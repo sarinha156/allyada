@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Exemplo - Demonstração Allyada</title>
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+
+  <!-- Cabeçalho Principal -->
+  <header class="portal-header">
+    <div class="header-container">
+      <a href="#" class="brand-logo" aria-label="Página Inicial do Portal Allyada">
+        <div class="brand-icon" aria-hidden="true">A</div>
+        <span>Portal Inclusivo</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegação Principal">
+        <ul>
+          <li><a href="#noticias">Notícias</a></li>
+          <li><a href="#acessibilidade">Acessibilidade</a></li>
+          <li><a href="#guia-teste">Guia de Testes</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Banner com Animações para Teste -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <span class="hero-badge">Allyada &bull; A11Y Web Assistiva</span>
+      <h1>Tecnologia Assistiva Aberta e Inclusiva</h1>
+      <p>
+        Sua verdadeira aliada em acessibilidade digital. 
+        Clique no ícone flutuante no canto inferior direito ou pressione o atalho <kbd>Alt</kbd> + <kbd>A</kbd>.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="Allyada.openPanel()">Abrir Menu Allyada</button>
+        <a href="#guia-teste" class="btn-secondary">Ver Roteiro de Teste</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Layout Principal -->
+  <main class="main-container">
+    
+    <!-- Artigo e Conteúdo -->
+    <article class="article-card" id="noticias">
+      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=80" 
+           alt="Pessoa sorrindo utilizando um computador portátil com tecnologia assistiva" 
+           class="article-image">
+      
+      <div class="article-body">
+        <span class="article-category">Inclusão & Cidadania Digital</span>
+        <h2 class="article-title">Como a Allyada transforma a experiência de navegação</h2>
+        
+        <p class="article-text">
+          A acessibilidade na web não é apenas um requisito legal previsto pela <strong>Lei Brasileira de Inclusão (LBI - Lei 13.146/15)</strong>,
+          mas um direito fundamental que garante a milhões de pessoas autonomia e dignidade digital.
+        </p>
+
+        <p class="article-text">
+          A <strong>Allyada</strong> foi arquitetada com <strong>Shadow DOM</strong> para isolamento visual completo.
+          Seus recursos operam de forma harmônica, sem quebrar grids, flexbox, imagens ou botões.
+        </p>
+
+        <!-- Box de Instruções de Teste Rápido -->
+        <div class="test-guide-box" id="guia-teste">
+          <h4>🧪 Guia de Teste das Melhorias da Allyada v2.0:</h4>
+          <ul>
+            <li><strong>Posicionamento do VLibras:</strong> Abra o menu e clique em <em>"Ativar VLibras"</em>. Repare que o botão oficial do VLibras é posicionado automaticamente empilhado logo acima do botão da Allyada, sem qualquer conflito ou sobreposição!</li>
+            <li><strong>Leitor de Voz com Realce Visual:</strong> Selecione este parágrafo e clique em <em>"Ouvir Página"</em>. Note o destaque dourado ao redor do texto durante a leitura.</li>
+            <li><strong>Régua de Leitura Suave:</strong> Ative a <em>"Guia de Leitura"</em> e mova o mouse ou dedo na tela. O movimento agora roda com <code>requestAnimationFrame</code> para 60fps sem lag.</li>
+            <li><strong>Escalonamento de Texto com Travas:</strong> Clique em <code>A+</code> até <code>+45%</code>. Os botões desabilitam nos extremos para feedback visual nítido.</li>
+            <li><strong>Contraste Escuro Não-Destrutivo:</strong> Ative o Alto Contraste Escuro e veja que o banner, caixas verdes, botões e campos de texto preservam suas identidades e legibilidade WCAG AAA.</li>
+            <li><strong>Atalhos de Teclado:</strong> Pressione <kbd>Alt</kbd> + <kbd>A</kbd> para abrir e <kbd>Esc</kbd> para fechar a qualquer instante.</li>
+          </ul>
+        </div>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px; color: var(--portal-heading);">Conformidade WCAG 2.1 e Usabilidade</h3>
+        <p class="article-text">
+          O painel de controle foi projetado para ser 100% operável via teclado: use a tecla <kbd>Tab</kbd> para navegar entre os botões,
+          <kbd>Enter</kbd> ou <kbd>Espaço</kbd> para alternar as opções, e <kbd>Esc</kbd> para fechar.
+        </p>
+      </div>
+    </article>
+
+    <!-- Barra Lateral (Sidebar) -->
+    <aside class="portal-sidebar">
+      
+      <!-- Widget de Links Úteis -->
+      <div class="sidebar-widget">
+        <h3 class="widget-title">Links em Destaque</h3>
+        <ul class="links-list">
+          <li><a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener">Diretrizes WCAG 2.1 (W3C)</a></li>
+          <li><a href="https://vlibras.gov.br" target="_blank" rel="noopener">Portal Oficial do VLibras</a></li>
+          <li><a href="http://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm" target="_blank" rel="noopener">Lei Brasileira de Inclusão</a></li>
+          <li><a href="#documentacao">Documentação da Allyada</a></li>
+        </ul>
+      </div>
+
+      <!-- Widget de Formulário de Contato / Inscrição -->
+      <div class="sidebar-widget" id="contato">
+        <h3 class="widget-title">Receba Novidades</h3>
+        <form onsubmit="event.preventDefault(); alert('Inscrição simulada com sucesso!');">
+          <div class="form-group">
+            <label for="input-nome" class="form-label">Seu Nome:</label>
+            <input type="text" id="input-nome" class="form-input" placeholder="Ex: Maria da Silva" required>
+          </div>
+          <div class="form-group">
+            <label for="input-email" class="form-label">Seu E-mail:</label>
+            <input type="email" id="input-email" class="form-input" placeholder="maria@exemplo.com" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 8px;">Cadastrar</button>
+        </form>
+      </div>
+
+      <!-- Widget Informativo -->
+      <div class="sidebar-widget">
+        <h3 class="widget-title">Dica de Acessibilidade</h3>
+        <p style="font-size: 0.9rem; color: var(--portal-text);">
+          A combinação de <strong>alto contraste</strong> com <strong>fontes limpas</strong> reduz o esforço cognitivo
+          e beneficia não só pessoas com baixa visão, mas também usuários em ambientes com iluminação difícil.
+        </p>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="portal-footer">
+    <div class="footer-content">
+      <div>
+        <p><strong>Allyada</strong> &bull; Sua aliada em acessibilidade digital aberta.</p>
+        <p style="font-size: 0.85rem; margin-top: 4px;">Construído com base nas melhores práticas da WAI-ARIA e WCAG 2.1.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacidade</a>
+        <a href="#">Termos de Uso</a>
+        <a href="#">Declaração de Acessibilidade</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Inclusão da Allyada -->
+  <script src="../dist/allyada.js"></script>
+  <script>
+    // Inicialização da Allyada
+    Allyada.init({
+      position: 'right',        // 'right' ou 'left'
+      primaryColor: '#0052cc',  // Cor principal do botão e cabeçalho
+      accentColor: '#f59e0b',   // Cor de foco e contraste
+      shortcutKey: 'a'          // Atalho Alt + A
+    });
+  </script>
+
+</body>
+</html>
