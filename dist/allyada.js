@@ -2,17 +2,16 @@
  * Allyada - Plataforma de Acessibilidade Digital
  * "Sua aliada em acessibilidade web"
  * 
- * Solução moderna, modular e de alto desempenho para tornar websites
- * plenamente acessíveis, inclusivos e em conformidade com as diretrizes WCAG e a LBI.
- * 
- * Versão 2.0 (Polimento e Aprimoramento):
- * - Nome oficial: Allyada (em referência a A11Y / Aliada)
- * - Posicionamento inteligente integrado do VLibras (evita sobreposição visual com o botão flutuante)
- * - Leitor de voz TTS aprimorado com realce visual em tempo real do texto em leitura
- * - Régua de leitura otimizada com aceleração de hardware (requestAnimationFrame)
- * - Escalonamento de fontes com travas visuais nos limites (100% a 145%)
- * - Temas de contraste premium (Escuro, Claro, Mono, Invertido) sem quebrar flex/grid
- * - Compatibilidade retroativa garantida (window.Allyada e window.AcessiWeb)
+ * Versão 2.1 (Fase 2: Perfis de Acessibilidade em 1 Clique & Filtros de Daltonismo SVG):
+ * - 5 Perfis de 1 Clique: TDAH, Daltonismo, Epilepsia Segura, Baixa Visão, Dislexia
+ * - Filtros SVG nativos de matriz de cor: Protanopia, Deuteranopia e Tritanopia
+ * - Seletor rápido de tipo de daltonismo
+ * - Escalonamento universal de fontes (+15%, +30%, +45%)
+ * - Temas de alto contraste WCAG AAA não destrutivos
+ * - Posicionamento harmonizado do VLibras
+ * - Leitor de voz TTS com realce visual em tempo real
+ * - Régua de leitura fluida a 60fps
+ * - Isolamento total de CSS via Shadow DOM
  */
 
 (function(root, factory) {
@@ -43,6 +42,8 @@
   };
 
   const DEFAULT_STATE = {
+    activeProfile: null, // 'adhd', 'colorblind', 'epilepsy', 'low-vision', 'dyslexia'
+    colorblindType: 'deuteranopia', // 'deuteranopia', 'protanopia', 'tritanopia'
     fontSizeLevel: 0, // 0: normal, 1: +15%, 2: +30%, 3: +45%
     lineHeight: false,
     letterSpacing: false,
@@ -63,6 +64,7 @@
       this.hostContainer = null;
       this.shadowRoot = null;
       this.rulerElement = null;
+      this.svgFiltersContainer = null;
       this.speechSynthesizer = null;
       this.speechUtterance = null;
       this.currentSpeakingNode = null;
@@ -86,6 +88,7 @@
       this.config = { ...this.config, ...options };
       this.loadState();
       this.injectHostStyles();
+      this.injectSvgFilters();
       this.createReadingRulerDOM();
       this.createWidgetDOM();
       this.initSpeechSynthesis();
@@ -96,7 +99,7 @@
         this.loadVLibras();
       }
 
-      console.log('[Allyada v2.0] Inicializada com sucesso. Pressione Alt + A para abrir.');
+      console.log('[Allyada v2.1] Inicializada com sucesso. Pressione Alt + A para abrir.');
       return this;
     }
 
@@ -138,6 +141,37 @@
     }
 
     /**
+     * Injeta filtros SVG nativos para simulação e compensação de Daltonismo
+     */
+    injectSvgFilters() {
+      if (document.getElementById('allyada-svg-filters')) return;
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.id = 'allyada-svg-filters';
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('data-allyada-ignore', 'true');
+      svg.style.cssText = 'position: absolute; width: 0; height: 0; pointer-events: none; overflow: hidden;';
+      svg.innerHTML = `
+        <defs>
+          <!-- Deuteranopia (Deficiência de Verde) -->
+          <filter id="allyada-filter-deuteranopia">
+            <feColorMatrix type="matrix" values="0.625, 0.375, 0, 0, 0  0.7, 0.3, 0, 0, 0  0, 0.3, 0.7, 0, 0  0, 0, 0, 1, 0"/>
+          </filter>
+          <!-- Protanopia (Deficiência de Vermelho) -->
+          <filter id="allyada-filter-protanopia">
+            <feColorMatrix type="matrix" values="0.567, 0.433, 0, 0, 0  0.558, 0.442, 0, 0, 0  0, 0.242, 0.758, 0, 0  0, 0, 0, 1, 0"/>
+          </filter>
+          <!-- Tritanopia (Deficiência de Azul) -->
+          <filter id="allyada-filter-tritanopia">
+            <feColorMatrix type="matrix" values="0.95, 0.05, 0, 0, 0  0, 0.433, 0.567, 0, 0  0, 0.475, 0.525, 0, 0  0, 0, 0, 1, 0"/>
+          </filter>
+        </defs>
+      `;
+      document.documentElement.appendChild(svg);
+      this.svgFiltersContainer = svg;
+    }
+
+    /**
      * Injeta estilos no documento do site hospedeiro de forma segura e não intrusiva
      */
     injectHostStyles() {
@@ -146,7 +180,7 @@
       const style = document.createElement('style');
       style.id = 'allyada-host-styles';
       style.textContent = `
-        /* Fontes de Alta Legibilidade (Lexend e Atkinson Hyperlegible) */
+        /* Fontes de Alta Legibilidade */
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
 
         /* Espaçamento de Entrelinhas Amplo (apenas em blocos de texto/leitura) */
@@ -231,7 +265,7 @@
         html.ally-contrast-dark h2,
         html.ally-contrast-dark h3,
         html.ally-contrast-dark h4 {
-          color: #fde047 !important; /* Amarelo solar de altíssimo contraste */
+          color: #fde047 !important;
         }
         html.ally-contrast-dark p,
         html.ally-contrast-dark li,
@@ -239,7 +273,7 @@
           color: #f1f5f9 !important;
         }
         html.ally-contrast-dark a {
-          color: #38bdf8 !important; /* Azul celeste vibrante */
+          color: #38bdf8 !important;
           text-decoration: underline !important;
         }
         html.ally-contrast-dark input,
@@ -325,7 +359,18 @@
           filter: invert(100%) hue-rotate(180deg) !important;
         }
 
-        /* Destaque de Links (sublinhado e contorno luminoso de alta visibilidade) */
+        /* Filtros de Daltonismo SVG (aplicados apenas ao body) */
+        html.ally-filter-deuteranopia body {
+          filter: url('#allyada-filter-deuteranopia') !important;
+        }
+        html.ally-filter-protanopia body {
+          filter: url('#allyada-filter-protanopia') !important;
+        }
+        html.ally-filter-tritanopia body {
+          filter: url('#allyada-filter-tritanopia') !important;
+        }
+
+        /* Destaque de Links */
         html.ally-highlight-links a:not([data-allyada-ignore]),
         html.ally-highlight-links [role="button"]:not([data-allyada-ignore]) {
           outline: 3px solid #f59e0b !important;
@@ -361,7 +406,7 @@
           transition: background-color 0.2s ease !important;
         }
 
-        /* Posicionamento Inteligente do Botão VLibras (empilhado perfeitamente acima da Allyada) */
+        /* Posicionamento Inteligente do Botão VLibras */
         div[vw] [vw-access-button] {
           bottom: 92px !important;
           ${this.config.position === 'right' ? 'right: 24px !important; left: auto !important;' : 'left: 24px !important; right: auto !important;'}
@@ -377,7 +422,7 @@
     }
 
     /**
-     * Cria a Régua de Leitura anexada diretamente ao documentElement (fora do body)
+     * Cria a Régua de Leitura anexada ao documentElement
      */
     createReadingRulerDOM() {
       if (document.getElementById('allyada-reading-ruler')) return;
@@ -423,7 +468,7 @@
     }
 
     /**
-     * Cria a interface customizada com Shadow DOM anexada ao documentElement
+     * Cria a interface com Shadow DOM
      */
     createWidgetDOM() {
       this.hostContainer = document.createElement('div');
@@ -442,7 +487,7 @@
       const wrapper = document.createElement('div');
       wrapper.className = `allyada-wrapper pos-${this.config.position}`;
       wrapper.innerHTML = `
-        <!-- Botão Flutuante Disparador (FAB) -->
+        <!-- Botão Flutuante (FAB) -->
         <button type="button" 
                 class="allyada-fab" 
                 id="allyada-trigger-btn"
@@ -510,14 +555,79 @@
             </div>
           </div>
 
-          <!-- Conteúdo com Categorias -->
+          <!-- Conteúdo do Painel -->
           <div class="drawer-body">
             
+            <!-- NOVA SEÇÃO: Perfis de Acessibilidade em 1 Clique -->
+            <div class="feature-section">
+              <div class="section-title-wrapper">
+                <h3 class="section-title">Perfis em 1 Clique</h3>
+                <span class="section-pill">Automático</span>
+              </div>
+              <div class="profiles-grid">
+                
+                <button type="button" class="profile-card" id="profile-adhd" aria-pressed="false">
+                  <div class="profile-header">
+                    <span class="profile-icon">🧠</span>
+                    <span class="profile-tag">Foco</span>
+                  </div>
+                  <strong class="profile-title">Perfil TDAH</strong>
+                  <span class="profile-desc">Régua de leitura, sem animações e links em destaque.</span>
+                </button>
+
+                <button type="button" class="profile-card" id="profile-colorblind" aria-pressed="false">
+                  <div class="profile-header">
+                    <span class="profile-icon">👁️</span>
+                    <span class="profile-tag">Cores</span>
+                  </div>
+                  <strong class="profile-title">Daltonismo</strong>
+                  <span class="profile-desc">Filtro de matiz de cor para compensação visual.</span>
+                </button>
+
+                <button type="button" class="profile-card" id="profile-epilepsy" aria-pressed="false">
+                  <div class="profile-header">
+                    <span class="profile-icon">⚡</span>
+                    <span class="profile-tag">Segurança</span>
+                  </div>
+                  <strong class="profile-title">Crises / Epilepsia</strong>
+                  <span class="profile-desc">Desativa flashes, transições e reduz brilho visual.</span>
+                </button>
+
+                <button type="button" class="profile-card" id="profile-low-vision" aria-pressed="false">
+                  <div class="profile-header">
+                    <span class="profile-icon">👓</span>
+                    <span class="profile-tag">Visão</span>
+                  </div>
+                  <strong class="profile-title">Baixa Visão / Idoso</strong>
+                  <span class="profile-desc">Texto ampliado (+30%), alto contraste e cursor grande.</span>
+                </button>
+
+                <button type="button" class="profile-card" id="profile-dyslexia" aria-pressed="false">
+                  <div class="profile-header">
+                    <span class="profile-icon">📖</span>
+                    <span class="profile-tag">Leitura</span>
+                  </div>
+                  <strong class="profile-title">Perfil Dislexia</strong>
+                  <span class="profile-desc">Fonte Lexend com espaçamento amplo e sem justificação.</span>
+                </button>
+
+              </div>
+
+              <!-- Sub-seletor do Daltonismo (visível quando o perfil de Daltonismo está ativo) -->
+              <div class="colorblind-selector-box" id="colorblind-selector-box" style="display: none;">
+                <span class="sub-label">Tipo de Daltonismo:</span>
+                <div class="colorblind-pills">
+                  <button type="button" class="cb-pill active" data-type="deuteranopia" id="cb-deuteranopia">Deuteranopia (Verde)</button>
+                  <button type="button" class="cb-pill" data-type="protanopia" id="cb-protanopia">Protanopia (Vermelho)</button>
+                  <button type="button" class="cb-pill" data-type="tritanopia" id="cb-tritanopia">Tritanopia (Azul)</button>
+                </div>
+              </div>
+            </div>
+
             <!-- Seção 1: Texto e Tipografia -->
             <div class="feature-section">
               <h3 class="section-title">Texto e Tipografia</h3>
               
-              <!-- Stepper de Tamanho de Texto Universal -->
               <div class="stepper-card">
                 <div class="stepper-info">
                   <span class="stepper-label">Tamanho do Texto</span>
@@ -529,7 +639,6 @@
                 </div>
               </div>
 
-              <!-- Grid de Botões Rápidos de Texto -->
               <div class="features-grid">
                 <button type="button" class="feature-card" id="card-dyslexic-font" aria-pressed="false">
                   <div class="card-icon">🔤</div>
@@ -669,7 +778,6 @@
       `;
 
       this.shadowRoot.appendChild(wrapper);
-      // Anexa diretamente ao documentElement para isolamento total contra filtros de estilo do body
       document.documentElement.appendChild(this.hostContainer);
 
       this.bindPanelEvents();
@@ -696,11 +804,78 @@
       const resetBtn = root.getElementById('btn-reset-all');
       resetBtn.addEventListener('click', () => this.resetState());
 
+      // Eventos dos Perfis em 1 Clique
+      const bindProfile = (btnId, profileKey, applyFn) => {
+        const btn = root.getElementById(btnId);
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          if (this.state.activeProfile === profileKey) {
+            // Desativa perfil e restaura para estado padrão
+            this.state.activeProfile = null;
+            this.resetState();
+          } else {
+            this.state.activeProfile = profileKey;
+            applyFn();
+            this.saveState();
+            this.applyAllStateChanges();
+            this.updatePanelUI();
+          }
+        });
+      };
+
+      // 1. Perfil TDAH
+      bindProfile('profile-adhd', 'adhd', () => {
+        this.state.readingRuler = true;
+        this.state.stopAnimations = true;
+        this.state.highlightLinks = true;
+        this.state.lineHeight = true;
+      });
+
+      // 2. Perfil Daltonismo
+      bindProfile('profile-colorblind', 'colorblind', () => {
+        this.state.highlightLinks = true;
+      });
+
+      // 3. Perfil Epilepsia
+      bindProfile('profile-epilepsy', 'epilepsy', () => {
+        this.state.stopAnimations = true;
+        this.state.contrast = 'dark';
+      });
+
+      // 4. Perfil Baixa Visão
+      bindProfile('profile-low-vision', 'low-vision', () => {
+        this.state.fontSizeLevel = 2; // +30%
+        this.state.contrast = 'dark';
+        this.state.bigCursor = true;
+        this.state.highlightLinks = true;
+      });
+
+      // 5. Perfil Dislexia
+      bindProfile('profile-dyslexia', 'dyslexia', () => {
+        this.state.dyslexicFont = true;
+        this.state.lineHeight = true;
+        this.state.letterSpacing = true;
+        this.state.textAlignLeft = true;
+      });
+
+      // Seletores de tipo de Daltonismo
+      ['deuteranopia', 'protanopia', 'tritanopia'].forEach(type => {
+        const pill = root.getElementById(`cb-${type}`);
+        if (!pill) return;
+        pill.addEventListener('click', () => {
+          this.state.colorblindType = type;
+          this.saveState();
+          this.applyAllStateChanges();
+          this.updatePanelUI();
+        });
+      });
+
       // Controle de Tamanho de Fonte
       const btnFontIncrease = root.getElementById('btn-font-increase');
       btnFontIncrease.addEventListener('click', () => {
         if (this.state.fontSizeLevel < 3) {
           this.state.fontSizeLevel++;
+          this.state.activeProfile = null;
           this.saveState();
           this.applyAllStateChanges();
           this.updatePanelUI();
@@ -711,6 +886,7 @@
       btnFontDecrease.addEventListener('click', () => {
         if (this.state.fontSizeLevel > 0) {
           this.state.fontSizeLevel--;
+          this.state.activeProfile = null;
           this.saveState();
           this.applyAllStateChanges();
           this.updatePanelUI();
@@ -723,6 +899,7 @@
         if (!el) return;
         el.addEventListener('click', () => {
           this.state[stateKey] = !this.state[stateKey];
+          this.state.activeProfile = null; // desmarca perfil ativo caso ajuste individual
           this.saveState();
           this.applyAllStateChanges();
           this.updatePanelUI();
@@ -745,6 +922,7 @@
         if (!el) return;
         el.addEventListener('click', () => {
           this.state.contrast = (this.state.contrast === opt) ? 'normal' : opt;
+          this.state.activeProfile = null;
           this.saveState();
           this.applyAllStateChanges();
           this.updatePanelUI();
@@ -777,27 +955,23 @@
 
     /**
      * Aplica redimensionamento proporcional a TODOS os elementos de texto da página
-     * preservando a hierarquia visual (h1, h2, p, inputs, botões)
      */
     applyFontSize() {
       const factors = [1.0, 1.15, 1.30, 1.45];
       const factor = factors[this.state.fontSizeLevel] || 1.0;
       const html = document.documentElement;
 
-      // 1. Escala a raiz (para websites baseados em rem)
       if (this.state.fontSizeLevel > 0) {
         html.style.fontSize = `${(100 * factor).toFixed(1)}%`;
       } else {
         html.style.fontSize = '';
       }
 
-      // 2. Escala elementos de texto individuais (para cobrir px, pt e controles de formulário)
       if (!document.body) return;
       const selectors = 'p, h1, h2, h3, h4, h5, h6, a, span, li, button, input, textarea, select, label, blockquote, figcaption, td, th, kbd, dt, dd';
       const elements = document.body.querySelectorAll(selectors);
 
       elements.forEach(el => {
-        // Ignora elementos internos da Allyada e VLibras
         if (el.closest('#allyada-root') || el.closest('[data-allyada-ignore]') || el.closest('[vw]')) return;
 
         if (this.state.fontSizeLevel === 0) {
@@ -844,6 +1018,16 @@
         html.classList.add(`ally-contrast-${this.state.contrast}`);
       }
 
+      // Filtros de Daltonismo SVG
+      html.classList.remove(
+        'ally-filter-deuteranopia',
+        'ally-filter-protanopia',
+        'ally-filter-tritanopia'
+      );
+      if (this.state.activeProfile === 'colorblind') {
+        html.classList.add(`ally-filter-${this.state.colorblindType}`);
+      }
+
       // Navegação e Auxílio
       html.classList.toggle('ally-highlight-links', this.state.highlightLinks);
       html.classList.toggle('ally-big-cursor', this.state.bigCursor);
@@ -861,6 +1045,30 @@
     updatePanelUI() {
       const root = this.shadowRoot;
       if (!root) return;
+
+      // Atualiza cards de Perfis em 1 Clique
+      const profiles = ['adhd', 'colorblind', 'epilepsy', 'low-vision', 'dyslexia'];
+      profiles.forEach(p => {
+        const el = root.getElementById(`profile-${p}`);
+        if (el) {
+          const isActive = this.state.activeProfile === p;
+          el.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+          el.classList.toggle('active', isActive);
+        }
+      });
+
+      // Exibição do seletor de tipo de Daltonismo
+      const cbBox = root.getElementById('colorblind-selector-box');
+      if (cbBox) {
+        cbBox.style.display = this.state.activeProfile === 'colorblind' ? 'block' : 'none';
+      }
+
+      ['deuteranopia', 'protanopia', 'tritanopia'].forEach(type => {
+        const pill = root.getElementById(`cb-${type}`);
+        if (pill) {
+          pill.classList.toggle('active', this.state.colorblindType === type);
+        }
+      });
 
       // Atualiza indicador de fonte e travas dos botões
       const fontLabels = ['Padrão (100%)', '+15%', '+30%', '+45%'];
@@ -907,6 +1115,7 @@
 
       // Badge com contador de recursos ativos no FAB
       let activeCount = 0;
+      if (this.state.activeProfile) activeCount++;
       if (this.state.fontSizeLevel > 0) activeCount++;
       if (this.state.lineHeight) activeCount++;
       if (this.state.letterSpacing) activeCount++;
@@ -1151,7 +1360,7 @@
     extractReadableText(el) {
       if (!el) return '';
       const clone = el.cloneNode(true);
-      const removeSelectors = ['script', 'style', 'noscript', '#allyada-root', '#allyada-reading-ruler', '[data-allyada-ignore]', '[vw]'];
+      const removeSelectors = ['script', 'style', 'noscript', '#allyada-root', '#allyada-reading-ruler', '#allyada-svg-filters', '[data-allyada-ignore]', '[vw]'];
       removeSelectors.forEach(sel => {
         clone.querySelectorAll(sel).forEach(node => node.remove());
       });
@@ -1313,8 +1522,8 @@
         .allyada-drawer {
           position: fixed;
           top: 0;
-          width: 400px;
-          max-width: 90vw;
+          width: 420px;
+          max-width: 92vw;
           height: 100vh;
           background: var(--bg-panel);
           box-shadow: var(--shadow-lg);
@@ -1469,13 +1678,138 @@
           flex-direction: column;
           gap: 22px;
         }
+        .section-title-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 10px;
+        }
         .section-title {
           font-size: 0.85rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           font-weight: 700;
           color: var(--text-muted);
-          margin-bottom: 10px;
+        }
+        .section-pill {
+          font-size: 0.7rem;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 9999px;
+          background: #eff6ff;
+          color: #0052cc;
+        }
+
+        /* Grid de Perfis em 1 Clique */
+        .profiles-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .profile-card {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+          padding: 12px 14px;
+          background: #f8fafc;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 10px;
+          cursor: pointer;
+          text-align: left;
+          transition: all 0.2s ease;
+          color: var(--text-main);
+        }
+        .profile-card:hover {
+          background: #f1f5f9;
+          border-color: #94a3b8;
+          transform: translateY(-1px);
+        }
+        .profile-card:focus-visible {
+          outline: 3px solid var(--primary);
+          outline-offset: 2px;
+        }
+        .profile-card.active {
+          background: #eff6ff;
+          border-color: #0052cc;
+          box-shadow: 0 0 0 1px #0052cc;
+        }
+        .profile-header {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .profile-icon {
+          font-size: 1.3rem;
+        }
+        .profile-tag {
+          font-size: 0.68rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          padding: 2px 6px;
+          border-radius: 4px;
+          background: #e2e8f0;
+          color: #475569;
+        }
+        .profile-card.active .profile-tag {
+          background: #0052cc;
+          color: #ffffff;
+        }
+        .profile-title {
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: var(--text-main);
+        }
+        .profile-card.active .profile-title {
+          color: #0052cc;
+        }
+        .profile-desc {
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          line-height: 1.3;
+        }
+
+        /* Box seletor de tipo de Daltonismo */
+        .colorblind-selector-box {
+          margin-top: 10px;
+          padding: 12px;
+          background: #f0fdf4;
+          border: 1px solid #bbf7d0;
+          border-radius: 8px;
+        }
+        .sub-label {
+          display: block;
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: #166534;
+          margin-bottom: 8px;
+        }
+        .colorblind-pills {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .cb-pill {
+          padding: 6px 10px;
+          font-size: 0.76rem;
+          font-weight: 600;
+          border-radius: 6px;
+          border: 1px solid #86efac;
+          background: #ffffff;
+          color: #15803d;
+          cursor: pointer;
+          text-align: left;
+          transition: all 0.15s ease;
+        }
+        .cb-pill:hover {
+          background: #dcfce7;
+        }
+        .cb-pill.active {
+          background: #16a34a;
+          color: #ffffff;
+          border-color: #15803d;
+          font-weight: 700;
         }
 
         /* Stepper de Tamanho de Fonte */
