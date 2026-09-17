@@ -64,7 +64,7 @@
     stopAnimations: false,
     readingRuler: false,
     vlibrasActive: false,
-    autoRemediate: true,
+    autoRemediate: false,
     lastAuditScore: null
   };
 
@@ -184,7 +184,7 @@
       skip.textContent = 'Pular para o conteúdo principal';
       skip.setAttribute('data-allyada-ignore', 'true');
       skip.style.cssText = `
-        position: absolute;
+        position: fixed;
         top: -100px;
         left: 16px;
         padding: 10px 16px;
@@ -199,9 +199,11 @@
       `;
       skip.addEventListener('focus', () => { skip.style.top = '16px'; });
       skip.addEventListener('blur', () => { skip.style.top = '-100px'; });
-      document.body.prepend(skip);
+      
+      // Anexa diretamente a document.documentElement para não alterar o document.body nem quebrar :first-child
+      document.documentElement.appendChild(skip);
 
-      // Marca o main se não tiver ID
+      // Marca o main apenas se ele existir e não tiver ID
       const main = document.querySelector('main') || document.querySelector('article');
       if (main && !main.id) {
         main.id = 'main-content';
@@ -210,46 +212,56 @@
 
     /**
      * Motor de Remediação Automática (WCAG 2.2 AA / ADA Title II / Section 508)
+     * Seguro, não-destrutivo e preserva 100% da integridade visual do layout
      */
     runAutoRemediation() {
+      let count = 0;
       // 1. Injeta Landmarks semânticos ARIA se faltarem
       const header = document.querySelector('header');
-      if (header && !header.getAttribute('role')) header.setAttribute('role', 'banner');
+      if (header && !header.getAttribute('role')) { header.setAttribute('role', 'banner'); count++; }
 
       const main = document.querySelector('main');
-      if (main && !main.getAttribute('role')) main.setAttribute('role', 'main');
+      if (main && !main.getAttribute('role')) { main.setAttribute('role', 'main'); count++; }
 
       const nav = document.querySelector('nav');
-      if (nav && !nav.getAttribute('role')) nav.setAttribute('role', 'navigation');
+      if (nav && !nav.getAttribute('role')) { nav.setAttribute('role', 'navigation'); count++; }
 
       const footer = document.querySelector('footer');
-      if (footer && !footer.getAttribute('role')) footer.setAttribute('role', 'contentinfo');
+      if (footer && !footer.getAttribute('role')) { footer.setAttribute('role', 'contentinfo'); count++; }
 
-      // 2. WCAG 1.1.1: Imagens sem alt recebem alt vazio decorativo se não descritas
+      // 2. WCAG 1.1.1: Imagens sem alt recebem alt descritivo baseado no título ou decorativo
       document.querySelectorAll('img:not([alt])').forEach(img => {
         if (!img.closest('#allyada-root')) {
           img.setAttribute('alt', img.title || '');
           img.setAttribute('data-allyada-remediated', 'alt');
+          count++;
         }
       });
 
-      // 3. WCAG 4.1.2 & 2.4.4: Botões ou links vazios com ícones recebem aria-label
-      document.querySelectorAll('button:empty, a:empty').forEach(el => {
+      // 3. WCAG 4.1.2: Botões vazios apenas com ícones recebem aria-label
+      document.querySelectorAll('button:empty').forEach(el => {
         if (!el.getAttribute('aria-label') && !el.closest('#allyada-root')) {
-          const title = el.getAttribute('title') || el.className || 'Ação';
-          el.setAttribute('aria-label', title.replace(/[^a-zA-Z0-9\s]/g, ' ').trim());
+          const label = el.getAttribute('title') || 'Botão interativo';
+          el.setAttribute('aria-label', label);
           el.setAttribute('data-allyada-remediated', 'aria-label');
+          count++;
         }
       });
 
       // 4. WCAG 2.2 Critério 2.5.8 (Target Size Minimum 24x24px):
-      // Garante área clicável mínima em botões interativos
-      document.querySelectorAll('button, a, input[type="button"], input[type="submit"]').forEach(el => {
-        if (!el.closest('#allyada-root')) {
-          el.style.minWidth = '24px';
-          el.style.minHeight = '24px';
+      // Aplica APENAS em botões isolados (buttons) que tenham menos de 24px, NUNCA em links inline <a>!
+      document.querySelectorAll('button').forEach(el => {
+        if (!el.closest('#allyada-root') && !el.closest('[vw]')) {
+          const rect = el.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0 && (rect.width < 24 || rect.height < 24)) {
+            el.style.minWidth = '24px';
+            el.style.minHeight = '24px';
+            count++;
+          }
         }
       });
+
+      return { remediatedCount: count };
     }
 
     /**
@@ -1605,6 +1617,16 @@
       const backdrop = this.shadowRoot.getElementById('allyada-backdrop');
       const trigger = this.shadowRoot.getElementById('allyada-trigger-btn');
 
+      // Desfoca o elemento interno antes de aplicar aria-hidden="true" para eliminar warning do Chromium
+      if (this.shadowRoot.activeElement && typeof this.shadowRoot.activeElement.blur === 'function') {
+        this.shadowRoot.activeElement.blur();
+      }
+      if (this.previousFocusedElement && typeof this.previousFocusedElement.focus === 'function') {
+        this.previousFocusedElement.focus();
+      } else if (trigger && typeof trigger.focus === 'function') {
+        trigger.focus();
+      }
+
       if (panel) {
         panel.classList.remove('open');
         panel.setAttribute('aria-hidden', 'true');
@@ -1615,10 +1637,6 @@
       }
       if (trigger) {
         trigger.setAttribute('aria-expanded', 'false');
-      }
-
-      if (this.previousFocusedElement && typeof this.previousFocusedElement.focus === 'function') {
-        this.previousFocusedElement.focus();
       }
     }
 
