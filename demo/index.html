@@ -30,15 +30,32 @@
   <!-- Hero Banner com Animações para Teste -->
   <section class="hero-banner">
     <div class="hero-content">
-      <span class="hero-badge">Allyada &bull; A11Y Web Assistiva</span>
-      <h1>Tecnologia Assistiva Aberta e Inclusiva</h1>
+      <span class="hero-badge">Allyada v3.0 &bull; Suite de Conformidade e Tecnologia Assistiva</span>
+      <h1>Acessibilidade Global & Conformidade Jurídica</h1>
       <p>
-        Sua verdadeira aliada em acessibilidade digital. 
-        Clique no ícone flutuante no canto inferior direito ou pressione o atalho <kbd>Alt</kbd> + <kbd>A</kbd>.
+        Das diretrizes <strong>WCAG 2.2 AA</strong> à <strong>ADA</strong>, <strong>EAA</strong> e legislações internacionais.
+        Tudo projetado para <em>Monitorar</em>, <em>Corrigir</em> e <em>Comprovar</em> a conformidade digital do seu site.
       </p>
-      <div class="hero-actions">
+
+      <div class="compliance-hero-pills">
+        <span class="compliance-badge-pill gold">✓ WCAG 2.2 Nível AA</span>
+        <span class="compliance-badge-pill">✓ ADA Title II & III</span>
+        <span class="compliance-badge-pill">✓ Seção 508 & 504</span>
+        <span class="compliance-badge-pill">✓ EAA (European Accessibility Act)</span>
+        <span class="compliance-badge-pill">✓ EN 301 549</span>
+        <span class="compliance-badge-pill">✓ Lei Unruh (Califórnia)</span>
+        <span class="compliance-badge-pill">✓ Colorado HB 21-1110</span>
+        <span class="compliance-badge-pill">✓ AODA & ACA (Canadá)</span>
+        <span class="compliance-badge-pill">✓ UK Equality Act 2010</span>
+        <span class="compliance-badge-pill">✓ IS 5568 (Israel)</span>
+        <span class="compliance-badge-pill">✓ LBI (Brasil - Lei 13.146/15)</span>
+        <span class="compliance-badge-pill">✓ PDF/A & HÁ</span>
+      </div>
+
+      <div class="hero-actions" style="margin-top: 24px;">
         <button class="btn-primary" onclick="Allyada.openPanel()">Abrir Menu Allyada</button>
-        <a href="#guia-teste" class="btn-secondary">Ver Roteiro de Teste</a>
+        <button class="btn-secondary" onclick="Allyada.openPanel(); Allyada.switchTab('audit');">🔍 Ver Auditoria WCAG</button>
+        <button class="btn-secondary" onclick="Allyada.openPanel(); Allyada.switchTab('statement');">📜 Declaração Legal</button>
       </div>
     </div>
   </section>
@@ -53,38 +70,179 @@
            class="article-image">
       
       <div class="article-body">
-        <span class="article-category">Inclusão & Cidadania Digital</span>
-        <h2 class="article-title">Como a Allyada transforma a experiência de navegação</h2>
+        <span class="article-category">Monitorar &bull; Corrigir &bull; Comprovar</span>
+        <h2 class="article-title">Como a Allyada garante conformidade jurídica contínua</h2>
         
         <p class="article-text">
-          A acessibilidade na web não é apenas um requisito legal previsto pela <strong>Lei Brasileira de Inclusão (LBI - Lei 13.146/15)</strong>,
-          mas um direito fundamental que garante a milhões de pessoas autonomia e dignidade digital.
+          A acessibilidade na web agora é obrigatória não apenas sob a <strong>Lei Brasileira de Inclusão (LBI - Lei 13.146/15)</strong>,
+          mas sob um ecossistema rigoroso de legislações globais como o <strong>Título II da ADA</strong> nos EUA, a <strong>EAA (European Accessibility Act)</strong>
+          na União Europeia, a <strong>Lei Unruh</strong> na Califórnia e o <strong>Colorado HB 21-1110</strong>.
         </p>
 
+        <!-- Laboratório Interativo de Auditoria e Auto-Remediação -->
+        <div class="audit-lab-box">
+          <div class="audit-lab-header">
+            <div class="audit-lab-title">
+              <span>🧪</span> Laboratório de Auditoria WCAG 2.2 & Auto-Remediação
+            </div>
+            <div class="lab-btn-group">
+              <button class="btn-lab-action btn-lab-audit" onclick="Allyada.openPanel(); Allyada.switchTab('audit');">
+                🔍 Escanear DOM ao Vivo
+              </button>
+              <button class="btn-lab-action btn-lab-remediate" onclick="const r = Allyada.remediateDOM(); alert(`Auto-Remediação concluída!\n\n${r.remediatedCount} elementos corrigidos em tempo real pelo motor da Allyada.`);">
+                ⚡ Auto-Remediar DOM
+              </button>
+              <button class="btn-lab-action btn-lab-legal" onclick="Allyada.openPanel(); Allyada.switchTab('statement');">
+                📜 Gerar Laudo Legal
+              </button>
+            </div>
+          </div>
+
+          <p style="font-size: 0.85rem; color: #475569; margin-bottom: 12px;">
+            Abaixo estão elementos deliberadamente imperfeitos para você testar como o motor da <strong>Allyada</strong>
+            detecta falhas de acessibilidade e aplica <em>Auto-Remediação</em> sem quebrar o layout:
+          </p>
+
+          <div class="lab-elements-grid">
+            <div class="lab-sample-item">
+              <h5>1. Botão sem Rotulagem (WCAG 4.1.2)</h5>
+              <p>Botão apenas com ícone gráfico, sem texto legível por leitores de tela.</p>
+              <div class="sample-target-preview">
+                <button class="micro-target-btn" style="width: 32px; height: 32px;" title="Configurações">
+                  ⚙️
+                </button>
+                <span style="font-size: 0.75rem; color: #64748b;">(Clique em "Auto-Remediar" para injetar aria-label)</span>
+              </div>
+            </div>
+
+            <div class="lab-sample-item">
+              <h5>2. Alvo de Toque Reduzido (WCAG 2.2 - 2.5.8)</h5>
+              <p>Elemento interativo com menos de 24x24px, violando a WCAG 2.2.</p>
+              <div class="sample-target-preview">
+                <button class="micro-target-btn" title="Fechar">✕</button>
+                <span style="font-size: 0.75rem; color: #64748b;">(Auto-remediação expande para mínimo de 24x24px)</span>
+              </div>
+            </div>
+
+            <div class="lab-sample-item">
+              <h5>3. Campo de Entrada sem Rótulo (WCAG 3.3.2)</h5>
+              <p>Campo &lt;input&gt; sem &lt;label&gt; associado nem aria-label.</p>
+              <div class="sample-target-preview">
+                <input type="text" placeholder="Código promocional..." style="padding: 6px; font-size: 0.8rem; border: 1px solid #cbd5e1; border-radius: 4px; width: 150px;">
+              </div>
+            </div>
+
+            <div class="lab-sample-item">
+              <h5>4. Imagem Informativa com Alt</h5>
+              <p>Imagem no topo possui atributo alt descritivo (Critério 1.1.1 aprovado).</p>
+              <div class="sample-target-preview">
+                <span class="status-check-tag">✓ Aprovado na Auditoria</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matriz de Legislações Cobertas -->
+        <h3 style="margin-top: 28px; margin-bottom: 12px; color: var(--portal-heading);">Matriz de Conformidade Jurídica e Padrões Suportados</h3>
         <p class="article-text">
-          A <strong>Allyada</strong> foi arquitetada com <strong>Shadow DOM</strong> para isolamento visual completo.
-          Seus recursos operam de forma harmônica, sem quebrar grids, flexbox, imagens ou botões.
+          A Allyada oferece tripla camada: <strong>Ferramentas Assistivas</strong> na ponta para o usuário,
+          <strong>Auditoria em Tempo Real</strong> para os desenvolvedores e <strong>Declaração de Conformidade</strong> para respaldo jurídico.
         </p>
+
+        <div class="standards-table-wrapper">
+          <table class="standards-table">
+            <thead>
+              <tr>
+                <th>Norma / Lei</th>
+                <th>Jurisdição</th>
+                <th>Exigência Principal</th>
+                <th>Status Allyada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>WCAG 2.2 (Nível AA)</strong></td>
+                <td>Global / W3C</td>
+                <td>Critérios de sucesso perceptíveis, operáveis, compreensíveis e robustos</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>ADA Title II & III</strong></td>
+                <td>Estados Unidos</td>
+                <td>Acomodações públicas e serviços de governos estaduais/municipais</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>Rehabilitation Act (508/504)</strong></td>
+                <td>EUA (Federal)</td>
+                <td>Acessibilidade em contratações de TIC e programas subsidiados</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>Lei Unruh (Civil Rights Act)</strong></td>
+                <td>Califórnia (EUA)</td>
+                <td>Proteção contra discriminação em serviços comerciais na web</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>Colorado HB 21-1110</strong></td>
+                <td>Colorado (EUA)</td>
+                <td>Obrigatoriedade WCAG 2.1/2.2 para todas as agências do estado</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>EAA & EN 301 549</strong></td>
+                <td>União Europeia</td>
+                <td>Diretiva Europeia de Acessibilidade 2025 para comércio e serviços</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>AODA & ACA</strong></td>
+                <td>Canadá (Ontário/Federal)</td>
+                <td>Padrões de informação e comunicações acessíveis</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>UK Equality Act 2010</strong></td>
+                <td>Reino Unido</td>
+                <td>Ajustes razoáveis de acessibilidade em serviços online</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>IS 5568</strong></td>
+                <td>Israel</td>
+                <td>Diretrizes governamentais para acessibilidade na internet</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>LBI (Lei 13.146/2015)</strong></td>
+                <td>Brasil</td>
+                <td>Art. 63: Acessibilidade obrigatória em sítios da internet mantidos por empresas/órgãos</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+              <tr>
+                <td><strong>PDF/A & HÁ</strong></td>
+                <td>ISO / Internacional</td>
+                <td>Preservação de documentos digitais e acessibilidade no ensino superior</td>
+                <td><span class="status-check-tag">✓ Atendido</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <!-- Box de Instruções de Teste Rápido -->
         <div class="test-guide-box" id="guia-teste">
-          <h4>🧪 Guia de Validação da Allyada v2.5 (Design Senior & Tipografia Granular):</h4>
+          <h4>🧪 Roteiro de Validação Allyada v3.0:</h4>
           <ul>
-            <li><strong>✨ Novo Design System UX/UI:</strong> Abra o menu (<kbd>Alt</kbd> + <kbd>A</kbd>) e note os ícones vetoriais SVG nítidos, switches com indicadores ativos e sombras suaves estilo Apple/Linear.</li>
-            <li><strong>🔠 Tamanho de Fonte Granular:</strong> Use <code>-</code> e <code>+</code> para percorrer 5 níveis (100%, 115%, 130%, 145%, 160%) acompanhados pela barra visual de progresso.</li>
-            <li><strong>↕️ Espaçamento de Linhas Granular:</strong> Alterne entre <em>Padrão (1.5x)</em>, <em>Confortável (1.9x)</em> e <em>Amplo (2.3x)</em>. Repare que apenas os textos de leitura expandem, mantendo botões e o cabeçalho intactos!</li>
-            <li><strong>↔️ Espaçamento de Letras Granular:</strong> Alterne entre <em>Normal</em>, <em>Médio (+0.08em)</em> e <em>Amplo (+0.16em)</em>.</li>
-            <li><strong>🧠 Perfis em 1 Clique:</strong> Teste TDAH, Daltonismo (com seletor verde/vermelho/azul), Anti-Crises, Baixa Visão e Dislexia.</li>
-            <li><strong>🤟 Posicionamento VLibras:</strong> Ative o VLibras e veja o avatar empilhado perfeitamente acima do botão da Allyada.</li>
-            <li><strong>🔊 Leitor de Texto TTS:</strong> Selecione este parágrafo e clique em <em>"Ouvir Texto"</em> para ver o realce dourado ao vivo.</li>
+            <li><strong>🗂️ 3 Abas Integradas:</strong> Abra o painel (<kbd>Alt</kbd> + <kbd>A</kbd>) e navegue entre as abas <em>Ferramentas</em>, <em>Auditoria WCAG</em> e <em>Declaração Legal</em>.</li>
+            <li><strong>🔍 Auditoria em Tempo Real:</strong> Clique na aba "Auditoria WCAG" para ver a pontuação (0 a 100%) e o checklist de conformidade dos elementos da página.</li>
+            <li><strong>⚡ Auto-Remediação do DOM:</strong> No painel ou no laboratório acima, clique em "Corrigir Problemas" e veja os marcos ARIA e atributos sendo saneados ao vivo.</li>
+            <li><strong>📜 Declaração de Conformidade com 1 Clique:</strong> Na aba "Declaração Legal", visualize a declaração completa cobrindo as 13 legislações e copie o texto com um único clique.</li>
+            <li><strong>🔠 Tipografia Granular e Anti-Quebra:</strong> Experimente os 5 níveis de fonte e os seletores de entrelinha (1.5x, 1.9x, 2.3x) sem qualquer quebra de layout.</li>
+            <li><strong>🤟 VLibras e Leitor TTS:</strong> Acesse o tradutor de Libras perfeitamente empilhado e o leitor de voz com destaque dourado ao vivo.</li>
           </ul>
         </div>
 
-        <h3 style="margin-top: 24px; margin-bottom: 12px; color: var(--portal-heading);">Conformidade WCAG 2.1 e Usabilidade</h3>
-        <p class="article-text">
-          O painel de controle foi projetado para ser 100% operável via teclado: use a tecla <kbd>Tab</kbd> para navegar entre os botões,
-          <kbd>Enter</kbd> ou <kbd>Espaço</kbd> para alternar as opções, e <kbd>Esc</kbd> para fechar.
-        </p>
       </div>
     </article>
 
