@@ -1,23 +1,16 @@
-﻿/**
- * Allyada - Plataforma de Acessibilidade Digital e Conformidade Legal
- * "Sua aliada em acessibilidade web e conformidade jurídica"
+/**
+ * Allyada - Assistente Pessoal de Acessibilidade Digital & Tecnologia Assistiva
+ * "Acessibilidade para você — Navegue com autonomia, conforto e clareza"
  * 
- * Versão 3.0 - Suíte Completa: Monitorar, Corrigir e Comprovar
+ * Versão 3.0 — Tecnologia Assistiva & Personalização da Experiência do Usuário
  * 
- * Em total conformidade com:
- * ✓ WCAG 2.2 Nível AA (Diretrizes Globais do W3C / WAI)
- * ✓ ADA Título II & Título III (Americans with Disabilities Act - EUA)
- * ✓ Reabilitação Art. 508 e 504 (Setor Público e Federal dos EUA)
- * ✓ Lei dos Direitos Civis de Unruh (Califórnia)
- * ✓ Colorado HB 21-1110 (Legislação Estadual do Colorado para WCAG 2.2)
- * ✓ AODA (Accessibility for Ontarians with Disabilities Act - Canadá)
- * ✓ ACA (Accessible Canada Act - Canadá Federal)
- * ✓ EN 301 549 (Padrão Europeu de Acessibilidade em Compras Públicas)
- * ✓ EAA (European Accessibility Act - Diretiva UE 2019/882)
- * ✓ Lei da Igualdade do Reino Unido (UK Equality Act 2010)
- * ✓ IS 5568 (Padrão de Acessibilidade Web de Israel)
- * ✓ LBI (Lei Brasileira de Inclusão nº 13.146/15 e e-MAG)
- * ✓ PDF/A & Boas Práticas de Documentos Acessíveis
+ * Focado exclusivamente em:
+ * ✓ Acessibilidade real e autonomia do usuário
+ * ✓ Tecnologia assistiva de ponta (Síntese de voz TTS, VLibras, Régua e Máscara)
+ * ✓ Percepção visual (Contraste escuro/claro/mono/inversão e Daltonismo)
+ * ✓ Leitura e cognição (Fonte amigável Lexend, entrelinhas, espaçamento e alinhamento)
+ * ✓ Navegação segura por teclado, foco reforçado e varredura de títulos H1-H3
+ * ✓ Estabilidade total: isolamento de cabeçalhos/menus e zero mutação do DOM do host
  */
 
 (function(root, factory) {
@@ -35,7 +28,8 @@
 
   const STORAGE_KEY = 'allyada_preferences';
   const LEGACY_KEY = 'acessiweb_preferences';
-  
+  const REMEMBER_KEY = 'allyada_remember_prefs';
+
   const DEFAULT_CONFIG = {
     position: 'right',
     primaryColor: '#0052cc',
@@ -43,62 +37,66 @@
     shortcutKey: 'a',
     enableSpeech: true,
     enableVLibras: true,
-    enableComplianceTab: true,
-    autoRemediation: true,
     speechLang: 'pt-BR',
     autoInit: true
   };
 
   const DEFAULT_STATE = {
-    activeTab: 'assistive', // 'assistive', 'audit', 'statement'
-    activeProfile: null, // 'adhd', 'colorblind', 'epilepsy', 'low-vision', 'dyslexia'
-    colorblindType: 'deuteranopia',
-    fontSizeLevel: 0, // 0 a 4
-    lineHeightLevel: 0, // 0 a 2
-    letterSpacingLevel: 0, // 0 a 2
+    activeTab: 'foryou', // 'foryou', 'tools', 'settings'
+    activeProfile: null, // 'concentration', 'low-vision', 'reading', 'colorblind', 'motion'
+    colorblindType: 'none', // 'none', 'deuteranopia', 'protanopia', 'tritanopia'
+    fontSizeLevel: 0, // 0 a 4 (Normal, +15%, +30%, +45%, +60%)
+    lineHeightLevel: 0, // 0 a 2 (Normal, Confortável 1.9x, Amplo 2.3x)
+    letterSpacingLevel: 0, // 0 a 2 (Normal, Médio +0.08em, Amplo +0.16em)
+    wordSpacingLevel: 0, // 0 a 1 (Normal, Amplo +0.12em)
     dyslexicFont: false,
     textAlignLeft: false,
-    contrast: 'normal',
+    contrast: 'normal', // 'normal', 'dark', 'light', 'monochrome', 'invert'
     highlightLinks: false,
-    bigCursor: false,
+    cursorSize: 'normal', // 'normal', 'large', 'xlarge'
     stopAnimations: false,
-    readingRuler: false,
+    readingGuideMode: 'none', // 'none', 'ruler', 'mask'
+    enhancedFocus: false,
+    speechRate: 1.0, // 0.75, 1.0, 1.25, 1.5, 2.0
     vlibrasActive: false,
-    autoRemediate: false,
-    lastAuditScore: null
+    rememberPreferences: true
   };
 
-  // SVGs do Design System
+  // SVGs de Ícones Acessíveis
   const ICONS = {
-    allyada: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"></circle><path d="M4 8h16"></path><path d="M12 8v6"></path><path d="M8 20l4-6 4 6"></path></svg>`,
-    close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
-    reset: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>`,
-    sound: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`,
-    stop: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"></rect></svg>`,
-    brain: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"></path></svg>`,
-    eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`,
-    zap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
-    glasses: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="15" r="4"></circle><circle cx="18" cy="15" r="4"></circle><path d="M14 15a2 2 0 0 0-4 0"></path><path d="M2.5 13 5 7c.7-1.3 1.9-2 3.5-2"></path><path d="M21.5 13 19 7c-.7-1.3-1.9-2-3.5-2"></path></svg>`,
-    book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`,
-    type: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>`,
-    alignLeft: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>`,
-    moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
-    sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line></svg>`,
-    contrast: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path></svg>`,
-    refresh: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`,
-    link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`,
-    ruler: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 8.7 8.7 21.3c-1 1-2.6 1-3.6 0l-1.4-1.4c-1-1-1-2.6 0-3.6L16.3 3.7c1-1 2.6-1 3.6 0l1.4 1.4c1 1 1 2.6 0 3.6z"></path></svg>`,
-    cursor: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 3 7 18 3-7 7-3L3 3z"></path></svg>`,
-    pause: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`,
-    hands: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-4 0v5"></path><path d="M14 10V4a2 2 0 0 0-4 0v6"></path><path d="M10 10.5V6a2 2 0 0 0-4 0v8"></path><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path></svg>`,
-    shieldCheck: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>`,
-    fileText: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
-    tools: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
-    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
-    alert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
-    dock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><path d="m14 9-3 3 3 3"></path></svg>`,
-    search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
-    copy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`
+    allyada: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="2"></circle><path d="M4 8h16"></path><path d="M12 8v6"></path><path d="M8 20l4-6 4 6"></path></svg>`,
+    close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+    reset: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>`,
+    sound: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`,
+    pause: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`,
+    play: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`,
+    stop: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12"></rect></svg>`,
+    brain: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"></path></svg>`,
+    eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`,
+    zap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
+    glasses: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="15" r="4"></circle><circle cx="18" cy="15" r="4"></circle><path d="M14 15a2 2 0 0 0-4 0"></path><path d="M2.5 13 5 7c.7-1.3 1.9-2 3.5-2"></path><path d="M21.5 13 19 7c-.7-1.3-1.9-2-3.5-2"></path></svg>`,
+    book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`,
+    type: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>`,
+    alignLeft: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>`,
+    moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
+    sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line></svg>`,
+    contrast: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path></svg>`,
+    refresh: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`,
+    link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`,
+    ruler: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 8.7 8.7 21.3c-1 1-2.6 1-3.6 0l-1.4-1.4c-1-1-1-2.6 0-3.6L16.3 3.7c1-1 2.6-1 3.6 0l1.4 1.4c1 1 1 2.6 0 3.6z"></path></svg>`,
+    cursor: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 7 18 3-7 7-3L3 3z"></path></svg>`,
+    target: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>`,
+    headings: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="14" y2="12"></line><line x1="4" y1="18" x2="18" y2="18"></line></svg>`,
+    skip: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 12 12 19 19 12"></polyline><line x1="12" y1="5" x2="12" y2="19"></line></svg>`,
+    hands: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-4 0v5"></path><path d="M14 10V4a2 2 0 0 0-4 0v6"></path><path d="M10 10.5V6a2 2 0 0 0-4 0v8"></path><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path></svg>`,
+    spark: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
+    tools: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
+    settings: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
+    dock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><path d="m14 9-3 3 3 3"></path></svg>`,
+    search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
+    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+    remove: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+    arrowRight: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`
   };
 
   class AllyadaPlugin {
@@ -107,7 +105,8 @@
       this.state = { ...DEFAULT_STATE };
       this.hostContainer = null;
       this.shadowRoot = null;
-      this.rulerElement = null;
+      this.readingGuideElement = null;
+      this.readingMaskElement = null;
       this.svgFiltersContainer = null;
       this.speechSynthesizer = null;
       this.speechUtterance = null;
@@ -116,9 +115,9 @@
       this.isSpeechPaused = false;
       this.isOpen = false;
       this.previousFocusedElement = null;
-      this.rulerRafId = null;
+      this.guideRafId = null;
       this.mouseY = 0;
-      this.auditResults = null;
+      this.panelKeyDownHandler = null;
     }
 
     init(options = {}) {
@@ -129,14 +128,10 @@
       this.injectHostStyles();
       this.injectSvgFilters();
       this.injectSkipLink();
-      this.createReadingRulerDOM();
+      this.createReadingGuideDOM();
       this.createWidgetDOM();
       this.initSpeechSynthesis();
       this.setupGlobalShortcuts();
-
-      if (this.state.autoRemediate) {
-        this.runAutoRemediation();
-      }
 
       this.applyAllStateChanges();
 
@@ -144,15 +139,35 @@
         this.loadVLibras();
       }
 
-      console.log('[Allyada v3.0] Suíte de Acessibilidade & Conformidade WCAG 2.2 / ADA / EAA carregada.');
+      console.log('[Allyada v3.0] Assistente de Acessibilidade & Tecnologia Assistiva carregado com sucesso.');
       return this;
     }
 
     loadState() {
       try {
+        const rememberSetting = localStorage.getItem(REMEMBER_KEY);
+        const shouldRemember = rememberSetting === null ? true : rememberSetting === 'true';
+        if (!shouldRemember) {
+          this.state.rememberPreferences = false;
+          return;
+        }
+
         const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
         if (saved) {
-          this.state = { ...DEFAULT_STATE, ...JSON.parse(saved) };
+          const parsed = JSON.parse(saved);
+          // Migração de campos legados
+          if (parsed.bigCursor && !parsed.cursorSize) parsed.cursorSize = 'large';
+          if (parsed.readingRuler && !parsed.readingGuideMode) parsed.readingGuideMode = 'ruler';
+          if (parsed.activeProfile === 'adhd') parsed.activeProfile = 'concentration';
+          if (parsed.activeProfile === 'dyslexia') parsed.activeProfile = 'reading';
+          if (parsed.activeProfile === 'epilepsy') parsed.activeProfile = 'motion';
+          // Limpeza de campos legados de auditoria/remediação
+          delete parsed.autoRemediate;
+          delete parsed.lastAuditScore;
+          delete parsed.enableComplianceTab;
+          delete parsed.autoRemediation;
+
+          this.state = { ...DEFAULT_STATE, ...parsed, rememberPreferences: true };
         }
       } catch (e) {
         console.warn('[Allyada] Erro ao carregar preferências:', e);
@@ -161,7 +176,14 @@
 
     saveState() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        if (this.state.rememberPreferences) {
+          localStorage.setItem(REMEMBER_KEY, 'true');
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        } else {
+          localStorage.setItem(REMEMBER_KEY, 'false');
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(LEGACY_KEY);
+        }
       } catch (e) {
         console.warn('[Allyada] Erro ao salvar preferências:', e);
       }
@@ -169,14 +191,16 @@
 
     resetState() {
       this.stopSpeech();
-      this.state = { ...DEFAULT_STATE, activeTab: this.state.activeTab };
+      const currentTab = this.state.activeTab;
+      const remember = this.state.rememberPreferences;
+      this.state = { ...DEFAULT_STATE, activeTab: currentTab, rememberPreferences: remember };
       this.saveState();
       this.applyAllStateChanges();
       this.updatePanelUI();
     }
 
     /**
-     * WCAG 2.4.1 (Bypass Blocks) / ADA: Injeta link 'Pular para o conteúdo principal'
+     * WCAG 2.4.1 (Bypass Blocks): Injeta link de salto com foco suave e visível
      */
     injectSkipLink() {
       if (document.getElementById('allyada-skip-link')) return;
@@ -190,473 +214,51 @@
         position: fixed;
         top: -100px;
         left: 16px;
-        padding: 10px 16px;
+        padding: 12px 20px;
         background: #0052cc;
         color: #ffffff;
         font-weight: 700;
+        font-size: 14px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         text-decoration: none;
-        border-radius: 6px;
+        border-radius: 8px;
         z-index: 2147483647;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+        outline: 3px solid #ffab00;
         transition: top 0.2s ease;
       `;
       skip.addEventListener('focus', () => { skip.style.top = '16px'; });
       skip.addEventListener('blur', () => { skip.style.top = '-100px'; });
-      
-      // Anexa diretamente a document.documentElement para não alterar o document.body nem quebrar :first-child
+      skip.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.scrollToMainContent();
+      });
+
       document.documentElement.appendChild(skip);
 
-      // Marca o main apenas se ele existir e não tiver ID
-      const main = document.querySelector('main') || document.querySelector('article');
+      const main = document.querySelector('main') || document.querySelector('[role="main"]') || document.querySelector('article');
       if (main && !main.id) {
         main.id = 'main-content';
       }
     }
 
     /**
-     * Utilitário para cópia segura para a área de transferência com fallback
+     * Scroll suave e foco acessível para o conteúdo principal
      */
-    copyToClipboard(text) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        return navigator.clipboard.writeText(text).catch(() => this.fallbackCopyText(text));
-      }
-      return this.fallbackCopyText(text);
-    }
-
-    fallbackCopyText(text) {
-      try {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        return Promise.resolve();
-      } catch (err) {
-        return Promise.reject(err);
-      }
-    }
-
-    /**
-     * Motor de Remediação Automática (WCAG 2.2 AA / ADA Title II / Section 508 / EAA)
-     * Seguro, não-destrutivo e preserva 100% da integridade visual e layouts do host.
-     */
-    runAutoRemediation() {
-      let count = 0;
-      const isHost = (el) => !el.closest('#allyada-root') && !el.closest('[data-allyada-ignore]') && !el.closest('[vw]');
-
-      // 1. Injeta Landmarks semânticos ARIA se faltarem
-      const header = document.querySelector('header');
-      if (header && isHost(header) && !header.getAttribute('role')) {
-        header.setAttribute('role', 'banner');
-        header.setAttribute('data-allyada-remediated', 'role-banner');
-        count++;
-      }
-
-      let main = document.querySelector('main, [role="main"]');
-      if (!main) {
-        // Localiza container de conteúdo principal
-        main = document.querySelector('#main, #content, .content, .main-content, article, section, [class*="content"]') || 
-               document.querySelector('body > div:not(#allyada-root)');
-        if (main && isHost(main)) {
-          main.setAttribute('role', 'main');
-          main.setAttribute('data-allyada-remediated', 'role-main');
-          count++;
+    scrollToMainContent() {
+      const target = document.querySelector('#main-content') || 
+                     document.querySelector('main') || 
+                     document.querySelector('[role="main"]') || 
+                     document.querySelector('#content') || 
+                     document.querySelector('article') || 
+                     document.querySelector('h1');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!target.hasAttribute('tabindex')) {
+          target.setAttribute('tabindex', '-1');
         }
+        target.focus();
       }
-
-      document.querySelectorAll('nav').forEach(nav => {
-        if (isHost(nav) && !nav.getAttribute('role')) {
-          nav.setAttribute('role', 'navigation');
-          nav.setAttribute('data-allyada-remediated', 'role-nav');
-          count++;
-        }
-      });
-
-      const footer = document.querySelector('footer');
-      if (footer && isHost(footer) && !footer.getAttribute('role')) {
-        footer.setAttribute('role', 'contentinfo');
-        footer.setAttribute('data-allyada-remediated', 'role-footer');
-        count++;
-      }
-
-      // 2. WCAG 1.1.1: Imagens sem alt recebem alt descritivo baseado no título ou contexto
-      document.querySelectorAll('img:not([alt])').forEach(img => {
-        if (isHost(img)) {
-          const fallback = img.title || img.getAttribute('aria-label') || 'Imagem ilustrativa';
-          img.setAttribute('alt', fallback);
-          img.setAttribute('data-allyada-remediated', 'alt');
-          count++;
-        }
-      });
-
-      // 3. WCAG 4.1.2: Botões vazios ou com ícones sem rótulo textual recebem aria-label
-      document.querySelectorAll('button, [role="button"]').forEach(el => {
-        if (isHost(el)) {
-          const text = (el.innerText || el.textContent || '').trim();
-          const aria = el.getAttribute('aria-label') || el.getAttribute('aria-labelledby');
-          const title = el.getAttribute('title');
-          const hasImg = !!el.querySelector('img[alt]:not([alt=""])');
-          const hasSvg = !!el.querySelector('svg title, svg[aria-label]');
-          if (!text && !aria && !title && !hasImg && !hasSvg) {
-            const label = el.querySelector('svg, i') ? 'Controle interativo' : 'Botão de ação';
-            el.setAttribute('aria-label', label);
-            el.setAttribute('data-allyada-remediated', 'aria-label');
-            count++;
-          }
-        }
-      });
-
-      // 4. WCAG 3.3.2: Campos de formulário sem rótulo associado
-      document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), select, textarea').forEach(inp => {
-        if (isHost(inp)) {
-          const id = inp.id;
-          const hasLabel = id ? !!document.querySelector(`label[for="${id}"]`) : !!inp.closest('label');
-          const hasAria = inp.getAttribute('aria-label') || inp.getAttribute('aria-labelledby');
-          const hasTitle = inp.getAttribute('title');
-          if (!hasLabel && !hasAria && !hasTitle) {
-            const label = inp.placeholder || inp.name || (inp.type ? `Campo de ${inp.type}` : 'Campo de entrada');
-            inp.setAttribute('aria-label', label);
-            inp.setAttribute('data-allyada-remediated', 'aria-label');
-            count++;
-          }
-        }
-      });
-
-      // 5. WCAG 1.3.1: H1 principal ausente na página
-      if (!document.querySelector('h1:not(#allyada-root *)')) {
-        let h1 = document.querySelector('h1[data-allyada-remediated="h1"]');
-        if (!h1) {
-          h1 = document.createElement('h1');
-          h1.className = 'allyada-sr-only';
-          h1.setAttribute('data-allyada-remediated', 'h1');
-          h1.textContent = document.title || 'Conteúdo Principal do Portal';
-          const target = document.querySelector('main, [role="main"]') || document.body;
-          if (target && typeof target.insertBefore === 'function' && target.firstChild) {
-            target.insertBefore(h1, target.firstChild);
-          } else if (target && typeof target.appendChild === 'function') {
-            target.appendChild(h1);
-          }
-          count++;
-        }
-      }
-
-      // 6. WCAG 2.2 Critério 2.5.8 (Target Size Minimum 24x24px):
-      // Aplica APENAS em botões isolados abaixo de 24px, NUNCA em links de texto <a>
-      document.querySelectorAll('button').forEach(el => {
-        if (isHost(el)) {
-          const rect = el.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0 && (rect.width < 23.5 || rect.height < 23.5)) {
-            el.style.minWidth = '24px';
-            el.style.minHeight = '24px';
-            el.setAttribute('data-allyada-remediated-size', 'true');
-            count++;
-          }
-        }
-      });
-
-      // 7. WCAG 3.1.1: Idioma global na tag <html>
-      if (!document.documentElement.lang) {
-        document.documentElement.lang = this.config.speechLang || 'pt-BR';
-        document.documentElement.setAttribute('data-allyada-remediated', 'lang');
-        count++;
-      }
-
-      this.remediatedCount = count;
-      return { remediatedCount: count };
-    }
-
-    /**
-     * Reverte de forma limpa as correções automáticas aplicadas ao DOM
-     */
-    revertAutoRemediation() {
-      // Reverte atributo de idioma na tag <html> se foi remediado
-      if (document.documentElement && document.documentElement.getAttribute('data-allyada-remediated') === 'lang') {
-        document.documentElement.removeAttribute('lang');
-        document.documentElement.lang = '';
-        document.documentElement.removeAttribute('data-allyada-remediated');
-      }
-
-      // Reverte atributos data-allyada-remediated
-      document.querySelectorAll('[data-allyada-remediated]').forEach(el => {
-        const remType = el.getAttribute('data-allyada-remediated');
-        if (remType && remType.startsWith('role')) {
-          el.removeAttribute('role');
-        } else if (remType === 'alt') {
-          el.removeAttribute('alt');
-        } else if (remType === 'aria-label') {
-          el.removeAttribute('aria-label');
-        } else if (remType === 'lang') {
-          el.removeAttribute('lang');
-        } else if (remType === 'h1') {
-          if (el.parentNode && typeof el.parentNode.removeChild === 'function') {
-            el.parentNode.removeChild(el);
-          } else if (typeof el.remove === 'function') {
-            el.remove();
-          }
-        }
-        el.removeAttribute('data-allyada-remediated');
-      });
-
-      // Reverte tamanho de alvo
-      document.querySelectorAll('[data-allyada-remediated-size]').forEach(el => {
-        el.style.minWidth = '';
-        el.style.minHeight = '';
-        el.removeAttribute('data-allyada-remediated-size');
-      });
-
-      this.remediatedCount = 0;
-    }
-
-    remediateDOM() {
-      const res = this.runAutoRemediation();
-      this.state.autoRemediate = true;
-      this.saveState();
-      this.runAudit();
-      this.renderAuditChecklist();
-      this.updatePanelUI();
-      return res;
-    }
-
-    /**
-     * Motor de Auditoria e Monitoramento em Tempo Real (WCAG 2.2 AA / ADA / EAA)
-     * Realiza varredura rigorosa no DOM do host e calcula pontuação proporcional
-     */
-    runAudit() {
-      const isHost = (el) => !el.closest('#allyada-root') && !el.closest('[data-allyada-ignore]') && !el.closest('[vw]');
-
-      const results = {
-        score: 100,
-        checks: [
-          {
-            id: 'img-alt',
-            code: 'WCAG 1.1.1',
-            name: 'Imagens com Descrição Alternativa',
-            standard: 'WCAG 1.1.1 Nível A / ADA Título II / LBI',
-            passed: true,
-            remediated: false,
-            details: '',
-            count: 0,
-            total: 0
-          },
-          {
-            id: 'landmarks',
-            code: 'WCAG 1.3.1',
-            name: 'Estrutura e Landmarks ARIA',
-            standard: 'WCAG 1.3.1 Nível A / Seção 508 / EAA',
-            passed: true,
-            remediated: false,
-            details: '',
-            count: 0,
-            total: 0
-          },
-          {
-            id: 'btn-labels',
-            code: 'WCAG 4.1.2',
-            name: 'Botões e Links com Rótulos Acessíveis',
-            standard: 'WCAG 4.1.2 Nível A / EN 301 549',
-            passed: true,
-            remediated: false,
-            details: '',
-            count: 0,
-            total: 0
-          },
-          {
-            id: 'form-labels',
-            code: 'WCAG 3.3.2',
-            name: 'Campos de Formulário com Etiquetas',
-            standard: 'WCAG 3.3.2 Nível A / ADA / e-MAG',
-            passed: true,
-            remediated: false,
-            details: '',
-            count: 0,
-            total: 0
-          },
-          {
-            id: 'headings',
-            code: 'WCAG 1.3.1',
-            name: 'Hierarquia de Cabeçalhos H1-H6',
-            standard: 'WCAG 1.3.1 Nível A / EAA 2019/882',
-            passed: true,
-            remediated: false,
-            details: '',
-            count: 0,
-            total: 0
-          },
-          {
-            id: 'target-size',
-            code: 'WCAG 2.5.8',
-            name: 'Tamanho Mínimo de Alvo 24x24px',
-            standard: 'WCAG 2.2 AA Critério 2.5.8 (Novo)',
-            passed: true,
-            remediated: false,
-            details: '',
-            count: 0,
-            total: 0
-          },
-          {
-            id: 'lang',
-            code: 'WCAG 3.1.1',
-            name: 'Idioma da Página Definido',
-            standard: 'WCAG 3.1.1 Nível A / IS 5568',
-            passed: true,
-            remediated: false,
-            details: '',
-            count: 0,
-            total: 0
-          }
-        ]
-      };
-
-      let deductions = 0;
-
-      // 1. Imagens
-      const allImgs = Array.from(document.querySelectorAll('img')).filter(isHost);
-      const missingAlt = allImgs.filter(i => !i.hasAttribute('alt'));
-      const remediatedAlt = allImgs.filter(i => i.getAttribute('data-allyada-remediated') === 'alt');
-      results.checks[0].total = allImgs.length;
-      results.checks[0].count = allImgs.length - missingAlt.length;
-      results.checks[0].remediated = remediatedAlt.length > 0;
-      if (missingAlt.length > 0) {
-        results.checks[0].passed = false;
-        results.checks[0].details = `${missingAlt.length} de ${allImgs.length} imagem(ns) sem atributo alt detectada(s).`;
-        deductions += 15;
-      } else {
-        results.checks[0].passed = true;
-        results.checks[0].details = allImgs.length > 0
-          ? `${allImgs.length} imagem(ns) auditadas com texto alternativo em conformidade.`
-          : 'Nenhuma imagem host no DOM ou todas possuem descrição alternativa.';
-      }
-
-      // 2. Landmarks
-      const mains = Array.from(document.querySelectorAll('main, [role="main"]')).filter(isHost);
-      const hasMain = mains.length > 0;
-      const hasRemMain = mains.some(m => m.getAttribute('data-allyada-remediated') === 'role-main');
-      results.checks[1].remediated = hasRemMain;
-      if (!hasMain) {
-        results.checks[1].passed = false;
-        results.checks[1].details = 'Landmark semântico <main> ou role="main" não encontrado no layout.';
-        deductions += 15;
-      } else {
-        results.checks[1].passed = true;
-        results.checks[1].details = hasRemMain
-          ? 'Landmark <main> semântico injetado e validado pela auto-remediação.'
-          : 'Landmark principal <main> / role="main" identificado e validado.';
-      }
-
-      // 3. Botões e Controles
-      const buttons = Array.from(document.querySelectorAll('button, [role="button"]')).filter(isHost);
-      const emptyBtns = buttons.filter(b => {
-        const text = (b.innerText || b.textContent || '').trim();
-        const aria = b.getAttribute('aria-label') || b.getAttribute('aria-labelledby');
-        const title = b.getAttribute('title');
-        const hasAccessibleImg = !!b.querySelector('img[alt]:not([alt=""])');
-        const hasSvgTitle = !!b.querySelector('svg title, svg[aria-label]');
-        return !text && !aria && !title && !hasAccessibleImg && !hasSvgTitle;
-      });
-      const remBtns = buttons.filter(b => b.getAttribute('data-allyada-remediated') === 'aria-label');
-      results.checks[2].total = buttons.length;
-      results.checks[2].count = buttons.length - emptyBtns.length;
-      results.checks[2].remediated = remBtns.length > 0;
-      if (emptyBtns.length > 0) {
-        results.checks[2].passed = false;
-        results.checks[2].details = `${emptyBtns.length} de ${buttons.length} botão(ões) sem rótulo textual identificável.`;
-        deductions += 15;
-      } else {
-        results.checks[2].passed = true;
-        results.checks[2].details = buttons.length > 0
-          ? `${buttons.length} botões e controles interativos com rótulos acessíveis.`
-          : 'Controles interativos identificados em conformidade.';
-      }
-
-      // 4. Formulários
-      const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), select, textarea')).filter(isHost);
-      const unlabelledInputs = inputs.filter(inp => {
-        const id = inp.id;
-        const hasLabel = id ? !!document.querySelector(`label[for="${id}"]`) : !!inp.closest('label');
-        const hasAria = inp.getAttribute('aria-label') || inp.getAttribute('aria-labelledby');
-        const hasTitle = inp.getAttribute('title');
-        return !hasLabel && !hasAria && !hasTitle;
-      });
-      const remInputs = inputs.filter(inp => inp.getAttribute('data-allyada-remediated') === 'aria-label');
-      results.checks[3].total = inputs.length;
-      results.checks[3].count = inputs.length - unlabelledInputs.length;
-      results.checks[3].remediated = remInputs.length > 0;
-      if (unlabelledInputs.length > 0) {
-        results.checks[3].passed = false;
-        results.checks[3].details = `${unlabelledInputs.length} de ${inputs.length} campo(s) sem rótulo ou etiqueta associada.`;
-        deductions += 15;
-      } else {
-        results.checks[3].passed = true;
-        results.checks[3].details = inputs.length > 0
-          ? `${inputs.length} campos de entrada associados a etiquetas acessíveis.`
-          : 'Campos de formulário verificados em conformidade.';
-      }
-
-      // 5. Cabeçalhos
-      const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6')).filter(isHost);
-      const h1 = allHeadings.find(h => h.tagName.toLowerCase() === 'h1');
-      const remH1 = !!h1 && h1.getAttribute('data-allyada-remediated') === 'h1';
-      results.checks[4].total = allHeadings.length;
-      results.checks[4].remediated = remH1;
-      if (!h1) {
-        results.checks[4].passed = false;
-        results.checks[4].details = 'Nenhum cabeçalho estrutural principal <h1> encontrado na página.';
-        deductions += 10;
-      } else {
-        results.checks[4].passed = true;
-        const h1Text = (h1.textContent || '').trim().replace(/\s+/g, ' ');
-        const preview = h1Text.length > 28 ? `${h1Text.slice(0, 28)}...` : h1Text;
-        results.checks[4].details = remH1
-          ? `Cabeçalho principal <h1> estrutural garantido por auto-remediação.`
-          : `Título principal <h1> identificado: "${preview}" (${allHeadings.length} títulos no total).`;
-      }
-
-      // 6. WCAG 2.2 Target Size (24x24px)
-      const hostButtons = Array.from(document.querySelectorAll('button')).filter(isHost);
-      const smallTargets = hostButtons.filter(b => {
-        if (b.hasAttribute('data-allyada-remediated-size')) return false;
-        const rect = b.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0 && (rect.width < 23.5 || rect.height < 23.5);
-      });
-      const remSizes = hostButtons.filter(b => b.hasAttribute('data-allyada-remediated-size'));
-      results.checks[5].total = hostButtons.length;
-      results.checks[5].remediated = remSizes.length > 0;
-      if (smallTargets.length > 0) {
-        results.checks[5].passed = false;
-        results.checks[5].details = `${smallTargets.length} de ${hostButtons.length} controle(s) com área de toque inferior a 24x24px.`;
-        deductions += 15;
-      } else {
-        results.checks[5].passed = true;
-        results.checks[5].details = hostButtons.length > 0
-          ? `${hostButtons.length} controles interativos atendem à área de toque mínima de 24x24px.`
-          : 'Critério WCAG 2.2 AA 2.5.8 validado (alvos interativos >= 24px).';
-      }
-
-      // 7. Idioma
-      const lang = document.documentElement ? (document.documentElement.lang || document.documentElement.getAttribute('lang') || '') : '';
-      const remLang = document.documentElement && document.documentElement.getAttribute('data-allyada-remediated') === 'lang';
-      results.checks[6].remediated = !!remLang;
-      if (!lang) {
-        results.checks[6].passed = false;
-        results.checks[6].details = 'Atributo lang ausente na tag <html> (prejudica leitores de tela).';
-        deductions += 15;
-      } else {
-        results.checks[6].passed = true;
-        results.checks[6].details = remLang
-          ? `Idioma global da página definido como "${lang}" via auto-remediação.`
-          : `Idioma global da página configurado: "${lang}".`;
-      }
-
-      results.score = Math.max(10, 100 - deductions);
-      this.auditResults = results;
-      this.state.lastAuditScore = results.score;
-      this.saveState();
-      return results;
     }
 
     injectSvgFilters() {
@@ -705,7 +307,7 @@
           border: 0 !important;
         }
 
-        /* Espaçamento de Linhas (WCAG 1.4.12 Text Spacing) */
+        /* Espaçamento de Linhas (WCAG 1.4.12) com isolamento de headers/menus */
         html.ally-line-height-1 :is(p, article p, blockquote, dd, .article-text):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
         html.ally-line-height-1 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           line-height: 1.9 !important;
@@ -720,19 +322,23 @@
         html.ally-letter-spacing-1 :is(p, article, blockquote, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
         html.ally-letter-spacing-1 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           letter-spacing: 0.08em !important;
-          word-spacing: 0.12em !important;
         }
 
         html.ally-letter-spacing-2 :is(p, article, blockquote, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
         html.ally-letter-spacing-2 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           letter-spacing: 0.16em !important;
-          word-spacing: 0.20em !important;
         }
 
-        /* Fonte para Dislexia */
+        /* Espaçamento de Palavras (WCAG 1.4.12) */
+        html.ally-word-spacing-1 :is(p, article, blockquote, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-word-spacing-1 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
+          word-spacing: 0.12em !important;
+        }
+
+        /* Fonte para Dislexia (Lexend) */
         html.ally-dyslexic-font :is(p, h1, h2, h3, h4, h5, h6, blockquote, label, input, textarea, select):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
         html.ally-dyslexic-font :is(main li, article li, section li, [role="main"] li, main a, article a, section a, [role="main"] a):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
-          font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+          font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         }
 
         /* Alinhamento à Esquerda */
@@ -741,7 +347,7 @@
           text-align: left !important;
         }
 
-        /* Alto Contraste Escuro (WCAG AAA - Contraste mínimo 7:1) */
+        /* Alto Contraste Escuro */
         html.ally-contrast-dark,
         html.ally-contrast-dark body {
           background-color: #121212 !important;
@@ -789,15 +395,6 @@
           color: #ffffff !important;
           border-color: #52525b !important;
         }
-        html.ally-contrast-dark .test-guide-box {
-          background-color: #064e3b !important;
-          border-color: #059669 !important;
-        }
-        html.ally-contrast-dark .test-guide-box h4,
-        html.ally-contrast-dark .test-guide-box ul,
-        html.ally-contrast-dark .test-guide-box li {
-          color: #d1fae5 !important;
-        }
 
         /* Alto Contraste Claro */
         html.ally-contrast-light,
@@ -812,16 +409,11 @@
         html.ally-contrast-light aside,
         html.ally-contrast-light footer,
         html.ally-contrast-light section,
-        html.ally-contrast-light .article-card,
-        html.ally-contrast-light .sidebar-widget {
+        html.ally-contrast-light [class*="card"],
+        html.ally-contrast-light [class*="panel"] {
           background-color: #ffffff !important;
           color: #000000 !important;
           border-color: #000000 !important;
-        }
-        html.ally-contrast-light .hero-banner {
-          background: #f8fafc !important;
-          color: #000000 !important;
-          border-bottom: 2px solid #000000 !important;
         }
         html.ally-contrast-light h1,
         html.ally-contrast-light h2,
@@ -855,7 +447,7 @@
           filter: invert(100%) hue-rotate(180deg) !important;
         }
 
-        /* Daltonismo SVG */
+        /* Filtros de Daltonismo */
         html.ally-filter-deuteranopia body {
           filter: url('#allyada-filter-deuteranopia') !important;
         }
@@ -866,7 +458,7 @@
           filter: url('#allyada-filter-tritanopia') !important;
         }
 
-        /* Destaque de Links (WCAG 2.4.7 Focus Visible) */
+        /* Destaque de Links */
         html.ally-highlight-links a:not([data-allyada-ignore]):not(#allyada-root *):not(header *):not(nav *):not([class*="navbar"] *):not([class*="topbar"] *),
         html.ally-highlight-links [role="button"]:not([data-allyada-ignore]):not(#allyada-root *):not(header *):not(nav *) {
           outline: 3px solid #f59e0b !important;
@@ -874,16 +466,31 @@
           text-decoration: underline 3px #f59e0b !important;
           text-underline-offset: 4px !important;
           font-weight: 700 !important;
-          border-radius: 2px !important;
+          border-radius: 3px !important;
         }
 
-        /* Cursor Grande */
-        html.ally-big-cursor,
-        html.ally-big-cursor * {
-          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23000000' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M3 3l7 18 3-7 7-3L3 3z'/%3E%3C/svg%3E"), auto !important;
+        /* Cursor Ampliado - Grande (36px) */
+        html.ally-cursor-large,
+        html.ally-cursor-large * {
+          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24' fill='%23000000' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M3 3l7 18 3-7 7-3L3 3z'/%3E%3C/svg%3E") 0 0, auto !important;
         }
 
-        /* Parar Animações (WCAG 2.2.2 Pause, Stop, Hide) */
+        /* Cursor Ampliado - Extra Grande (48px) */
+        html.ally-cursor-xlarge,
+        html.ally-cursor-xlarge * {
+          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='%23000000' stroke='%23ffab00' stroke-width='2.5'%3E%3Cpath d='M3 3l7 18 3-7 7-3L3 3z'/%3E%3C/svg%3E") 0 0, auto !important;
+        }
+
+        /* Foco Visual de Teclado Reforçado */
+        html.ally-enhanced-focus *:focus,
+        html.ally-enhanced-focus *:focus-visible {
+          outline: 3px solid #ffab00 !important;
+          outline-offset: 3px !important;
+          box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.9) !important;
+          border-radius: 4px !important;
+        }
+
+        /* Pausar Animações (WCAG 2.2.2) */
         html.ally-stop-animations *,
         html.ally-stop-animations *::before,
         html.ally-stop-animations *::after {
@@ -893,13 +500,23 @@
           scroll-behavior: auto !important;
         }
 
-        /* Realce Visual na Leitura TTS */
+        /* Destaque Visual Durante Leitura em Voz Alta (TTS) */
         .allyada-reading-highlight {
           background-color: #fef08a !important;
           color: #000000 !important;
           outline: 3px solid #f59e0b !important;
+          outline-offset: 2px !important;
           border-radius: 4px !important;
           transition: background-color 0.2s ease !important;
+        }
+
+        /* Destaque Temporário de Navegação por Título */
+        .allyada-heading-target-highlight {
+          outline: 3px solid #2563eb !important;
+          outline-offset: 4px !important;
+          background: rgba(37, 99, 235, 0.12) !important;
+          border-radius: 4px !important;
+          transition: all 0.3s ease !important;
         }
 
         /* Posicionamento do VLibras */
@@ -917,9 +534,10 @@
       (document.head || document.documentElement).appendChild(style);
     }
 
-    createReadingRulerDOM() {
+    createReadingGuideDOM() {
       if (document.getElementById('allyada-reading-ruler')) return;
 
+      // 1. Régua de leitura (faixa horizontal com bordas âmbar)
       const ruler = document.createElement('div');
       ruler.id = 'allyada-reading-ruler';
       ruler.setAttribute('aria-hidden', 'true');
@@ -929,27 +547,61 @@
         position: fixed;
         left: 0;
         right: 0;
-        height: 44px;
-        background: rgba(254, 240, 138, 0.35);
+        height: 42px;
+        background: rgba(254, 240, 138, 0.38);
         border-top: 3px solid #f59e0b;
         border-bottom: 3px solid #f59e0b;
-        box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
-        pointer-events: none;
+        box-shadow: 0 0 24px rgba(245, 158, 11, 0.3);
+        pointer-events: none !important;
         z-index: 2147483640;
         transform: translateY(-50%);
         will-change: top;
       `;
       document.documentElement.appendChild(ruler);
-      this.rulerElement = ruler;
+      this.readingGuideElement = ruler;
+
+      // 2. Máscara de foco na leitura (cortinas escuras superior e inferior, com vão central limpo)
+      const mask = document.createElement('div');
+      mask.id = 'allyada-reading-mask';
+      mask.setAttribute('aria-hidden', 'true');
+      mask.setAttribute('data-allyada-ignore', 'true');
+      mask.style.cssText = `
+        display: none;
+        position: fixed;
+        inset: 0;
+        pointer-events: none !important;
+        z-index: 2147483639;
+        overflow: hidden;
+      `;
+      mask.innerHTML = `
+        <div id="allyada-mask-top" style="position: absolute; top: 0; left: 0; right: 0; height: 50vh; background: rgba(0, 0, 0, 0.62); pointer-events: none !important;"></div>
+        <div id="allyada-mask-window" style="position: absolute; top: 50vh; left: 0; right: 0; height: 56px; transform: translateY(-50%); border-top: 2px solid rgba(255,255,255,0.4); border-bottom: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 20px rgba(0,0,0,0.5); pointer-events: none !important;"></div>
+        <div id="allyada-mask-bottom" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50vh; background: rgba(0, 0, 0, 0.62); pointer-events: none !important;"></div>
+      `;
+      document.documentElement.appendChild(mask);
+      this.readingMaskElement = mask;
 
       const onPointerMove = (clientY) => {
         this.mouseY = clientY;
-        if (!this.rulerRafId && this.state.readingRuler) {
-          this.rulerRafId = requestAnimationFrame(() => {
-            if (this.rulerElement) {
-              this.rulerElement.style.top = `${this.mouseY}px`;
+        if (!this.guideRafId && this.state.readingGuideMode !== 'none') {
+          this.guideRafId = requestAnimationFrame(() => {
+            if (this.state.readingGuideMode === 'ruler' && this.readingGuideElement) {
+              this.readingGuideElement.style.top = `${this.mouseY}px`;
+            } else if (this.state.readingGuideMode === 'mask' && this.readingMaskElement) {
+              const slitHeight = 56;
+              const topCurtain = this.readingMaskElement.querySelector('#allyada-mask-top');
+              const maskWindow = this.readingMaskElement.querySelector('#allyada-mask-window');
+              const botCurtain = this.readingMaskElement.querySelector('#allyada-mask-bottom');
+
+              if (topCurtain && maskWindow && botCurtain) {
+                const topH = Math.max(0, this.mouseY - (slitHeight / 2));
+                topCurtain.style.height = `${topH}px`;
+                maskWindow.style.top = `${topH + (slitHeight / 2)}px`;
+                botCurtain.style.top = `${topH + slitHeight}px`;
+                botCurtain.style.height = `calc(100vh - ${topH + slitHeight}px)`;
+              }
             }
-            this.rulerRafId = null;
+            this.guideRafId = null;
           });
         }
       };
@@ -975,19 +627,19 @@
       const wrapper = document.createElement('div');
       wrapper.className = `allyada-wrapper pos-${this.config.position}`;
       wrapper.innerHTML = `
-        <!-- Botão Flutuante (FAB) -->
+        <!-- Botão Flutuante de Abertura (FAB) -->
         <button type="button" 
                 class="allyada-fab" 
                 id="allyada-trigger-btn"
-                aria-label="Abrir Menu de Acessibilidade e Conformidade Allyada (Atalho: Alt + A)"
+                aria-label="Abrir Menu de Acessibilidade Pessoal Allyada (Atalho: Alt + A)"
                 aria-haspopup="dialog"
                 aria-expanded="false"
-                title="Allyada - Acessibilidade & Conformidade (Alt + A)">
+                title="Allyada - Acessibilidade para você (Alt + A)">
           <span class="fab-icon">${ICONS.allyada}</span>
           <span class="fab-badge" aria-hidden="true" id="allyada-active-count">0</span>
         </button>
 
-        <!-- Drawer Lateral -->
+        <!-- Drawer Lateral Flutuante -->
         <div class="allyada-drawer" 
              id="allyada-panel" 
              role="dialog" 
@@ -995,110 +647,108 @@
              aria-labelledby="allyada-title"
              aria-hidden="true">
           
-          <!-- Header com Navegação e Ações Rápidas -->
+          <!-- Header do Widget -->
           <div class="drawer-header">
             <div class="header-brand-group">
               <div class="brand-badge-icon" aria-hidden="true">${ICONS.allyada}</div>
               <div class="brand-text">
                 <div class="title-row">
                   <h2 id="allyada-title">Allyada</h2>
-                  <span class="active-badge-pill" id="header-active-badge" style="display:none;">0 ativas</span>
+                  <span class="active-badge-pill" id="header-active-badge" style="display:none;">0 ativos</span>
                 </div>
-                <span class="brand-sub">Acessibilidade & Conformidade</span>
+                <span class="brand-sub">Acessibilidade para você</span>
               </div>
             </div>
             <div class="header-actions-group">
-              <button type="button" class="btn-header-action" id="btn-toggle-dock" title="Mover painel para esquerda/direita" aria-label="Mover widget de lado">
+              <button type="button" class="btn-header-action" id="btn-toggle-dock" title="Mover painel para esquerda/direita" aria-label="Mover painel para outro lado">
                 ${ICONS.dock}
               </button>
-              <button type="button" class="btn-icon-close" id="allyada-close-btn" aria-label="Fechar menu de acessibilidade (Esc)" title="Fechar (Esc)">
+              <button type="button" class="btn-icon-close" id="allyada-close-btn" aria-label="Fechar painel de acessibilidade (Esc)" title="Fechar (Esc)">
                 ${ICONS.close}
               </button>
             </div>
           </div>
 
-          <!-- Abas de Navegação Superior da Suíte -->
-          <div class="suite-tabs">
-            <button type="button" class="suite-tab-btn active" id="tab-btn-assistive" title="Ferramentas de acessibilidade">
+          <!-- Navegação por Abas (role="tablist") -->
+          <div class="suite-tabs" role="tablist" aria-label="Abas de recursos de acessibilidade">
+            <button type="button" class="suite-tab-btn active" id="tab-btn-foryou" role="tab" aria-selected="true" aria-controls="tab-content-foryou" title="Acesso rápido e perfis">
+              <span class="tab-icon">${ICONS.spark}</span>
+              <span>Para você</span>
+            </button>
+            <button type="button" class="suite-tab-btn" id="tab-btn-tools" role="tab" aria-selected="false" aria-controls="tab-content-tools" title="Todas as ferramentas assistivas">
               <span class="tab-icon">${ICONS.tools}</span>
               <span>Ferramentas</span>
             </button>
-            <button type="button" class="suite-tab-btn" id="tab-btn-audit" title="Auditoria e pontuação WCAG 2.2">
-              <span class="tab-icon">${ICONS.shieldCheck}</span>
-              <span>Auditoria</span>
-            </button>
-            <button type="button" class="suite-tab-btn" id="tab-btn-statement" title="Declaração de Conformidade Legal">
-              <span class="tab-icon">${ICONS.fileText}</span>
-              <span>Declaração</span>
+            <button type="button" class="suite-tab-btn" id="tab-btn-settings" role="tab" aria-selected="false" aria-controls="tab-content-settings" title="Preferências e atalhos">
+              <span class="tab-icon">${ICONS.settings}</span>
+              <span>Configurações</span>
             </button>
           </div>
 
-          <!-- ABA 1: FERRAMENTAS ASSISTIVAS -->
-          <div class="drawer-tab-content active" id="tab-content-assistive">
-            
-            <!-- Barra de Ações Rápidas -->
-            <div class="utility-bar">
-              <button type="button" class="btn-utility reset" id="btn-reset-all" title="Restaurar padrão original">
-                <span class="btn-icon">${ICONS.reset}</span>
-                <span>Redefinir</span>
-              </button>
-
-              <div class="tts-utility-group" id="voice-controls-box">
-                <button type="button" class="btn-utility tts" id="btn-read-page" title="Ouvir texto da página ou do trecho selecionado">
-                  <span class="btn-icon" id="voice-icon-box">${ICONS.sound}</span>
-                  <span id="voice-btn-text">Ouvir Texto</span>
-                </button>
-                <button type="button" class="btn-utility tts-stop" id="btn-stop-voice" style="display:none;" title="Parar fala">
-                  ${ICONS.stop}
-                </button>
-              </div>
-            </div>
-
-            <!-- Campo de Busca Rápida -->
-            <div class="search-box-wrapper">
-              <div class="search-input-box">
-                <span class="search-icon-svg">${ICONS.search}</span>
-                <input type="text" id="allyada-search-input" class="search-input-field" placeholder="Buscar recurso (ex: contraste, fonte, cursor)..." aria-label="Buscar ferramenta de acessibilidade">
-                <button type="button" class="search-clear-btn" id="btn-search-clear" style="display:none;" aria-label="Limpar pesquisa">&times;</button>
-              </div>
-            </div>
-
-            <!-- Corpo dos Controles -->
+          <!-- ABA 1: PARA VOCÊ (ACESSO RÁPIDO & PERFIS HUMANOS) -->
+          <div class="drawer-tab-content active" id="tab-content-foryou" role="tabpanel" aria-labelledby="tab-btn-foryou">
             <div class="tab-scroll-body">
               
-              <!-- Perfis em 1 Clique -->
+              <!-- Acesso Rápido (Modo Simples) -->
               <section class="menu-section">
                 <div class="section-heading">
-                  <h3>Perfis em 1 Clique</h3>
-                  <span class="pill-badge">Automático</span>
+                  <h3>Acesso Rápido</h3>
+                  <span class="pill-badge">Mais Usados</span>
+                </div>
+
+                <div class="quick-grid">
+                  <button type="button" class="quick-tile" id="quick-font-size" aria-pressed="false">
+                    <div class="tile-icon">${ICONS.type}</div>
+                    <span class="tile-label">Texto Maior</span>
+                  </button>
+
+                  <button type="button" class="quick-tile" id="quick-contrast" aria-pressed="false">
+                    <div class="tile-icon">${ICONS.moon}</div>
+                    <span class="tile-label">Alto Contraste</span>
+                  </button>
+
+                  <button type="button" class="quick-tile" id="quick-links" aria-pressed="false">
+                    <div class="tile-icon">${ICONS.link}</div>
+                    <span class="tile-label">Destacar Links</span>
+                  </button>
+
+                  <button type="button" class="quick-tile" id="quick-tts" aria-pressed="false">
+                    <div class="tile-icon">${ICONS.sound}</div>
+                    <span class="tile-label" id="quick-tts-label">Ouvir Texto</span>
+                  </button>
+
+                  <button type="button" class="quick-tile" id="quick-motion" aria-pressed="false">
+                    <div class="tile-icon">${ICONS.zap}</div>
+                    <span class="tile-label">Menos Movimento</span>
+                  </button>
+
+                  <button type="button" class="quick-tile" id="quick-cursor" aria-pressed="false">
+                    <div class="tile-icon">${ICONS.cursor}</div>
+                    <span class="tile-label">Cursor Maior</span>
+                  </button>
+                </div>
+
+                <button type="button" class="btn-customize-link" id="btn-goto-tools">
+                  <span>Personalizar acessibilidade detalhada</span>
+                  <span class="arrow-icon">${ICONS.arrowRight}</span>
+                </button>
+              </section>
+
+              <!-- Perfis de Navegação Humana -->
+              <section class="menu-section">
+                <div class="section-heading">
+                  <h3>Como você prefere navegar?</h3>
+                  <span class="pill-badge">Perfis</span>
                 </div>
                 
                 <div class="profiles-grid">
-                  <button type="button" class="profile-card" id="profile-adhd" aria-pressed="false">
+                  <button type="button" class="profile-card" id="profile-concentration" aria-pressed="false">
                     <div class="card-top-row">
                       <div class="card-icon-bubble">${ICONS.brain}</div>
                       <span class="card-tag">Foco</span>
                     </div>
-                    <strong class="card-heading">TDAH & Atenção</strong>
-                    <p class="card-subtext">Régua de leitura, sem distrações e links visíveis.</p>
-                  </button>
-
-                  <button type="button" class="profile-card" id="profile-colorblind" aria-pressed="false">
-                    <div class="card-top-row">
-                      <div class="card-icon-bubble">${ICONS.eye}</div>
-                      <span class="card-tag">Cores</span>
-                    </div>
-                    <strong class="card-heading">Daltonismo</strong>
-                    <p class="card-subtext">Filtros clínicos de matiz de cor para compensação.</p>
-                  </button>
-
-                  <button type="button" class="profile-card" id="profile-epilepsy" aria-pressed="false">
-                    <div class="card-top-row">
-                      <div class="card-icon-bubble">${ICONS.zap}</div>
-                      <span class="card-tag">Segurança</span>
-                    </div>
-                    <strong class="card-heading">Anti-Crises</strong>
-                    <p class="card-subtext">Pausa vídeos, flashes, transições e reduz brilho.</p>
+                    <strong class="card-heading">Mais Concentração</strong>
+                    <p class="card-subtext">Régua de leitura ativa, animações pausadas e espaçamento confortável.</p>
                   </button>
 
                   <button type="button" class="profile-card" id="profile-low-vision" aria-pressed="false">
@@ -1106,22 +756,41 @@
                       <div class="card-icon-bubble">${ICONS.glasses}</div>
                       <span class="card-tag">Visão</span>
                     </div>
-                    <strong class="card-heading">Baixa Visão</strong>
-                    <p class="card-subtext">Texto ampliado (+30%), alto contraste e cursor grande.</p>
+                    <strong class="card-heading">Facilidade para Enxergar</strong>
+                    <p class="card-subtext">Texto ampliado (+30%), alto contraste escuro, links e cursor grande.</p>
                   </button>
 
-                  <button type="button" class="profile-card" id="profile-dyslexia" aria-pressed="false">
+                  <button type="button" class="profile-card" id="profile-reading" aria-pressed="false">
                     <div class="card-top-row">
                       <div class="card-icon-bubble">${ICONS.book}</div>
                       <span class="card-tag">Leitura</span>
                     </div>
-                    <strong class="card-heading">Dislexia</strong>
-                    <p class="card-subtext">Fonte Lexend com espaçamento amplo e confortável.</p>
+                    <strong class="card-heading">Leitura Confortável</strong>
+                    <p class="card-subtext">Fonte legível Lexend, entrelinhas 1.9x e alinhamento à esquerda.</p>
+                  </button>
+
+                  <button type="button" class="profile-card" id="profile-colorblind" aria-pressed="false">
+                    <div class="card-top-row">
+                      <div class="card-icon-bubble">${ICONS.eye}</div>
+                      <span class="card-tag">Cores</span>
+                    </div>
+                    <strong class="card-heading">Diferenciar Cores</strong>
+                    <p class="card-subtext">Compensação cromática para deuteranopia, protanopia e tritanopia.</p>
+                  </button>
+
+                  <button type="button" class="profile-card" id="profile-motion" aria-pressed="false">
+                    <div class="card-top-row">
+                      <div class="card-icon-bubble">${ICONS.zap}</div>
+                      <span class="card-tag">Calma</span>
+                    </div>
+                    <strong class="card-heading">Menos Movimento</strong>
+                    <p class="card-subtext">Pausa total de animações, transições suaves e redução de estímulos.</p>
                   </button>
                 </div>
 
+                <!-- Seletor de Tipo de Daltonismo (quando o perfil de cores está ativo) -->
                 <div class="sub-selector-box" id="colorblind-selector-box" style="display: none;">
-                  <span class="sub-selector-title">Tipo de Daltonismo:</span>
+                  <span class="sub-selector-title">Ajuste específico para Daltonismo:</span>
                   <div class="segmented-control">
                     <button type="button" class="seg-btn active" data-type="deuteranopia" id="cb-deuteranopia">Deuteranopia</button>
                     <button type="button" class="seg-btn" data-type="protanopia" id="cb-protanopia">Protanopia</button>
@@ -1130,21 +799,39 @@
                 </div>
               </section>
 
-              <!-- Tipografia Granular -->
-              <section class="menu-section">
+            </div>
+          </div>
+
+          <!-- ABA 2: TODAS AS FERRAMENTAS ASSISTIVAS -->
+          <div class="drawer-tab-content" id="tab-content-tools" role="tabpanel" aria-labelledby="tab-btn-tools" style="display:none;">
+            
+            <!-- Campo de Busca Rápida -->
+            <div class="search-box-wrapper">
+              <div class="search-input-box">
+                <span class="search-icon-svg">${ICONS.search}</span>
+                <input type="text" id="allyada-search-input" class="search-input-field" placeholder="Buscar ferramenta (ex: fonte, foco, cursor)..." aria-label="Filtrar ferramentas de acessibilidade">
+                <button type="button" class="search-clear-btn" id="btn-search-clear" style="display:none;" aria-label="Limpar pesquisa">&times;</button>
+              </div>
+            </div>
+
+            <div class="tab-scroll-body">
+              
+              <!-- 1. TEXTO & TIPOGRAFIA -->
+              <section class="menu-section" data-section="typography">
                 <div class="section-heading">
                   <h3>Texto & Tipografia</h3>
                 </div>
 
+                <!-- Tamanho do Texto -->
                 <div class="control-box">
                   <div class="control-box-header">
                     <div>
                       <strong class="control-title">Tamanho do Texto</strong>
-                      <span class="control-val" id="font-size-indicator">Padrão (100%)</span>
+                      <span class="control-val" id="font-size-indicator">Normal (100%)</span>
                     </div>
                     <div class="stepper-actions">
-                      <button type="button" class="btn-step" id="btn-font-decrease" aria-label="Diminuir texto">-</button>
-                      <button type="button" class="btn-step" id="btn-font-increase" aria-label="Aumentar texto">+</button>
+                      <button type="button" class="btn-step" id="btn-font-decrease" aria-label="Diminuir tamanho do texto">-</button>
+                      <button type="button" class="btn-step" id="btn-font-increase" aria-label="Aumentar tamanho do texto">+</button>
                     </div>
                   </div>
                   <div class="steps-progress" id="font-progress-bar">
@@ -1156,40 +843,43 @@
                   </div>
                 </div>
 
+                <!-- Espaçamento de Linhas -->
                 <div class="control-box">
                   <div class="control-box-header">
                     <div>
                       <strong class="control-title">Espaçamento de Linhas</strong>
-                      <span class="control-val" id="line-height-indicator">Padrão</span>
+                      <span class="control-val" id="line-height-indicator">Normal</span>
                     </div>
                   </div>
                   <div class="segmented-control mt-2">
-                    <button type="button" class="seg-btn active" id="btn-lh-0">Padrão</button>
+                    <button type="button" class="seg-btn active" id="btn-lh-0">Normal</button>
                     <button type="button" class="seg-btn" id="btn-lh-1">Confortável (1.9x)</button>
                     <button type="button" class="seg-btn" id="btn-lh-2">Amplo (2.3x)</button>
                   </div>
                 </div>
 
+                <!-- Espaçamento de Letras -->
                 <div class="control-box">
                   <div class="control-box-header">
                     <div>
                       <strong class="control-title">Espaçamento de Letras</strong>
-                      <span class="control-val" id="letter-spacing-indicator">Padrão</span>
+                      <span class="control-val" id="letter-spacing-indicator">Normal</span>
                     </div>
                   </div>
                   <div class="segmented-control mt-2">
                     <button type="button" class="seg-btn active" id="btn-ls-0">Normal</button>
-                    <button type="button" class="seg-btn" id="btn-ls-1">Médio (+0.08em)</button>
-                    <button type="button" class="seg-btn" id="btn-ls-2">Amplo (+0.16em)</button>
+                    <button type="button" class="seg-btn" id="btn-ls-1">Médio</button>
+                    <button type="button" class="seg-btn" id="btn-ls-2">Amplo</button>
                   </div>
                 </div>
 
+                <!-- Espaçamento de Palavras & Alinhamento -->
                 <div class="tools-grid mt-3">
-                  <button type="button" class="tool-card" id="card-dyslexic-font" aria-pressed="false">
+                  <button type="button" class="tool-card" id="card-word-spacing" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.type}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Fonte Dislexia</strong>
-                      <span class="tool-desc">Tipografia Lexend</span>
+                      <strong class="tool-title">Separar Palavras</strong>
+                      <span class="tool-desc">Mais respiro entre termos</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -1197,18 +887,35 @@
                   <button type="button" class="tool-card" id="card-text-align-left" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.alignLeft}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Alinhar Texto</strong>
-                      <span class="tool-desc">À esquerda</span>
+                      <strong class="tool-title">Alinhar à Esquerda</strong>
+                      <span class="tool-desc">Evita texto justificado</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-dyslexic-font" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.book}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Fonte Amigável</strong>
+                      <span class="tool-desc">Tipografia Lexend</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
                 </div>
+
+                <!-- Caixa de Prévia ao Vivo -->
+                <div class="live-preview-wrapper mt-3">
+                  <span class="preview-tag">Prévia de Leitura ao Vivo</span>
+                  <div class="live-preview-box" id="typography-preview-box">
+                    A acessibilidade web garante que todas as pessoas possam navegar, compreender e interagir com autonomia e clareza.
+                  </div>
+                </div>
               </section>
 
-              <!-- Contraste -->
-              <section class="menu-section">
+              <!-- 2. CORES E CONTRASTE -->
+              <section class="menu-section" data-section="colors">
                 <div class="section-heading">
-                  <h3>Contraste & Cores</h3>
+                  <h3>Cores & Contraste</h3>
                 </div>
 
                 <div class="tools-grid">
@@ -1216,7 +923,7 @@
                     <div class="tool-icon-box">${ICONS.moon}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Modo Escuro</strong>
-                      <span class="tool-desc">Alto contraste</span>
+                      <span class="tool-desc">Fundo escuro suave</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -1225,7 +932,7 @@
                     <div class="tool-icon-box">${ICONS.sun}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Modo Claro</strong>
-                      <span class="tool-desc">Fundo branco</span>
+                      <span class="tool-desc">Fundo branco nítido</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -1243,15 +950,31 @@
                     <div class="tool-icon-box">${ICONS.refresh}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Inverter Cores</strong>
-                      <span class="tool-desc">Inversão suave</span>
+                      <span class="tool-desc">Inversão de alto contraste</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
                 </div>
+
+                <!-- Percepção de Cores (Filtros de Daltonismo) -->
+                <div class="control-box mt-3">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Filtro para Daltonismo</strong>
+                      <span class="control-val" id="colorblind-active-label">Padrão</span>
+                    </div>
+                  </div>
+                  <div class="segmented-control mt-2">
+                    <button type="button" class="seg-btn active" id="btn-cb-none">Padrão</button>
+                    <button type="button" class="seg-btn" id="btn-cb-deuteranopia">Deuteranopia</button>
+                    <button type="button" class="seg-btn" id="btn-cb-protanopia">Protanopia</button>
+                    <button type="button" class="seg-btn" id="btn-cb-tritanopia">Tritanopia</button>
+                  </div>
+                </div>
               </section>
 
-              <!-- Navegação & Foco -->
-              <section class="menu-section">
+              <!-- 3. NAVEGAÇÃO & FOCO -->
+              <section class="menu-section" data-section="navigation">
                 <div class="section-heading">
                   <h3>Navegação & Foco</h3>
                 </div>
@@ -1261,7 +984,16 @@
                     <div class="tool-icon-box">${ICONS.link}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Destacar Links</strong>
-                      <span class="tool-desc">Realçar foco</span>
+                      <span class="tool-desc">Borda âmbar visível</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-enhanced-focus" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.target}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Foco Reforçado</strong>
+                      <span class="tool-desc">Anel luminoso no teclado</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -1269,34 +1001,120 @@
                   <button type="button" class="tool-card" id="card-reading-ruler" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.ruler}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Régua Leitura</strong>
-                      <span class="tool-desc">Guia para foco</span>
+                      <strong class="tool-title">Régua de Leitura</strong>
+                      <span class="tool-desc">Faixa guia horizontal</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
 
-                  <button type="button" class="tool-card" id="card-big-cursor" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.cursor}</div>
+                  <button type="button" class="tool-card" id="card-reading-mask" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.eye}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Cursor Grande</strong>
-                      <span class="tool-desc">Ponteiro ampliado</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="tool-card" id="card-stop-animations" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.pause}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Pausar Movimento</strong>
-                      <span class="tool-desc">Sem animações</span>
+                      <strong class="tool-title">Máscara de Foco</strong>
+                      <span class="tool-desc">Escurece o restante</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
                 </div>
+
+                <!-- Tamanho do Cursor -->
+                <div class="control-box mt-3">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Tamanho do Cursor</strong>
+                      <span class="control-val" id="cursor-size-label">Normal</span>
+                    </div>
+                  </div>
+                  <div class="segmented-control mt-2">
+                    <button type="button" class="seg-btn active" id="btn-cursor-normal">Normal</button>
+                    <button type="button" class="seg-btn" id="btn-cursor-large">Grande (36px)</button>
+                    <button type="button" class="seg-btn" id="btn-cursor-xlarge">Extra Grande (48px)</button>
+                  </div>
+                </div>
+
+                <!-- Ações de Navegação Estrutural -->
+                <div class="structure-nav-group mt-3">
+                  <button type="button" class="btn-action-tile" id="btn-skip-to-main">
+                    <span class="tile-icon-action">${ICONS.skip}</span>
+                    <div class="tile-info-action">
+                      <strong>Ir para o Conteúdo Principal</strong>
+                      <span>Pula menus e cabeçalhos diretamente para o texto</span>
+                    </div>
+                  </button>
+
+                  <button type="button" class="btn-action-tile" id="btn-toggle-headings" aria-expanded="false">
+                    <span class="tile-icon-action">${ICONS.headings}</span>
+                    <div class="tile-info-action">
+                      <strong>Navegar pelos Títulos da Página</strong>
+                      <span id="headings-count-summary">Ver índice de cabeçalhos H1-H3</span>
+                    </div>
+                  </button>
+
+                  <div class="headings-drawer" id="headings-list-container" style="display:none;">
+                    <div class="headings-list-header">
+                      <span>Estrutura de Títulos Encontrada:</span>
+                    </div>
+                    <ul class="headings-list-items" id="headings-items-ul">
+                      <!-- Preenchido dinamicamente via JS -->
+                    </ul>
+                  </div>
+                </div>
               </section>
 
-              <!-- VLibras -->
-              <section class="menu-section">
+              <!-- 4. LEITURA EM VOZ ALTA (TTS) -->
+              <section class="menu-section" data-section="speech">
+                <div class="section-heading">
+                  <h3>Leitura em Voz Alta</h3>
+                  <span class="pill-badge">Síntese de Voz</span>
+                </div>
+
+                <div class="tts-card-box">
+                  <div class="tts-status-row">
+                    <span class="tts-status-indicator" id="tts-status-text">Pronto para ler a página ou o trecho selecionado.</span>
+                  </div>
+
+                  <div class="tts-button-controls">
+                    <button type="button" class="btn-tts-action primary" id="btn-tts-play-pause">
+                      <span class="tts-btn-icon" id="tts-play-icon">${ICONS.sound}</span>
+                      <span id="tts-play-label">Ouvir Página</span>
+                    </button>
+                    <button type="button" class="btn-tts-action stop" id="btn-tts-stop" style="display:none;" title="Parar leitura">
+                      ${ICONS.stop} Parar
+                    </button>
+                  </div>
+
+                  <!-- Velocidade de Fala -->
+                  <div class="tts-rate-row mt-2">
+                    <span class="tts-rate-title">Velocidade:</span>
+                    <div class="segmented-control tts-rates">
+                      <button type="button" class="seg-btn" data-rate="0.75" id="rate-075">0.75x</button>
+                      <button type="button" class="seg-btn active" data-rate="1" id="rate-100">1.0x</button>
+                      <button type="button" class="seg-btn" data-rate="1.25" id="rate-125">1.25x</button>
+                      <button type="button" class="seg-btn" data-rate="1.5" id="rate-150">1.5x</button>
+                      <button type="button" class="seg-btn" data-rate="2" id="rate-200">2.0x</button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- 5. MOVIMENTO & ESTÍMULOS -->
+              <section class="menu-section" data-section="motion">
+                <div class="section-heading">
+                  <h3>Movimento & Transições</h3>
+                </div>
+
+                <button type="button" class="tool-card full-width" id="card-stop-animations" aria-pressed="false">
+                  <div class="tool-icon-box">${ICONS.pause}</div>
+                  <div class="tool-info">
+                    <strong class="tool-title">Pausar Animações e Movimentos</strong>
+                    <span class="tool-desc">Interrompe transições visuais, gifs e animações automáticas</span>
+                  </div>
+                  <div class="toggle-indicator"></div>
+                </button>
+              </section>
+
+              <!-- 6. LIBRAS (LÍNGUA DE SINAIS) -->
+              <section class="menu-section" data-section="libras">
                 <div class="section-heading">
                   <h3>Língua de Sinais (Libras)</h3>
                 </div>
@@ -1304,8 +1122,8 @@
                 <button type="button" class="vlibras-banner-card" id="card-vlibras-toggle" aria-pressed="false">
                   <div class="vlibras-icon-box">${ICONS.hands}</div>
                   <div class="vlibras-info">
-                    <strong class="tool-title">Ativar VLibras</strong>
-                    <span class="tool-desc">Avatar 3D tradutor posicionado acima da Allyada</span>
+                    <strong class="tool-title">Ativar Tradutor VLibras</strong>
+                    <span class="tool-desc">Avatar 3D tradutor posicionado logo acima da Allyada</span>
                   </div>
                   <div class="toggle-pill" id="vlibras-pill">Desativado</div>
                 </button>
@@ -1314,109 +1132,76 @@
             </div>
           </div>
 
-          <!-- ABA 2: AUDITORIA E MONITORAMENTO (MONITORAR & CORRIGIR) -->
-          <div class="drawer-tab-content" id="tab-content-audit" style="display:none;">
+          <!-- ABA 3: CONFIGURAÇÕES, ATALHOS & AJUSTES ATIVOS -->
+          <div class="drawer-tab-content" id="tab-content-settings" role="tabpanel" aria-labelledby="tab-btn-settings" style="display:none;">
             <div class="tab-scroll-body">
               
-              <!-- Card de Pontuação WCAG 2.2 AA -->
-              <div class="audit-score-card">
-                <div class="score-circle-box score-high" id="audit-score-circle">
-                  <span class="score-number" id="audit-score-val">--%</span>
-                  <span class="score-label">Índice WCAG</span>
+              <!-- Persistência de Preferências -->
+              <section class="menu-section">
+                <div class="section-heading">
+                  <h3>Preferências no Navegador</h3>
                 </div>
-                <div class="score-info">
-                  <h4 id="audit-score-status">Conformidade Digital</h4>
-                  <p id="audit-score-subtext">Avaliação técnica automática de regras WCAG 2.2 AA, ADA Title II e Section 508.</p>
-                  <div class="audit-actions-row">
-                    <button type="button" class="btn-run-audit" id="btn-run-audit">
-                      <span class="audit-btn-icon">${ICONS.refresh}</span>
-                      <span class="audit-btn-text">Reauditar Página</span>
-                    </button>
-                    <button type="button" class="btn-copy-audit" id="btn-copy-audit" title="Copiar relatório técnico completo">
-                      ${ICONS.copy} Copiar Relatório
-                    </button>
+
+                <div class="setting-item-row">
+                  <div class="setting-text">
+                    <strong>Lembrar minhas preferências neste site</strong>
+                    <span>Salva suas escolhas automaticamente para suas próximas visitas.</span>
+                  </div>
+                  <label class="switch-toggle" for="chk-remember-preferences">
+                    <input type="checkbox" id="chk-remember-preferences" checked aria-label="Lembrar minhas preferências neste site">
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+              </section>
+
+              <!-- Guia de Atalhos de Teclado -->
+              <section class="menu-section">
+                <div class="section-heading">
+                  <h3>Atalhos Rápidos de Teclado</h3>
+                </div>
+
+                <div class="shortcuts-list">
+                  <div class="shortcut-item">
+                    <span>Abrir ou fechar o Allyada</span>
+                    <div class="kbd-combo"><kbd>Alt</kbd> + <kbd>A</kbd></div>
+                  </div>
+                  <div class="shortcut-item">
+                    <span>Fechar o painel com foco seguro</span>
+                    <div class="kbd-combo"><kbd>Esc</kbd></div>
+                  </div>
+                  <div class="shortcut-item">
+                    <span>Navegar pelos controles com foco visível</span>
+                    <div class="kbd-combo"><kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd></div>
                   </div>
                 </div>
-              </div>
+              </section>
 
-              <!-- Switch de Remediação Automática no DOM -->
-              <div class="remediation-box" id="remediation-card-box">
-                <div class="remediation-header">
-                  <div class="rem-icon-box">${ICONS.shieldCheck}</div>
-                  <div class="rem-text">
-                    <strong>Remediação Ativa em Tempo Real</strong>
-                    <span>Corrige landmarks ARIA, alvos clicáveis (2.5.8), tags e rótulos no código.</span>
-                  </div>
-                  <input type="checkbox" id="chk-auto-remediation" class="modern-toggle" aria-label="Ativar remediação automática no DOM">
+              <!-- Painel de Ajustes Ativos em Tempo Real -->
+              <section class="menu-section">
+                <div class="section-heading">
+                  <h3>Ajustes Ativos Neste Momento</h3>
+                  <span class="pill-badge" id="settings-active-count-badge">0 ativos</span>
                 </div>
-                <div class="rem-status-badge inactive" id="rem-status-badge">
-                  Remediação pausada &bull; Ative o switch para auto-corrigir o DOM
-                </div>
-              </div>
 
-              <!-- Lista de Verificações -->
-              <div class="audit-checklist-header">
-                <h3>Critérios de Acessibilidade Auditados</h3>
-              </div>
-              <div class="audit-checklist" id="audit-checklist-items">
-                <!-- Injetado via JS -->
-              </div>
+                <div class="active-adjustments-list" id="active-adjustments-chips">
+                  <!-- Gerado dinamicamente via JS com botões individuais de fechar (✕) -->
+                </div>
+
+                <div class="reset-all-box mt-3">
+                  <button type="button" class="btn-reset-all-full" id="btn-reset-all">
+                    <span class="btn-icon">${ICONS.reset}</span>
+                    <span>Redefinir Tudo e Restaurar Padrão</span>
+                  </button>
+                </div>
+              </section>
 
             </div>
           </div>
 
-          <!-- ABA 3: DECLARAÇÃO LEGAL (COMPROVAR A CONFORMIDADE) -->
-          <div class="drawer-tab-content" id="tab-content-statement" style="display:none;">
-            <div class="tab-scroll-body">
-              
-              <div class="statement-hero">
-                <div class="legal-badge-tag">${ICONS.shieldCheck} Comprovação de Conformidade</div>
-                <h3 class="statement-heading">Declaração de Acessibilidade Digital</h3>
-                <p class="statement-date">Última auditoria técnica: ${new Date().toLocaleDateString('pt-BR')}</p>
-              </div>
-
-              <div class="statement-body-text">
-                <p>
-                  Este portal digital adota a tecnologia <strong>Allyada</strong> para assegurar conformidade contínua, inclusão plena e conformidade jurídica com as principais normas globais e regionais de acessibilidade digital.
-                </p>
-
-                <div class="standards-badges-grid">
-                  <div class="std-badge">✓ WCAG 2.2 Nível AA</div>
-                  <div class="std-badge">✓ ADA Título II & III (EUA)</div>
-                  <div class="std-badge">✓ Reabilitação Art. 508 & 504</div>
-                  <div class="std-badge">✓ Lei Unruh (Califórnia)</div>
-                  <div class="std-badge">✓ Colorado HB 21-1110</div>
-                  <div class="std-badge">✓ AODA & ACA (Canadá)</div>
-                  <div class="std-badge">✓ EN 301 549 & EAA (União Europeia)</div>
-                  <div class="std-badge">✓ Lei da Igualdade do Reino Unido</div>
-                  <div class="std-badge">✓ Padrão Israelense IS 5568</div>
-                  <div class="std-badge">✓ LBI (Lei 13.146/15 - Brasil)</div>
-                  <div class="std-badge">✓ PDF/A & Documentos Digitais</div>
-                </div>
-
-                <div class="statement-legal-box">
-                  <h4>Medidas Técnicas Adotadas</h4>
-                  <ul>
-                    <li>Remediação dinâmica de atributos ARIA e landmarks estruturais.</li>
-                    <li>Garantia de alvos de toque mínimos de 24x24px (WCAG 2.2 Critério 2.5.8).</li>
-                    <li>Disponibilização de atalhos e navegação 100% por teclado sem armadilhas.</li>
-                    <li>Leitor de tela nativo e integração com Língua Brasileira de Sinais (VLibras).</li>
-                    <li>Filtros clínicos de compensação para Daltonismo e modos de alto contraste.</li>
-                  </ul>
-                </div>
-
-                <button type="button" class="btn-copy-statement" id="btn-copy-statement">
-                  Copiar Texto da Declaração de Acessibilidade
-                </button>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- Rodapé -->
+          <!-- Rodapé do Widget -->
           <div class="drawer-footer">
-            <span class="shortcut-tip">Atalho: <kbd>Alt</kbd>+<kbd>A</kbd></span>
-            <span class="footer-brand-tag">Allyada v3.0 &bull; WCAG 2.2 AA</span>
+            <span class="shortcut-tip">Atalho: <kbd>Alt</kbd> + <kbd>A</kbd></span>
+            <span class="footer-brand-tag">Allyada &bull; Acessibilidade para você</span>
           </div>
 
         </div>
@@ -1428,26 +1213,24 @@
       document.documentElement.appendChild(this.hostContainer);
 
       this.bindPanelEvents();
-      this.renderAuditChecklist();
     }
 
     bindPanelEvents() {
       const root = this.shadowRoot;
 
-      // Disparador de abrir
+      // 1. Abrir / Fechar Painel
       const triggerBtn = root.getElementById('allyada-trigger-btn');
-      triggerBtn.addEventListener('click', () => this.togglePanel());
+      if (triggerBtn) triggerBtn.addEventListener('click', () => this.togglePanel());
 
-      // Fechar
       const closeBtn = root.getElementById('allyada-close-btn');
-      closeBtn.addEventListener('click', () => this.closePanel());
+      if (closeBtn) closeBtn.addEventListener('click', () => this.closePanel());
 
       const backdrop = root.getElementById('allyada-backdrop');
       if (backdrop) {
         backdrop.addEventListener('click', () => this.closePanel());
       }
 
-      // Fechar ao clicar fora no documento (preservando seleção de texto para leitor TTS)
+      // Fechar ao clicar fora no documento (preservando seleção para o TTS)
       document.addEventListener('click', (e) => {
         if (!this.isOpen) return;
         const path = e.composedPath ? e.composedPath() : [];
@@ -1461,27 +1244,27 @@
         this.closePanel();
       });
 
-      // Reset
-      const resetBtn = root.getElementById('btn-reset-all');
-      resetBtn.addEventListener('click', () => this.resetState());
-
-      // Navegação por Abas (Ferramentas | Auditoria | Declaração Legal)
-      const tabs = ['assistive', 'audit', 'statement'];
-      tabs.forEach(t => {
-        const btn = root.getElementById(`tab-btn-${t}`);
+      // 2. Navegação por Abas (Para você | Ferramentas | Configurações)
+      const tabs = ['foryou', 'tools', 'settings'];
+      tabs.forEach(tabKey => {
+        const btn = root.getElementById(`tab-btn-${tabKey}`);
         if (!btn) return;
-        btn.addEventListener('click', () => {
-          this.switchTab(t);
-        });
+        btn.addEventListener('click', () => this.switchTab(tabKey));
       });
 
-      // Alternar Lado (Dock Esquerda / Direita)
+      // Atalho "Personalizar acessibilidade" para ir da aba 1 para a aba 2
+      const gotoToolsBtn = root.getElementById('btn-goto-tools');
+      if (gotoToolsBtn) {
+        gotoToolsBtn.addEventListener('click', () => this.switchTab('tools'));
+      }
+
+      // 3. Mover Doca (Esquerda / Direita)
       const dockBtn = root.getElementById('btn-toggle-dock');
       if (dockBtn) {
         dockBtn.addEventListener('click', () => this.toggleDockPosition());
       }
 
-      // Busca Instantânea de Recursos
+      // 4. Busca Instantânea nas Ferramentas
       const searchInput = root.getElementById('allyada-search-input');
       const searchClearBtn = root.getElementById('btn-search-clear');
       if (searchInput) {
@@ -1489,15 +1272,15 @@
           const query = e.target.value.toLowerCase().trim();
           if (searchClearBtn) searchClearBtn.style.display = query ? 'flex' : 'none';
 
-          const cards = root.querySelectorAll('#tab-content-assistive .profile-card, #tab-content-assistive .tool-card, #tab-content-assistive .control-box, #tab-content-assistive .vlibras-banner-card');
+          const cards = root.querySelectorAll('#tab-content-tools .tool-card, #tab-content-tools .control-box, #tab-content-tools .structure-nav-group, #tab-content-tools .tts-card-box, #tab-content-tools .vlibras-banner-card');
           cards.forEach(card => {
             const text = card.textContent.toLowerCase();
             const match = !query || text.includes(query);
             card.style.display = match ? '' : 'none';
           });
 
-          root.querySelectorAll('#tab-content-assistive .menu-section').forEach(sec => {
-            const visible = sec.querySelectorAll('.profile-card:not([style*="display: none"]), .tool-card:not([style*="display: none"]), .control-box:not([style*="display: none"]), .vlibras-banner-card:not([style*="display: none"])');
+          root.querySelectorAll('#tab-content-tools .menu-section').forEach(sec => {
+            const visible = sec.querySelectorAll('.tool-card:not([style*="display: none"]), .control-box:not([style*="display: none"]), .structure-nav-group:not([style*="display: none"]), .tts-card-box:not([style*="display: none"]), .vlibras-banner-card:not([style*="display: none"])');
             sec.style.display = (visible.length > 0 || !query) ? '' : 'none';
           });
         });
@@ -1511,129 +1294,58 @@
         }
       }
 
-      // Auditoria com Feedback Visual em Tempo Real
-      const runAuditBtn = root.getElementById('btn-run-audit');
-      if (runAuditBtn) {
-        runAuditBtn.addEventListener('click', () => {
-          const scoreCircle = root.getElementById('audit-score-circle');
-          const btnText = runAuditBtn.querySelector('.audit-btn-text');
-          const btnIcon = runAuditBtn.querySelector('.audit-btn-icon');
-
-          runAuditBtn.classList.add('scanning');
-          if (scoreCircle) scoreCircle.classList.add('scanning');
-          if (btnText) btnText.textContent = 'Varrendo DOM...';
-          if (btnIcon) btnIcon.innerHTML = `<span class="spin-icon">${ICONS.refresh}</span>`;
-
-          setTimeout(() => {
-            if (this.state.autoRemediate) {
-              this.runAutoRemediation();
-            }
-            this.runAudit();
-            this.renderAuditChecklist();
-
-            runAuditBtn.classList.remove('scanning');
-            runAuditBtn.classList.add('success');
-            if (scoreCircle) scoreCircle.classList.remove('scanning');
-            if (btnText) btnText.textContent = '✓ DOM Auditado!';
-            if (btnIcon) btnIcon.innerHTML = ICONS.check;
-
-            setTimeout(() => {
-              runAuditBtn.classList.remove('success');
-              if (btnText) btnText.textContent = 'Reauditar Página';
-              if (btnIcon) btnIcon.innerHTML = ICONS.refresh;
-            }, 1800);
-          }, 350);
+      // 5. Ações Rápidas (Modo Simples - Aba "Para você")
+      const qFont = root.getElementById('quick-font-size');
+      if (qFont) {
+        qFont.addEventListener('click', () => {
+          this.state.fontSizeLevel = (this.state.fontSizeLevel === 0) ? 2 : 0;
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
         });
       }
 
-      // Botão Copiar Relatório Técnico de Auditoria
-      const copyAuditBtn = root.getElementById('btn-copy-audit');
-      if (copyAuditBtn) {
-        copyAuditBtn.addEventListener('click', () => {
-          const res = this.auditResults || this.runAudit();
-          const report = [
-            `================================================================================`,
-            `RELATÓRIO TÉCNICO DE AUDITORIA DE ACESSIBILIDADE DIGITAL - ALLYADA v3.0`,
-            `================================================================================`,
-            `Data da Verificação: ${new Date().toLocaleString('pt-BR')}`,
-            `URL Auditada: ${window.location.href}`,
-            `Índice Geral de Conformidade WCAG 2.2 AA: ${res.score}%`,
-            `Remediação Automática no DOM: ${this.state.autoRemediate ? `ATIVA (${this.remediatedCount || 0} correções aplicadas)` : 'DESATIVADA'}`,
-            `--------------------------------------------------------------------------------`,
-            `CRITÉRIOS TÉCNICOS AUDITADOS:`,
-            ...res.checks.map(c => `[${c.passed ? 'CONFORME' : 'ATENÇÃO'}] [${c.code}] ${c.name}\n  Padrão: ${c.standard}\n  Diagnóstico: ${c.details}${c.remediated ? ' (Corrigido por auto-remediação)' : ''}`),
-            `--------------------------------------------------------------------------------`,
-            `Conformidade: WCAG 2.2 AA / ADA Título II e III / Seção 508 / EAA 2019/882 / LBI`,
-            `Tecnologia Assistiva: Allyada Compliance Suite v3.0`
-          ].join('\n');
-
-          this.copyToClipboard(report).then(() => {
-            const originalHtml = copyAuditBtn.innerHTML;
-            copyAuditBtn.innerHTML = `✓ Relatório Copiado!`;
-            setTimeout(() => { copyAuditBtn.innerHTML = originalHtml; }, 2500);
-          });
+      const qContrast = root.getElementById('quick-contrast');
+      if (qContrast) {
+        qContrast.addEventListener('click', () => {
+          this.state.contrast = (this.state.contrast === 'dark') ? 'normal' : 'dark';
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
         });
       }
 
-      // Toggle de Remediação Automática no DOM
-      const chkRem = root.getElementById('chk-auto-remediation');
-      if (chkRem) {
-        chkRem.addEventListener('change', (e) => {
-          this.state.autoRemediate = e.target.checked;
-          this.saveState();
-          if (this.state.autoRemediate) {
-            this.runAutoRemediation();
-          } else {
-            this.revertAutoRemediation();
-          }
-          // Re-audita imediatamente e atualiza a interface com a nova pontuação
-          this.runAudit();
-          this.renderAuditChecklist();
+      const qLinks = root.getElementById('quick-links');
+      if (qLinks) {
+        qLinks.addEventListener('click', () => {
+          this.state.highlightLinks = !this.state.highlightLinks;
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
         });
       }
 
-      // Botão Copiar Declaração Legal
-      const copyBtn = root.getElementById('btn-copy-statement');
-      if (copyBtn) {
-        copyBtn.addEventListener('click', () => {
-          const score = (this.auditResults && this.auditResults.score) ? `${this.auditResults.score}%` : '95%';
-          const text = [
-            `DECLARAÇÃO DE ACESSIBILIDADE DIGITAL E CONFORMIDADE JURÍDICA`,
-            `Última Verificação Técnica: ${new Date().toLocaleDateString('pt-BR')}`,
-            `Índice de Conformidade Auditado: ${score}`,
-            `Portal: ${window.location.origin}`,
-            ``,
-            `Este portal digital adota a tecnologia Allyada (v3.0) para assegurar conformidade contínua, inclusão plena e conformidade jurídica em atendimento a:`,
-            `✓ WCAG 2.2 Nível AA (Diretrizes Globais do W3C / WAI)`,
-            `✓ ADA Título II & Título III (Americans with Disabilities Act - EUA)`,
-            `✓ Reabilitação Art. 508 e 504 (Setor Público e Federal dos EUA)`,
-            `✓ Lei dos Direitos Civis de Unruh (Califórnia)`,
-            `✓ Colorado HB 21-1110 (Legislação do Colorado para WCAG 2.2)`,
-            `✓ AODA & ACA (Legislação de Acessibilidade do Canadá)`,
-            `✓ EN 301 549 e EAA (European Accessibility Act - Diretiva UE 2019/882)`,
-            `✓ Lei da Igualdade do Reino Unido (UK Equality Act 2010)`,
-            `✓ IS 5568 (Padrão de Acessibilidade Web de Israel)`,
-            `✓ LBI (Lei Brasileira de Inclusão nº 13.146/15 e e-MAG)`,
-            `✓ PDF/A e Boas Práticas de Documentos Digitais Acessíveis`,
-            ``,
-            `MEDIDAS TÉCNICAS ADOTADAS:`,
-            `- Remediação dinâmica de atributos ARIA e landmarks estruturais (banner, main, navigation, contentinfo).`,
-            `- Garantia de tamanho mínimo de alvo clicável de 24x24px (WCAG 2.2 Critério 2.5.8).`,
-            `- Navegação 100% operável por teclado, atalhos globais (Alt + A) e foco visível de alto contraste.`,
-            `- Síntese de voz nativa (TTS) para leitura de textos e integração com Língua Brasileira de Sinais (VLibras).`,
-            `- Filtros clínicos de compensação de matiz para Daltonismo (Deuteranopia, Protanopia, Tritanopia).`,
-            `- Modos de alto contraste certificados (Preto WCAG AAA, Branco Puro, Monocromático e Inversão Suave).`,
-            ``,
-            `Caso encontre alguma barreira de acesso ou necessite de suporte específico, favor contatar os canais oficiais deste portal.`
-          ].join('\n');
-          navigator.clipboard.writeText(text).then(() => {
-            copyBtn.textContent = '✓ Declaração Copiada com Sucesso!';
-            setTimeout(() => { copyBtn.textContent = 'Copiar Texto da Declaração de Acessibilidade'; }, 2500);
-          });
+      const qTts = root.getElementById('quick-tts');
+      if (qTts) {
+        qTts.addEventListener('click', () => this.handleSpeechClick());
+      }
+
+      const qMotion = root.getElementById('quick-motion');
+      if (qMotion) {
+        qMotion.addEventListener('click', () => {
+          this.state.stopAnimations = !this.state.stopAnimations;
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
         });
       }
 
-      // Perfis em 1 Clique
+      const qCursor = root.getElementById('quick-cursor');
+      if (qCursor) {
+        qCursor.addEventListener('click', () => {
+          this.state.cursorSize = (this.state.cursorSize === 'large') ? 'normal' : 'large';
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
+        });
+      }
+
+      // 6. Perfis Humanos
       const bindProfile = (btnId, profileKey, applyFn) => {
         const btn = root.getElementById(btnId);
         if (!btn) return;
@@ -1642,253 +1354,336 @@
             this.state.activeProfile = null;
             this.resetState();
           } else {
-            this.state = { ...DEFAULT_STATE, activeTab: this.state.activeTab, activeProfile: profileKey };
+            this.state = { 
+              ...DEFAULT_STATE, 
+              activeTab: this.state.activeTab, 
+              rememberPreferences: this.state.rememberPreferences,
+              activeProfile: profileKey 
+            };
             applyFn();
-            this.saveState();
-            this.applyAllStateChanges();
-            this.updatePanelUI();
+            this.syncStateAndUI();
           }
         });
       };
 
-      bindProfile('profile-adhd', 'adhd', () => {
-        this.state.readingRuler = true;
+      bindProfile('profile-concentration', 'concentration', () => {
+        this.state.readingGuideMode = 'ruler';
         this.state.stopAnimations = true;
-        this.state.highlightLinks = true;
         this.state.lineHeightLevel = 1;
-      });
-
-      bindProfile('profile-colorblind', 'colorblind', () => {
-        this.state.highlightLinks = true;
-      });
-
-      bindProfile('profile-epilepsy', 'epilepsy', () => {
-        this.state.stopAnimations = true;
-        this.state.contrast = 'dark';
       });
 
       bindProfile('profile-low-vision', 'low-vision', () => {
         this.state.fontSizeLevel = 2;
         this.state.contrast = 'dark';
-        this.state.bigCursor = true;
+        this.state.cursorSize = 'large';
         this.state.highlightLinks = true;
       });
 
-      bindProfile('profile-dyslexia', 'dyslexia', () => {
+      bindProfile('profile-reading', 'reading', () => {
         this.state.dyslexicFont = true;
         this.state.lineHeightLevel = 1;
-        this.state.letterSpacingLevel = 1;
         this.state.textAlignLeft = true;
       });
 
-      // Daltonismo seletor
+      bindProfile('profile-colorblind', 'colorblind', () => {
+        this.state.highlightLinks = true;
+        if (this.state.colorblindType === 'none') {
+          this.state.colorblindType = 'deuteranopia';
+        }
+      });
+
+      bindProfile('profile-motion', 'motion', () => {
+        this.state.stopAnimations = true;
+      });
+
+      // Seletor de Daltonismo dentro do perfil
       ['deuteranopia', 'protanopia', 'tritanopia'].forEach(type => {
         const pill = root.getElementById(`cb-${type}`);
         if (!pill) return;
         pill.addEventListener('click', () => {
           this.state.colorblindType = type;
-          this.saveState();
-          this.applyAllStateChanges();
-          this.updatePanelUI();
+          this.syncStateAndUI();
         });
       });
 
-      // Tamanho da Fonte
+      // 7. Tipografia (Aba Ferramentas)
       const btnFontIncrease = root.getElementById('btn-font-increase');
-      btnFontIncrease.addEventListener('click', () => {
-        if (this.state.fontSizeLevel < 4) {
-          this.state.fontSizeLevel++;
-          this.state.activeProfile = null;
-          this.saveState();
-          this.applyAllStateChanges();
-          this.updatePanelUI();
-        }
-      });
+      if (btnFontIncrease) {
+        btnFontIncrease.addEventListener('click', () => {
+          if (this.state.fontSizeLevel < 4) {
+            this.state.fontSizeLevel++;
+            this.state.activeProfile = null;
+            this.syncStateAndUI();
+          }
+        });
+      }
 
       const btnFontDecrease = root.getElementById('btn-font-decrease');
-      btnFontDecrease.addEventListener('click', () => {
-        if (this.state.fontSizeLevel > 0) {
-          this.state.fontSizeLevel--;
-          this.state.activeProfile = null;
-          this.saveState();
-          this.applyAllStateChanges();
-          this.updatePanelUI();
-        }
-      });
+      if (btnFontDecrease) {
+        btnFontDecrease.addEventListener('click', () => {
+          if (this.state.fontSizeLevel > 0) {
+            this.state.fontSizeLevel--;
+            this.state.activeProfile = null;
+            this.syncStateAndUI();
+          }
+        });
+      }
 
-      // Espaçamento de Linhas
       [0, 1, 2].forEach(level => {
         const btn = root.getElementById(`btn-lh-${level}`);
         if (!btn) return;
         btn.addEventListener('click', () => {
           this.state.lineHeightLevel = level;
           this.state.activeProfile = null;
-          this.saveState();
-          this.applyAllStateChanges();
-          this.updatePanelUI();
+          this.syncStateAndUI();
         });
       });
 
-      // Espaçamento de Letras
       [0, 1, 2].forEach(level => {
         const btn = root.getElementById(`btn-ls-${level}`);
         if (!btn) return;
         btn.addEventListener('click', () => {
           this.state.letterSpacingLevel = level;
           this.state.activeProfile = null;
-          this.saveState();
-          this.applyAllStateChanges();
-          this.updatePanelUI();
+          this.syncStateAndUI();
         });
       });
 
-      // Toggles Simples
       const bindToggle = (id, stateKey) => {
         const el = root.getElementById(id);
         if (!el) return;
         el.addEventListener('click', () => {
           this.state[stateKey] = !this.state[stateKey];
           this.state.activeProfile = null;
-          this.saveState();
-          this.applyAllStateChanges();
-          this.updatePanelUI();
+          this.syncStateAndUI();
         });
       };
 
-      bindToggle('card-dyslexic-font', 'dyslexicFont');
+      bindToggle('card-word-spacing', 'wordSpacingLevel');
       bindToggle('card-text-align-left', 'textAlignLeft');
-      bindToggle('card-highlight-links', 'highlightLinks');
-      bindToggle('card-big-cursor', 'bigCursor');
-      bindToggle('card-stop-animations', 'stopAnimations');
-      bindToggle('card-reading-ruler', 'readingRuler');
+      bindToggle('card-dyslexic-font', 'dyslexicFont');
 
-      // Contrastes
+      // 8. Cores e Contraste
       ['dark', 'light', 'monochrome', 'invert'].forEach(opt => {
         const el = root.getElementById(`card-contrast-${opt}`);
         if (!el) return;
         el.addEventListener('click', () => {
           this.state.contrast = (this.state.contrast === opt) ? 'normal' : opt;
           this.state.activeProfile = null;
-          this.saveState();
-          this.applyAllStateChanges();
-          this.updatePanelUI();
+          this.syncStateAndUI();
         });
       });
 
-      // VLibras
-      const vlibrasBtn = root.getElementById('card-vlibras-toggle');
-      vlibrasBtn.addEventListener('click', () => {
-        this.state.vlibrasActive = !this.state.vlibrasActive;
-        this.saveState();
-        if (this.state.vlibrasActive) {
-          this.loadVLibras();
-        } else {
-          const vwContainer = document.querySelector('[vw]');
-          if (vwContainer) vwContainer.style.display = 'none';
-        }
-        this.updatePanelUI();
+      // Filtros de Daltonismo na aba Ferramentas
+      ['none', 'deuteranopia', 'protanopia', 'tritanopia'].forEach(type => {
+        const btn = root.getElementById(`btn-cb-${type}`);
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          this.state.colorblindType = type;
+          this.syncStateAndUI();
+        });
       });
 
-      // TTS
-      const readBtn = root.getElementById('btn-read-page');
-      readBtn.addEventListener('click', () => this.handleSpeechClick());
+      // 9. Navegação & Foco
+      bindToggle('card-highlight-links', 'highlightLinks');
+      bindToggle('card-enhanced-focus', 'enhancedFocus');
 
-      const stopVoiceBtn = root.getElementById('btn-stop-voice');
-      stopVoiceBtn.addEventListener('click', () => this.stopSpeech());
+      // Régua vs Máscara de Leitura
+      const cardRuler = root.getElementById('card-reading-ruler');
+      if (cardRuler) {
+        cardRuler.addEventListener('click', () => {
+          this.state.readingGuideMode = (this.state.readingGuideMode === 'ruler') ? 'none' : 'ruler';
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
+        });
+      }
+
+      const cardMask = root.getElementById('card-reading-mask');
+      if (cardMask) {
+        cardMask.addEventListener('click', () => {
+          this.state.readingGuideMode = (this.state.readingGuideMode === 'mask') ? 'none' : 'mask';
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
+        });
+      }
+
+      // Cursor: Normal, Large, Xlarge
+      ['normal', 'large', 'xlarge'].forEach(size => {
+        const btn = root.getElementById(`btn-cursor-${size}`);
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          this.state.cursorSize = size;
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
+        });
+      });
+
+      // Pular para o Conteúdo Principal
+      const btnSkip = root.getElementById('btn-skip-to-main');
+      if (btnSkip) {
+        btnSkip.addEventListener('click', () => {
+          this.scrollToMainContent();
+          this.closePanel();
+        });
+      }
+
+      // Navegar pelos Títulos da Página
+      const btnHeadings = root.getElementById('btn-toggle-headings');
+      if (btnHeadings) {
+        btnHeadings.addEventListener('click', () => this.toggleHeadingsList());
+      }
+
+      // 10. Leitura em Voz Alta (TTS)
+      const playPauseBtn = root.getElementById('btn-tts-play-pause');
+      if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', () => this.handleSpeechClick());
+      }
+
+      const stopBtn = root.getElementById('btn-tts-stop');
+      if (stopBtn) {
+        stopBtn.addEventListener('click', () => this.stopSpeech());
+      }
+
+      [0.75, 1, 1.25, 1.5, 2].forEach(r => {
+        const rateBtn = root.getElementById(`rate-${String(r).replace('.', '')}`);
+        if (!rateBtn) return;
+        rateBtn.addEventListener('click', () => {
+          this.state.speechRate = r;
+          this.saveState();
+          this.updatePanelUI();
+          if (this.isSpeaking) {
+            // Reinicia a fala com a nova velocidade
+            this.handleSpeechClick();
+          }
+        });
+      });
+
+      // 11. Movimento
+      bindToggle('card-stop-animations', 'stopAnimations');
+
+      // 12. VLibras
+      const vlibrasBtn = root.getElementById('card-vlibras-toggle');
+      if (vlibrasBtn) {
+        vlibrasBtn.addEventListener('click', () => {
+          this.state.vlibrasActive = !this.state.vlibrasActive;
+          this.saveState();
+          if (this.state.vlibrasActive) {
+            this.loadVLibras();
+          } else {
+            const vwContainer = document.querySelector('[vw]');
+            if (vwContainer) vwContainer.style.display = 'none';
+          }
+          this.updatePanelUI();
+        });
+      }
+
+      // 13. Configurações: Lembrar Preferências
+      const chkRemember = root.getElementById('chk-remember-preferences');
+      if (chkRemember) {
+        chkRemember.addEventListener('change', (e) => {
+          this.state.rememberPreferences = e.target.checked;
+          this.saveState();
+        });
+      }
+
+      // 14. Redefinir Tudo
+      const resetBtn = root.getElementById('btn-reset-all');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => this.resetState());
+      }
+    }
+
+    syncStateAndUI() {
+      this.saveState();
+      this.applyAllStateChanges();
+      this.updatePanelUI();
     }
 
     switchTab(tabKey) {
       this.state.activeTab = tabKey;
       const root = this.shadowRoot;
-      ['assistive', 'audit', 'statement'].forEach(t => {
+      if (!root) return;
+
+      const tabs = ['foryou', 'tools', 'settings'];
+      tabs.forEach(t => {
         const btn = root.getElementById(`tab-btn-${t}`);
         const content = root.getElementById(`tab-content-${t}`);
-        if (btn) btn.classList.toggle('active', t === tabKey);
-        if (content) content.style.display = t === tabKey ? 'block' : 'none';
-      });
+        const isActive = (t === tabKey);
 
-      if (tabKey === 'audit') {
-        this.runAudit();
-        this.renderAuditChecklist();
+        if (btn) {
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        }
+        if (content) {
+          content.classList.toggle('active', isActive);
+          content.style.display = isActive ? 'block' : 'none';
+        }
+      });
+      this.saveState();
+    }
+
+    toggleHeadingsList() {
+      const root = this.shadowRoot;
+      const listContainer = root.getElementById('headings-list-container');
+      const btnHeadings = root.getElementById('btn-toggle-headings');
+      const ul = root.getElementById('headings-items-ul');
+      if (!listContainer || !ul) return;
+
+      const isHidden = listContainer.style.display === 'none';
+      if (isHidden) {
+        listContainer.style.display = 'block';
+        btnHeadings.setAttribute('aria-expanded', 'true');
+        ul.innerHTML = '';
+
+        const headings = Array.from(document.querySelectorAll('h1, h2, h3')).filter(el => {
+          return !el.closest('#allyada-root') && !el.closest('[data-allyada-ignore]') && !el.closest('[vw]');
+        });
+
+        if (headings.length === 0) {
+          ul.innerHTML = `<li class="heading-empty-item">Nenhum cabeçalho estrutural (H1, H2, H3) foi encontrado nesta página.</li>`;
+          return;
+        }
+
+        headings.forEach((h, idx) => {
+          const text = (h.textContent || '').trim();
+          if (!text) return;
+          const tag = h.tagName.toLowerCase();
+          const li = document.createElement('li');
+          li.className = 'heading-list-item';
+          li.innerHTML = `
+            <button type="button" class="btn-heading-target" data-heading-idx="${idx}">
+              <span class="heading-level-pill ${tag}">${tag.toUpperCase()}</span>
+              <span class="heading-text-label">${this.escapeHTML(text.slice(0, 80))}</span>
+            </button>
+          `;
+          li.querySelector('button').addEventListener('click', () => {
+            this.closePanel();
+            h.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (!h.hasAttribute('tabindex')) {
+              h.setAttribute('tabindex', '-1');
+            }
+            h.focus();
+            h.classList.add('allyada-heading-target-highlight');
+            setTimeout(() => {
+              h.classList.remove('allyada-heading-target-highlight');
+            }, 2500);
+          });
+          ul.appendChild(li);
+        });
+      } else {
+        listContainer.style.display = 'none';
+        btnHeadings.setAttribute('aria-expanded', 'false');
       }
     }
 
-    renderAuditChecklist() {
-      const root = this.shadowRoot;
-      if (!root) return;
-
-      const container = root.getElementById('audit-checklist-items');
-      const scoreVal = root.getElementById('audit-score-val');
-      const scoreCircle = root.getElementById('audit-score-circle');
-      const scoreStatus = root.getElementById('audit-score-status');
-      const scoreSubtext = root.getElementById('audit-score-subtext');
-      const remStatusBadge = root.getElementById('rem-status-badge');
-      const remCardBox = root.getElementById('remediation-card-box');
-      if (!container) return;
-
-      const results = this.auditResults || this.runAudit();
-      const score = results.score;
-
-      // 1. Atualiza valor numérico
-      if (scoreVal) scoreVal.textContent = `${score}%`;
-
-      // 2. Anéis de conformidade dinâmicos
-      if (scoreCircle) {
-        scoreCircle.classList.remove('score-high', 'score-med', 'score-low');
-        if (score >= 90) {
-          scoreCircle.classList.add('score-high');
-        } else if (score >= 70) {
-          scoreCircle.classList.add('score-med');
-        } else {
-          scoreCircle.classList.add('score-low');
-        }
-      }
-
-      // 3. Título e subtexto explicativo
-      if (scoreStatus) {
-        if (score >= 90) {
-          scoreStatus.textContent = 'Conformidade Alta (Excelente)';
-        } else if (score >= 70) {
-          scoreStatus.textContent = 'Conformidade Parcial (Atenção)';
-        } else {
-          scoreStatus.textContent = 'Conformidade Crítica (Ajustes)';
-        }
-      }
-
-      if (scoreSubtext) {
-        const passedCount = results.checks.filter(c => c.passed).length;
-        scoreSubtext.textContent = `${passedCount} de ${results.checks.length} critérios técnicos aprovados em conformidade com WCAG 2.2 AA.`;
-      }
-
-      // 4. Status da Remediação no DOM
-      if (remStatusBadge) {
-        const remCount = this.remediatedCount || 0;
-        if (this.state.autoRemediate) {
-          remStatusBadge.className = 'rem-status-badge active';
-          remStatusBadge.innerHTML = `<span class="rem-pulse-dot"></span> Remediação ativa: <strong>${remCount} correções aplicadas no DOM</strong>`;
-          if (remCardBox) remCardBox.classList.add('remediated');
-        } else {
-          remStatusBadge.className = 'rem-status-badge inactive';
-          remStatusBadge.innerHTML = `Remediação pausada &bull; Ative o switch para auto-corrigir o DOM`;
-          if (remCardBox) remCardBox.classList.remove('remediated');
-        }
-      }
-
-      // 5. Itens auditados detalhados
-      container.innerHTML = results.checks.map(c => `
-        <div class="audit-check-item ${c.passed ? 'passed' : 'failed'}">
-          <div class="check-icon">${c.passed ? ICONS.check : ICONS.alert}</div>
-          <div class="check-text">
-            <div class="check-title-row">
-              <span class="check-criterion-code">${c.code}</span>
-              <strong>${c.name}</strong>
-            </div>
-            <span class="check-detail-text">${c.details}</span>
-            ${c.remediated ? `<span class="check-remediated-badge">✓ Corrigido por auto-remediação</span>` : ''}
-          </div>
-          <span class="check-status-pill ${c.passed ? 'passed' : 'failed'}">${c.passed ? 'Aprovado' : 'Ajustar'}</span>
-        </div>
-      `).join('');
+    escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag));
     }
 
     applyFontSize() {
@@ -1903,7 +1698,7 @@
       const elements = document.body.querySelectorAll(selectors);
 
       elements.forEach(el => {
-        // Escudo de isolamento: ignora Allyada, VLibras e CABEÇALHOS/NAVBARS do host
+        // Escudo de isolamento: ignora Allyada, VLibras e cabeçalhos/navbars do host
         if (
           el.closest('#allyada-root') || 
           el.closest('[data-allyada-ignore]') || 
@@ -1940,43 +1735,208 @@
 
       this.applyFontSize();
 
+      // Linhas
       html.classList.remove('ally-line-height-1', 'ally-line-height-2');
       if (this.state.lineHeightLevel > 0) {
         html.classList.add(`ally-line-height-${this.state.lineHeightLevel}`);
       }
 
+      // Letras
       html.classList.remove('ally-letter-spacing-1', 'ally-letter-spacing-2');
       if (this.state.letterSpacingLevel > 0) {
         html.classList.add(`ally-letter-spacing-${this.state.letterSpacingLevel}`);
       }
 
+      // Palavras
+      html.classList.toggle('ally-word-spacing-1', !!this.state.wordSpacingLevel);
+
+      // Fonte & Alinhamento
       html.classList.toggle('ally-dyslexic-font', this.state.dyslexicFont);
       html.classList.toggle('ally-text-align-left', this.state.textAlignLeft);
 
+      // Contraste
       html.classList.remove('ally-contrast-dark', 'ally-contrast-light', 'ally-contrast-monochrome', 'ally-contrast-invert');
       if (this.state.contrast !== 'normal') {
         html.classList.add(`ally-contrast-${this.state.contrast}`);
       }
 
+      // Daltonismo
       html.classList.remove('ally-filter-deuteranopia', 'ally-filter-protanopia', 'ally-filter-tritanopia');
-      if (this.state.activeProfile === 'colorblind') {
+      if (this.state.colorblindType && this.state.colorblindType !== 'none') {
         html.classList.add(`ally-filter-${this.state.colorblindType}`);
       }
 
+      // Navegação & Foco
       html.classList.toggle('ally-highlight-links', this.state.highlightLinks);
-      html.classList.toggle('ally-big-cursor', this.state.bigCursor);
+      html.classList.toggle('ally-enhanced-focus', this.state.enhancedFocus);
+
+      // Cursor
+      html.classList.remove('ally-cursor-large', 'ally-cursor-xlarge');
+      if (this.state.cursorSize === 'large') {
+        html.classList.add('ally-cursor-large');
+      } else if (this.state.cursorSize === 'xlarge') {
+        html.classList.add('ally-cursor-xlarge');
+      }
+
+      // Movimento
       html.classList.toggle('ally-stop-animations', this.state.stopAnimations);
 
-      if (this.rulerElement) {
-        this.rulerElement.style.display = this.state.readingRuler ? 'block' : 'none';
+      // Guia de Leitura (Régua ou Máscara)
+      if (this.readingGuideElement) {
+        this.readingGuideElement.style.display = (this.state.readingGuideMode === 'ruler') ? 'block' : 'none';
       }
+      if (this.readingMaskElement) {
+        this.readingMaskElement.style.display = (this.state.readingGuideMode === 'mask') ? 'block' : 'none';
+      }
+    }
+
+    /**
+     * Calcula a lista de ajustes ativos para exibição e desativação individual
+     */
+    getActiveAdjustments() {
+      const items = [];
+
+      if (this.state.activeProfile) {
+        const profileNames = {
+          concentration: 'Concentração',
+          'low-vision': 'Facilidade para enxergar',
+          reading: 'Leitura confortável',
+          colorblind: 'Diferenciar cores',
+          motion: 'Menos movimento'
+        };
+        items.push({
+          id: 'profile',
+          label: `Perfil: ${profileNames[this.state.activeProfile] || this.state.activeProfile}`,
+          reset: () => { this.state.activeProfile = null; }
+        });
+      }
+
+      if (this.state.fontSizeLevel > 0) {
+        items.push({
+          id: 'font-size',
+          label: `Texto (+${this.state.fontSizeLevel * 15}%)`,
+          reset: () => { this.state.fontSizeLevel = 0; }
+        });
+      }
+
+      if (this.state.lineHeightLevel > 0) {
+        items.push({
+          id: 'line-height',
+          label: `Entrelinhas (${this.state.lineHeightLevel === 1 ? '1.9x' : '2.3x'})`,
+          reset: () => { this.state.lineHeightLevel = 0; }
+        });
+      }
+
+      if (this.state.letterSpacingLevel > 0) {
+        items.push({
+          id: 'letter-spacing',
+          label: `Letras (${this.state.letterSpacingLevel === 1 ? 'Médio' : 'Amplo'})`,
+          reset: () => { this.state.letterSpacingLevel = 0; }
+        });
+      }
+
+      if (this.state.wordSpacingLevel) {
+        items.push({
+          id: 'word-spacing',
+          label: 'Separar palavras',
+          reset: () => { this.state.wordSpacingLevel = 0; }
+        });
+      }
+
+      if (this.state.dyslexicFont) {
+        items.push({
+          id: 'dyslexic-font',
+          label: 'Fonte Lexend',
+          reset: () => { this.state.dyslexicFont = false; }
+        });
+      }
+
+      if (this.state.textAlignLeft) {
+        items.push({
+          id: 'align-left',
+          label: 'Alinhamento à esquerda',
+          reset: () => { this.state.textAlignLeft = false; }
+        });
+      }
+
+      if (this.state.contrast !== 'normal') {
+        const cLabels = { dark: 'Escuro', light: 'Claro', monochrome: 'Monocromático', invert: 'Invertido' };
+        items.push({
+          id: 'contrast',
+          label: `Contraste (${cLabels[this.state.contrast] || this.state.contrast})`,
+          reset: () => { this.state.contrast = 'normal'; }
+        });
+      }
+
+      if (this.state.colorblindType && this.state.colorblindType !== 'none') {
+        items.push({
+          id: 'colorblind',
+          label: `Filtro: ${this.state.colorblindType}`,
+          reset: () => { this.state.colorblindType = 'none'; }
+        });
+      }
+
+      if (this.state.highlightLinks) {
+        items.push({
+          id: 'highlight-links',
+          label: 'Destacar links',
+          reset: () => { this.state.highlightLinks = false; }
+        });
+      }
+
+      if (this.state.enhancedFocus) {
+        items.push({
+          id: 'enhanced-focus',
+          label: 'Foco reforçado',
+          reset: () => { this.state.enhancedFocus = false; }
+        });
+      }
+
+      if (this.state.cursorSize !== 'normal') {
+        items.push({
+          id: 'cursor-size',
+          label: `Cursor (${this.state.cursorSize === 'large' ? 'Grande' : 'Extra Grande'})`,
+          reset: () => { this.state.cursorSize = 'normal'; }
+        });
+      }
+
+      if (this.state.readingGuideMode !== 'none') {
+        items.push({
+          id: 'reading-guide',
+          label: `Guia (${this.state.readingGuideMode === 'ruler' ? 'Régua' : 'Máscara'})`,
+          reset: () => { this.state.readingGuideMode = 'none'; }
+        });
+      }
+
+      if (this.state.stopAnimations) {
+        items.push({
+          id: 'stop-animations',
+          label: 'Menos movimento',
+          reset: () => { this.state.stopAnimations = false; }
+        });
+      }
+
+      if (this.state.vlibrasActive) {
+        items.push({
+          id: 'vlibras',
+          label: 'VLibras ativo',
+          reset: () => { 
+            this.state.vlibrasActive = false; 
+            const vw = document.querySelector('[vw]');
+            if (vw) vw.style.display = 'none';
+          }
+        });
+      }
+
+      return items;
     }
 
     updatePanelUI() {
       const root = this.shadowRoot;
       if (!root) return;
 
-      const profiles = ['adhd', 'colorblind', 'epilepsy', 'low-vision', 'dyslexia'];
+      // 1. Perfis
+      const profiles = ['concentration', 'low-vision', 'reading', 'colorblind', 'motion'];
       profiles.forEach(p => {
         const el = root.getElementById(`profile-${p}`);
         if (el) {
@@ -1986,6 +1946,7 @@
         }
       });
 
+      // Seletor de Daltonismo no Perfil
       const cbBox = root.getElementById('colorblind-selector-box');
       if (cbBox) {
         cbBox.style.display = this.state.activeProfile === 'colorblind' ? 'block' : 'none';
@@ -1995,10 +1956,26 @@
         if (pill) pill.classList.toggle('active', this.state.colorblindType === type);
       });
 
-      const fontLabels = ['Padrão (100%)', '+15%', '+30%', '+45%', '+60%'];
+      // 2. Acesso Rápido (Modo Simples)
+      const setQuick = (id, active) => {
+        const el = root.getElementById(id);
+        if (el) {
+          el.setAttribute('aria-pressed', active ? 'true' : 'false');
+          el.classList.toggle('active', !!active);
+        }
+      };
+      setQuick('quick-font-size', this.state.fontSizeLevel > 0);
+      setQuick('quick-contrast', this.state.contrast !== 'normal');
+      setQuick('quick-links', this.state.highlightLinks);
+      setQuick('quick-tts', this.isSpeaking);
+      setQuick('quick-motion', this.state.stopAnimations);
+      setQuick('quick-cursor', this.state.cursorSize !== 'normal');
+
+      // 3. Tipografia
+      const fontLabels = ['Normal (100%)', '+15%', '+30%', '+45%', '+60%'];
       const fontIndicator = root.getElementById('font-size-indicator');
       if (fontIndicator) {
-        fontIndicator.textContent = fontLabels[this.state.fontSizeLevel] || 'Padrão (100%)';
+        fontIndicator.textContent = fontLabels[this.state.fontSizeLevel] || 'Normal (100%)';
       }
 
       const btnDec = root.getElementById('btn-font-decrease');
@@ -2011,9 +1988,9 @@
         dot.classList.toggle('active', idx <= this.state.fontSizeLevel);
       });
 
-      const lhLabels = ['Padrão', 'Confortável (1.9x)', 'Amplo (2.3x)'];
+      const lhLabels = ['Normal', 'Confortável (1.9x)', 'Amplo (2.3x)'];
       const lhInd = root.getElementById('line-height-indicator');
-      if (lhInd) lhInd.textContent = lhLabels[this.state.lineHeightLevel] || 'Padrão';
+      if (lhInd) lhInd.textContent = lhLabels[this.state.lineHeightLevel] || 'Normal';
       [0, 1, 2].forEach(l => {
         const btn = root.getElementById(`btn-lh-${l}`);
         if (btn) btn.classList.toggle('active', this.state.lineHeightLevel === l);
@@ -2035,17 +2012,60 @@
         }
       };
 
-      updateTool('card-dyslexic-font', this.state.dyslexicFont);
+      updateTool('card-word-spacing', !!this.state.wordSpacingLevel);
       updateTool('card-text-align-left', this.state.textAlignLeft);
-      updateTool('card-highlight-links', this.state.highlightLinks);
-      updateTool('card-big-cursor', this.state.bigCursor);
-      updateTool('card-stop-animations', this.state.stopAnimations);
-      updateTool('card-reading-ruler', this.state.readingRuler);
+      updateTool('card-dyslexic-font', this.state.dyslexicFont);
 
+      // Atualiza Caixa de Prévia ao Vivo de Tipografia
+      const previewBox = root.getElementById('typography-preview-box');
+      if (previewBox) {
+        const factors = [1.0, 1.15, 1.30, 1.45, 1.60];
+        const lhValues = ['1.5', '1.9', '2.3'];
+        const lsValues = ['normal', '0.08em', '0.16em'];
+
+        previewBox.style.fontSize = `${(13 * (factors[this.state.fontSizeLevel] || 1.0)).toFixed(1)}px`;
+        previewBox.style.lineHeight = lhValues[this.state.lineHeightLevel] || '1.5';
+        previewBox.style.letterSpacing = lsValues[this.state.letterSpacingLevel] || 'normal';
+        previewBox.style.wordSpacing = this.state.wordSpacingLevel ? '0.12em' : 'normal';
+        previewBox.style.fontFamily = this.state.dyslexicFont ? "'Lexend', sans-serif" : 'inherit';
+        previewBox.style.textAlign = this.state.textAlignLeft ? 'left' : 'inherit';
+      }
+
+      // 4. Cores e Contraste
       ['dark', 'light', 'monochrome', 'invert'].forEach(opt => {
         updateTool(`card-contrast-${opt}`, this.state.contrast === opt);
       });
 
+      const cbLabel = root.getElementById('colorblind-active-label');
+      if (cbLabel) {
+        const names = { none: 'Padrão', deuteranopia: 'Deuteranopia', protanopia: 'Protanopia', tritanopia: 'Tritanopia' };
+        cbLabel.textContent = names[this.state.colorblindType] || 'Padrão';
+      }
+      ['none', 'deuteranopia', 'protanopia', 'tritanopia'].forEach(type => {
+        const btn = root.getElementById(`btn-cb-${type}`);
+        if (btn) btn.classList.toggle('active', this.state.colorblindType === type);
+      });
+
+      // 5. Navegação & Foco
+      updateTool('card-highlight-links', this.state.highlightLinks);
+      updateTool('card-enhanced-focus', this.state.enhancedFocus);
+      updateTool('card-reading-ruler', this.state.readingGuideMode === 'ruler');
+      updateTool('card-reading-mask', this.state.readingGuideMode === 'mask');
+
+      const cSizeLabel = root.getElementById('cursor-size-label');
+      if (cSizeLabel) {
+        const cNames = { normal: 'Normal', large: 'Grande (36px)', xlarge: 'Extra Grande (48px)' };
+        cSizeLabel.textContent = cNames[this.state.cursorSize] || 'Normal';
+      }
+      ['normal', 'large', 'xlarge'].forEach(size => {
+        const btn = root.getElementById(`btn-cursor-${size}`);
+        if (btn) btn.classList.toggle('active', this.state.cursorSize === size);
+      });
+
+      // 6. Movimento
+      updateTool('card-stop-animations', this.state.stopAnimations);
+
+      // 7. VLibras
       updateTool('card-vlibras-toggle', this.state.vlibrasActive);
       const vlibrasPill = root.getElementById('vlibras-pill');
       if (vlibrasPill) {
@@ -2053,19 +2073,19 @@
         vlibrasPill.classList.toggle('active', this.state.vlibrasActive);
       }
 
-      let activeCount = 0;
-      if (this.state.activeProfile) activeCount++;
-      if (this.state.fontSizeLevel > 0) activeCount++;
-      if (this.state.lineHeightLevel > 0) activeCount++;
-      if (this.state.letterSpacingLevel > 0) activeCount++;
-      if (this.state.dyslexicFont) activeCount++;
-      if (this.state.textAlignLeft) activeCount++;
-      if (this.state.contrast !== 'normal') activeCount++;
-      if (this.state.highlightLinks) activeCount++;
-      if (this.state.bigCursor) activeCount++;
-      if (this.state.stopAnimations) activeCount++;
-      if (this.state.readingRuler) activeCount++;
-      if (this.state.vlibrasActive) activeCount++;
+      // 8. Velocidade de Fala (TTS)
+      [0.75, 1, 1.25, 1.5, 2].forEach(r => {
+        const btn = root.getElementById(`rate-${String(r).replace('.', '')}`);
+        if (btn) btn.classList.toggle('active', this.state.speechRate === r);
+      });
+
+      // 9. Configurações: Switch de Lembrar
+      const chkRem = root.getElementById('chk-remember-preferences');
+      if (chkRem) chkRem.checked = !!this.state.rememberPreferences;
+
+      // 10. Ajustes Ativos: Chips e Contadores
+      const activeItems = this.getActiveAdjustments();
+      const activeCount = activeItems.length;
 
       const badge = root.getElementById('allyada-active-count');
       if (badge) {
@@ -2075,8 +2095,13 @@
 
       const headerBadge = root.getElementById('header-active-badge');
       if (headerBadge) {
-        headerBadge.textContent = `${activeCount} ${activeCount === 1 ? 'ativa' : 'ativas'}`;
+        headerBadge.textContent = `${activeCount} ${activeCount === 1 ? 'ativo' : 'ativos'}`;
         headerBadge.style.display = activeCount > 0 ? 'inline-flex' : 'none';
+      }
+
+      const settingsBadge = root.getElementById('settings-active-count-badge');
+      if (settingsBadge) {
+        settingsBadge.textContent = `${activeCount} ${activeCount === 1 ? 'ativo' : 'ativos'}`;
       }
 
       const resetBtn = root.getElementById('btn-reset-all');
@@ -2085,11 +2110,30 @@
         resetBtn.classList.toggle('has-active', activeCount > 0);
       }
 
-      const chkRem = root.getElementById('chk-auto-remediation');
-      if (chkRem) {
-        chkRem.checked = !!this.state.autoRemediate;
+      // Renderiza os Chips de Ajustes Ativos com botão ✕ individual
+      const chipsContainer = root.getElementById('active-adjustments-chips');
+      if (chipsContainer) {
+        if (activeCount === 0) {
+          chipsContainer.innerHTML = `<div class="active-none-msg">Nenhum ajuste ativo no momento. As configurações estão no padrão original.</div>`;
+        } else {
+          chipsContainer.innerHTML = '';
+          activeItems.forEach(item => {
+            const chip = document.createElement('div');
+            chip.className = 'adjustment-chip';
+            chip.innerHTML = `
+              <span class="chip-text">${this.escapeHTML(item.label)}</span>
+              <button type="button" class="btn-chip-remove" aria-label="Remover ajuste ${this.escapeHTML(item.label)}" title="Remover este ajuste">
+                ${ICONS.remove}
+              </button>
+            `;
+            chip.querySelector('.btn-chip-remove').addEventListener('click', () => {
+              item.reset();
+              this.syncStateAndUI();
+            });
+            chipsContainer.appendChild(chip);
+          });
+        }
       }
-      this.renderAuditChecklist();
     }
 
     toggleDockPosition() {
@@ -2133,15 +2177,13 @@
 
       this.updatePanelUI();
 
-      if (this.state.activeTab === 'audit') {
-        this.runAudit();
-        this.renderAuditChecklist();
-      }
+      // Ativa o Focus Trap no interior do painel
+      this.setupFocusTrap();
 
       setTimeout(() => {
         const closeBtn = this.shadowRoot.getElementById('allyada-close-btn');
         if (closeBtn) closeBtn.focus();
-      }, 50);
+      }, 60);
     }
 
     closePanel() {
@@ -2150,10 +2192,15 @@
       const backdrop = this.shadowRoot.getElementById('allyada-backdrop');
       const trigger = this.shadowRoot.getElementById('allyada-trigger-btn');
 
-      // Desfoca o elemento interno antes de aplicar aria-hidden="true" para eliminar warning do Chromium
+      // Remove o Focus Trap
+      this.removeFocusTrap();
+
+      // Desfoca o elemento interno antes de ocultar para eliminar qualquer warning no Chromium
       if (this.shadowRoot.activeElement && typeof this.shadowRoot.activeElement.blur === 'function') {
         this.shadowRoot.activeElement.blur();
       }
+
+      // Restaura o foco para o elemento disparador ou o foco anterior
       if (this.previousFocusedElement && typeof this.previousFocusedElement.focus === 'function') {
         this.previousFocusedElement.focus();
       } else if (trigger && typeof trigger.focus === 'function') {
@@ -2173,12 +2220,78 @@
       }
     }
 
+    /**
+     * WCAG 2.1.2 (No Keyboard Trap) e Focus Trap Seguro
+     * Garante que a navegação por Tab circule estritamente dentro do painel
+     */
+    setupFocusTrap() {
+      this.removeFocusTrap();
+      const panel = this.shadowRoot.getElementById('allyada-panel');
+      if (!panel) return;
+
+      this.panelKeyDownHandler = (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          this.closePanel();
+          return;
+        }
+
+        if (e.key === 'Tab') {
+          const focusableSelectors = 'button:not([disabled]):not([style*="display: none"]), [tabindex="0"], input:not([disabled]):not([style*="display: none"]), select:not([disabled]), textarea:not([disabled])';
+          const focusables = Array.from(panel.querySelectorAll(focusableSelectors)).filter(el => {
+            return el.offsetParent !== null || el === this.shadowRoot.getElementById('allyada-close-btn');
+          });
+
+          if (focusables.length === 0) return;
+
+          const firstEl = focusables[0];
+          const lastEl = focusables[focusables.length - 1];
+          const currentEl = this.shadowRoot.activeElement;
+
+          if (e.shiftKey) {
+            if (currentEl === firstEl || !panel.contains(currentEl)) {
+              e.preventDefault();
+              lastEl.focus();
+            }
+          } else {
+            if (currentEl === lastEl || !panel.contains(currentEl)) {
+              e.preventDefault();
+              firstEl.focus();
+            }
+          }
+        }
+      };
+
+      panel.addEventListener('keydown', this.panelKeyDownHandler);
+    }
+
+    removeFocusTrap() {
+      if (this.panelKeyDownHandler) {
+        const panel = this.shadowRoot ? this.shadowRoot.getElementById('allyada-panel') : null;
+        if (panel) {
+          panel.removeEventListener('keydown', this.panelKeyDownHandler);
+        }
+        this.panelKeyDownHandler = null;
+      }
+    }
+
     setupGlobalShortcuts() {
       window.addEventListener('keydown', (e) => {
+        // Bloqueia Alt + A caso o usuário esteja digitando em um campo de texto
         if (e.altKey && e.key.toLowerCase() === this.config.shortcutKey) {
+          const active = document.activeElement;
+          const isInput = active && (
+            active.tagName === 'INPUT' || 
+            active.tagName === 'TEXTAREA' || 
+            active.tagName === 'SELECT' || 
+            active.isContentEditable
+          );
+          if (isInput) return;
+
           e.preventDefault();
           this.togglePanel();
         }
+
         if (e.key === 'Escape' && this.isOpen) {
           e.preventDefault();
           this.closePanel();
@@ -2189,8 +2302,8 @@
     initSpeechSynthesis() {
       if (!('speechSynthesis' in window)) {
         console.warn('[Allyada] O navegador não suporta Web Speech API.');
-        const voiceBox = this.shadowRoot.getElementById('voice-controls-box');
-        if (voiceBox) voiceBox.style.display = 'none';
+        const ttsSec = this.shadowRoot.querySelector('[data-section="speech"]');
+        if (ttsSec) ttsSec.style.display = 'none';
         return;
       }
       this.speechSynthesizer = window.speechSynthesis;
@@ -2220,12 +2333,17 @@
         textToRead = selection.toString().trim();
         targetNode = selection.anchorNode ? (selection.anchorNode.nodeType === 1 ? selection.anchorNode : selection.anchorNode.parentElement) : null;
       } else {
-        targetNode = document.querySelector('main article') || document.querySelector('main') || document.querySelector('article') || document.body;
+        targetNode = document.querySelector('main article') || 
+                     document.querySelector('main') || 
+                     document.querySelector('[role="main"]') || 
+                     document.querySelector('#content') || 
+                     document.querySelector('article') || 
+                     document.body;
         textToRead = this.extractReadableText(targetNode);
       }
 
       if (!textToRead) {
-        alert('Nenhum texto disponível para leitura.');
+        alert('Nenhum texto legível disponível na página.');
         return;
       }
 
@@ -2238,7 +2356,7 @@
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = this.config.speechLang;
-      utterance.rate = 1.0;
+      utterance.rate = this.state.speechRate || 1.0;
       utterance.pitch = 1.0;
 
       const voices = this.speechSynthesizer.getVoices();
@@ -2263,7 +2381,7 @@
       };
 
       utterance.onerror = (e) => {
-        console.warn('[Allyada] Erro na síntese de voz:', e);
+        console.warn('[Allyada] Erro na fala:', e);
         this.isSpeaking = false;
         this.isSpeechPaused = false;
         this.clearHighlight();
@@ -2291,28 +2409,43 @@
 
     updateSpeechButtons(speaking, paused) {
       const root = this.shadowRoot;
-      const textSpan = root.getElementById('voice-btn-text');
-      const stopBtn = root.getElementById('btn-stop-voice');
+      if (!root) return;
 
-      if (!textSpan || !stopBtn) return;
+      const playLabel = root.getElementById('tts-play-label');
+      const playIcon = root.getElementById('tts-play-icon');
+      const stopBtn = root.getElementById('btn-tts-stop');
+      const statusText = root.getElementById('tts-status-text');
+      const quickLabel = root.getElementById('quick-tts-label');
 
       if (speaking) {
-        textSpan.textContent = paused ? 'Continuar' : 'Pausar';
-        stopBtn.style.display = 'inline-flex';
+        if (playLabel) playLabel.textContent = paused ? 'Continuar Leitura' : 'Pausar Leitura';
+        if (playIcon) playIcon.innerHTML = paused ? ICONS.play : ICONS.pause;
+        if (stopBtn) stopBtn.style.display = 'inline-flex';
+        if (statusText) statusText.textContent = paused ? 'Leitura pausada. Clique em continuar para prosseguir.' : 'Lendo conteúdo em voz alta...';
+        if (quickLabel) quickLabel.textContent = paused ? 'Continuar' : 'Pausar';
       } else {
-        textSpan.textContent = 'Ouvir Texto';
-        stopBtn.style.display = 'none';
+        if (playLabel) playLabel.textContent = 'Ouvir Página';
+        if (playIcon) playIcon.innerHTML = ICONS.sound;
+        if (stopBtn) stopBtn.style.display = 'none';
+        if (statusText) statusText.textContent = 'Pronto para ler a página ou o trecho selecionado.';
+        if (quickLabel) quickLabel.textContent = 'Ouvir Texto';
+      }
+
+      const quickTile = root.getElementById('quick-tts');
+      if (quickTile) {
+        quickTile.setAttribute('aria-pressed', speaking ? 'true' : 'false');
+        quickTile.classList.toggle('active', speaking);
       }
     }
 
     extractReadableText(el) {
       if (!el) return '';
       const clone = el.cloneNode(true);
-      const removeSelectors = ['script', 'style', 'noscript', '#allyada-root', '#allyada-reading-ruler', '#allyada-svg-filters', '[data-allyada-ignore]', '[vw]'];
+      const removeSelectors = ['script', 'style', 'noscript', '#allyada-root', '#allyada-reading-ruler', '#allyada-reading-mask', '#allyada-svg-filters', '[data-allyada-ignore]', '[vw]'];
       removeSelectors.forEach(sel => {
         clone.querySelectorAll(sel).forEach(node => node.remove());
       });
-      return clone.innerText.slice(0, 3000);
+      return clone.innerText.slice(0, 3500);
     }
 
     loadVLibras() {
@@ -2347,7 +2480,7 @@
             rootPath: 'https://vlibras.gov.br/app',
             position: this.config.position === 'right' ? 'R' : 'L'
           });
-          console.log('[Allyada] VLibras carregado e integrado.');
+          console.log('[Allyada] VLibras carregado e posicionado.');
         }
       };
       document.body.appendChild(script);
@@ -2369,8 +2502,6 @@
           --text-main: #0f172a;
           --text-secondary: #475569;
           --text-muted: #64748b;
-          --shadow-floating: 0 12px 36px -4px rgba(0, 30, 80, 0.22), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
-          --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
           --radius-card: 12px;
           --radius-btn: 8px;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
@@ -2451,21 +2582,21 @@
           box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* Sem cortina escura nem blur no fundo para visualização clara em tempo real */
+        /* Backdrop sem bloqueio visual */
         .allyada-backdrop {
           display: none !important;
           pointer-events: none !important;
         }
 
-        /* Painel Flutuante (Modal Descolado da Lateral) */
+        /* Painel Flutuante (Drawer Lateral Descolado) */
         .allyada-drawer {
           position: fixed;
           bottom: 86px;
           top: auto;
-          width: 385px;
+          width: 395px;
           max-width: calc(100vw - 24px);
           height: auto;
-          max-height: min(600px, calc(100vh - 104px));
+          max-height: min(620px, calc(100vh - 104px));
           background: #ffffff;
           border: 1px solid rgba(15, 23, 42, 0.12);
           border-radius: 16px;
@@ -2500,38 +2631,33 @@
             width: calc(100vw - 20px);
             right: 10px !important;
             left: 10px !important;
-            bottom: 80px;
-            max-height: calc(100vh - 94px);
-          }
-        }
-
-        @media (max-height: 680px) {
-          .allyada-drawer {
-            bottom: 76px;
-            max-height: calc(100vh - 86px);
+            bottom: 84px;
+            max-height: calc(100vh - 96px);
           }
         }
 
         /* Header */
         .drawer-header {
-          flex-shrink: 0;
-          padding: 10px 14px;
+          padding: 12px 14px;
+          background: #ffffff;
+          border-bottom: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: #ffffff;
-          border-bottom: 1px solid var(--border-subtle);
+          gap: 8px;
+          flex-shrink: 0;
         }
         .header-brand-group {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 9px;
+          min-width: 0;
         }
         .brand-badge-icon {
-          width: 28px;
-          height: 28px;
-          border-radius: 8px;
-          background: linear-gradient(135deg, var(--primary), #0284c7);
+          width: 32px;
+          height: 32px;
+          border-radius: 9px;
+          background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
           color: #ffffff;
           display: flex;
           align-items: center;
@@ -2539,557 +2665,928 @@
           flex-shrink: 0;
         }
         .brand-badge-icon svg { width: 18px; height: 18px; }
-        .title-row {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .brand-text h2 {
-          font-size: 1.02rem;
+        .brand-text { display: flex; flex-direction: column; min-width: 0; }
+        .title-row { display: flex; align-items: center; gap: 6px; }
+        .title-row h2 {
+          font-size: 0.95rem;
           font-weight: 800;
           color: var(--text-main);
           letter-spacing: -0.02em;
-          line-height: 1.1;
+          line-height: 1.2;
         }
         .active-badge-pill {
-          font-size: 0.60rem;
+          font-size: 0.62rem;
           font-weight: 800;
+          color: #1d4ed8;
+          background: #dbeafe;
           padding: 1px 6px;
           border-radius: 9999px;
-          background: #dcfce7;
-          color: #15803d;
-          border: 1px solid #bbf7d0;
-          display: inline-flex;
-          align-items: center;
+          border: 1px solid #bfdbfe;
         }
         .brand-sub {
-          font-size: 0.68rem;
+          font-size: 0.67rem;
           color: var(--text-muted);
-          font-weight: 600;
+          font-weight: 500;
+          line-height: 1.2;
         }
         .header-actions-group {
           display: flex;
           align-items: center;
           gap: 4px;
+          flex-shrink: 0;
         }
-        .btn-header-action {
-          background: transparent;
-          border: none;
+        .btn-header-action, .btn-icon-close {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          border: 1px solid var(--border-subtle);
+          background: #ffffff;
+          color: var(--text-secondary);
           cursor: pointer;
-          padding: 5px;
-          border-radius: 6px;
-          color: var(--text-muted);
           display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.15s ease;
         }
-        .btn-header-action:hover {
-          background: #f1f5f9;
+        .btn-header-action:hover, .btn-icon-close:hover {
+          background: var(--bg-card-hover);
           color: var(--text-main);
+          border-color: #cbd5e1;
         }
-        .btn-header-action svg { width: 16px; height: 16px; }
-        .btn-icon-close {
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          padding: 5px;
-          border-radius: 6px;
-          color: var(--text-muted);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.15s ease;
+        .btn-header-action:focus-visible, .btn-icon-close:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 2px;
         }
-        .btn-icon-close:hover {
-          background: #f1f5f9;
-          color: var(--text-main);
+        .btn-header-action svg, .btn-icon-close svg {
+          width: 16px;
+          height: 16px;
         }
-        .btn-icon-close svg { width: 17px; height: 17px; }
 
         /* Abas Superiores */
         .suite-tabs {
-          flex-shrink: 0;
           display: flex;
-          background: #f1f5f9;
           padding: 4px;
-          gap: 4px;
+          background: #f1f5f9;
           border-bottom: 1px solid var(--border-subtle);
+          flex-shrink: 0;
+          gap: 3px;
         }
         .suite-tab-btn {
           flex: 1;
-          display: inline-flex;
+          display: flex;
           align-items: center;
           justify-content: center;
-          gap: 6px;
+          gap: 5px;
           padding: 7px 4px;
-          font-size: 0.74rem;
-          font-weight: 700;
-          white-space: nowrap;
           border: none;
           background: transparent;
           color: var(--text-secondary);
-          border-radius: 8px;
+          font-size: 0.73rem;
+          font-weight: 700;
+          border-radius: 7px;
           cursor: pointer;
           transition: all 0.15s ease;
+          min-height: 36px;
         }
         .suite-tab-btn:hover {
-          background: rgba(255, 255, 255, 0.7);
           color: var(--text-main);
+          background: rgba(255, 255, 255, 0.6);
         }
         .suite-tab-btn.active {
           background: #ffffff;
           color: var(--primary);
           box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-        .tab-icon svg { width: 14px; height: 14px; flex-shrink: 0; }
+        .suite-tab-btn:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+        .suite-tab-btn .tab-icon svg { width: 14px; height: 14px; }
 
         /* Conteúdo das Abas */
         .drawer-tab-content {
           flex: 1;
-          overflow: hidden;
           display: flex;
           flex-direction: column;
+          overflow: hidden;
+          min-height: 0;
         }
         .tab-scroll-body {
           flex: 1;
           overflow-y: auto;
-          padding: 10px 14px 14px 14px;
+          padding: 12px 14px 16px;
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 14px;
           scrollbar-width: thin;
           scrollbar-color: #cbd5e1 transparent;
         }
-        .tab-scroll-body::-webkit-scrollbar {
-          width: 5px;
+        .tab-scroll-body::-webkit-scrollbar { width: 5px; }
+        .tab-scroll-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        /* Campo de Busca Rápida */
+        .search-box-wrapper {
+          padding: 8px 14px 2px;
+          flex-shrink: 0;
         }
-        .tab-scroll-body::-webkit-scrollbar-track {
-          background: transparent;
+        .search-input-box {
+          position: relative;
+          display: flex;
+          align-items: center;
+          width: 100%;
         }
-        .tab-scroll-body::-webkit-scrollbar-thumb {
+        .search-icon-svg {
+          position: absolute;
+          left: 10px;
+          color: var(--text-muted);
+          display: flex;
+          align-items: center;
+          pointer-events: none;
+        }
+        .search-icon-svg svg { width: 14px; height: 14px; }
+        .search-input-field {
+          width: 100%;
+          padding: 7px 28px 7px 30px;
+          border-radius: 8px;
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+          font-size: 0.74rem;
+          color: var(--text-main);
+          outline: none;
+          transition: all 0.15s ease;
+        }
+        .search-input-field:focus {
+          border-color: var(--primary);
+          background: #ffffff;
+          box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15);
+        }
+        .search-clear-btn {
+          position: absolute;
+          right: 8px;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
           background: #cbd5e1;
-          border-radius: 4px;
+          color: #ffffff;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
         }
 
-        /* Barra de Utilidades */
-        .utility-bar {
-          flex-shrink: 0;
-          padding: 6px 12px;
+        /* Seções do Menu */
+        .menu-section {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .section-heading {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .section-heading h3 {
+          font-size: 0.70rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--text-muted);
+        }
+        .pill-badge {
+          font-size: 0.60rem;
+          font-weight: 700;
+          color: #0369a1;
+          background: #e0f2fe;
+          padding: 1px 6px;
+          border-radius: 9999px;
+        }
+
+        /* Grid do Modo Simples / Acesso Rápido */
+        .quick-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
+        }
+        .quick-tile {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          padding: 10px 4px;
+          border-radius: var(--radius-btn);
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+          cursor: pointer;
+          transition: all 0.15s ease;
+          text-align: center;
+          min-height: 64px;
+        }
+        .quick-tile:hover {
+          background: var(--bg-card-hover);
+          border-color: #cbd5e1;
+          transform: translateY(-1px);
+        }
+        .quick-tile.active {
+          background: var(--bg-card-active);
+          border-color: var(--border-active);
+          color: var(--primary);
+        }
+        .quick-tile:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+        .tile-icon svg { width: 18px; height: 18px; }
+        .tile-label { font-size: 0.67rem; font-weight: 700; line-height: 1.2; }
+
+        .btn-customize-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          width: 100%;
+          padding: 8px 10px;
           background: #f8fafc;
-          border-bottom: 1px solid var(--border-subtle);
+          border: 1px dashed #cbd5e1;
+          border-radius: var(--radius-btn);
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: var(--primary);
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-customize-link:hover {
+          background: var(--bg-card-active);
+          border-color: var(--primary);
+        }
+        .btn-customize-link:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+        .arrow-icon svg { width: 12px; height: 12px; }
+
+        /* Perfis Humanos */
+        .profiles-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .profile-card {
+          padding: 9px 11px;
+          border-radius: var(--radius-card);
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+          cursor: pointer;
+          text-align: left;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          transition: all 0.15s ease;
+        }
+        .profile-card:hover {
+          background: var(--bg-card-hover);
+          border-color: #cbd5e1;
+        }
+        .profile-card.active {
+          background: var(--bg-card-active);
+          border-color: var(--border-active);
+          box-shadow: 0 0 0 1px var(--border-active);
+        }
+        .profile-card:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+        .card-top-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 2px;
+        }
+        .card-icon-bubble {
+          width: 24px;
+          height: 24px;
+          border-radius: 6px;
+          background: #e2e8f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-main);
+        }
+        .profile-card.active .card-icon-bubble {
+          background: var(--primary);
+          color: #ffffff;
+        }
+        .card-icon-bubble svg { width: 14px; height: 14px; }
+        .card-tag {
+          font-size: 0.60rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+        .card-heading {
+          font-size: 0.77rem;
+          font-weight: 800;
+          color: var(--text-main);
+        }
+        .card-subtext {
+          font-size: 0.67rem;
+          color: var(--text-secondary);
+          line-height: 1.3;
+        }
+
+        .sub-selector-box {
+          background: #f8fafc;
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-card);
+          padding: 8px 10px;
+        }
+        .sub-selector-title {
+          font-size: 0.67rem;
+          font-weight: 700;
+          color: var(--text-main);
+          display: block;
+          margin-bottom: 5px;
+        }
+
+        /* Caixas de Controle (Steppers & Segmentados) */
+        .control-box {
+          background: var(--bg-card);
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-card);
+          padding: 8px 10px;
+        }
+        .control-box-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .control-title {
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: var(--text-main);
+          display: block;
+        }
+        .control-val {
+          font-size: 0.66rem;
+          color: var(--text-muted);
+          font-weight: 600;
+        }
+        .stepper-actions {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .btn-step {
+          width: 28px;
+          height: 28px;
+          border-radius: 6px;
+          border: 1px solid #cbd5e1;
+          background: #ffffff;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .btn-step:hover:not(:disabled) {
+          background: var(--bg-card-hover);
+          border-color: #94a3b8;
+        }
+        .btn-step:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+        .btn-step:focus-visible {
+          outline: 2px solid var(--primary);
+        }
+
+        .steps-progress {
+          display: flex;
+          gap: 4px;
+          margin-top: 6px;
+        }
+        .prog-dot {
+          flex: 1;
+          height: 4px;
+          background: #e2e8f0;
+          border-radius: 2px;
+          transition: background 0.2s ease;
+        }
+        .prog-dot.active {
+          background: var(--primary);
+        }
+
+        .segmented-control {
+          display: flex;
+          background: #e2e8f0;
+          padding: 2px;
+          border-radius: 7px;
+          gap: 2px;
+        }
+        .seg-btn {
+          flex: 1;
+          padding: 5px 3px;
+          font-size: 0.67rem;
+          font-weight: 700;
+          border: none;
+          background: transparent;
+          color: var(--text-secondary);
+          border-radius: 5px;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          text-align: center;
+          min-height: 28px;
+        }
+        .seg-btn:hover { color: var(--text-main); }
+        .seg-btn.active {
+          background: #ffffff;
+          color: var(--primary);
+          box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+        .seg-btn:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+
+        /* Cards de Ferramentas com Toggle */
+        .tools-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 6px;
+        }
+        .tool-card {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          padding: 7px 8px;
+          border-radius: var(--radius-btn);
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+          cursor: pointer;
+          text-align: left;
+          transition: all 0.15s ease;
+          min-height: 48px;
+        }
+        .tool-card.full-width {
+          grid-column: 1 / -1;
+        }
+        .tool-card:hover {
+          background: var(--bg-card-hover);
+          border-color: #cbd5e1;
+        }
+        .tool-card.active {
+          background: var(--bg-card-active);
+          border-color: var(--border-active);
+        }
+        .tool-card:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+        .tool-icon-box {
+          width: 26px;
+          height: 26px;
+          border-radius: 6px;
+          background: #e2e8f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          color: var(--text-main);
+        }
+        .tool-card.active .tool-icon-box {
+          background: var(--primary);
+          color: #ffffff;
+        }
+        .tool-icon-box svg { width: 14px; height: 14px; }
+        .tool-info { flex: 1; min-width: 0; }
+        .tool-title {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: var(--text-main);
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .tool-desc {
+          font-size: 0.63rem;
+          color: var(--text-muted);
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .toggle-indicator {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #cbd5e1;
+          flex-shrink: 0;
+          transition: background 0.2s ease;
+        }
+        .tool-card.active .toggle-indicator {
+          background: #16a34a;
+          box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25);
+        }
+
+        /* Caixa de Prévia ao Vivo */
+        .live-preview-wrapper {
+          background: #ffffff;
+          border: 1px dashed #cbd5e1;
+          border-radius: var(--radius-card);
+          padding: 8px 10px;
+        }
+        .preview-tag {
+          font-size: 0.62rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: var(--primary);
+          display: block;
+          margin-bottom: 4px;
+        }
+        .live-preview-box {
+          font-size: 13px;
+          line-height: 1.5;
+          color: var(--text-main);
+          padding: 6px 8px;
+          background: #f8fafc;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+        }
+
+        /* Estrutura de Títulos (Navegação H1-H3) */
+        .structure-nav-group {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .btn-action-tile {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 8px 10px;
+          border-radius: var(--radius-btn);
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+          cursor: pointer;
+          text-align: left;
+          transition: all 0.15s ease;
+        }
+        .btn-action-tile:hover {
+          background: var(--bg-card-hover);
+          border-color: #cbd5e1;
+        }
+        .btn-action-tile:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+        .tile-icon-action {
+          width: 28px;
+          height: 28px;
+          border-radius: 6px;
+          background: #e0e7ff;
+          color: #3730a3;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .tile-icon-action svg { width: 16px; height: 16px; }
+        .tile-info-action strong { font-size: 0.74rem; font-weight: 700; color: var(--text-main); display: block; }
+        .tile-info-action span { font-size: 0.65rem; color: var(--text-muted); display: block; }
+
+        .headings-drawer {
+          background: #ffffff;
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-card);
+          padding: 8px 10px;
+          max-height: 220px;
+          overflow-y: auto;
+        }
+        .headings-list-header {
+          font-size: 0.67rem;
+          font-weight: 800;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+        .headings-list-items {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .btn-heading-target {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 6px;
+          border: 1px solid transparent;
+          border-radius: 6px;
+          background: #f8fafc;
+          cursor: pointer;
+          text-align: left;
+          transition: all 0.15s ease;
+        }
+        .btn-heading-target:hover {
+          background: #e0f2fe;
+          border-color: #bae6fd;
+        }
+        .btn-heading-target:focus-visible {
+          outline: 2px solid var(--primary);
+        }
+        .heading-level-pill {
+          font-size: 0.58rem;
+          font-weight: 800;
+          padding: 1px 5px;
+          border-radius: 4px;
+          background: #e2e8f0;
+          color: #334155;
+          flex-shrink: 0;
+        }
+        .heading-level-pill.h1 { background: #dbeafe; color: #1e40af; }
+        .heading-level-pill.h2 { background: #fef3c7; color: #92400e; }
+        .heading-level-pill.h3 { background: #f1f5f9; color: #475569; }
+        .heading-text-label {
+          font-size: 0.68rem;
+          color: var(--text-main);
+          font-weight: 600;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .heading-empty-item {
+          font-size: 0.68rem;
+          color: var(--text-muted);
+          padding: 6px;
+          text-align: center;
+        }
+
+        /* Card TTS (Leitura em Voz Alta) */
+        .tts-card-box {
+          background: var(--bg-card);
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-card);
+          padding: 10px 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .tts-status-row {
+          font-size: 0.68rem;
+          color: var(--text-secondary);
+          line-height: 1.3;
+        }
+        .tts-button-controls {
+          display: flex;
+          gap: 6px;
+        }
+        .btn-tts-action {
+          flex: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 8px 12px;
+          border-radius: 7px;
+          font-size: 0.74rem;
+          font-weight: 700;
+          cursor: pointer;
+          border: none;
+          transition: all 0.15s ease;
+          min-height: 38px;
+        }
+        .btn-tts-action.primary {
+          background: var(--primary);
+          color: #ffffff;
+        }
+        .btn-tts-action.primary:hover { background: var(--primary-hover); }
+        .btn-tts-action.stop {
+          background: #fee2e2;
+          color: #b91c1c;
+          border: 1px solid #fca5a5;
+        }
+        .btn-tts-action.stop:hover { background: #fecaca; }
+        .btn-tts-action:focus-visible { outline: 2px solid var(--accent); }
+        .tts-btn-icon svg { width: 16px; height: 16px; }
+
+        .tts-rate-row {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 6px;
         }
-        .btn-utility {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          padding: 4px 8px;
-          border-radius: 6px;
-          font-size: 0.74rem;
-          font-weight: 600;
-          cursor: pointer;
-          border: 1px solid var(--border-subtle);
-          background: #ffffff;
-          color: var(--text-secondary);
-          transition: all 0.15s ease;
-        }
-        .btn-utility svg { width: 13px; height: 13px; }
-        .btn-utility:hover { background: #f1f5f9; border-color: #cbd5e1; }
-        .btn-utility.reset:hover { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
-        .btn-utility.reset.has-active {
-          color: #dc2626;
-          border-color: #fca5a5;
-          background: #fef2f2;
-          font-weight: 700;
-        }
-        .btn-utility.reset:disabled {
-          opacity: 0.45;
-          cursor: not-allowed;
-        }
-        .btn-utility.tts { color: #0052cc; background: #eff6ff; border-color: #bfdbfe; }
-        .btn-utility.tts:hover { background: #dbeafe; }
-        .btn-utility.tts-stop { padding: 4px 6px; background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+        .tts-rate-title { font-size: 0.67rem; font-weight: 700; color: var(--text-muted); }
+        .tts-rates { flex: 1; max-width: 220px; }
 
-        /* Campo de Busca Rápida */
-        .search-box-wrapper {
-          padding: 8px 14px 2px 14px;
-          background: #ffffff;
-        }
-        .search-input-box {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 5px 10px;
-          background: #f1f5f9;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          transition: all 0.15s ease;
-        }
-        .search-input-box:focus-within {
-          background: #ffffff;
-          border-color: var(--primary);
-          box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.15);
-        }
-        .search-icon-svg svg {
-          width: 13px;
-          height: 13px;
-          color: var(--text-muted);
-          display: block;
-        }
-        .search-input-field {
-          flex: 1;
-          border: none;
-          background: transparent;
-          font-size: 0.73rem;
-          color: var(--text-main);
-          outline: none;
-        }
-        .search-input-field::placeholder {
-          color: #94a3b8;
-        }
-        .search-clear-btn {
-          border: none;
-          background: #cbd5e1;
-          color: #475569;
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          font-size: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          line-height: 1;
-          padding: 0;
-        }
-        .search-clear-btn:hover {
-          background: #94a3b8;
-          color: #ffffff;
-        }
-
-        /* Seções e Cards */
-        .menu-section { display: flex; flex-direction: column; gap: 6px; }
-        .section-heading { display: flex; align-items: center; justify-content: space-between; }
-        .section-heading h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; color: var(--text-muted); }
-        .pill-badge { font-size: 0.63rem; font-weight: 700; padding: 1px 6px; border-radius: 9999px; background: #eff6ff; color: #0052cc; }
-
-        .profiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .profile-card {
-          display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 8px 10px;
-          background: var(--bg-card); border: 1.5px solid var(--border-subtle); border-radius: 8px;
-          cursor: pointer; text-align: left; transition: all 0.18s ease; color: var(--text-main); box-shadow: var(--shadow-card);
-        }
-        .profile-card:hover { background: var(--bg-card-hover); border-color: #94a3b8; transform: translateY(-1px); }
-        .profile-card.active { background: var(--bg-card-active); border-color: var(--border-active); box-shadow: 0 0 0 1px var(--border-active); }
-        .card-top-row { width: 100%; display: flex; align-items: center; justify-content: space-between; }
-        .card-icon-bubble { width: 24px; height: 24px; border-radius: 6px; background: #ffffff; border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; color: var(--primary); }
-        .card-icon-bubble svg { width: 14px; height: 14px; }
-        .card-tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; padding: 1px 5px; border-radius: 3px; background: #e2e8f0; color: #475569; }
-        .profile-card.active .card-tag { background: var(--border-active); color: #ffffff; }
-        .card-heading { font-size: 0.78rem; font-weight: 700; color: var(--text-main); }
-        .profile-card.active .card-heading { color: var(--border-active); }
-        .card-subtext { font-size: 0.65rem; color: var(--text-muted); line-height: 1.25; }
-
-        .sub-selector-box { margin-top: 2px; padding: 8px 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; }
-        .sub-selector-title { display: block; font-size: 0.7rem; font-weight: 700; color: #166534; margin-bottom: 6px; }
-        .segmented-control { display: flex; gap: 4px; }
-        .seg-btn { flex: 1; padding: 5px 6px; font-size: 0.7rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-subtle); background: #ffffff; color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 0.15s ease; }
-        .seg-btn:hover { background: #f1f5f9; }
-        .seg-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); font-weight: 700; }
-        .sub-selector-box .seg-btn.active { background: #16a34a; border-color: #15803d; }
-
-        .control-box { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 8px 10px; box-shadow: var(--shadow-card); }
-        .control-box-header { display: flex; align-items: center; justify-content: space-between; }
-        .control-title { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-main); }
-        .control-val { display: block; font-size: 0.7rem; font-weight: 700; color: var(--primary); margin-top: 1px; }
-        .stepper-actions { display: flex; gap: 4px; }
-        .btn-step { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border-subtle); background: #ffffff; color: var(--text-main); font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
-        .btn-step:hover:not(:disabled) { background: #f1f5f9; border-color: #94a3b8; }
-        .btn-step:disabled { opacity: 0.35; cursor: not-allowed; }
-        .steps-progress { display: flex; gap: 4px; margin-top: 6px; }
-        .prog-dot { flex: 1; height: 3px; border-radius: 9999px; background: #e2e8f0; }
-        .prog-dot.active { background: var(--primary); }
-
-        .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .tool-card {
-          display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg-card); border: 1px solid var(--border-subtle);
-          border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.18s ease; color: var(--text-main); position: relative; box-shadow: var(--shadow-card);
-        }
-        .tool-card:hover { background: var(--bg-card-hover); border-color: #94a3b8; transform: translateY(-1px); }
-        .tool-card.active { background: var(--bg-card-active); border-color: var(--border-active); box-shadow: 0 0 0 1px var(--border-active); }
-        .tool-icon-box { width: 26px; height: 26px; border-radius: 6px; background: #ffffff; border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); flex-shrink: 0; }
-        .tool-card.active .tool-icon-box { background: #dbeafe; color: var(--primary); border-color: #bfdbfe; }
-        .tool-icon-box svg { width: 14px; height: 14px; }
-        .tool-info { flex: 1; min-width: 0; }
-        .tool-title { display: block; font-size: 0.74rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
-        .tool-card.active .tool-title { color: var(--border-active); }
-        .tool-desc { display: block; font-size: 0.63rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; margin-top: 1px; }
-        .toggle-indicator { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; flex-shrink: 0; transition: all 0.2s ease; }
-        .tool-card.active .toggle-indicator { background: #22c55e; box-shadow: 0 0 5px #22c55e; }
-
+        /* Card VLibras */
         .vlibras-banner-card {
-          width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg-card);
-          border: 1px solid var(--border-subtle); border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.18s ease; box-shadow: var(--shadow-card);
-        }
-        .vlibras-banner-card:hover { background: var(--bg-card-hover); border-color: #94a3b8; }
-        .vlibras-icon-box { width: 28px; height: 28px; border-radius: 7px; background: #eff6ff; color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .vlibras-icon-box svg { width: 16px; height: 16px; }
-        .vlibras-info { flex: 1; }
-        .toggle-pill { padding: 3px 8px; border-radius: 9999px; font-size: 0.68rem; font-weight: 700; background: #e2e8f0; color: #475569; }
-        .toggle-pill.active { background: #22c55e; color: #ffffff; }
-
-        /* ABA 2: Estilos da Auditoria WCAG */
-        .audit-score-card {
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-          color: #ffffff;
-          border-radius: 10px;
-          padding: 12px 14px;
           display: flex;
           align-items: center;
-          gap: 12px;
-          box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+          gap: 10px;
+          padding: 9px 12px;
+          border-radius: var(--radius-card);
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-card);
+          cursor: pointer;
+          width: 100%;
+          text-align: left;
+          transition: all 0.15s ease;
         }
-        .score-circle-box {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          border: 3px solid #22c55e;
+        .vlibras-banner-card:hover {
+          background: var(--bg-card-hover);
+          border-color: #cbd5e1;
+        }
+        .vlibras-banner-card.active {
+          background: var(--bg-card-active);
+          border-color: var(--border-active);
+        }
+        .vlibras-banner-card:focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 1px;
+        }
+        .vlibras-icon-box {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          background: #0052cc;
+          color: #ffffff;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
-          background: rgba(34, 197, 94, 0.1);
           flex-shrink: 0;
-          transition: all 0.25s ease;
         }
-        .score-circle-box.score-high {
-          border-color: #22c55e;
-          background: rgba(34, 197, 94, 0.12);
+        .vlibras-icon-box svg { width: 18px; height: 18px; }
+        .vlibras-info { flex: 1; }
+        .toggle-pill {
+          font-size: 0.65rem;
+          font-weight: 800;
+          padding: 2px 7px;
+          border-radius: 9999px;
+          background: #e2e8f0;
+          color: #475569;
         }
-        .score-circle-box.score-high .score-number { color: #4ade80; }
-
-        .score-circle-box.score-med {
-          border-color: #f59e0b;
-          background: rgba(245, 158, 11, 0.12);
-        }
-        .score-circle-box.score-med .score-number { color: #fbbf24; }
-
-        .score-circle-box.score-low {
-          border-color: #ef4444;
-          background: rgba(239, 68, 68, 0.12);
-        }
-        .score-circle-box.score-low .score-number { color: #f87171; }
-
-        .score-circle-box.scanning {
-          animation: allyada-pulse-glow 0.8s infinite alternate ease-in-out;
-        }
-        @keyframes allyada-pulse-glow {
-          0% { box-shadow: 0 0 4px rgba(59, 130, 246, 0.4); transform: scale(1); }
-          100% { box-shadow: 0 0 16px rgba(59, 130, 246, 0.85); transform: scale(1.05); }
-        }
-
-        .score-number { font-size: 1.05rem; font-weight: 800; color: #4ade80; line-height: 1; transition: color 0.2s ease; }
-        .score-label { font-size: 0.54rem; text-transform: uppercase; font-weight: 700; color: #94a3b8; margin-top: 1px; }
-        .score-info h4 { font-size: 0.88rem; font-weight: 800; margin-bottom: 2px; }
-        .score-info p { font-size: 0.68rem; color: #94a3b8; line-height: 1.3; margin-bottom: 8px; }
-        
-        .audit-actions-row {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          flex-wrap: wrap;
-        }
-        .btn-run-audit {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          padding: 4px 10px;
-          border-radius: 6px;
-          font-size: 0.72rem;
-          font-weight: 700;
-          border: none;
-          background: #2563eb;
-          color: #ffffff;
-          cursor: pointer;
-          transition: background 0.15s ease, opacity 0.15s ease;
-        }
-        .btn-run-audit:hover { background: #1d4ed8; }
-        .btn-run-audit.scanning { opacity: 0.75; pointer-events: none; }
-        .btn-run-audit.success { background: #16a34a !important; }
-        .btn-run-audit svg { width: 12px; height: 12px; }
-        .spin-icon { display: inline-flex; animation: allyada-spin 0.7s linear infinite; }
-        @keyframes allyada-spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        .btn-copy-audit {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          padding: 4px 10px;
-          border-radius: 6px;
-          font-size: 0.72rem;
-          font-weight: 700;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          background: rgba(255, 255, 255, 0.12);
-          color: #ffffff;
-          cursor: pointer;
-          transition: background 0.15s ease;
-        }
-        .btn-copy-audit:hover { background: rgba(255, 255, 255, 0.22); }
-        .btn-copy-audit svg { width: 12px; height: 12px; }
-
-        .contrast-dark-box { background: #18181b !important; color: #fde047 !important; border-color: #3f3f46 !important; }
-        .contrast-light-box { background: #ffffff !important; color: #0f172a !important; border-color: #0f172a !important; }
-        .contrast-mono-box { background: #e2e8f0 !important; color: #475569 !important; border-color: #94a3b8 !important; }
-        .contrast-invert-box { background: #f1f5f9 !important; color: #7c3aed !important; border-color: #ddd6fe !important; }
-
-        .remediation-box {
-          background: #f0fdf4;
-          border: 1px solid #bbf7d0;
-          border-radius: 8px;
-          padding: 10px 12px;
-          transition: all 0.2s ease;
-        }
-        .remediation-box.remediated {
-          background: #ecfdf5;
-          border-color: #a7f3d0;
-        }
-        .remediation-header { display: flex; align-items: center; gap: 10px; }
-        .rem-icon-box { width: 28px; height: 28px; border-radius: 6px; background: #22c55e; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .rem-icon-box svg { width: 15px; height: 15px; }
-        .rem-text { flex: 1; }
-        .rem-text strong { display: block; font-size: 0.78rem; font-weight: 700; color: #166534; }
-        .rem-text span { display: block; font-size: 0.67rem; color: #15803d; line-height: 1.25; }
-        .modern-toggle { width: 36px; height: 20px; accent-color: #16a34a; cursor: pointer; }
-
-        .rem-status-badge {
-          margin-top: 8px;
-          padding: 4px 8px;
-          border-radius: 6px;
-          font-size: 0.68rem;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .rem-status-badge.active {
+        .toggle-pill.active {
           background: #dcfce7;
-          color: #166534;
-          border: 1px solid #bbf7d0;
-        }
-        .rem-status-badge.inactive {
-          background: #f1f5f9;
-          color: #64748b;
-          border: 1px solid #e2e8f0;
-        }
-        .rem-pulse-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #22c55e;
-          display: inline-block;
-          flex-shrink: 0;
-          animation: allyada-dot-pulse 1.2s infinite;
-        }
-        @keyframes allyada-dot-pulse {
-          0% { transform: scale(0.9); opacity: 0.8; }
-          50% { transform: scale(1.4); opacity: 1; }
-          100% { transform: scale(0.9); opacity: 0.8; }
+          color: #15803d;
         }
 
-        .audit-checklist-header h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; color: var(--text-muted); }
-        .audit-checklist { display: flex; flex-direction: column; gap: 6px; }
-        .audit-check-item {
+        /* Configurações & Switch */
+        .setting-item-row {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
+          justify-content: space-between;
           gap: 10px;
           padding: 8px 10px;
           background: var(--bg-card);
           border: 1px solid var(--border-subtle);
-          border-radius: 8px;
+          border-radius: var(--radius-card);
         }
-        .audit-check-item.passed { border-left: 3px solid #22c55e; }
-        .audit-check-item.failed { border-left: 3px solid #ef4444; background: #fef2f2; }
-        .check-icon svg { width: 16px; height: 16px; margin-top: 1px; }
-        .audit-check-item.passed .check-icon { color: #16a34a; }
-        .audit-check-item.failed .check-icon { color: #dc2626; }
-        .check-text { flex: 1; }
-        .check-title-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
-        .check-criterion-code { font-size: 0.60rem; font-weight: 800; color: #475569; background: #e2e8f0; padding: 1px 5px; border-radius: 4px; }
-        .check-text strong { font-size: 0.76rem; font-weight: 700; color: var(--text-main); }
-        .check-detail-text { display: block; font-size: 0.67rem; color: var(--text-muted); line-height: 1.25; }
-        .check-remediated-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.60rem; font-weight: 700; color: #166534; background: #dcfce7; padding: 1px 5px; border-radius: 4px; margin-top: 3px; }
-        .check-status-pill { font-size: 0.64rem; font-weight: 800; padding: 2px 6px; border-radius: 9999px; }
-        .check-status-pill.passed { background: #dcfce7; color: #15803d; }
-        .check-status-pill.failed { background: #fee2e2; color: #991b1b; }
+        .setting-text strong {
+          display: block;
+          font-size: 0.74rem;
+          font-weight: 700;
+          color: var(--text-main);
+        }
+        .setting-text span {
+          display: block;
+          font-size: 0.65rem;
+          color: var(--text-muted);
+        }
+        .switch-toggle {
+          position: relative;
+          display: inline-block;
+          width: 38px;
+          height: 22px;
+          flex-shrink: 0;
+        }
+        .switch-toggle input { opacity: 0; width: 0; height: 0; }
+        .switch-slider {
+          position: absolute;
+          cursor: pointer;
+          inset: 0;
+          background-color: #cbd5e1;
+          border-radius: 22px;
+          transition: .2s;
+        }
+        .switch-slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          border-radius: 50%;
+          transition: .2s;
+        }
+        .switch-toggle input:checked + .switch-slider { background-color: #16a34a; }
+        .switch-toggle input:focus-visible + .switch-slider { outline: 2px solid var(--primary); }
+        .switch-toggle input:checked + .switch-slider:before { transform: translateX(16px); }
 
-        /* ABA 3: Estilos da Declaração Legal */
-        .statement-hero {
-          background: #eff6ff;
-          border: 1px solid #bfdbfe;
-          border-radius: 8px;
-          padding: 10px 12px;
+        /* Lista de Atalhos */
+        .shortcuts-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
         }
-        .legal-badge-tag {
+        .shortcut-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 6px 10px;
+          background: var(--bg-card);
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-btn);
+          font-size: 0.70rem;
+          color: var(--text-secondary);
+        }
+        .kbd-combo kbd {
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
+          border-radius: 4px;
+          padding: 1px 5px;
+          font-size: 0.65rem;
+          font-weight: 700;
+          color: var(--text-main);
+          box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+        }
+
+        /* Chips de Ajustes Ativos */
+        .active-adjustments-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          min-height: 38px;
+        }
+        .adjustment-chip {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          font-size: 0.68rem;
-          font-weight: 800;
-          color: #1d4ed8;
-          text-transform: uppercase;
-          letter-spacing: 0.04em;
-        }
-        .legal-badge-tag svg { width: 13px; height: 13px; }
-        .statement-heading { font-size: 0.95rem; font-weight: 800; color: #1e3a8a; margin: 3px 0 1px; }
-        .statement-date { font-size: 0.68rem; color: #3b82f6; }
-
-        .statement-body-text p { font-size: 0.74rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 10px; }
-        .standards-badges-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 5px;
-          margin-bottom: 10px;
-        }
-        .std-badge {
-          padding: 4px 6px;
-          background: #f8fafc;
-          border: 1px solid #cbd5e1;
-          border-radius: 5px;
-          font-size: 0.65rem;
-          font-weight: 700;
-          color: #334155;
-        }
-        .statement-legal-box {
-          background: var(--bg-card);
-          border: 1px solid var(--border-subtle);
-          border-radius: 8px;
-          padding: 10px;
-          margin-bottom: 10px;
-        }
-        .statement-legal-box h4 { font-size: 0.76rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px; }
-        .statement-legal-box ul { padding-left: 16px; font-size: 0.68rem; color: var(--text-secondary); }
-        .statement-legal-box li { margin-bottom: 4px; }
-
-        .btn-copy-statement {
-          width: 100%;
-          padding: 8px 12px;
+          padding: 4px 8px;
+          background: #eff6ff;
+          border: 1px solid #bfdbfe;
           border-radius: 6px;
-          font-size: 0.76rem;
+          font-size: 0.68rem;
           font-weight: 700;
-          border: none;
-          background: var(--primary);
-          color: #ffffff;
-          cursor: pointer;
-          transition: background 0.15s ease;
+          color: #1e40af;
         }
-        .btn-copy-statement:hover { background: var(--primary-hover); }
+        .btn-chip-remove {
+          border: none;
+          background: transparent;
+          color: #60a5fa;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1px;
+          border-radius: 3px;
+        }
+        .btn-chip-remove:hover { color: #1e3a8a; background: #dbeafe; }
+        .btn-chip-remove svg { width: 12px; height: 12px; }
+        .active-none-msg {
+          font-size: 0.69rem;
+          color: var(--text-muted);
+          padding: 8px 10px;
+          background: var(--bg-card);
+          border: 1px dashed var(--border-subtle);
+          border-radius: 8px;
+          width: 100%;
+          text-align: center;
+        }
+
+        .btn-reset-all-full {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 9px 12px;
+          border-radius: var(--radius-btn);
+          border: 1px solid #cbd5e1;
+          background: #f8fafc;
+          color: var(--text-secondary);
+          font-size: 0.74rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-reset-all-full:hover:not(:disabled) {
+          background: #fee2e2;
+          color: #b91c1c;
+          border-color: #fca5a5;
+        }
+        .btn-reset-all-full:disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
+        }
+        .btn-reset-all-full:focus-visible { outline: 2px solid var(--primary); }
+        .btn-reset-all-full svg { width: 14px; height: 14px; }
 
         /* Rodapé */
         .drawer-footer {
@@ -3100,7 +3597,7 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
-          font-size: 0.70rem;
+          font-size: 0.69rem;
           color: var(--text-muted);
           white-space: nowrap;
         }
@@ -3109,7 +3606,7 @@
           border: 1px solid #cbd5e1;
           border-radius: 4px;
           padding: 1px 5px;
-          font-size: 0.68rem;
+          font-size: 0.66rem;
           font-weight: 700;
           color: var(--text-main);
           box-shadow: 0 1px 1px rgba(0,0,0,0.06);
@@ -3118,9 +3615,8 @@
           display: inline-flex;
           align-items: center;
           gap: 4px;
-          font-size: 0.70rem;
         }
-        .footer-brand-tag { font-weight: 700; color: var(--primary); font-size: 0.68rem; }
+        .footer-brand-tag { font-weight: 700; color: var(--primary); font-size: 0.67rem; }
 
         .mt-2 { margin-top: 6px; }
         .mt-3 { margin-top: 8px; }
@@ -3150,4 +3646,3 @@
 
   return instance;
 }));
-
