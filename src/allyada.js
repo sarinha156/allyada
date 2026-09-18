@@ -214,151 +214,442 @@
     }
 
     /**
-     * Motor de Remediação Automática (WCAG 2.2 AA / ADA Title II / Section 508)
-     * Seguro, não-destrutivo e preserva 100% da integridade visual do layout
+     * Utilitário para cópia segura para a área de transferência com fallback
+     */
+    copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text).catch(() => this.fallbackCopyText(text));
+      }
+      return this.fallbackCopyText(text);
+    }
+
+    fallbackCopyText(text) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        return Promise.resolve();
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+
+    /**
+     * Motor de Remediação Automática (WCAG 2.2 AA / ADA Title II / Section 508 / EAA)
+     * Seguro, não-destrutivo e preserva 100% da integridade visual e layouts do host.
      */
     runAutoRemediation() {
       let count = 0;
+      const isHost = (el) => !el.closest('#allyada-root') && !el.closest('[data-allyada-ignore]') && !el.closest('[vw]');
+
       // 1. Injeta Landmarks semânticos ARIA se faltarem
       const header = document.querySelector('header');
-      if (header && !header.getAttribute('role')) { header.setAttribute('role', 'banner'); count++; }
+      if (header && isHost(header) && !header.getAttribute('role')) {
+        header.setAttribute('role', 'banner');
+        header.setAttribute('data-allyada-remediated', 'role-banner');
+        count++;
+      }
 
-      const main = document.querySelector('main');
-      if (main && !main.getAttribute('role')) { main.setAttribute('role', 'main'); count++; }
+      let main = document.querySelector('main, [role="main"]');
+      if (!main) {
+        // Localiza container de conteúdo principal
+        main = document.querySelector('#main, #content, .content, .main-content, article, section, [class*="content"]') || 
+               document.querySelector('body > div:not(#allyada-root)');
+        if (main && isHost(main)) {
+          main.setAttribute('role', 'main');
+          main.setAttribute('data-allyada-remediated', 'role-main');
+          count++;
+        }
+      }
 
-      const nav = document.querySelector('nav');
-      if (nav && !nav.getAttribute('role')) { nav.setAttribute('role', 'navigation'); count++; }
+      document.querySelectorAll('nav').forEach(nav => {
+        if (isHost(nav) && !nav.getAttribute('role')) {
+          nav.setAttribute('role', 'navigation');
+          nav.setAttribute('data-allyada-remediated', 'role-nav');
+          count++;
+        }
+      });
 
       const footer = document.querySelector('footer');
-      if (footer && !footer.getAttribute('role')) { footer.setAttribute('role', 'contentinfo'); count++; }
+      if (footer && isHost(footer) && !footer.getAttribute('role')) {
+        footer.setAttribute('role', 'contentinfo');
+        footer.setAttribute('data-allyada-remediated', 'role-footer');
+        count++;
+      }
 
-      // 2. WCAG 1.1.1: Imagens sem alt recebem alt descritivo baseado no título ou decorativo
+      // 2. WCAG 1.1.1: Imagens sem alt recebem alt descritivo baseado no título ou contexto
       document.querySelectorAll('img:not([alt])').forEach(img => {
-        if (!img.closest('#allyada-root')) {
-          img.setAttribute('alt', img.title || '');
+        if (isHost(img)) {
+          const fallback = img.title || img.getAttribute('aria-label') || 'Imagem ilustrativa';
+          img.setAttribute('alt', fallback);
           img.setAttribute('data-allyada-remediated', 'alt');
           count++;
         }
       });
 
-      // 3. WCAG 4.1.2: Botões vazios apenas com ícones recebem aria-label
-      document.querySelectorAll('button:empty').forEach(el => {
-        if (!el.getAttribute('aria-label') && !el.closest('#allyada-root')) {
-          const label = el.getAttribute('title') || 'Botão interativo';
-          el.setAttribute('aria-label', label);
-          el.setAttribute('data-allyada-remediated', 'aria-label');
-          count++;
-        }
-      });
-
-      // 4. WCAG 2.2 Critério 2.5.8 (Target Size Minimum 24x24px):
-      // Aplica APENAS em botões isolados (buttons) que tenham menos de 24px, NUNCA em links inline <a>!
-      document.querySelectorAll('button').forEach(el => {
-        if (!el.closest('#allyada-root') && !el.closest('[vw]')) {
-          const rect = el.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0 && (rect.width < 24 || rect.height < 24)) {
-            el.style.minWidth = '24px';
-            el.style.minHeight = '24px';
+      // 3. WCAG 4.1.2: Botões vazios ou com ícones sem rótulo textual recebem aria-label
+      document.querySelectorAll('button, [role="button"]').forEach(el => {
+        if (isHost(el)) {
+          const text = (el.innerText || el.textContent || '').trim();
+          const aria = el.getAttribute('aria-label') || el.getAttribute('aria-labelledby');
+          const title = el.getAttribute('title');
+          const hasImg = !!el.querySelector('img[alt]:not([alt=""])');
+          const hasSvg = !!el.querySelector('svg title, svg[aria-label]');
+          if (!text && !aria && !title && !hasImg && !hasSvg) {
+            const label = el.querySelector('svg, i') ? 'Controle interativo' : 'Botão de ação';
+            el.setAttribute('aria-label', label);
+            el.setAttribute('data-allyada-remediated', 'aria-label');
             count++;
           }
         }
       });
 
+      // 4. WCAG 3.3.2: Campos de formulário sem rótulo associado
+      document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), select, textarea').forEach(inp => {
+        if (isHost(inp)) {
+          const id = inp.id;
+          const hasLabel = id ? !!document.querySelector(`label[for="${id}"]`) : !!inp.closest('label');
+          const hasAria = inp.getAttribute('aria-label') || inp.getAttribute('aria-labelledby');
+          const hasTitle = inp.getAttribute('title');
+          if (!hasLabel && !hasAria && !hasTitle) {
+            const label = inp.placeholder || inp.name || (inp.type ? `Campo de ${inp.type}` : 'Campo de entrada');
+            inp.setAttribute('aria-label', label);
+            inp.setAttribute('data-allyada-remediated', 'aria-label');
+            count++;
+          }
+        }
+      });
+
+      // 5. WCAG 1.3.1: H1 principal ausente na página
+      if (!document.querySelector('h1:not(#allyada-root *)')) {
+        let h1 = document.querySelector('h1[data-allyada-remediated="h1"]');
+        if (!h1) {
+          h1 = document.createElement('h1');
+          h1.className = 'allyada-sr-only';
+          h1.setAttribute('data-allyada-remediated', 'h1');
+          h1.textContent = document.title || 'Conteúdo Principal do Portal';
+          const target = document.querySelector('main, [role="main"]') || document.body;
+          if (target && typeof target.insertBefore === 'function' && target.firstChild) {
+            target.insertBefore(h1, target.firstChild);
+          } else if (target && typeof target.appendChild === 'function') {
+            target.appendChild(h1);
+          }
+          count++;
+        }
+      }
+
+      // 6. WCAG 2.2 Critério 2.5.8 (Target Size Minimum 24x24px):
+      // Aplica APENAS em botões isolados abaixo de 24px, NUNCA em links de texto <a>
+      document.querySelectorAll('button').forEach(el => {
+        if (isHost(el)) {
+          const rect = el.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0 && (rect.width < 23.5 || rect.height < 23.5)) {
+            el.style.minWidth = '24px';
+            el.style.minHeight = '24px';
+            el.setAttribute('data-allyada-remediated-size', 'true');
+            count++;
+          }
+        }
+      });
+
+      // 7. WCAG 3.1.1: Idioma global na tag <html>
+      if (!document.documentElement.lang) {
+        document.documentElement.lang = this.config.speechLang || 'pt-BR';
+        document.documentElement.setAttribute('data-allyada-remediated', 'lang');
+        count++;
+      }
+
+      this.remediatedCount = count;
       return { remediatedCount: count };
     }
 
+    /**
+     * Reverte de forma limpa as correções automáticas aplicadas ao DOM
+     */
+    revertAutoRemediation() {
+      // Reverte atributo de idioma na tag <html> se foi remediado
+      if (document.documentElement && document.documentElement.getAttribute('data-allyada-remediated') === 'lang') {
+        document.documentElement.removeAttribute('lang');
+        document.documentElement.lang = '';
+        document.documentElement.removeAttribute('data-allyada-remediated');
+      }
+
+      // Reverte atributos data-allyada-remediated
+      document.querySelectorAll('[data-allyada-remediated]').forEach(el => {
+        const remType = el.getAttribute('data-allyada-remediated');
+        if (remType && remType.startsWith('role')) {
+          el.removeAttribute('role');
+        } else if (remType === 'alt') {
+          el.removeAttribute('alt');
+        } else if (remType === 'aria-label') {
+          el.removeAttribute('aria-label');
+        } else if (remType === 'lang') {
+          el.removeAttribute('lang');
+        } else if (remType === 'h1') {
+          if (el.parentNode && typeof el.parentNode.removeChild === 'function') {
+            el.parentNode.removeChild(el);
+          } else if (typeof el.remove === 'function') {
+            el.remove();
+          }
+        }
+        el.removeAttribute('data-allyada-remediated');
+      });
+
+      // Reverte tamanho de alvo
+      document.querySelectorAll('[data-allyada-remediated-size]').forEach(el => {
+        el.style.minWidth = '';
+        el.style.minHeight = '';
+        el.removeAttribute('data-allyada-remediated-size');
+      });
+
+      this.remediatedCount = 0;
+    }
+
     remediateDOM() {
-      return this.runAutoRemediation();
+      const res = this.runAutoRemediation();
+      this.state.autoRemediate = true;
+      this.saveState();
+      this.runAudit();
+      this.renderAuditChecklist();
+      this.updatePanelUI();
+      return res;
     }
 
     /**
-     * Motor de Auditoria e Monitoramento em Tempo Real (WCAG 2.2 AA)
+     * Motor de Auditoria e Monitoramento em Tempo Real (WCAG 2.2 AA / ADA / EAA)
+     * Realiza varredura rigorosa no DOM do host e calcula pontuação proporcional
      */
     runAudit() {
+      const isHost = (el) => !el.closest('#allyada-root') && !el.closest('[data-allyada-ignore]') && !el.closest('[vw]');
+
       const results = {
         score: 100,
         checks: [
-          { id: 'img-alt', name: 'Imagens com Descrição Alternativa (WCAG 1.1.1 / ADA)', passed: true, details: '' },
-          { id: 'landmarks', name: 'Estrutura e Landmarks ARIA (WCAG 1.3.1 / Seção 508)', passed: true, details: '' },
-          { id: 'btn-labels', name: 'Botões e Links com Rótulos Acessíveis (WCAG 4.1.2)', passed: true, details: '' },
-          { id: 'form-labels', name: 'Campos de Formulário com Etiquetas (WCAG 3.3.2)', passed: true, details: '' },
-          { id: 'headings', name: 'Hierarquia de Cabeçalhos H1-H6 (WCAG 1.3.1 / EAA)', passed: true, details: '' },
-          { id: 'target-size', name: 'Tamanho Mínimo de Alvo 24x24px (WCAG 2.2 Critério 2.5.8)', passed: true, details: '' },
-          { id: 'lang', name: 'Idioma da Página Definido (WCAG 3.1.1 / IS 5568)', passed: true, details: '' }
+          {
+            id: 'img-alt',
+            code: 'WCAG 1.1.1',
+            name: 'Imagens com Descrição Alternativa',
+            standard: 'WCAG 1.1.1 Nível A / ADA Título II / LBI',
+            passed: true,
+            remediated: false,
+            details: '',
+            count: 0,
+            total: 0
+          },
+          {
+            id: 'landmarks',
+            code: 'WCAG 1.3.1',
+            name: 'Estrutura e Landmarks ARIA',
+            standard: 'WCAG 1.3.1 Nível A / Seção 508 / EAA',
+            passed: true,
+            remediated: false,
+            details: '',
+            count: 0,
+            total: 0
+          },
+          {
+            id: 'btn-labels',
+            code: 'WCAG 4.1.2',
+            name: 'Botões e Links com Rótulos Acessíveis',
+            standard: 'WCAG 4.1.2 Nível A / EN 301 549',
+            passed: true,
+            remediated: false,
+            details: '',
+            count: 0,
+            total: 0
+          },
+          {
+            id: 'form-labels',
+            code: 'WCAG 3.3.2',
+            name: 'Campos de Formulário com Etiquetas',
+            standard: 'WCAG 3.3.2 Nível A / ADA / e-MAG',
+            passed: true,
+            remediated: false,
+            details: '',
+            count: 0,
+            total: 0
+          },
+          {
+            id: 'headings',
+            code: 'WCAG 1.3.1',
+            name: 'Hierarquia de Cabeçalhos H1-H6',
+            standard: 'WCAG 1.3.1 Nível A / EAA 2019/882',
+            passed: true,
+            remediated: false,
+            details: '',
+            count: 0,
+            total: 0
+          },
+          {
+            id: 'target-size',
+            code: 'WCAG 2.5.8',
+            name: 'Tamanho Mínimo de Alvo 24x24px',
+            standard: 'WCAG 2.2 AA Critério 2.5.8 (Novo)',
+            passed: true,
+            remediated: false,
+            details: '',
+            count: 0,
+            total: 0
+          },
+          {
+            id: 'lang',
+            code: 'WCAG 3.1.1',
+            name: 'Idioma da Página Definido',
+            standard: 'WCAG 3.1.1 Nível A / IS 5568',
+            passed: true,
+            remediated: false,
+            details: '',
+            count: 0,
+            total: 0
+          }
         ]
       };
 
       let deductions = 0;
 
       // 1. Imagens
-      const imgs = Array.from(document.querySelectorAll('img:not(#allyada-root *)'));
-      const missingAlt = imgs.filter(i => !i.hasAttribute('alt'));
+      const allImgs = Array.from(document.querySelectorAll('img')).filter(isHost);
+      const missingAlt = allImgs.filter(i => !i.hasAttribute('alt'));
+      const remediatedAlt = allImgs.filter(i => i.getAttribute('data-allyada-remediated') === 'alt');
+      results.checks[0].total = allImgs.length;
+      results.checks[0].count = allImgs.length - missingAlt.length;
+      results.checks[0].remediated = remediatedAlt.length > 0;
       if (missingAlt.length > 0) {
         results.checks[0].passed = false;
-        results.checks[0].details = `${missingAlt.length} imagem(ns) sem atributo alt detectada(s).`;
+        results.checks[0].details = `${missingAlt.length} de ${allImgs.length} imagem(ns) sem atributo alt detectada(s).`;
         deductions += 15;
       } else {
-        results.checks[0].details = `${imgs.length} imagem(ns) auditadas e em conformidade.`;
+        results.checks[0].passed = true;
+        results.checks[0].details = allImgs.length > 0
+          ? `${allImgs.length} imagem(ns) auditadas com texto alternativo em conformidade.`
+          : 'Nenhuma imagem host no DOM ou todas possuem descrição alternativa.';
       }
 
       // 2. Landmarks
-      const hasMain = !!document.querySelector('main, [role="main"]');
+      const mains = Array.from(document.querySelectorAll('main, [role="main"]')).filter(isHost);
+      const hasMain = mains.length > 0;
+      const hasRemMain = mains.some(m => m.getAttribute('data-allyada-remediated') === 'role-main');
+      results.checks[1].remediated = hasRemMain;
       if (!hasMain) {
         results.checks[1].passed = false;
-        results.checks[1].details = 'Elemento <main> semântico não encontrado.';
+        results.checks[1].details = 'Landmark semântico <main> ou role="main" não encontrado no layout.';
         deductions += 15;
       } else {
-        results.checks[1].details = 'Landmark <main> semântico presente.';
+        results.checks[1].passed = true;
+        results.checks[1].details = hasRemMain
+          ? 'Landmark <main> semântico injetado e validado pela auto-remediação.'
+          : 'Landmark principal <main> / role="main" identificado e validado.';
       }
 
-      // 3. Botões
-      const buttons = Array.from(document.querySelectorAll('button:not(#allyada-root *)'));
-      const emptyBtns = buttons.filter(b => !b.innerText.trim() && !b.getAttribute('aria-label'));
+      // 3. Botões e Controles
+      const buttons = Array.from(document.querySelectorAll('button, [role="button"]')).filter(isHost);
+      const emptyBtns = buttons.filter(b => {
+        const text = (b.innerText || b.textContent || '').trim();
+        const aria = b.getAttribute('aria-label') || b.getAttribute('aria-labelledby');
+        const title = b.getAttribute('title');
+        const hasAccessibleImg = !!b.querySelector('img[alt]:not([alt=""])');
+        const hasSvgTitle = !!b.querySelector('svg title, svg[aria-label]');
+        return !text && !aria && !title && !hasAccessibleImg && !hasSvgTitle;
+      });
+      const remBtns = buttons.filter(b => b.getAttribute('data-allyada-remediated') === 'aria-label');
+      results.checks[2].total = buttons.length;
+      results.checks[2].count = buttons.length - emptyBtns.length;
+      results.checks[2].remediated = remBtns.length > 0;
       if (emptyBtns.length > 0) {
         results.checks[2].passed = false;
-        results.checks[2].details = `${emptyBtns.length} botão(ões) sem rótulo textual identificável.`;
+        results.checks[2].details = `${emptyBtns.length} de ${buttons.length} botão(ões) sem rótulo textual identificável.`;
         deductions += 15;
       } else {
-        results.checks[2].details = `${buttons.length} botões verificados com sucesso.`;
+        results.checks[2].passed = true;
+        results.checks[2].details = buttons.length > 0
+          ? `${buttons.length} botões e controles interativos com rótulos acessíveis.`
+          : 'Controles interativos identificados em conformidade.';
       }
 
       // 4. Formulários
-      const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]), textarea, select'));
+      const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), select, textarea')).filter(isHost);
       const unlabelledInputs = inputs.filter(inp => {
         const id = inp.id;
-        const hasLabel = id ? !!document.querySelector(`label[for="${id}"]`) : false;
-        const hasAria = !!inp.getAttribute('aria-label') || !!inp.getAttribute('aria-labelledby');
-        return !hasLabel && !hasAria;
+        const hasLabel = id ? !!document.querySelector(`label[for="${id}"]`) : !!inp.closest('label');
+        const hasAria = inp.getAttribute('aria-label') || inp.getAttribute('aria-labelledby');
+        const hasTitle = inp.getAttribute('title');
+        return !hasLabel && !hasAria && !hasTitle;
       });
+      const remInputs = inputs.filter(inp => inp.getAttribute('data-allyada-remediated') === 'aria-label');
+      results.checks[3].total = inputs.length;
+      results.checks[3].count = inputs.length - unlabelledInputs.length;
+      results.checks[3].remediated = remInputs.length > 0;
       if (unlabelledInputs.length > 0) {
         results.checks[3].passed = false;
-        results.checks[3].details = `${unlabelledInputs.length} campo(s) de formulário sem label associada.`;
+        results.checks[3].details = `${unlabelledInputs.length} de ${inputs.length} campo(s) sem rótulo ou etiqueta associada.`;
         deductions += 15;
       } else {
-        results.checks[3].details = `${inputs.length} campos de formulário verificados.`;
+        results.checks[3].passed = true;
+        results.checks[3].details = inputs.length > 0
+          ? `${inputs.length} campos de entrada associados a etiquetas acessíveis.`
+          : 'Campos de formulário verificados em conformidade.';
       }
 
       // 5. Cabeçalhos
-      const h1 = document.querySelector('h1');
+      const allHeadings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6')).filter(isHost);
+      const h1 = allHeadings.find(h => h.tagName.toLowerCase() === 'h1');
+      const remH1 = !!h1 && h1.getAttribute('data-allyada-remediated') === 'h1';
+      results.checks[4].total = allHeadings.length;
+      results.checks[4].remediated = remH1;
       if (!h1) {
         results.checks[4].passed = false;
-        results.checks[4].details = 'Nenhum cabeçalho principal <h1> encontrado na página.';
+        results.checks[4].details = 'Nenhum cabeçalho estrutural principal <h1> encontrado na página.';
         deductions += 10;
       } else {
-        results.checks[4].details = `Título principal <h1> identificado: "${h1.innerText.slice(0, 30)}..."`;
+        results.checks[4].passed = true;
+        const h1Text = (h1.textContent || '').trim().replace(/\s+/g, ' ');
+        const preview = h1Text.length > 28 ? `${h1Text.slice(0, 28)}...` : h1Text;
+        results.checks[4].details = remH1
+          ? `Cabeçalho principal <h1> estrutural garantido por auto-remediação.`
+          : `Título principal <h1> identificado: "${preview}" (${allHeadings.length} títulos no total).`;
       }
 
       // 6. WCAG 2.2 Target Size (24x24px)
-      results.checks[5].details = 'Critério WCAG 2.2 AA 2.5.8 validado (alvos interativos >= 24px).';
+      const hostButtons = Array.from(document.querySelectorAll('button')).filter(isHost);
+      const smallTargets = hostButtons.filter(b => {
+        if (b.hasAttribute('data-allyada-remediated-size')) return false;
+        const rect = b.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && (rect.width < 23.5 || rect.height < 23.5);
+      });
+      const remSizes = hostButtons.filter(b => b.hasAttribute('data-allyada-remediated-size'));
+      results.checks[5].total = hostButtons.length;
+      results.checks[5].remediated = remSizes.length > 0;
+      if (smallTargets.length > 0) {
+        results.checks[5].passed = false;
+        results.checks[5].details = `${smallTargets.length} de ${hostButtons.length} controle(s) com área de toque inferior a 24x24px.`;
+        deductions += 15;
+      } else {
+        results.checks[5].passed = true;
+        results.checks[5].details = hostButtons.length > 0
+          ? `${hostButtons.length} controles interativos atendem à área de toque mínima de 24x24px.`
+          : 'Critério WCAG 2.2 AA 2.5.8 validado (alvos interativos >= 24px).';
+      }
 
       // 7. Idioma
-      const lang = document.documentElement.lang;
+      const lang = document.documentElement ? (document.documentElement.lang || document.documentElement.getAttribute('lang') || '') : '';
+      const remLang = document.documentElement && document.documentElement.getAttribute('data-allyada-remediated') === 'lang';
+      results.checks[6].remediated = !!remLang;
       if (!lang) {
         results.checks[6].passed = false;
-        results.checks[6].details = 'Atributo lang ausente na tag <html>.';
-        deductions += 10;
+        results.checks[6].details = 'Atributo lang ausente na tag <html> (prejudica leitores de tela).';
+        deductions += 15;
       } else {
-        results.checks[6].details = `Idioma definido: "${lang}".`;
+        results.checks[6].passed = true;
+        results.checks[6].details = remLang
+          ? `Idioma global da página definido como "${lang}" via auto-remediação.`
+          : `Idioma global da página configurado: "${lang}".`;
       }
 
       results.score = Math.max(10, 100 - deductions);
@@ -400,6 +691,19 @@
       style.id = 'allyada-host-styles';
       style.textContent = `
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
+
+        /* Ocultação Acessível para Leitores de Tela (Screen Reader Only) */
+        .allyada-sr-only {
+          position: absolute !important;
+          width: 1px !important;
+          height: 1px !important;
+          padding: 0 !important;
+          margin: -1px !important;
+          overflow: hidden !important;
+          clip: rect(0, 0, 0, 0) !important;
+          white-space: nowrap !important;
+          border: 0 !important;
+        }
 
         /* Espaçamento de Linhas (WCAG 1.4.12 Text Spacing) */
         html.ally-line-height-1 :is(p, article p, blockquote, dd, .article-text):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
@@ -610,7 +914,7 @@
           transform: scale(1.08) !important;
         }
       `;
-      document.head.appendChild(style);
+      (document.head || document.documentElement).appendChild(style);
     }
 
     createReadingRulerDOM() {
@@ -1016,16 +1320,17 @@
               
               <!-- Card de Pontuação WCAG 2.2 AA -->
               <div class="audit-score-card">
-                <div class="score-circle-box">
-                  <span class="score-number" id="audit-score-val">95%</span>
+                <div class="score-circle-box score-high" id="audit-score-circle">
+                  <span class="score-number" id="audit-score-val">--%</span>
                   <span class="score-label">Índice WCAG</span>
                 </div>
                 <div class="score-info">
-                  <h4>Conformidade Digital</h4>
-                  <p>Avaliação técnica automática de regras WCAG 2.2 AA, ADA Title II e Section 508.</p>
+                  <h4 id="audit-score-status">Conformidade Digital</h4>
+                  <p id="audit-score-subtext">Avaliação técnica automática de regras WCAG 2.2 AA, ADA Title II e Section 508.</p>
                   <div class="audit-actions-row">
                     <button type="button" class="btn-run-audit" id="btn-run-audit">
-                      ${ICONS.refresh} Reauditar Página
+                      <span class="audit-btn-icon">${ICONS.refresh}</span>
+                      <span class="audit-btn-text">Reauditar Página</span>
                     </button>
                     <button type="button" class="btn-copy-audit" id="btn-copy-audit" title="Copiar relatório técnico completo">
                       ${ICONS.copy} Copiar Relatório
@@ -1035,14 +1340,17 @@
               </div>
 
               <!-- Switch de Remediação Automática no DOM -->
-              <div class="remediation-box">
+              <div class="remediation-box" id="remediation-card-box">
                 <div class="remediation-header">
                   <div class="rem-icon-box">${ICONS.shieldCheck}</div>
                   <div class="rem-text">
                     <strong>Remediação Ativa em Tempo Real</strong>
-                    <span>Corrige landmarks ARIA, alvos clicáveis (2.5.8) e rótulos no código.</span>
+                    <span>Corrige landmarks ARIA, alvos clicáveis (2.5.8), tags e rótulos no código.</span>
                   </div>
                   <input type="checkbox" id="chk-auto-remediation" class="modern-toggle" aria-label="Ativar remediação automática no DOM">
+                </div>
+                <div class="rem-status-badge inactive" id="rem-status-badge">
+                  Remediação pausada &bull; Ative o switch para auto-corrigir o DOM
                 </div>
               </div>
 
@@ -1203,12 +1511,38 @@
         }
       }
 
-      // Auditoria
+      // Auditoria com Feedback Visual em Tempo Real
       const runAuditBtn = root.getElementById('btn-run-audit');
       if (runAuditBtn) {
         runAuditBtn.addEventListener('click', () => {
-          this.runAudit();
-          this.renderAuditChecklist();
+          const scoreCircle = root.getElementById('audit-score-circle');
+          const btnText = runAuditBtn.querySelector('.audit-btn-text');
+          const btnIcon = runAuditBtn.querySelector('.audit-btn-icon');
+
+          runAuditBtn.classList.add('scanning');
+          if (scoreCircle) scoreCircle.classList.add('scanning');
+          if (btnText) btnText.textContent = 'Varrendo DOM...';
+          if (btnIcon) btnIcon.innerHTML = `<span class="spin-icon">${ICONS.refresh}</span>`;
+
+          setTimeout(() => {
+            if (this.state.autoRemediate) {
+              this.runAutoRemediation();
+            }
+            this.runAudit();
+            this.renderAuditChecklist();
+
+            runAuditBtn.classList.remove('scanning');
+            runAuditBtn.classList.add('success');
+            if (scoreCircle) scoreCircle.classList.remove('scanning');
+            if (btnText) btnText.textContent = '✓ DOM Auditado!';
+            if (btnIcon) btnIcon.innerHTML = ICONS.check;
+
+            setTimeout(() => {
+              runAuditBtn.classList.remove('success');
+              if (btnText) btnText.textContent = 'Reauditar Página';
+              if (btnIcon) btnIcon.innerHTML = ICONS.refresh;
+            }, 1800);
+          }, 350);
         });
       }
 
@@ -1218,24 +1552,30 @@
         copyAuditBtn.addEventListener('click', () => {
           const res = this.auditResults || this.runAudit();
           const report = [
+            `================================================================================`,
             `RELATÓRIO TÉCNICO DE AUDITORIA DE ACESSIBILIDADE DIGITAL - ALLYADA v3.0`,
+            `================================================================================`,
             `Data da Verificação: ${new Date().toLocaleString('pt-BR')}`,
             `URL Auditada: ${window.location.href}`,
             `Índice Geral de Conformidade WCAG 2.2 AA: ${res.score}%`,
+            `Remediação Automática no DOM: ${this.state.autoRemediate ? `ATIVA (${this.remediatedCount || 0} correções aplicadas)` : 'DESATIVADA'}`,
             `--------------------------------------------------------------------------------`,
-            ...res.checks.map(c => `[${c.passed ? 'CONFORME' : 'ATENÇÃO'}] ${c.name}\n  Status: ${c.details}`),
+            `CRITÉRIOS TÉCNICOS AUDITADOS:`,
+            ...res.checks.map(c => `[${c.passed ? 'CONFORME' : 'ATENÇÃO'}] [${c.code}] ${c.name}\n  Padrão: ${c.standard}\n  Diagnóstico: ${c.details}${c.remediated ? ' (Corrigido por auto-remediação)' : ''}`),
             `--------------------------------------------------------------------------------`,
-            `Tecnologia: Allyada Compliance Suite v3.0 (W3C / ADA / EAA / LBI)`
+            `Conformidade: WCAG 2.2 AA / ADA Título II e III / Seção 508 / EAA 2019/882 / LBI`,
+            `Tecnologia Assistiva: Allyada Compliance Suite v3.0`
           ].join('\n');
-          navigator.clipboard.writeText(report).then(() => {
-            const originalText = copyAuditBtn.innerHTML;
+
+          this.copyToClipboard(report).then(() => {
+            const originalHtml = copyAuditBtn.innerHTML;
             copyAuditBtn.innerHTML = `✓ Relatório Copiado!`;
-            setTimeout(() => { copyAuditBtn.innerHTML = originalText; }, 2500);
+            setTimeout(() => { copyAuditBtn.innerHTML = originalHtml; }, 2500);
           });
         });
       }
 
-      // Toggle de Remediação Automática
+      // Toggle de Remediação Automática no DOM
       const chkRem = root.getElementById('chk-auto-remediation');
       if (chkRem) {
         chkRem.addEventListener('change', (e) => {
@@ -1243,7 +1583,12 @@
           this.saveState();
           if (this.state.autoRemediate) {
             this.runAutoRemediation();
+          } else {
+            this.revertAutoRemediation();
           }
+          // Re-audita imediatamente e atualiza a interface com a nova pontuação
+          this.runAudit();
+          this.renderAuditChecklist();
         });
       }
 
@@ -1462,7 +1807,7 @@
         if (content) content.style.display = t === tabKey ? 'block' : 'none';
       });
 
-      if (tabKey === 'audit' && !this.auditResults) {
+      if (tabKey === 'audit') {
         this.runAudit();
         this.renderAuditChecklist();
       }
@@ -1470,19 +1815,76 @@
 
     renderAuditChecklist() {
       const root = this.shadowRoot;
+      if (!root) return;
+
       const container = root.getElementById('audit-checklist-items');
       const scoreVal = root.getElementById('audit-score-val');
+      const scoreCircle = root.getElementById('audit-score-circle');
+      const scoreStatus = root.getElementById('audit-score-status');
+      const scoreSubtext = root.getElementById('audit-score-subtext');
+      const remStatusBadge = root.getElementById('rem-status-badge');
+      const remCardBox = root.getElementById('remediation-card-box');
       if (!container) return;
 
       const results = this.auditResults || this.runAudit();
-      if (scoreVal) scoreVal.textContent = `${results.score}%`;
+      const score = results.score;
 
+      // 1. Atualiza valor numérico
+      if (scoreVal) scoreVal.textContent = `${score}%`;
+
+      // 2. Anéis de conformidade dinâmicos
+      if (scoreCircle) {
+        scoreCircle.classList.remove('score-high', 'score-med', 'score-low');
+        if (score >= 90) {
+          scoreCircle.classList.add('score-high');
+        } else if (score >= 70) {
+          scoreCircle.classList.add('score-med');
+        } else {
+          scoreCircle.classList.add('score-low');
+        }
+      }
+
+      // 3. Título e subtexto explicativo
+      if (scoreStatus) {
+        if (score >= 90) {
+          scoreStatus.textContent = 'Conformidade Alta (Excelente)';
+        } else if (score >= 70) {
+          scoreStatus.textContent = 'Conformidade Parcial (Atenção)';
+        } else {
+          scoreStatus.textContent = 'Conformidade Crítica (Ajustes)';
+        }
+      }
+
+      if (scoreSubtext) {
+        const passedCount = results.checks.filter(c => c.passed).length;
+        scoreSubtext.textContent = `${passedCount} de ${results.checks.length} critérios técnicos aprovados em conformidade com WCAG 2.2 AA.`;
+      }
+
+      // 4. Status da Remediação no DOM
+      if (remStatusBadge) {
+        const remCount = this.remediatedCount || 0;
+        if (this.state.autoRemediate) {
+          remStatusBadge.className = 'rem-status-badge active';
+          remStatusBadge.innerHTML = `<span class="rem-pulse-dot"></span> Remediação ativa: <strong>${remCount} correções aplicadas no DOM</strong>`;
+          if (remCardBox) remCardBox.classList.add('remediated');
+        } else {
+          remStatusBadge.className = 'rem-status-badge inactive';
+          remStatusBadge.innerHTML = `Remediação pausada &bull; Ative o switch para auto-corrigir o DOM`;
+          if (remCardBox) remCardBox.classList.remove('remediated');
+        }
+      }
+
+      // 5. Itens auditados detalhados
       container.innerHTML = results.checks.map(c => `
         <div class="audit-check-item ${c.passed ? 'passed' : 'failed'}">
           <div class="check-icon">${c.passed ? ICONS.check : ICONS.alert}</div>
           <div class="check-text">
-            <strong>${c.name}</strong>
-            <span>${c.details}</span>
+            <div class="check-title-row">
+              <span class="check-criterion-code">${c.code}</span>
+              <strong>${c.name}</strong>
+            </div>
+            <span class="check-detail-text">${c.details}</span>
+            ${c.remediated ? `<span class="check-remediated-badge">✓ Corrigido por auto-remediação</span>` : ''}
           </div>
           <span class="check-status-pill ${c.passed ? 'passed' : 'failed'}">${c.passed ? 'Aprovado' : 'Ajustar'}</span>
         </div>
@@ -1687,6 +2089,7 @@
       if (chkRem) {
         chkRem.checked = !!this.state.autoRemediate;
       }
+      this.renderAuditChecklist();
     }
 
     toggleDockPosition() {
@@ -1729,6 +2132,11 @@
       trigger.setAttribute('aria-expanded', 'true');
 
       this.updatePanelUI();
+
+      if (this.state.activeTab === 'audit') {
+        this.runAudit();
+        this.renderAuditChecklist();
+      }
 
       setTimeout(() => {
         const closeBtn = this.shadowRoot.getElementById('allyada-close-btn');
@@ -2456,8 +2864,35 @@
           justify-content: center;
           background: rgba(34, 197, 94, 0.1);
           flex-shrink: 0;
+          transition: all 0.25s ease;
         }
-        .score-number { font-size: 1.05rem; font-weight: 800; color: #4ade80; line-height: 1; }
+        .score-circle-box.score-high {
+          border-color: #22c55e;
+          background: rgba(34, 197, 94, 0.12);
+        }
+        .score-circle-box.score-high .score-number { color: #4ade80; }
+
+        .score-circle-box.score-med {
+          border-color: #f59e0b;
+          background: rgba(245, 158, 11, 0.12);
+        }
+        .score-circle-box.score-med .score-number { color: #fbbf24; }
+
+        .score-circle-box.score-low {
+          border-color: #ef4444;
+          background: rgba(239, 68, 68, 0.12);
+        }
+        .score-circle-box.score-low .score-number { color: #f87171; }
+
+        .score-circle-box.scanning {
+          animation: allyada-pulse-glow 0.8s infinite alternate ease-in-out;
+        }
+        @keyframes allyada-pulse-glow {
+          0% { box-shadow: 0 0 4px rgba(59, 130, 246, 0.4); transform: scale(1); }
+          100% { box-shadow: 0 0 16px rgba(59, 130, 246, 0.85); transform: scale(1.05); }
+        }
+
+        .score-number { font-size: 1.05rem; font-weight: 800; color: #4ade80; line-height: 1; transition: color 0.2s ease; }
         .score-label { font-size: 0.54rem; text-transform: uppercase; font-weight: 700; color: #94a3b8; margin-top: 1px; }
         .score-info h4 { font-size: 0.88rem; font-weight: 800; margin-bottom: 2px; }
         .score-info p { font-size: 0.68rem; color: #94a3b8; line-height: 1.3; margin-bottom: 8px; }
@@ -2480,10 +2915,17 @@
           background: #2563eb;
           color: #ffffff;
           cursor: pointer;
-          transition: background 0.15s ease;
+          transition: background 0.15s ease, opacity 0.15s ease;
         }
         .btn-run-audit:hover { background: #1d4ed8; }
+        .btn-run-audit.scanning { opacity: 0.75; pointer-events: none; }
+        .btn-run-audit.success { background: #16a34a !important; }
         .btn-run-audit svg { width: 12px; height: 12px; }
+        .spin-icon { display: inline-flex; animation: allyada-spin 0.7s linear infinite; }
+        @keyframes allyada-spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
 
         .btn-copy-audit {
           display: inline-flex;
@@ -2512,6 +2954,11 @@
           border: 1px solid #bbf7d0;
           border-radius: 8px;
           padding: 10px 12px;
+          transition: all 0.2s ease;
+        }
+        .remediation-box.remediated {
+          background: #ecfdf5;
+          border-color: #a7f3d0;
         }
         .remediation-header { display: flex; align-items: center; gap: 10px; }
         .rem-icon-box { width: 28px; height: 28px; border-radius: 6px; background: #22c55e; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -2520,6 +2967,41 @@
         .rem-text strong { display: block; font-size: 0.78rem; font-weight: 700; color: #166534; }
         .rem-text span { display: block; font-size: 0.67rem; color: #15803d; line-height: 1.25; }
         .modern-toggle { width: 36px; height: 20px; accent-color: #16a34a; cursor: pointer; }
+
+        .rem-status-badge {
+          margin-top: 8px;
+          padding: 4px 8px;
+          border-radius: 6px;
+          font-size: 0.68rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .rem-status-badge.active {
+          background: #dcfce7;
+          color: #166534;
+          border: 1px solid #bbf7d0;
+        }
+        .rem-status-badge.inactive {
+          background: #f1f5f9;
+          color: #64748b;
+          border: 1px solid #e2e8f0;
+        }
+        .rem-pulse-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #22c55e;
+          display: inline-block;
+          flex-shrink: 0;
+          animation: allyada-dot-pulse 1.2s infinite;
+        }
+        @keyframes allyada-dot-pulse {
+          0% { transform: scale(0.9); opacity: 0.8; }
+          50% { transform: scale(1.4); opacity: 1; }
+          100% { transform: scale(0.9); opacity: 0.8; }
+        }
 
         .audit-checklist-header h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; color: var(--text-muted); }
         .audit-checklist { display: flex; flex-direction: column; gap: 6px; }
@@ -2538,8 +3020,11 @@
         .audit-check-item.passed .check-icon { color: #16a34a; }
         .audit-check-item.failed .check-icon { color: #dc2626; }
         .check-text { flex: 1; }
-        .check-text strong { display: block; font-size: 0.76rem; font-weight: 700; color: var(--text-main); }
-        .check-text span { display: block; font-size: 0.67rem; color: var(--text-muted); margin-top: 1px; }
+        .check-title-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+        .check-criterion-code { font-size: 0.60rem; font-weight: 800; color: #475569; background: #e2e8f0; padding: 1px 5px; border-radius: 4px; }
+        .check-text strong { font-size: 0.76rem; font-weight: 700; color: var(--text-main); }
+        .check-detail-text { display: block; font-size: 0.67rem; color: var(--text-muted); line-height: 1.25; }
+        .check-remediated-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.60rem; font-weight: 700; color: #166534; background: #dcfce7; padding: 1px 5px; border-radius: 4px; margin-top: 3px; }
         .check-status-pill { font-size: 0.64rem; font-weight: 800; padding: 2px 6px; border-radius: 9999px; }
         .check-status-pill.passed { background: #dcfce7; color: #15803d; }
         .check-status-pill.failed { background: #fee2e2; color: #991b1b; }
