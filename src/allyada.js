@@ -395,75 +395,38 @@
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
 
         /* Espaçamento de Linhas (WCAG 1.4.12 Text Spacing) */
-        html.ally-line-height-1 p,
-        html.ally-line-height-1 article p,
-        html.ally-line-height-1 li,
-        html.ally-line-height-1 blockquote,
-        html.ally-line-height-1 dd,
-        html.ally-line-height-1 .article-text {
+        html.ally-line-height-1 :is(p, article p, blockquote, dd, .article-text):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-line-height-1 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           line-height: 1.9 !important;
         }
 
-        html.ally-line-height-2 p,
-        html.ally-line-height-2 article p,
-        html.ally-line-height-2 li,
-        html.ally-line-height-2 blockquote,
-        html.ally-line-height-2 dd,
-        html.ally-line-height-2 .article-text {
+        html.ally-line-height-2 :is(p, article p, blockquote, dd, .article-text):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-line-height-2 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           line-height: 2.3 !important;
         }
 
         /* Espaçamento de Letras (WCAG 1.4.12) */
-        html.ally-letter-spacing-1 p,
-        html.ally-letter-spacing-1 article,
-        html.ally-letter-spacing-1 li,
-        html.ally-letter-spacing-1 blockquote,
-        html.ally-letter-spacing-1 h1,
-        html.ally-letter-spacing-1 h2,
-        html.ally-letter-spacing-1 h3,
-        html.ally-letter-spacing-1 h4 {
+        html.ally-letter-spacing-1 :is(p, article, blockquote, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-letter-spacing-1 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           letter-spacing: 0.08em !important;
           word-spacing: 0.12em !important;
         }
 
-        html.ally-letter-spacing-2 p,
-        html.ally-letter-spacing-2 article,
-        html.ally-letter-spacing-2 li,
-        html.ally-letter-spacing-2 blockquote,
-        html.ally-letter-spacing-2 h1,
-        html.ally-letter-spacing-2 h2,
-        html.ally-letter-spacing-2 h3,
-        html.ally-letter-spacing-2 h4 {
+        html.ally-letter-spacing-2 :is(p, article, blockquote, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-letter-spacing-2 :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           letter-spacing: 0.16em !important;
           word-spacing: 0.20em !important;
         }
 
         /* Fonte para Dislexia */
-        html.ally-dyslexic-font body,
-        html.ally-dyslexic-font p,
-        html.ally-dyslexic-font h1,
-        html.ally-dyslexic-font h2,
-        html.ally-dyslexic-font h3,
-        html.ally-dyslexic-font h4,
-        html.ally-dyslexic-font h5,
-        html.ally-dyslexic-font h6,
-        html.ally-dyslexic-font li,
-        html.ally-dyslexic-font blockquote,
-        html.ally-dyslexic-font label,
-        html.ally-dyslexic-font input,
-        html.ally-dyslexic-font textarea,
-        html.ally-dyslexic-font select,
-        html.ally-dyslexic-font button,
-        html.ally-dyslexic-font a:not([class*="icon"]) {
+        html.ally-dyslexic-font :is(p, h1, h2, h3, h4, h5, h6, blockquote, label, input, textarea, select):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-dyslexic-font :is(main li, article li, section li, [role="main"] li, main a, article a, section a, [role="main"] a):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
         }
 
         /* Alinhamento à Esquerda */
-        html.ally-text-align-left p,
-        html.ally-text-align-left article p,
-        html.ally-text-align-left li,
-        html.ally-text-align-left blockquote,
-        html.ally-text-align-left .article-text {
+        html.ally-text-align-left :is(p, article p, blockquote, dd, .article-text):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-text-align-left :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           text-align: left !important;
         }
 
@@ -593,8 +556,8 @@
         }
 
         /* Destaque de Links (WCAG 2.4.7 Focus Visible) */
-        html.ally-highlight-links a:not([data-allyada-ignore]),
-        html.ally-highlight-links [role="button"]:not([data-allyada-ignore]) {
+        html.ally-highlight-links a:not([data-allyada-ignore]):not(#allyada-root *):not(header *):not(nav *):not([class*="navbar"] *):not([class*="topbar"] *),
+        html.ally-highlight-links [role="button"]:not([data-allyada-ignore]):not(#allyada-root *):not(header *):not(nav *) {
           outline: 3px solid #f59e0b !important;
           outline-offset: 3px !important;
           text-decoration: underline 3px #f59e0b !important;
@@ -737,17 +700,17 @@
 
           <!-- Abas de Navegação Superior da Suíte -->
           <div class="suite-tabs">
-            <button type="button" class="suite-tab-btn active" id="tab-btn-assistive">
+            <button type="button" class="suite-tab-btn active" id="tab-btn-assistive" title="Ferramentas de acessibilidade">
               <span class="tab-icon">${ICONS.tools}</span>
               <span>Ferramentas</span>
             </button>
-            <button type="button" class="suite-tab-btn" id="tab-btn-audit">
+            <button type="button" class="suite-tab-btn" id="tab-btn-audit" title="Auditoria e pontuação WCAG 2.2">
               <span class="tab-icon">${ICONS.shieldCheck}</span>
-              <span>Auditoria WCAG</span>
+              <span>Auditoria</span>
             </button>
-            <button type="button" class="suite-tab-btn" id="tab-btn-statement">
+            <button type="button" class="suite-tab-btn" id="tab-btn-statement" title="Declaração de Conformidade Legal">
               <span class="tab-icon">${ICONS.fileText}</span>
-              <span>Declaração Legal</span>
+              <span>Declaração</span>
             </button>
           </div>
 
@@ -906,8 +869,8 @@
                   <button type="button" class="tool-card" id="card-text-align-left" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.alignLeft}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Alinhar à Esquerda</strong>
-                      <span class="tool-desc">Sem justificado</span>
+                      <strong class="tool-title">Alinhar Texto</strong>
+                      <span class="tool-desc">À esquerda</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -924,8 +887,8 @@
                   <button type="button" class="tool-card" id="card-contrast-dark" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.moon}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Alto Contraste</strong>
-                      <span class="tool-desc">Fundo Escuro</span>
+                      <strong class="tool-title">Modo Escuro</strong>
+                      <span class="tool-desc">Alto contraste</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -933,8 +896,8 @@
                   <button type="button" class="tool-card" id="card-contrast-light" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.sun}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Contraste Claro</strong>
-                      <span class="tool-desc">Branco Puro</span>
+                      <strong class="tool-title">Modo Claro</strong>
+                      <span class="tool-desc">Fundo branco</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -943,7 +906,7 @@
                     <div class="tool-icon-box">${ICONS.contrast}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Monocromático</strong>
-                      <span class="tool-desc">Escala de cinza</span>
+                      <span class="tool-desc">Tons de cinza</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -970,7 +933,7 @@
                     <div class="tool-icon-box">${ICONS.link}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Destacar Links</strong>
-                      <span class="tool-desc">Contorno visível</span>
+                      <span class="tool-desc">Realçar foco</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -978,8 +941,8 @@
                   <button type="button" class="tool-card" id="card-reading-ruler" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.ruler}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Guia de Leitura</strong>
-                      <span class="tool-desc">Régua para TDAH</span>
+                      <strong class="tool-title">Régua Leitura</strong>
+                      <span class="tool-desc">Guia para foco</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -987,8 +950,8 @@
                   <button type="button" class="tool-card" id="card-big-cursor" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.cursor}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Cursor Ampliado</strong>
-                      <span class="tool-desc">Ponteiro grande</span>
+                      <strong class="tool-title">Cursor Grande</strong>
+                      <span class="tool-desc">Ponteiro ampliado</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -996,8 +959,8 @@
                   <button type="button" class="tool-card" id="card-stop-animations" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.pause}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Parar Animações</strong>
-                      <span class="tool-desc">Congela movimentos</span>
+                      <strong class="tool-title">Pausar Movimento</strong>
+                      <span class="tool-desc">Sem animações</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -1115,8 +1078,8 @@
 
           <!-- Rodapé -->
           <div class="drawer-footer">
-            <span class="shortcut-tip">Atalho: <kbd>Alt</kbd> + <kbd>A</kbd></span>
-            <span class="footer-brand-tag">Allyada v3.0 &bull; WCAG 2.2 AA / ADA</span>
+            <span class="shortcut-tip">Atalho: <kbd>Alt</kbd>+<kbd>A</kbd></span>
+            <span class="footer-brand-tag">Allyada v3.0 &bull; WCAG 2.2 AA</span>
           </div>
 
         </div>
@@ -1412,20 +1375,28 @@
     applyFontSize() {
       const factors = [1.0, 1.15, 1.30, 1.45, 1.60];
       const factor = factors[this.state.fontSizeLevel] || 1.0;
-      const html = document.documentElement;
 
-      if (this.state.fontSizeLevel > 0) {
-        html.style.fontSize = `${(100 * factor).toFixed(1)}%`;
-      } else {
-        html.style.fontSize = '';
-      }
+      // Não modifica document.documentElement.style.fontSize para proteger unidades rem no header/topbar
+      document.documentElement.style.fontSize = '';
 
       if (!document.body) return;
       const selectors = 'p, h1, h2, h3, h4, h5, h6, a, span, li, button, input, textarea, select, label, blockquote, figcaption, td, th, kbd, dt, dd';
       const elements = document.body.querySelectorAll(selectors);
 
       elements.forEach(el => {
-        if (el.closest('#allyada-root') || el.closest('[data-allyada-ignore]') || el.closest('[vw]')) return;
+        // Escudo de isolamento: ignora Allyada, VLibras e CABEÇALHOS/NAVBARS do host
+        if (
+          el.closest('#allyada-root') || 
+          el.closest('[data-allyada-ignore]') || 
+          el.closest('[vw]') ||
+          el.closest('header, nav, [role="banner"], [role="navigation"], [class*="header"], [class*="navbar"], [class*="topbar"], [class*="menu"]')
+        ) {
+          if (el.dataset.allyOrigFont) {
+            el.style.fontSize = '';
+            delete el.dataset.allyOrigFont;
+          }
+          return;
+        }
 
         if (this.state.fontSizeLevel === 0) {
           if (el.dataset.allyOrigFont) {
@@ -1823,6 +1794,7 @@
     getShadowStyles() {
       return `
         :host {
+          all: initial !important;
           --primary: ${this.config.primaryColor};
           --primary-hover: #0043a8;
           --accent: ${this.config.accentColor};
@@ -1839,16 +1811,26 @@
           --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
           --radius-card: 12px;
           --radius-btn: 8px;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
-          font-size: 14px;
-          line-height: 1.5;
-          color: var(--text-main);
-          box-sizing: border-box;
-          -webkit-font-smoothing: antialiased;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+          font-size: 13px !important;
+          line-height: 1.4 !important;
+          letter-spacing: normal !important;
+          word-spacing: normal !important;
+          text-transform: none !important;
+          text-shadow: none !important;
+          color: #0f172a !important;
+          box-sizing: border-box !important;
+          -webkit-font-smoothing: antialiased !important;
+          -moz-osx-font-smoothing: grayscale !important;
         }
 
         *, *::before, *::after {
-          box-sizing: border-box;
+          box-sizing: border-box !important;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+          letter-spacing: normal !important;
+          word-spacing: normal !important;
+          text-transform: none !important;
+          text-shadow: none !important;
           margin: 0;
           padding: 0;
         }
@@ -1918,10 +1900,10 @@
           position: fixed;
           bottom: 86px;
           top: auto;
-          width: 360px;
-          max-width: calc(100vw - 32px);
+          width: 385px;
+          max-width: calc(100vw - 24px);
           height: auto;
-          max-height: min(580px, calc(100vh - 104px));
+          max-height: min(600px, calc(100vh - 104px));
           background: #ffffff;
           border: 1px solid rgba(15, 23, 42, 0.12);
           border-radius: 16px;
@@ -1953,11 +1935,11 @@
 
         @media (max-width: 480px) {
           .allyada-drawer {
-            width: calc(100vw - 24px);
-            right: 12px !important;
-            left: 12px !important;
+            width: calc(100vw - 20px);
+            right: 10px !important;
+            left: 10px !important;
             bottom: 80px;
-            max-height: calc(100vh - 96px);
+            max-height: calc(100vh - 94px);
           }
         }
 
@@ -2030,36 +2012,37 @@
           flex-shrink: 0;
           display: flex;
           background: #f1f5f9;
-          padding: 4px 8px;
+          padding: 4px;
           gap: 4px;
           border-bottom: 1px solid var(--border-subtle);
         }
         .suite-tab-btn {
           flex: 1;
-          display: flex;
+          display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 5px;
-          padding: 6px 4px;
-          font-size: 0.72rem;
+          gap: 6px;
+          padding: 7px 4px;
+          font-size: 0.74rem;
           font-weight: 700;
+          white-space: nowrap;
           border: none;
           background: transparent;
           color: var(--text-secondary);
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
           transition: all 0.15s ease;
         }
         .suite-tab-btn:hover {
-          background: rgba(255, 255, 255, 0.6);
+          background: rgba(255, 255, 255, 0.7);
           color: var(--text-main);
         }
         .suite-tab-btn.active {
           background: #ffffff;
           color: var(--primary);
-          box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-        .tab-icon svg { width: 13px; height: 13px; }
+        .tab-icon svg { width: 14px; height: 14px; flex-shrink: 0; }
 
         /* Conteúdo das Abas */
         .drawer-tab-content {
@@ -2166,7 +2149,7 @@
 
         .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .tool-card {
-          display: flex; align-items: center; gap: 8px; padding: 7px 9px; background: var(--bg-card); border: 1px solid var(--border-subtle);
+          display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg-card); border: 1px solid var(--border-subtle);
           border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.18s ease; color: var(--text-main); position: relative; box-shadow: var(--shadow-card);
         }
         .tool-card:hover { background: var(--bg-card-hover); border-color: #94a3b8; transform: translateY(-1px); }
@@ -2175,9 +2158,9 @@
         .tool-card.active .tool-icon-box { background: #dbeafe; color: var(--primary); border-color: #bfdbfe; }
         .tool-icon-box svg { width: 14px; height: 14px; }
         .tool-info { flex: 1; min-width: 0; }
-        .tool-title { display: block; font-size: 0.74rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tool-title { display: block; font-size: 0.74rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
         .tool-card.active .tool-title { color: var(--border-active); }
-        .tool-desc { display: block; font-size: 0.62rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tool-desc { display: block; font-size: 0.63rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; margin-top: 1px; }
         .toggle-indicator { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; flex-shrink: 0; transition: all 0.2s ease; }
         .tool-card.active .toggle-indicator { background: #22c55e; box-shadow: 0 0 5px #22c55e; }
 
@@ -2338,25 +2321,33 @@
         /* Rodapé */
         .drawer-footer {
           flex-shrink: 0;
-          padding: 6px 14px;
+          padding: 8px 14px;
           border-top: 1px solid var(--border-subtle);
           background: #f8fafc;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          font-size: 0.68rem;
+          font-size: 0.70rem;
           color: var(--text-muted);
+          white-space: nowrap;
         }
         .drawer-footer kbd {
           background: #ffffff;
           border: 1px solid #cbd5e1;
-          border-radius: 3px;
+          border-radius: 4px;
           padding: 1px 5px;
+          font-size: 0.68rem;
           font-weight: 700;
           color: var(--text-main);
           box-shadow: 0 1px 1px rgba(0,0,0,0.06);
         }
-        .footer-brand-tag { font-weight: 800; color: var(--primary); }
+        .shortcut-tip {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.70rem;
+        }
+        .footer-brand-tag { font-weight: 700; color: var(--primary); font-size: 0.68rem; }
 
         .mt-2 { margin-top: 6px; }
         .mt-3 { margin-top: 8px; }
