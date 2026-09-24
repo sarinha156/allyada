@@ -140,5 +140,13 @@ allyada/
 ├── demo/
 │   ├── index.html            # Portal demonstrativo com laboratório de auditoria
 │   └── demo.css              # Estilos do portal modelo
+├── LICENSE                   # Licença MIT
 └── README.md                 # Documentação técnica e jurídica
 ```
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a **Licença MIT** — veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
+
