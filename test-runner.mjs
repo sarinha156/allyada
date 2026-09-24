@@ -392,6 +392,59 @@ async function main() {
     `(wcagWidth: ${overflowCheck.wcagWidth}px, wordWidth: ${overflowCheck.wordWidth}px, overflowing: ${overflowCheck.overflowing.join(', ') || 'nenhum'})`
   );
 
+  console.log('\n--- 8. Sincronização Automática com Iframes ---');
+  await evaluate(`
+    (() => {
+      const iframe = document.createElement('iframe');
+      iframe.id = 'test-allyada-iframe';
+      iframe.style.cssText = 'width: 400px; height: 180px; border: 1px solid #ccc;';
+      document.body.appendChild(iframe);
+      const idoc = iframe.contentDocument;
+      idoc.open();
+      idoc.write('<!DOCTYPE html><html><head></head><body><h2 id="iframe-h2">Subtítulo Exclusivo do Iframe</h2><p id="iframe-p" style="font-size: 16px;">Texto interno do quadro embutido para leitura assistiva.</p><input type="text" id="iframe-input" /></body></html>');
+      idoc.close();
+      window.Allyada.bindSingleIframe(iframe);
+    })()
+  `);
+  await sleep(250);
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-fs-6").click()');
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-wcag-spacing").click()');
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-contrast-dark").click()');
+  await sleep(250);
+
+  const iframeSync = await evaluate(`
+    (() => {
+      const iframe = document.getElementById('test-allyada-iframe');
+      const idoc = iframe.contentDocument;
+      const pFont = idoc.getElementById('iframe-p').style.fontSize;
+      const hasDark = idoc.documentElement.classList.contains('ally-contrast-dark');
+      const hasWcag = idoc.documentElement.classList.contains('ally-wcag-spacing');
+      const hasStyles = !!idoc.getElementById('allyada-host-styles');
+      const extracted = window.Allyada.extractReadableText(document.body);
+      return {
+        pFont,
+        hasDark,
+        hasWcag,
+        hasStyles,
+        includesIframeText: extracted.includes('Texto interno do quadro embutido')
+      };
+    })()
+  `);
+
+  assert(
+    'Estilos, contraste escuro, WCAG 1.4.12 e fonte 200% sincronizados dentro do iframe',
+    iframeSync.hasStyles && iframeSync.hasDark && iframeSync.hasWcag && parseFloat(iframeSync.pFont) === 32,
+    `(font: ${iframeSync.pFont}, dark: ${iframeSync.hasDark}, wcag: ${iframeSync.hasWcag})`
+  );
+  assert(
+    'Leitor de voz (TTS) extrai texto de dentro do iframe automaticamente',
+    iframeSync.includesIframeText
+  );
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
+  await sleep(200);
+
   console.log(`\n========================================`);
   console.log(`📊 RESULTADO FINAL: ${passed}/${total} testes passaram (${Math.round((passed/total)*100)}%)`);
   console.log(`🚨 Total de exceções na página: ${pageErrors.length}`);

@@ -141,6 +141,7 @@
       this.createWidgetDOM();
       this.initSpeechSynthesis();
       this.setupGlobalShortcuts();
+      this.setupIframeBridge();
 
       this.applyAllStateChanges();
       this.updatePanelUI();
@@ -284,10 +285,11 @@
       }
     }
 
-    injectSvgFilters() {
-      if (document.getElementById('allyada-svg-filters')) return;
+    injectSvgFilters(targetDoc = document) {
+      if (!targetDoc || !targetDoc.documentElement) return;
+      if (targetDoc.getElementById('allyada-svg-filters')) return;
 
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      const svg = targetDoc.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.id = 'allyada-svg-filters';
       svg.setAttribute('aria-hidden', 'true');
       svg.setAttribute('data-allyada-ignore', 'true');
@@ -305,14 +307,17 @@
           </filter>
         </defs>
       `;
-      document.documentElement.appendChild(svg);
-      this.svgFiltersContainer = svg;
+      targetDoc.documentElement.appendChild(svg);
+      if (targetDoc === document) {
+        this.svgFiltersContainer = svg;
+      }
     }
 
-    injectHostStyles() {
-      if (document.getElementById('allyada-host-styles')) return;
+    injectHostStyles(targetDoc = document) {
+      if (!targetDoc || !targetDoc.documentElement) return;
+      if (targetDoc.getElementById('allyada-host-styles')) return;
 
-      const style = document.createElement('style');
+      const style = targetDoc.createElement('style');
       style.id = 'allyada-host-styles';
       style.textContent = `
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
@@ -585,7 +590,202 @@
           transform: scale(1.08) !important;
         }
       `;
-      (document.head || document.documentElement).appendChild(style);
+      (targetDoc.head || targetDoc.documentElement).appendChild(style);
+    }
+
+    /**
+     * Descobre todos os iframes acessíveis (mesma origem ou srcdoc) na página,
+     * ignorando containers internos do próprio Allyada ou do VLibras.
+     */
+    getAccessibleIframes() {
+      const results = [];
+      try {
+        const iframes = Array.from(document.querySelectorAll('iframe'));
+        for (const iframe of iframes) {
+          if (
+            iframe.closest('#allyada-root') ||
+            iframe.closest('[data-allyada-ignore]') ||
+            iframe.closest('[vw]')
+          ) {
+            continue;
+          }
+          try {
+            const doc = iframe.contentDocument;
+            const win = iframe.contentWindow;
+            if (doc && doc.documentElement && win) {
+              results.push({ iframe, doc, win });
+            }
+          } catch (err) {
+            // Iframe cross-origin: tratado via postMessage bridge
+          }
+        }
+      } catch (e) {}
+      return results;
+    }
+
+    /**
+     * Retorna o documento principal + todos os documentos de iframes acessíveis
+     */
+    getAllAccessibleDocuments() {
+      return [{ iframe: null, doc: document, win: window }, ...this.getAccessibleIframes()];
+    }
+
+    /**
+     * Configura sincronização automática com iframes (mesma origem, srcdoc e cross-origin via postMessage),
+     * além de observar novos iframes inseridos dinamicamente no DOM.
+     */
+    setupIframeBridge() {
+      const scanAndBindIframes = () => {
+        const allIframes = Array.from(document.querySelectorAll('iframe'));
+        allIframes.forEach(iframe => {
+          if (
+            iframe.closest('#allyada-root') ||
+            iframe.closest('[data-allyada-ignore]') ||
+            iframe.closest('[vw]')
+          ) {
+            return;
+          }
+          this.bindSingleIframe(iframe);
+        });
+      };
+
+      scanAndBindIframes();
+
+      // Observa iframes adicionados dinamicamente após o carregamento da página
+      if (typeof MutationObserver !== 'undefined' && document.documentElement) {
+        this.iframeObserver = new MutationObserver((mutations) => {
+          let foundIframe = false;
+          for (const m of mutations) {
+            if (m.addedNodes && m.addedNodes.length > 0) {
+              for (const node of m.addedNodes) {
+                if (node.nodeType === 1 && (node.tagName === 'IFRAME' || (node.querySelector && node.querySelector('iframe')))) {
+                  foundIframe = true;
+                  break;
+                }
+              }
+            }
+            if (foundIframe) break;
+          }
+          if (foundIframe) {
+            scanAndBindIframes();
+          }
+        });
+        this.iframeObserver.observe(document.documentElement, { childList: true, subtree: true });
+      }
+
+      // Ponte postMessage para iframes Cross-Origin que também carreguem o Allyada
+      window.addEventListener('message', (e) => {
+        const data = e.data;
+        if (!data || typeof data !== 'object') return;
+
+        if (data.type === 'ALLYADA_SYNC_STATE' && window.self !== window.top) {
+          // Quando rodando dentro de um iframe filho, oculta o FAB duplicado e aplica o estado do pai
+          if (this.hostContainer) {
+            this.hostContainer.style.display = 'none';
+          }
+          const prevFontLevel = this.state.fontSizeLevel;
+          this.state = { ...this.state, ...data.state };
+          if (prevFontLevel !== this.state.fontSizeLevel) {
+            this.lastFontSizeLevel = -1;
+          }
+          this.applyAllStateChanges();
+        } else if (data.type === 'ALLYADA_IFRAME_READY' && e.source) {
+          try {
+            e.source.postMessage({ type: 'ALLYADA_SYNC_STATE', state: this.state }, '*');
+          } catch (err) {}
+        }
+      });
+
+      if (window.self !== window.top) {
+        try {
+          window.parent.postMessage({ type: 'ALLYADA_IFRAME_READY' }, '*');
+        } catch (err) {}
+      }
+    }
+
+    /**
+     * Vincula estilos, filtros SVG, eventos de régua/máscara, teclado virtual e atalhos a um iframe.
+     */
+    bindSingleIframe(iframe) {
+      if (!iframe) return;
+
+      const syncIframeContent = () => {
+        try {
+          const doc = iframe.contentDocument;
+          const win = iframe.contentWindow;
+          if (!doc || !doc.documentElement || !win) return;
+
+          this.injectSvgFilters(doc);
+          this.injectHostStyles(doc);
+
+          if (!doc.documentElement.dataset.allyadaEventsBound) {
+            doc.documentElement.dataset.allyadaEventsBound = 'true';
+
+            // 1. Movimento do mouse/toque dentro do iframe atualiza a Régua de Leitura e Máscara na página pai
+            win.addEventListener('mousemove', (e) => {
+              if (this.updateReadingGuidePosition) {
+                const rect = iframe.getBoundingClientRect();
+                this.updateReadingGuidePosition(rect.top + e.clientY);
+              }
+            }, { passive: true });
+
+            win.addEventListener('touchmove', (e) => {
+              if (e.touches && e.touches[0] && this.updateReadingGuidePosition) {
+                const rect = iframe.getBoundingClientRect();
+                this.updateReadingGuidePosition(rect.top + e.touches[0].clientY);
+              }
+            }, { passive: true });
+
+            // 2. Foco dentro do iframe: move a Régua e aciona o Teclado Virtual se for campo de texto
+            doc.addEventListener('focusin', (e) => {
+              if (this.state.readingGuideMode !== 'none' && e.target && typeof e.target.getBoundingClientRect === 'function' && this.updateReadingGuidePosition) {
+                const iRect = iframe.getBoundingClientRect();
+                const tRect = e.target.getBoundingClientRect();
+                if (tRect.height > 0) {
+                  this.updateReadingGuidePosition(iRect.top + tRect.top + (tRect.height / 2));
+                }
+              }
+              if (this.virtualKeyboardActive && this.vkFocusHandler) {
+                this.vkFocusHandler(e);
+              }
+            }, { passive: true });
+
+            // 3. Atalhos globais (Alt + A e Escape) funcionando mesmo quando o foco está dentro do iframe
+            win.addEventListener('keydown', (e) => {
+              const isAltA = e.altKey && !e.ctrlKey && !e.metaKey && e.key && e.key.toLowerCase() === (this.config.shortcutKey || 'a').toLowerCase();
+              if (isAltA && this.state.enableShortcut !== false) {
+                const tag = e.target && e.target.tagName ? e.target.tagName.toUpperCase() : '';
+                const isInput = tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable);
+                if (!isInput) {
+                  e.preventDefault();
+                  this.togglePanel();
+                }
+              } else if (e.key === 'Escape' && this.isOpen) {
+                e.preventDefault();
+                this.closePanel();
+              }
+            });
+          }
+
+          // Força reaplicação do estado e tamanho de fonte no iframe recém-carregado
+          this.lastFontSizeLevel = -1;
+          this.applyAllStateChanges();
+        } catch (err) {
+          // Se for cross-origin, tenta sincronizar via postMessage
+          try {
+            if (iframe.contentWindow) {
+              iframe.contentWindow.postMessage({ type: 'ALLYADA_SYNC_STATE', state: this.state }, '*');
+            }
+          } catch (e) {}
+        }
+      };
+
+      if (!iframe.dataset.allyadaLoadBound) {
+        iframe.dataset.allyadaLoadBound = 'true';
+        iframe.addEventListener('load', syncIframeContent);
+      }
+
+      syncIframeContent();
     }
 
     createReadingGuideDOM() {
@@ -659,6 +859,7 @@
           });
         }
       };
+      this.updateReadingGuidePosition = onPointerMove;
 
       window.addEventListener('mousemove', (e) => onPointerMove(e.clientY), { passive: true });
       window.addEventListener('touchmove', (e) => {
@@ -2013,13 +2214,18 @@
         btnHeadings.setAttribute('aria-expanded', 'true');
         ul.innerHTML = '';
 
-        const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"][aria-level]')).filter(el => {
-          if (el.closest('#allyada-root') || el.closest('[data-allyada-ignore]') || el.closest('[vw]')) return false;
-          if (el.closest('[aria-hidden="true"], [hidden], [inert]')) return false;
-          try {
-            if (window.getComputedStyle(el).display === 'none') return false;
-          } catch(err) {}
-          return true;
+        const headings = [];
+        this.getAllAccessibleDocuments().forEach(({ iframe, doc, win }) => {
+          if (!doc) return;
+          const docHeadings = Array.from(doc.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"][aria-level]')).filter(el => {
+            if (el.closest('#allyada-root') || el.closest('[data-allyada-ignore]') || el.closest('[vw]')) return false;
+            if (el.closest('[aria-hidden="true"], [hidden], [inert]')) return false;
+            try {
+              if (win.getComputedStyle(el).display === 'none') return false;
+            } catch (err) {}
+            return true;
+          });
+          docHeadings.forEach(h => headings.push({ el: h, iframe }));
         });
 
         if (headings.length === 0) {
@@ -2027,7 +2233,7 @@
           return;
         }
 
-        headings.forEach((h, idx) => {
+        headings.forEach(({ el: h, iframe }, idx) => {
           const text = (h.textContent || '').trim();
           if (!text) return;
           let level = 'H2';
@@ -2036,16 +2242,20 @@
           } else if (h.getAttribute('aria-level')) {
             level = 'H' + h.getAttribute('aria-level');
           }
+          const prefix = iframe ? '[Quadro] ' : '';
           const li = document.createElement('li');
           li.className = 'heading-list-item';
           li.innerHTML = `
             <button type="button" class="btn-heading-target" data-heading-idx="${idx}">
               <span class="heading-level-pill ${level.toLowerCase()}">${level}</span>
-              <span class="heading-text-label">${this.escapeHTML(text.slice(0, 80))}</span>
+              <span class="heading-text-label">${this.escapeHTML((prefix + text).slice(0, 80))}</span>
             </button>
           `;
           li.querySelector('button').addEventListener('click', () => {
             this.closePanel();
+            if (iframe) {
+              iframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             h.scrollIntoView({ behavior: 'smooth', block: 'center' });
             if (!h.hasAttribute('tabindex')) {
               h.setAttribute('tabindex', '-1');
@@ -2077,112 +2287,57 @@
     applyFontSize() {
       const factors = [1.0, 1.15, 1.30, 1.45, 1.60, 1.80, 2.0];
       const factor = factors[this.state.fontSizeLevel] || 1.0;
-
-      // Não modifica document.documentElement.style.fontSize para proteger unidades rem no header/topbar
-      document.documentElement.style.fontSize = '';
-
-      if (!document.body) return;
       const selectors = 'p, h1, h2, h3, h4, h5, h6, a, span, li, button, input, textarea, select, label, blockquote, figcaption, td, th, kbd, dt, dd';
-      const elements = document.body.querySelectorAll(selectors);
 
-      elements.forEach(el => {
-        if (
-          el.closest('#allyada-root') || 
-          el.closest('[data-allyada-ignore]') || 
-          el.closest('[vw]') ||
-          el.closest('header, nav, [role="banner"], [role="navigation"], [class*="header"], [class*="navbar"], [class*="topbar"], [class*="menu"]')
-        ) {
-          if (el.dataset.allyOrigFont) {
-            el.style.fontSize = el.dataset.allyInlineFont || '';
-            delete el.dataset.allyOrigFont;
-            delete el.dataset.allyInlineFont;
-          }
-          return;
-        }
+      this.getAllAccessibleDocuments().forEach(({ doc, win }) => {
+        if (!doc || !doc.documentElement || !doc.body) return;
 
-        if (this.state.fontSizeLevel === 0) {
-          if (el.dataset.allyOrigFont) {
-            el.style.fontSize = el.dataset.allyInlineFont || '';
-            delete el.dataset.allyOrigFont;
-            delete el.dataset.allyInlineFont;
+        // Não modifica documentElement.style.fontSize para proteger unidades rem no header/topbar
+        doc.documentElement.style.fontSize = '';
+
+        const elements = doc.body.querySelectorAll(selectors);
+        elements.forEach(el => {
+          if (
+            el.closest('#allyada-root') || 
+            el.closest('[data-allyada-ignore]') || 
+            el.closest('[vw]') ||
+            el.closest('header, nav, [role="banner"], [role="navigation"], [class*="header"], [class*="navbar"], [class*="topbar"], [class*="menu"]')
+          ) {
+            if (el.dataset.allyOrigFont) {
+              el.style.fontSize = el.dataset.allyInlineFont || '';
+              delete el.dataset.allyOrigFont;
+              delete el.dataset.allyInlineFont;
+            }
+            return;
           }
-        } else {
-          if (!el.dataset.allyOrigFont) {
-            el.dataset.allyInlineFont = el.style.fontSize || '';
-            const computed = window.getComputedStyle(el).fontSize;
-            el.dataset.allyOrigFont = computed;
+
+          if (this.state.fontSizeLevel === 0) {
+            if (el.dataset.allyOrigFont) {
+              el.style.fontSize = el.dataset.allyInlineFont || '';
+              delete el.dataset.allyOrigFont;
+              delete el.dataset.allyInlineFont;
+            }
+          } else {
+            if (!el.dataset.allyOrigFont) {
+              el.dataset.allyInlineFont = el.style.fontSize || '';
+              const computed = win.getComputedStyle(el).fontSize;
+              el.dataset.allyOrigFont = computed;
+            }
+            const origPx = parseFloat(el.dataset.allyOrigFont);
+            if (!isNaN(origPx) && origPx > 0) {
+              el.style.fontSize = `${(origPx * factor).toFixed(1)}px`;
+            }
           }
-          const origPx = parseFloat(el.dataset.allyOrigFont);
-          if (!isNaN(origPx) && origPx > 0) {
-            el.style.fontSize = `${(origPx * factor).toFixed(1)}px`;
-          }
-        }
+        });
       });
     }
 
     applyAllStateChanges() {
-      const html = document.documentElement;
-
       if (this.lastFontSizeLevel !== this.state.fontSizeLevel) {
         this.applyFontSize();
         this.lastFontSizeLevel = this.state.fontSizeLevel;
       }
 
-      // Linhas
-      html.classList.remove('ally-line-height-1', 'ally-line-height-2');
-      if (this.state.lineHeightLevel > 0) {
-        html.classList.add(`ally-line-height-${this.state.lineHeightLevel}`);
-      }
-
-      // Letras
-      html.classList.remove('ally-letter-spacing-1', 'ally-letter-spacing-2');
-      if (this.state.letterSpacingLevel > 0) {
-        html.classList.add(`ally-letter-spacing-${this.state.letterSpacingLevel}`);
-      }
-
-      // Palavras
-      html.classList.toggle('ally-word-spacing-1', !!this.state.wordSpacingLevel);
-
-      // Espaçamento WCAG 1.4.12
-      html.classList.toggle('ally-wcag-spacing', !!this.state.wcagSpacing);
-
-      // Fonte & Alinhamento
-      html.classList.toggle('ally-dyslexic-font', this.state.dyslexicFont);
-      html.classList.toggle('ally-text-align-left', this.state.textAlignLeft);
-
-      // Contraste
-      html.classList.remove('ally-contrast-dark', 'ally-contrast-light', 'ally-contrast-monochrome', 'ally-contrast-invert');
-      if (this.state.contrast !== 'normal') {
-        html.classList.add(`ally-contrast-${this.state.contrast}`);
-      }
-
-      // Daltonismo
-      html.classList.remove('ally-filter-deuteranopia', 'ally-filter-protanopia', 'ally-filter-tritanopia');
-      if (this.state.colorblindType && this.state.colorblindType !== 'none') {
-        html.classList.add(`ally-filter-${this.state.colorblindType}`);
-      }
-
-      // Navegação & Foco
-      html.classList.toggle('ally-highlight-links', this.state.highlightLinks);
-      html.style.setProperty('--allyada-highlight-color', this.state.highlightColor || '#f59e0b');
-      html.classList.toggle('ally-enhanced-focus', this.state.enhancedFocus);
-
-      // Cursor
-      html.classList.remove('ally-cursor-large', 'ally-cursor-xlarge');
-      if (this.state.cursorSize === 'large') {
-        html.classList.add('ally-cursor-large');
-      } else if (this.state.cursorSize === 'xlarge') {
-        html.classList.add('ally-cursor-xlarge');
-      }
-
-      // Estilos Dinâmicos (Cor do Cursor)
-      let dynStyle = document.getElementById('allyada-dynamic-styles');
-      if (!dynStyle) {
-        dynStyle = document.createElement('style');
-        dynStyle.id = 'allyada-dynamic-styles';
-        document.head.appendChild(dynStyle);
-      }
-      
       const cColor = encodeURIComponent(this.state.cursorColor || '#000000');
       let dynCss = '';
       if (this.state.cursorSize === 'large') {
@@ -2190,18 +2345,95 @@
       } else if (this.state.cursorSize === 'xlarge') {
         dynCss = `html.ally-cursor-xlarge, html.ally-cursor-xlarge * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}' stroke='%23ffffff' stroke-width='2' d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L5.5 3.21z'/%3E%3C/svg%3E"), auto !important; }`;
       }
-      dynStyle.textContent = dynCss;
+
+      this.getAllAccessibleDocuments().forEach(({ iframe, doc }) => {
+        if (!doc || !doc.documentElement) return;
+        const html = doc.documentElement;
+
+        if (iframe) {
+          this.injectSvgFilters(doc);
+          this.injectHostStyles(doc);
+        }
+
+        // Linhas
+        html.classList.remove('ally-line-height-1', 'ally-line-height-2');
+        if (this.state.lineHeightLevel > 0) {
+          html.classList.add(`ally-line-height-${this.state.lineHeightLevel}`);
+        }
+
+        // Letras
+        html.classList.remove('ally-letter-spacing-1', 'ally-letter-spacing-2');
+        if (this.state.letterSpacingLevel > 0) {
+          html.classList.add(`ally-letter-spacing-${this.state.letterSpacingLevel}`);
+        }
+
+        // Palavras
+        html.classList.toggle('ally-word-spacing-1', !!this.state.wordSpacingLevel);
+
+        // Espaçamento WCAG 1.4.12
+        html.classList.toggle('ally-wcag-spacing', !!this.state.wcagSpacing);
+
+        // Fonte & Alinhamento
+        html.classList.toggle('ally-dyslexic-font', this.state.dyslexicFont);
+        html.classList.toggle('ally-text-align-left', this.state.textAlignLeft);
+
+        // Contraste
+        html.classList.remove('ally-contrast-dark', 'ally-contrast-light', 'ally-contrast-monochrome', 'ally-contrast-invert');
+        if (this.state.contrast !== 'normal') {
+          html.classList.add(`ally-contrast-${this.state.contrast}`);
+        }
+
+        // Daltonismo
+        html.classList.remove('ally-filter-deuteranopia', 'ally-filter-protanopia', 'ally-filter-tritanopia');
+        if (this.state.colorblindType && this.state.colorblindType !== 'none') {
+          html.classList.add(`ally-filter-${this.state.colorblindType}`);
+        }
+
+        // Navegação & Foco
+        html.classList.toggle('ally-highlight-links', this.state.highlightLinks);
+        html.style.setProperty('--allyada-highlight-color', this.state.highlightColor || '#f59e0b');
+        html.classList.toggle('ally-enhanced-focus', this.state.enhancedFocus);
+
+        // Cursor
+        html.classList.remove('ally-cursor-large', 'ally-cursor-xlarge');
+        if (this.state.cursorSize === 'large') {
+          html.classList.add('ally-cursor-large');
+        } else if (this.state.cursorSize === 'xlarge') {
+          html.classList.add('ally-cursor-xlarge');
+        }
+
+        // Estilos Dinâmicos (Cor do Cursor)
+        let dynStyle = doc.getElementById('allyada-dynamic-styles');
+        if (!dynStyle) {
+          dynStyle = doc.createElement('style');
+          dynStyle.id = 'allyada-dynamic-styles';
+          (doc.head || doc.documentElement).appendChild(dynStyle);
+        }
+        dynStyle.textContent = dynCss;
+
+        // Movimento (WCAG 2.2.2)
+        html.classList.toggle('ally-stop-animations', this.state.stopAnimations);
+        if (this.state.stopAnimations) {
+          doc.querySelectorAll('video').forEach(v => {
+            try { v.pause(); } catch (e) {}
+          });
+        }
+      });
+
+      // Transmite o estado via postMessage para quaisquer iframes Cross-Origin na página
+      try {
+        document.querySelectorAll('iframe').forEach(iframe => {
+          if (iframe.closest('#allyada-root, [vw], [data-allyada-ignore]')) return;
+          try {
+            if (iframe.contentWindow) {
+              iframe.contentWindow.postMessage({ type: 'ALLYADA_SYNC_STATE', state: this.state }, '*');
+            }
+          } catch (err) {}
+        });
+      } catch (e) {}
 
       // Tamanho da UI (Scale Responsivo à Tela)
       this.applyResponsiveWidgetSize();
-
-      // Movimento (WCAG 2.2.2)
-      html.classList.toggle('ally-stop-animations', this.state.stopAnimations);
-      if (this.state.stopAnimations) {
-        document.querySelectorAll('video').forEach(v => {
-          try { v.pause(); } catch(e) {}
-        });
-      }
 
       // Teclado Virtual
       if (this.state.virtualKeyboard) {
@@ -3058,12 +3290,16 @@
         return;
       }
 
-      const selection = window.getSelection();
-      if (selection && selection.toString().trim().length > 0) {
-        const textToRead = selection.toString().trim();
-        const targetNode = selection.anchorNode ? (selection.anchorNode.nodeType === 1 ? selection.anchorNode : selection.anchorNode.parentElement) : null;
-        this.speakText(textToRead, targetNode, 0);
-        return;
+      for (const { win } of this.getAllAccessibleDocuments()) {
+        try {
+          const selection = win && win.getSelection ? win.getSelection() : null;
+          if (selection && selection.toString().trim().length > 0) {
+            const textToRead = selection.toString().trim();
+            const targetNode = selection.anchorNode ? (selection.anchorNode.nodeType === 1 ? selection.anchorNode : selection.anchorNode.parentElement) : null;
+            this.speakText(textToRead, targetNode, 0);
+            return;
+          }
+        } catch (err) {}
       }
 
       const readable = this.extractReadableText(document.body);
@@ -3091,14 +3327,14 @@
 
     enableTtsSelectionListeners() {
       this.ttsHoverHandler = (e) => {
-        if (e.target.closest('#allyada-root')) return;
-        e.target.classList.add('allyada-tts-hover-target');
+        if (e.target.closest && e.target.closest('#allyada-root')) return;
+        if (e.target.classList) e.target.classList.add('allyada-tts-hover-target');
       };
       this.ttsOutHandler = (e) => {
-        e.target.classList.remove('allyada-tts-hover-target');
+        if (e.target.classList) e.target.classList.remove('allyada-tts-hover-target');
       };
       this.ttsClickHandler = (e) => {
-        if (e.target.closest('#allyada-root')) return;
+        if (e.target.closest && e.target.closest('#allyada-root')) return;
         e.preventDefault();
         e.stopPropagation();
         
@@ -3109,22 +3345,28 @@
         }
       };
 
-      document.addEventListener('mouseover', this.ttsHoverHandler, true);
-      document.addEventListener('mouseout', this.ttsOutHandler, true);
-      document.addEventListener('click', this.ttsClickHandler, true);
-      document.documentElement.style.cursor = 'help';
+      this.getAllAccessibleDocuments().forEach(({ doc }) => {
+        if (!doc || !doc.documentElement) return;
+        doc.addEventListener('mouseover', this.ttsHoverHandler, true);
+        doc.addEventListener('mouseout', this.ttsOutHandler, true);
+        doc.addEventListener('click', this.ttsClickHandler, true);
+        doc.documentElement.style.cursor = 'help';
+      });
     }
 
     disableTtsSelectionListeners() {
       this.isTtsSelectionMode = false;
-      if (this.ttsHoverHandler) {
-        document.removeEventListener('mouseover', this.ttsHoverHandler, true);
-        document.removeEventListener('mouseout', this.ttsOutHandler, true);
-        document.removeEventListener('click', this.ttsClickHandler, true);
-        this.ttsHoverHandler = null;
-      }
-      document.querySelectorAll('.allyada-tts-hover-target').forEach(el => el.classList.remove('allyada-tts-hover-target'));
-      document.documentElement.style.cursor = '';
+      this.getAllAccessibleDocuments().forEach(({ doc }) => {
+        if (!doc || !doc.documentElement) return;
+        if (this.ttsHoverHandler) {
+          doc.removeEventListener('mouseover', this.ttsHoverHandler, true);
+          doc.removeEventListener('mouseout', this.ttsOutHandler, true);
+          doc.removeEventListener('click', this.ttsClickHandler, true);
+        }
+        doc.querySelectorAll('.allyada-tts-hover-target').forEach(el => el.classList.remove('allyada-tts-hover-target'));
+        doc.documentElement.style.cursor = '';
+      });
+      this.ttsHoverHandler = null;
     }
 
     speakText(text, targetNode, startOffset = 0) {
@@ -3372,28 +3614,44 @@
 
     extractReadableText(el) {
       if (!el) return '';
-      const mainEl = document.querySelector('main, [role="main"]') || el;
-      const clone = mainEl.cloneNode(true);
       const removeSelectors = [
         'script', 'style', 'noscript', 'iframe', 'svg', 'canvas',
         '#allyada-root', '#allyada-reading-ruler', '#allyada-reading-mask', '#allyada-svg-filters',
         '[data-allyada-ignore]', '[vw]', '[aria-hidden="true"]', '[hidden]', '[inert]'
       ];
-      removeSelectors.forEach(sel => {
-        clone.querySelectorAll(sel).forEach(node => node.remove());
+
+      const cleanElementText = (rootNode, ownerDoc) => {
+        if (!rootNode) return '';
+        const clone = rootNode.cloneNode(true);
+        removeSelectors.forEach(sel => {
+          clone.querySelectorAll(sel).forEach(node => node.remove());
+        });
+        clone.querySelectorAll('img[alt]').forEach(img => {
+          const alt = (img.getAttribute('alt') || '').trim();
+          if (alt) {
+            const span = (ownerDoc || document).createElement('span');
+            span.textContent = ` Imagem: ${alt}. `;
+            img.replaceWith(span);
+          } else {
+            img.remove();
+          }
+        });
+        return (clone.innerText || clone.textContent || '').replace(/\s+/g, ' ').trim();
+      };
+
+      const mainEl = document.querySelector('main, [role="main"]') || el;
+      const chunks = [];
+      const hostText = cleanElementText(mainEl, document);
+      if (hostText) chunks.push(hostText);
+
+      // Inclui também o conteúdo textual dos iframes acessíveis na página
+      this.getAccessibleIframes().forEach(({ doc }) => {
+        if (!doc || !doc.body) return;
+        const iframeText = cleanElementText(doc.body, doc);
+        if (iframeText) chunks.push(iframeText);
       });
-      // Extrai textos alternativos significativos de imagens
-      clone.querySelectorAll('img[alt]').forEach(img => {
-        const alt = (img.getAttribute('alt') || '').trim();
-        if (alt) {
-          const span = document.createElement('span');
-          span.textContent = ` Imagem: ${alt}. `;
-          img.replaceWith(span);
-        } else {
-          img.remove();
-        }
-      });
-      return (clone.innerText || clone.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 4000);
+
+      return chunks.join('. ').replace(/\s+/g, ' ').trim().slice(0, 4000);
     }
 
     loadVLibras() {
