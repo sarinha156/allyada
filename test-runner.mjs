@@ -223,6 +223,18 @@ async function main() {
   assert('Botão Parar interrompe fala e oculta player', ttsStopped);
 
   console.log('\n--- 5. VLibras ---');
+  // Verifica que Hosana é a intérprete padrão
+  const defaultHosana = await evaluate(`
+    (() => {
+      const s = window.Allyada.shadowRoot;
+      const hosanaBtn = s.getElementById('btn-vlibras-hosana');
+      return window.Allyada.state.vlibrasAvatar === 'hosana' &&
+             hosanaBtn && hosanaBtn.classList.contains('active') &&
+             hosanaBtn.getAttribute('aria-pressed') === 'true';
+    })()
+  `);
+  assert('Hosana configurada como intérprete 3D padrão do VLibras', defaultHosana);
+
   // Ativa VLibras
   await evaluate('window.Allyada.shadowRoot.getElementById("card-vlibras-toggle").click()');
   await sleep(1500);
@@ -232,10 +244,49 @@ async function main() {
              !!document.querySelector('[vw]') &&
              document.querySelector('[vw]').style.display !== 'none' &&
              window.VLibrasWidget &&
-             window.VLibrasWidget.path === 'https://vlibras.gov.br/app';
+             window.VLibrasWidget.path === 'https://vlibras.gov.br/app' &&
+             window.VLibrasWidget.avatar === 'hosana';
     })()
   `);
-  assert('VLibras ativado, container visível e VLibrasWidget.path preservado (https://vlibras.gov.br/app)', vlibrasOn);
+  assert('VLibras ativado com Hosana, container visível e VLibrasWidget.path preservado', vlibrasOn);
+
+  // Verifica injeção do tema personalizado do Allyada na janela do VLibras e sincronização no localStorage
+  const vlibrasCustomThemeAndStorage = await evaluate(`
+    (() => {
+      const appRoot = document.getElementById('vlibras-app-root');
+      const hasCustomStyle = !!(appRoot && appRoot.shadowRoot && appRoot.shadowRoot.getElementById('allyada-vlibras-custom-theme'));
+      const rawStore = localStorage.getItem('@vlibras/player');
+      const parsed = rawStore ? JSON.parse(rawStore) : null;
+      return hasCustomStyle && parsed && parsed.state && parsed.state.avatar === 'hosana';
+    })()
+  `);
+  assert('Janela do VLibras personalizada (Shadow DOM) e Hosana sincronizada em @vlibras/player', vlibrasCustomThemeAndStorage);
+
+  // Testa troca de intérprete (Ícaro -> Hosana) pelo painel do Allyada
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-vlibras-icaro").click()');
+  await sleep(200);
+  const switchedToIcaro = await evaluate(`
+    (() => {
+      const parsed = JSON.parse(localStorage.getItem('@vlibras/player') || '{}');
+      return window.Allyada.state.vlibrasAvatar === 'icaro' &&
+             window.VLibrasWidget.avatar === 'icaro' &&
+             parsed.state && parsed.state.avatar === 'icaro';
+    })()
+  `);
+  assert('Seletor de intérprete alterna para Ícaro em tempo real', switchedToIcaro);
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-vlibras-hosana").click()');
+  await sleep(200);
+  const switchedBackToHosana = await evaluate(`
+    (() => {
+      const parsed = JSON.parse(localStorage.getItem('@vlibras/player') || '{}');
+      return window.Allyada.state.vlibrasAvatar === 'hosana' &&
+             window.VLibrasWidget.avatar === 'hosana' &&
+             parsed.state && parsed.state.avatar === 'hosana';
+    })()
+  `);
+  assert('Seletor de intérprete retorna para Hosana em tempo real', switchedBackToHosana);
+
   assert('Zero erros 404 de assets/fontes/unity no console ao ativar VLibras', local404Errors.length === 0, local404Errors.length ? JSON.stringify(local404Errors) : '');
 
   // Simula recarregamento de estado (loadState) e verifica que VLibras não abre sozinho ao abrir a página

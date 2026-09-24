@@ -65,6 +65,7 @@
     speechRate: 1.0, // 0.75, 1.0, 1.25, 1.5, 2.0
     uiScale: '1',
     vlibrasActive: false,
+    vlibrasAvatar: 'hosana', // 'hosana', 'icaro', 'guga'
     rememberPreferences: true,
     enableShortcut: true
   };
@@ -164,6 +165,7 @@
         const shouldRemember = rememberSetting === null ? true : rememberSetting === 'true';
         if (!shouldRemember) {
           this.state.rememberPreferences = false;
+          this.syncVLibrasAvatar(this.state.vlibrasAvatar);
           return;
         }
 
@@ -184,6 +186,10 @@
           delete parsed.enableComplianceTab;
           delete parsed.autoRemediation;
 
+          if (!['hosana', 'icaro', 'guga'].includes(parsed.vlibrasAvatar)) {
+            parsed.vlibrasAvatar = 'hosana';
+          }
+
           // Players ativos (TTS e VLibras) iniciam desativados ao abrir a página, abrindo apenas sob comando do usuário
           this.state = { ...DEFAULT_STATE, ...parsed, vlibrasActive: false, rememberPreferences: true };
         } else {
@@ -192,6 +198,7 @@
             this.state.stopAnimations = true;
           }
         }
+        this.syncVLibrasAvatar(this.state.vlibrasAvatar);
       } catch (e) {
         console.warn('[Allyada] Erro ao carregar preferências:', e);
       }
@@ -1453,10 +1460,24 @@
                     <div class="vlibras-icon-box">${ICONS.hands}</div>
                     <div class="vlibras-info">
                       <strong>Língua de Sinais (Libras)</strong>
-                      <span>Ativar tradutor 3D</span>
+                      <span id="card-vlibras-desc">Ativar tradutor 3D • Intérprete: Hosana</span>
                     </div>
                     <div class="vlibras-status-pill" id="vlibras-status-pill">Desativado</div>
                   </button>
+
+                  <div class="control-box mt-2" id="vlibras-avatar-box">
+                    <div class="control-box-header">
+                      <div>
+                        <strong class="control-title">Intérprete VLibras (3D)</strong>
+                        <span class="control-val" id="vlibras-avatar-label">Hosana</span>
+                      </div>
+                    </div>
+                    <div class="segmented-control mt-2" role="group" aria-label="Escolher intérprete 3D do VLibras">
+                      <button type="button" class="seg-btn active" id="btn-vlibras-hosana" data-avatar="hosana">Hosana</button>
+                      <button type="button" class="seg-btn" id="btn-vlibras-icaro" data-avatar="icaro">Ícaro</button>
+                      <button type="button" class="seg-btn" id="btn-vlibras-guga" data-avatar="guga">Guga</button>
+                    </div>
+                  </div>
                 </div>
               </section>
 
@@ -2008,6 +2029,15 @@
 
       const headerVlibrasBtn = root.getElementById('btn-header-vlibras');
       if (headerVlibrasBtn) headerVlibrasBtn.addEventListener('click', toggleVLibras);
+
+      ['hosana', 'icaro', 'guga'].forEach(av => {
+        const btnAv = root.getElementById(`btn-vlibras-${av}`);
+        if (btnAv) {
+          btnAv.addEventListener('click', () => {
+            this.setVLibrasAvatar(av);
+          });
+        }
+      });
 
       // 13. Configurações: Lembrar Preferências & Atalho Alt + A
       const chkRemember = root.getElementById('chk-remember-preferences');
@@ -2918,6 +2948,25 @@
         headerVlibras.setAttribute('aria-pressed', this.state.vlibrasActive ? 'true' : 'false');
       }
 
+      const currentAvatar = ['hosana', 'icaro', 'guga'].includes(this.state.vlibrasAvatar) ? this.state.vlibrasAvatar : 'hosana';
+      const avatarNames = { hosana: 'Hosana', icaro: 'Ícaro', guga: 'Guga' };
+      const avatarLabel = root.getElementById('vlibras-avatar-label');
+      if (avatarLabel) {
+        avatarLabel.textContent = avatarNames[currentAvatar] || 'Hosana';
+      }
+      const vlibrasDesc = root.getElementById('card-vlibras-desc');
+      if (vlibrasDesc) {
+        vlibrasDesc.textContent = `Ativar tradutor 3D • Intérprete: ${avatarNames[currentAvatar] || 'Hosana'}`;
+      }
+      ['hosana', 'icaro', 'guga'].forEach(av => {
+        const btnAv = root.getElementById(`btn-vlibras-${av}`);
+        if (btnAv) {
+          const isAv = (currentAvatar === av);
+          btnAv.classList.toggle('active', isAv);
+          btnAv.setAttribute('aria-pressed', isAv ? 'true' : 'false');
+        }
+      });
+
       // 8. Velocidade de Fala (TTS) em ambas as abas
       const updateRates = (prefix) => {
         const rates = { '075': 0.75, '100': 1, '125': 1.25, '150': 1.5, '200': 2 };
@@ -3045,6 +3094,7 @@
           vlibrasBtn.style.right = 'auto';
         }
       }
+      this.applyVLibrasCustomTheme();
     }
 
     togglePanel() {
@@ -3654,12 +3704,156 @@
       return chunks.join('. ').replace(/\s+/g, ' ').trim().slice(0, 4000);
     }
 
+    /**
+     * Sincroniza o intérprete escolhido (Hosana por padrão, Ícaro ou Guga) no storage do VLibras,
+     * no objeto global window.VLibrasWidget e no player 3D ativo em tempo real.
+     */
+    syncVLibrasAvatar(avatar) {
+      const VLIBRAS_APP_URL = 'https://vlibras.gov.br/app';
+      const validAvatar = ['hosana', 'icaro', 'guga'].includes(avatar) ? avatar : 'hosana';
+      const posCode = (this.config && this.config.position === 'left') ? 'L' : 'R';
+
+      try {
+        let playerStore = {
+          state: {
+            speed: 1,
+            showSubtitles: true,
+            avatar: validAvatar,
+            config: { baseUrl: '', personalizationUrl: '' }
+          },
+          version: 1
+        };
+        const existing = localStorage.getItem('@vlibras/player');
+        if (existing) {
+          const parsed = JSON.parse(existing);
+          if (parsed && typeof parsed === 'object') {
+            parsed.state = Object.assign(
+              { speed: 1, showSubtitles: true, config: { baseUrl: '', personalizationUrl: '' } },
+              parsed.state || {},
+              { avatar: validAvatar }
+            );
+            playerStore = parsed;
+          }
+        }
+        localStorage.setItem('@vlibras/player', JSON.stringify(playerStore));
+      } catch (e) {}
+
+      if (typeof window !== 'undefined') {
+        window.VLibrasWidget = Object.assign({ path: VLIBRAS_APP_URL }, window.VLibrasWidget || {}, {
+          path: VLIBRAS_APP_URL,
+          avatar: validAvatar,
+          position: posCode
+        });
+
+        try {
+          if (window.plugin && window.plugin.player && typeof window.plugin.player.changeAvatar === 'function') {
+            window.plugin.player.changeAvatar(validAvatar);
+          } else if (window.vlibras && typeof window.vlibras.toggleAvatar === 'function') {
+            window.vlibras.toggleAvatar(validAvatar);
+          }
+        } catch (err) {}
+      }
+
+      this.applyVLibrasCustomTheme();
+    }
+
+    setVLibrasAvatar(avatar) {
+      const validAvatar = ['hosana', 'icaro', 'guga'].includes(avatar) ? avatar : 'hosana';
+      this.state.vlibrasAvatar = validAvatar;
+      this.syncVLibrasAvatar(validAvatar);
+      this.saveState();
+      this.updatePanelUI();
+      const names = { hosana: 'Hosana', icaro: 'Ícaro', guga: 'Guga' };
+      this.announce(`Intérprete do VLibras alterado para ${names[validAvatar] || 'Hosana'}`);
+    }
+
+    /**
+     * Personaliza o visual da janela e do botão de acesso do VLibras (Shadow DOM aberto),
+     * aplicando bordas arredondadas, sombra moderna, posição sincronizada e ícone da Hosana/avatar ativo.
+     */
+    applyVLibrasCustomTheme() {
+      if (typeof document === 'undefined') return;
+      const VLIBRAS_APP_URL = 'https://vlibras.gov.br/app';
+      const validAvatar = ['hosana', 'icaro', 'guga'].includes(this.state.vlibrasAvatar) ? this.state.vlibrasAvatar : 'hosana';
+      const isLeft = (this.config && this.config.position === 'left');
+      const side = isLeft ? 'left' : 'right';
+      const opposite = isLeft ? 'right' : 'left';
+      const primaryColor = (this.config && this.config.primaryColor) ? this.config.primaryColor : '#0052cc';
+
+      // 1. Estiliza o botão flutuante de acesso do VLibras (#vlibras-access-wrapper)
+      const accessWrapper = document.getElementById('vlibras-access-wrapper');
+      if (accessWrapper && accessWrapper.shadowRoot) {
+        let accessStyle = accessWrapper.shadowRoot.getElementById('allyada-vlibras-access-theme');
+        if (!accessStyle) {
+          accessStyle = document.createElement('style');
+          accessStyle.id = 'allyada-vlibras-access-theme';
+          accessWrapper.shadowRoot.appendChild(accessStyle);
+        }
+        accessStyle.textContent = `
+          #vlibras-access {
+            bottom: 96px !important;
+            top: auto !important;
+            ${side}: 24px !important;
+            ${opposite}: auto !important;
+            flex-direction: ${isLeft ? 'row-reverse' : 'row'} !important;
+          }
+          #vlibras-button {
+            ${side}: 0 !important;
+            ${opposite}: auto !important;
+            border-radius: 14px !important;
+            box-shadow: 0 8px 22px rgba(0, 82, 204, 0.28) !important;
+          }
+          #vlibras-popup {
+            border-radius: 14px !important;
+          }
+        `;
+      }
+
+      // 2. Estiliza a janela principal do player 3D (#vlibras-app-root)
+      const appRoot = document.getElementById('vlibras-app-root');
+      if (appRoot && appRoot.shadowRoot) {
+        let appStyle = appRoot.shadowRoot.getElementById('allyada-vlibras-custom-theme');
+        if (!appStyle) {
+          appStyle = document.createElement('style');
+          appStyle.id = 'allyada-vlibras-custom-theme';
+          appRoot.shadowRoot.appendChild(appStyle);
+        }
+        appStyle.textContent = `
+          :host {
+            --radius: 18px !important;
+            --primary: ${primaryColor} !important;
+          }
+          #vlibras-app > .widget-radius {
+            border-radius: 22px !important;
+            box-shadow: 0 24px 54px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(0, 82, 204, 0.16) !important;
+            border: 1px solid rgba(203, 213, 225, 0.75) !important;
+            overflow: hidden !important;
+          }
+          #vlibras-app:not([style*="translate3d"]) {
+            ${side}: 24px !important;
+            ${opposite}: auto !important;
+          }
+          .size-20.bg-primary i,
+          .size-5\\.5 i {
+            -webkit-mask-image: url("${VLIBRAS_APP_URL}/assets/icons/${validAvatar}.webp") !important;
+            mask-image: url("${VLIBRAS_APP_URL}/assets/icons/${validAvatar}.webp") !important;
+          }
+        `;
+      }
+    }
+
     loadVLibras() {
       const VLIBRAS_APP_URL = 'https://vlibras.gov.br/app';
+      const validAvatar = ['hosana', 'icaro', 'guga'].includes(this.state.vlibrasAvatar) ? this.state.vlibrasAvatar : 'hosana';
+      const posCode = (this.config && this.config.position === 'left') ? 'L' : 'R';
+
+      this.syncVLibrasAvatar(validAvatar);
 
       // Garante que window.VLibrasWidget preserve a propriedade .path exigida pelo VLibras v7.12.2+
       window.VLibrasWidget = Object.assign({ path: VLIBRAS_APP_URL }, window.VLibrasWidget || {}, {
-        path: VLIBRAS_APP_URL
+        path: VLIBRAS_APP_URL,
+        avatar: validAvatar,
+        position: posCode
       });
 
       // 1. Injeta estrutura de suporte do VLibras no host caso não exista
@@ -3679,10 +3873,24 @@
         vw.style.display = 'block';
       }
 
+      // Observa a criação de #vlibras-app-root e #vlibras-access-wrapper para aplicar o tema personalizado imediatamente
+      if (!this.vlibrasThemeObserver && typeof MutationObserver !== 'undefined' && document.body) {
+        this.vlibrasThemeObserver = new MutationObserver(() => {
+          if (document.getElementById('vlibras-app-root') || document.getElementById('vlibras-access-wrapper')) {
+            this.applyVLibrasCustomTheme();
+          }
+        });
+        this.vlibrasThemeObserver.observe(document.body, { childList: true });
+      }
+
       const ensureOpen = () => {
         if (window.VLibrasWidget) {
           window.VLibrasWidget.path = VLIBRAS_APP_URL;
+          window.VLibrasWidget.avatar = validAvatar;
+          window.VLibrasWidget.position = posCode;
         }
+        this.syncVLibrasAvatar(validAvatar);
+
         const vwEl = document.querySelector('[vw]');
         if (vwEl) vwEl.style.display = 'block';
         const wrapper = document.getElementById('vlibras-access-wrapper');
@@ -3701,17 +3909,26 @@
           const accessBtn = document.querySelector('[vw-access-button]');
           if (accessBtn) accessBtn.click();
         }
+
+        this.applyVLibrasCustomTheme();
+        setTimeout(() => this.applyVLibrasCustomTheme(), 400);
       };
 
       if (window.VLibras && typeof window.VLibras.Widget === 'function') {
         if (!document.getElementById('vlibras-access-wrapper')) {
           try {
             // IMPORTANTE: Não atribuir "window.VLibrasWidget = new ...", pois isso sobrescreve window.VLibrasWidget.path!
-            new window.VLibras.Widget(VLIBRAS_APP_URL);
+            new window.VLibras.Widget({
+              rootPath: VLIBRAS_APP_URL,
+              avatar: validAvatar,
+              position: posCode
+            });
           } catch(e) {}
         }
         if (window.VLibrasWidget) {
           window.VLibrasWidget.path = VLIBRAS_APP_URL;
+          window.VLibrasWidget.avatar = validAvatar;
+          window.VLibrasWidget.position = posCode;
         }
         setTimeout(ensureOpen, 250);
         return;
@@ -3724,10 +3941,16 @@
         script.onload = () => {
           if (window.VLibras && typeof window.VLibras.Widget === 'function') {
             try {
-              new window.VLibras.Widget(VLIBRAS_APP_URL);
+              new window.VLibras.Widget({
+                rootPath: VLIBRAS_APP_URL,
+                avatar: validAvatar,
+                position: posCode
+              });
             } catch(e) {}
             if (window.VLibrasWidget) {
               window.VLibrasWidget.path = VLIBRAS_APP_URL;
+              window.VLibrasWidget.avatar = validAvatar;
+              window.VLibrasWidget.position = posCode;
             }
             setTimeout(ensureOpen, 350);
           }
