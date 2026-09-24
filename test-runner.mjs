@@ -250,17 +250,19 @@ async function main() {
   `);
   assert('VLibras ativado com Hosana, container visível e VLibrasWidget.path preservado', vlibrasOn);
 
-  // Verifica injeção do tema personalizado do Allyada na janela do VLibras e sincronização no localStorage
+  // Verifica injeção do tema personalizado do Allyada na janela do VLibras (cor #7956c2 + ocultar Emoções) e sincronização no localStorage
   const vlibrasCustomThemeAndStorage = await evaluate(`
     (() => {
       const appRoot = document.getElementById('vlibras-app-root');
-      const hasCustomStyle = !!(appRoot && appRoot.shadowRoot && appRoot.shadowRoot.getElementById('allyada-vlibras-custom-theme'));
+      const styleEl = appRoot && appRoot.shadowRoot ? appRoot.shadowRoot.getElementById('allyada-vlibras-custom-theme') : null;
+      const css = styleEl ? styleEl.textContent : '';
+      const hasLilacAndHiddenEmotions = css.includes('#7956c2') && css.includes('#emotions-subtitles-options > :first-child');
       const rawStore = localStorage.getItem('@vlibras/player');
       const parsed = rawStore ? JSON.parse(rawStore) : null;
-      return hasCustomStyle && parsed && parsed.state && parsed.state.avatar === 'hosana';
+      return hasLilacAndHiddenEmotions && parsed && parsed.state && parsed.state.avatar === 'hosana';
     })()
   `);
-  assert('Janela do VLibras personalizada (Shadow DOM) e Hosana sincronizada em @vlibras/player', vlibrasCustomThemeAndStorage);
+  assert('Janela do VLibras personalizada com lilás (#7956c2), opção "Emoções" ocultada e Hosana sincronizada', vlibrasCustomThemeAndStorage);
 
   // Testa troca de intérprete (Ícaro -> Hosana) pelo painel do Allyada
   await evaluate('window.Allyada.shadowRoot.getElementById("btn-vlibras-icaro").click()');

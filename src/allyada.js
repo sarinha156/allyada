@@ -3769,7 +3769,8 @@
 
     /**
      * Personaliza o visual da janela e do botão de acesso do VLibras (Shadow DOM aberto),
-     * aplicando bordas arredondadas, sombra moderna, posição sincronizada e ícone da Hosana/avatar ativo.
+     * aplicando cor lilás (#7956c2), bordas arredondadas, remoção da opção "Emoções",
+     * posição sincronizada e ícone da Hosana/avatar ativo.
      */
     applyVLibrasCustomTheme() {
       if (typeof document === 'undefined') return;
@@ -3778,7 +3779,7 @@
       const isLeft = (this.config && this.config.position === 'left');
       const side = isLeft ? 'left' : 'right';
       const opposite = isLeft ? 'right' : 'left';
-      const primaryColor = (this.config && this.config.primaryColor) ? this.config.primaryColor : '#0052cc';
+      const vlibrasColor = (this.config && this.config.vlibrasColor) ? this.config.vlibrasColor : '#7956c2';
 
       // 1. Estiliza o botão flutuante de acesso do VLibras (#vlibras-access-wrapper)
       const accessWrapper = document.getElementById('vlibras-access-wrapper');
@@ -3796,12 +3797,18 @@
             ${side}: 24px !important;
             ${opposite}: auto !important;
             flex-direction: ${isLeft ? 'row-reverse' : 'row'} !important;
+            --vlibras-btn-focus-visible-shadow: 0 0 10px 4px ${vlibrasColor} !important;
           }
           #vlibras-button {
             ${side}: 0 !important;
             ${opposite}: auto !important;
             border-radius: 14px !important;
-            box-shadow: 0 8px 22px rgba(0, 82, 204, 0.28) !important;
+            background: ${vlibrasColor} !important;
+            box-shadow: 0 8px 22px rgba(121, 86, 194, 0.35) !important;
+          }
+          #vlibras-button img,
+          #vlibras-popup {
+            filter: hue-rotate(45deg) saturate(0.9) !important;
           }
           #vlibras-popup {
             border-radius: 14px !important;
@@ -3819,14 +3826,21 @@
           appRoot.shadowRoot.appendChild(appStyle);
         }
         appStyle.textContent = `
-          :host {
+          :host,
+          [data-theme="light"],
+          :host(.dark),
+          [data-theme="dark"] {
             --radius: 18px !important;
-            --primary: ${primaryColor} !important;
+            --primary: ${vlibrasColor} !important;
+            --primary-foreground: #ffffff !important;
+            --secondary: #5e3ea1 !important;
+            --secondary-foreground: #f3effb !important;
+            --ring: #9d7fe0 !important;
           }
           #vlibras-app > .widget-radius {
             border-radius: 22px !important;
-            box-shadow: 0 24px 54px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(0, 82, 204, 0.16) !important;
-            border: 1px solid rgba(203, 213, 225, 0.75) !important;
+            box-shadow: 0 24px 54px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(121, 86, 194, 0.28) !important;
+            border: 1px solid rgba(121, 86, 194, 0.32) !important;
             overflow: hidden !important;
           }
           #vlibras-app:not([style*="translate3d"]) {
@@ -3837,6 +3851,19 @@
           .size-5\\.5 i {
             -webkit-mask-image: url("${VLIBRAS_APP_URL}/assets/icons/${validAvatar}.webp") !important;
             mask-image: url("${VLIBRAS_APP_URL}/assets/icons/${validAvatar}.webp") !important;
+          }
+          /* Remove a opção "Emoções" da barra de menu do VLibras e alinha os 4 botões restantes */
+          #emotions-subtitles-options > :first-child,
+          #emotions-subtitles-options [aria-label*="emoção" i],
+          #emotions-subtitles-options [aria-label*="emocao" i] {
+            display: none !important;
+          }
+          div:has(> #emotions-subtitles-options) {
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+          }
+          #emotions-subtitles-options {
+            grid-column: span 1 / span 1 !important;
+            grid-template-columns: 1fr !important;
           }
         `;
       }
