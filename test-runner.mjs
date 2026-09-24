@@ -341,6 +341,32 @@ async function main() {
   await sleep(200);
   assert('Foco reforçado duplo contraste aplicado', await evaluate('window.Allyada.state.enhancedFocus && document.documentElement.classList.contains("ally-enhanced-focus")'));
 
+  // Cursores Grande (64px) e Extra (96px) sem borda branca + Cor Roxo (#7956c2) do Allyada
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-cursor-large").click()');
+  await sleep(150);
+  const largeCursorCheck = await evaluate(`
+    (() => {
+      const css = (document.getElementById('allyada-dynamic-styles') || {}).textContent || '';
+      return window.Allyada.state.cursorSize === 'large' &&
+             css.includes("width='64' height='64'") &&
+             !css.includes("stroke='%23ffffff'");
+    })()
+  `);
+  assert('Cursor Grande (64px) proporcional e sem borda branca', largeCursorCheck);
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-cursor-xlarge").click()');
+  await sleep(150);
+  const xlargeCursorCheck = await evaluate(`
+    (() => {
+      const css = (document.getElementById('allyada-dynamic-styles') || {}).textContent || '';
+      return window.Allyada.state.cursorSize === 'xlarge' &&
+             css.includes("width='96' height='96'") &&
+             !css.includes("stroke='%23ffffff'") &&
+             window.Allyada.config.primaryColor === '#7956c2';
+    })()
+  `);
+  assert('Cursor Extra (96px) sem borda branca e cor principal do Allyada em roxo (#7956c2)', xlargeCursorCheck);
+
   // Redefinir Tudo final
   await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
   await sleep(300);

@@ -32,7 +32,7 @@
 
   const DEFAULT_CONFIG = {
     position: 'right',
-    primaryColor: '#0052cc',
+    primaryColor: '#7956c2',
     accentColor: '#ffab00',
     shortcutKey: 'a',
     enableShortcut: true,
@@ -133,7 +133,11 @@
     init(options = {}) {
       if (this.hostContainer) return this;
 
-      this.config = { ...this.config, ...options };
+      const normalizedOptions = { ...options };
+      if (normalizedOptions.primaryColor && normalizedOptions.primaryColor.toLowerCase() === '#0052cc') {
+        normalizedOptions.primaryColor = '#7956c2';
+      }
+      this.config = { ...this.config, ...normalizedOptions };
       this.loadState();
       this.injectHostStyles();
       this.injectSvgFilters();
@@ -246,7 +250,7 @@
         top: -100px;
         left: 16px;
         padding: 12px 20px;
-        background: #0052cc;
+        background: #7956c2;
         color: #ffffff;
         font-weight: 700;
         font-size: 14px;
@@ -517,24 +521,24 @@
           border-radius: 3px !important;
         }
 
-        /* Cursor Ampliado - Grande (36px) */
+        /* Cursor Ampliado - Grande (64px, sem borda branca) */
         html.ally-cursor-large,
         html.ally-cursor-large * {
-          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24' fill='%23000000' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M3 3l7 18 3-7 7-3L3 3z'/%3E%3C/svg%3E") 0 0, auto !important;
+          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z'/%3E%3C/svg%3E") 5 3, auto !important;
         }
 
         /* Hover para Modo TTS (Point and Read) */
         .allyada-tts-hover-target {
-          outline: 3px dashed #0ea5e9 !important;
+          outline: 3px dashed #7956c2 !important;
           outline-offset: 2px !important;
-          background-color: rgba(14, 165, 233, 0.1) !important;
+          background-color: rgba(121, 86, 194, 0.1) !important;
           cursor: pointer !important;
         }
 
-        /* Cursor Ampliado - Extra Grande (48px) */
+        /* Cursor Ampliado - Extra Grande (96px, sem borda branca) */
         html.ally-cursor-xlarge,
         html.ally-cursor-xlarge * {
-          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='%23000000' stroke='%23ffab00' stroke-width='2.5'%3E%3Cpath d='M3 3l7 18 3-7 7-3L3 3z'/%3E%3C/svg%3E") 0 0, auto !important;
+          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z'/%3E%3C/svg%3E") 8 5, auto !important;
         }
 
         /* Foco Visual de Teclado Reforçado (WCAG 2.2 — 2.4.13 Focus Appearance / AAA) */
@@ -1309,6 +1313,7 @@
                     </div>
                     <div class="color-presets" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                       <button type="button" class="color-preset-btn" data-color="#000000" aria-label="Preto" title="Preto" style="width: 30px; height: 30px; border-radius: 50%; background: #000000; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#7956c2" aria-label="Roxo" title="Roxo" style="width: 30px; height: 30px; border-radius: 50%; background: #7956c2; border: 2px solid #cbd5e1; cursor: pointer;"></button>
                       <button type="button" class="color-preset-btn" data-color="#ffffff" aria-label="Branco" title="Branco" style="width: 30px; height: 30px; border-radius: 50%; background: #ffffff; border: 2px solid #cbd5e1; cursor: pointer;"></button>
                       <button type="button" class="color-preset-btn" data-color="#facc15" aria-label="Amarelo" title="Amarelo" style="width: 30px; height: 30px; border-radius: 50%; background: #facc15; border: 2px solid #cbd5e1; cursor: pointer;"></button>
                       <button type="button" class="color-preset-btn" data-color="#ef4444" aria-label="Vermelho" title="Vermelho" style="width: 30px; height: 30px; border-radius: 50%; background: #ef4444; border: 2px solid #cbd5e1; cursor: pointer;"></button>
@@ -2163,6 +2168,30 @@
       }
     }
 
+    getCursorCssObject() {
+      const rawColor = (this.state.cursorColor || '#000000').trim();
+      const cColor = encodeURIComponent(rawColor);
+      const isWhite = rawColor.toLowerCase() === '#ffffff' || rawColor.toLowerCase() === '#fff';
+      const strokeAttr = isWhite ? " stroke='%231e293b' stroke-width='0.8'" : '';
+      const pathD = 'M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z';
+
+      if (this.state.cursorSize === 'large') {
+        const uri = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}'${strokeAttr} d='${pathD}'/%3E%3C/svg%3E") 5 3, auto`;
+        return {
+          hostCss: `html.ally-cursor-large, html.ally-cursor-large * { cursor: ${uri} !important; }`,
+          shadowCss: `:host, :host * { cursor: ${uri} !important; }`
+        };
+      }
+      if (this.state.cursorSize === 'xlarge') {
+        const uri = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}'${strokeAttr} d='${pathD}'/%3E%3C/svg%3E") 8 5, auto`;
+        return {
+          hostCss: `html.ally-cursor-xlarge, html.ally-cursor-xlarge * { cursor: ${uri} !important; }`,
+          shadowCss: `:host, :host * { cursor: ${uri} !important; }`
+        };
+      }
+      return { hostCss: '', shadowCss: '' };
+    }
+
     applyDynamicStyles() {
       let dynStyle = document.getElementById('allyada-dynamic-styles');
       if (!dynStyle) {
@@ -2170,15 +2199,18 @@
         dynStyle.id = 'allyada-dynamic-styles';
         document.head.appendChild(dynStyle);
       }
-      
-      const cColor = encodeURIComponent(this.state.cursorColor || '#000000');
-      let dynCss = '';
-      if (this.state.cursorSize === 'large') {
-        dynCss = `html.ally-cursor-large, html.ally-cursor-large * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}' stroke='%23ffffff' stroke-width='2' d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L5.5 3.21z'/%3E%3C/svg%3E"), auto !important; }`;
-      } else if (this.state.cursorSize === 'xlarge') {
-        dynCss = `html.ally-cursor-xlarge, html.ally-cursor-xlarge * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}' stroke='%23ffffff' stroke-width='2' d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L5.5 3.21z'/%3E%3C/svg%3E"), auto !important; }`;
+      const { hostCss, shadowCss } = this.getCursorCssObject();
+      dynStyle.textContent = hostCss;
+
+      if (this.shadowRoot) {
+        let shadowCursorStyle = this.shadowRoot.getElementById('allyada-shadow-cursor-styles');
+        if (!shadowCursorStyle) {
+          shadowCursorStyle = document.createElement('style');
+          shadowCursorStyle.id = 'allyada-shadow-cursor-styles';
+          this.shadowRoot.appendChild(shadowCursorStyle);
+        }
+        shadowCursorStyle.textContent = shadowCss;
       }
-      dynStyle.textContent = dynCss;
     }
 
     hideVLibras() {
@@ -2368,12 +2400,15 @@
         this.lastFontSizeLevel = this.state.fontSizeLevel;
       }
 
-      const cColor = encodeURIComponent(this.state.cursorColor || '#000000');
-      let dynCss = '';
-      if (this.state.cursorSize === 'large') {
-        dynCss = `html.ally-cursor-large, html.ally-cursor-large * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}' stroke='%23ffffff' stroke-width='2' d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L5.5 3.21z'/%3E%3C/svg%3E"), auto !important; }`;
-      } else if (this.state.cursorSize === 'xlarge') {
-        dynCss = `html.ally-cursor-xlarge, html.ally-cursor-xlarge * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}' stroke='%23ffffff' stroke-width='2' d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L5.5 3.21z'/%3E%3C/svg%3E"), auto !important; }`;
+      const { hostCss: dynCss, shadowCss } = this.getCursorCssObject();
+      if (this.shadowRoot) {
+        let shadowCursorStyle = this.shadowRoot.getElementById('allyada-shadow-cursor-styles');
+        if (!shadowCursorStyle) {
+          shadowCursorStyle = document.createElement('style');
+          shadowCursorStyle.id = 'allyada-shadow-cursor-styles';
+          this.shadowRoot.appendChild(shadowCursorStyle);
+        }
+        shadowCursorStyle.textContent = shadowCss;
       }
 
       this.getAllAccessibleDocuments().forEach(({ iframe, doc }) => {
@@ -3993,12 +4028,12 @@
         :host {
           all: initial !important;
           --primary: ${this.config.primaryColor};
-          --primary-hover: #0043a8;
+          --primary-hover: #6340ac;
           --accent: ${this.config.accentColor};
           --bg-panel: rgba(255, 255, 255, 0.95);
           --bg-card: #f8fafc;
           --bg-card-hover: #f1f5f9;
-          --bg-card-active: #eff6ff;
+          --bg-card-active: #f5f2fb;
           --border-subtle: rgba(203, 213, 225, 0.6);
           --border-active: var(--primary);
           --text-main: #0f172a;
@@ -4055,10 +4090,10 @@
           width: 64px;
           height: 64px;
           border-radius: 50%;
-          background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
+          background: linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%);
           color: #ffffff;
           border: none;
-          box-shadow: 0 10px 30px -4px rgba(0, 82, 204, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+          box-shadow: 0 10px 30px -4px rgba(121, 86, 194, 0.48), inset 0 2px 4px rgba(255, 255, 255, 0.3);
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -4068,7 +4103,7 @@
         }
         .allyada-fab:hover {
           transform: scale(1.08) translateY(-4px);
-          box-shadow: 0 16px 36px rgba(0, 82, 204, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+          box-shadow: 0 16px 36px rgba(121, 86, 194, 0.58), inset 0 2px 4px rgba(255, 255, 255, 0.4);
         }
         .allyada-fab:focus-visible {
           outline: 4px solid var(--accent);
@@ -4186,13 +4221,13 @@
           width: 40px;
           height: 40px;
           border-radius: 12px;
-          background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
+          background: linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%);
           color: #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          box-shadow: 0 4px 12px rgba(0, 82, 204, 0.2);
+          box-shadow: 0 4px 12px rgba(121, 86, 194, 0.25);
         }
         .brand-badge-icon svg { width: 22px; height: 22px; }
         .brand-text { display: flex; flex-direction: column; min-width: 0; }
@@ -4207,11 +4242,11 @@
         .active-badge-pill {
           font-size: 12px;
           font-weight: 800;
-          color: #1d4ed8;
-          background: #dbeafe;
+          color: #5e3ea1;
+          background: #f3effb;
           padding: 3px 8px;
           border-radius: 9999px;
-          border: 1px solid #bfdbfe;
+          border: 1px solid #dcd0f5;
         }
         .brand-sub {
           font-size: 14px;
@@ -4246,9 +4281,9 @@
           box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
         .btn-header-action.active {
-          background: #dbeafe;
-          color: #1d4ed8;
-          border-color: #bfdbfe;
+          background: #f3effb;
+          color: #5e3ea1;
+          border-color: #dcd0f5;
         }
         .btn-header-action:focus-visible, .btn-icon-close:focus-visible {
           outline: 2px solid var(--primary);
@@ -4358,7 +4393,7 @@
         }
         .search-input-field:focus {
           border-color: var(--primary);
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), 0 0 0 4px rgba(0, 82, 204, 0.15);
+          box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), 0 0 0 4px rgba(121, 86, 194, 0.15);
         }
         .search-clear-btn {
           position: absolute;
@@ -4389,7 +4424,7 @@
           outline: none;
           cursor: pointer;
         }
-        .allyada-select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.2); }
+        .allyada-select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(121, 86, 194, 0.2); }
         .allyada-color-picker {
           -webkit-appearance: none;
           border: none;
@@ -4424,11 +4459,11 @@
         .pill-badge {
           font-size: 12px;
           font-weight: 800;
-          color: #0369a1;
-          background: #e0f2fe;
+          color: #5e3ea1;
+          background: #f3effb;
           padding: 4px 10px;
           border-radius: 9999px;
-          border: 1px solid #bae6fd;
+          border: 1px solid #dcd0f5;
         }
 
         /* Grid do Modo Simples / Acesso Rápido */
@@ -4460,7 +4495,7 @@
           box-shadow: 0 6px 12px rgba(0,0,0,0.05);
         }
         .quick-tile.active {
-          background: rgba(0, 82, 204, 0.05);
+          background: rgba(121, 86, 194, 0.06);
           border-color: var(--border-active);
           color: var(--primary);
         }
@@ -4514,7 +4549,7 @@
           background: #ffffff;
           border-color: var(--primary);
           border-style: solid;
-          box-shadow: 0 4px 12px rgba(0, 82, 204, 0.08);
+          box-shadow: 0 4px 12px rgba(121, 86, 194, 0.1);
         }
         .btn-customize-link:focus-visible {
           outline: 3px solid var(--primary);
@@ -4548,7 +4583,7 @@
           box-shadow: 0 8px 16px rgba(0,0,0,0.06);
         }
         .profile-card.active {
-          background: rgba(0, 82, 204, 0.04);
+          background: rgba(121, 86, 194, 0.05);
           border-color: var(--border-active);
           box-shadow: 0 0 0 1px var(--border-active);
         }
@@ -4560,7 +4595,7 @@
           font-size: 12px;
           font-weight: 800;
           color: var(--primary);
-          background: rgba(0, 82, 204, 0.1);
+          background: rgba(121, 86, 194, 0.12);
           padding: 4px 10px;
           border-radius: 999px;
         }
@@ -4589,7 +4624,7 @@
         .profile-card.active .card-icon-bubble {
           background: var(--primary);
           color: #ffffff;
-          box-shadow: 0 4px 8px rgba(0, 82, 204, 0.3);
+          box-shadow: 0 4px 8px rgba(121, 86, 194, 0.3);
         }
         .card-icon-bubble svg { width: 20px; height: 20px; }
         .card-tag {
@@ -4774,7 +4809,7 @@
           box-shadow: 0 4px 8px rgba(0,0,0,0.04);
         }
         .tool-card.active {
-          background: rgba(0, 82, 204, 0.04);
+          background: rgba(121, 86, 194, 0.05);
           border-color: var(--border-active);
           box-shadow: 0 0 0 1px var(--border-active);
         }
@@ -4889,8 +4924,8 @@
           width: 36px;
           height: 36px;
           border-radius: 10px;
-          background: #e0e7ff;
-          color: #3730a3;
+          background: #f3effb;
+          color: #5e3ea1;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -4935,8 +4970,8 @@
           transition: all 0.15s ease;
         }
         .btn-heading-target:hover {
-          background: #e0f2fe;
-          border-color: #bae6fd;
+          background: #f3effb;
+          border-color: #dcd0f5;
         }
         .btn-heading-target:focus-visible {
           outline: 2px solid var(--primary);
@@ -4950,7 +4985,7 @@
           color: #334155;
           flex-shrink: 0;
         }
-        .heading-level-pill.h1 { background: #dbeafe; color: #1e40af; }
+        .heading-level-pill.h1 { background: #f3effb; color: #5e3ea1; }
         .heading-level-pill.h2 { background: #fef3c7; color: #92400e; }
         .heading-level-pill.h3 { background: #f1f5f9; color: #475569; }
         .heading-text-label {
@@ -4970,14 +5005,14 @@
 
         /* Player de Leitura TTS (Exibido apenas quando ativo) */
         .tts-player-panel {
-          background: #f0f9ff;
-          border: 1px solid #bae6fd;
+          background: #f5f2fb;
+          border: 1px solid #dcd0f5;
           border-radius: var(--radius-card);
           padding: 14px 16px;
           display: flex;
           flex-direction: column;
           gap: 12px;
-          box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+          box-shadow: 0 4px 12px rgba(121, 86, 194, 0.08);
           grid-column: 1 / -1;
           width: 100%;
           box-sizing: border-box;
@@ -4991,22 +5026,22 @@
           gap: 8px;
           font-size: 13px;
           font-weight: 600;
-          color: #0369a1;
+          color: #5e3ea1;
           line-height: 1.4;
         }
         .tts-pulse-indicator {
           width: 10px;
           height: 10px;
           border-radius: 50%;
-          background: #0284c7;
+          background: #7956c2;
           display: inline-block;
           flex-shrink: 0;
           animation: allyada-pulse 1.5s infinite;
         }
         @keyframes allyada-pulse {
-          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7); }
-          70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(2, 132, 199, 0); }
-          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(121, 86, 194, 0.7); }
+          70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(121, 86, 194, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(121, 86, 194, 0); }
         }
         .tts-controls-row {
           display: flex;
@@ -5031,7 +5066,7 @@
         .btn-tts-action.primary {
           background: var(--primary);
           color: #ffffff;
-          box-shadow: 0 3px 8px rgba(0, 82, 204, 0.2);
+          box-shadow: 0 3px 8px rgba(121, 86, 194, 0.25);
         }
         .btn-tts-action.primary:hover {
           background: var(--primary-hover);
@@ -5065,7 +5100,7 @@
         .speed-label {
           font-size: 12px;
           font-weight: 700;
-          color: #0284c7;
+          color: #5e3ea1;
         }
         .tts-rates {
           display: flex;
@@ -5097,7 +5132,7 @@
           box-shadow: 0 4px 8px rgba(0,0,0,0.04);
         }
         .vlibras-banner-card.active {
-          background: rgba(0, 82, 204, 0.04);
+          background: rgba(121, 86, 194, 0.05);
           border-color: var(--border-active);
         }
         .vlibras-banner-card:focus-visible {
@@ -5108,13 +5143,13 @@
           width: 40px;
           height: 40px;
           border-radius: 10px;
-          background: #0052cc;
+          background: #7956c2;
           color: #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          box-shadow: 0 4px 8px rgba(0, 82, 204, 0.2);
+          box-shadow: 0 4px 8px rgba(121, 86, 194, 0.25);
         }
         .vlibras-icon-box svg { width: 22px; height: 22px; }
         .vlibras-info { flex: 1; }
@@ -5226,17 +5261,17 @@
           align-items: center;
           gap: 6px;
           padding: 6px 10px;
-          background: #eff6ff;
-          border: 1px solid #bfdbfe;
+          background: #f5f2fb;
+          border: 1px solid #dcd0f5;
           border-radius: 8px;
           font-size: 13px;
           font-weight: 700;
-          color: #1e40af;
+          color: #5e3ea1;
         }
         .btn-chip-remove {
           border: none;
           background: transparent;
-          color: #60a5fa;
+          color: #7956c2;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -5244,8 +5279,8 @@
           padding: 2px;
           border-radius: 4px;
         }
-        .btn-chip-remove:hover { color: #1e3a8a; background: #dbeafe; }
-        .btn-chip-remove:focus-visible { outline: 2px solid #1e40af; }
+        .btn-chip-remove:hover { color: #4a2e85; background: #e8e0f8; }
+        .btn-chip-remove:focus-visible { outline: 2px solid #5e3ea1; }
         .btn-chip-remove svg { width: 14px; height: 14px; }
         .active-none-msg {
           font-size: 14px;
