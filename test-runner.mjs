@@ -1,0 +1,407 @@
+import { spawn } from 'child_process';
+
+const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+const URL = 'http://localhost:8080/demo/index.html';
+
+async function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+async function main() {
+  console.log('🚀 Iniciando bateria completa de testes no Chrome Headless...');
+  const chrome = spawn(CHROME_PATH, [
+    '--headless=new',
+    '--remote-debugging-port=9222',
+    '--user-data-dir=C:\\Users\\sarah\\AppData\\Local\\Temp\\allyada_test_cdp_full',
+    '--no-first-run',
+    '--no-default-browser-check',
+    '--disk-cache-size=1',
+    '--autoplay-policy=no-user-gesture-required',
+    URL
+  ]);
+
+  let wsUrl = null;
+  for (let i = 0; i < 20; i++) {
+    try {
+      const res = await fetch('http://localhost:9222/json');
+      const list = await res.json();
+      const page = list.find(p => p.type === 'page' && p.url.includes('localhost:8080'));
+      if (page && page.webSocketDebuggerUrl) {
+        wsUrl = page.webSocketDebuggerUrl;
+        break;
+      }
+    } catch (e) {}
+    await sleep(300);
+  }
+
+  if (!wsUrl) {
+    console.error('❌ Falha ao conectar ao Chrome CDP.');
+    chrome.kill();
+    process.exit(1);
+  }
+
+  const ws = new WebSocket(wsUrl);
+  let msgId = 1;
+  const callbacks = new Map();
+  const pageErrors = [];
+  const local404Errors = [];
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.method === 'Runtime.exceptionThrown') {
+      pageErrors.push(data.params.exceptionDetails);
+      console.error('  [Page Exception!]:', data.params.exceptionDetails.text, data.params.exceptionDetails.exception?.description);
+    }
+    if (data.method === 'Log.entryAdded') {
+      const entry = data.params.entry;
+      if (entry.level === 'error' && entry.url && entry.url.includes('localhost:8080')) {
+        local404Errors.push(`${entry.text} -> ${entry.url}`);
+        console.error('  [Local 404/Net Error!]:', entry.text, entry.url);
+      }
+    }
+    if (data.id && callbacks.has(data.id)) {
+      const resolve = callbacks.get(data.id);
+      callbacks.delete(data.id);
+      resolve(data);
+    }
+  };
+
+  await new Promise(r => ws.onopen = r);
+
+  function send(method, params = {}) {
+    const id = msgId++;
+    return new Promise((resolve) => {
+      callbacks.set(id, resolve);
+      ws.send(JSON.stringify({ id, method, params }));
+    });
+  }
+
+  async function evaluate(expr) {
+    const res = await send('Runtime.evaluate', {
+      expression: expr,
+      returnByValue: true,
+      awaitPromise: true
+    });
+    if (res.result?.exceptionDetails) {
+      console.error('  Eval Exception:', res.result.exceptionDetails);
+    }
+    return res.result?.result?.value;
+  }
+
+  await send('Page.enable');
+  await send('Runtime.enable');
+  await send('Console.enable');
+  await send('Log.enable');
+
+  await sleep(1000);
+
+  // 0. Limpa estado inicial para garantir teste limpo
+  await evaluate(`
+    (() => {
+      localStorage.clear();
+      window.Allyada.resetState();
+    })()
+  `);
+  await sleep(300);
+
+  let passed = 0;
+  let total = 0;
+  function assert(name, condition, extra = '') {
+    total++;
+    if (condition) {
+      passed++;
+      console.log(`  ✅ [PASS] ${name} ${extra}`);
+    } else {
+      console.error(`  ❌ [FAIL] ${name} ${extra}`);
+    }
+  }
+
+  console.log('\n--- 1. Painel e Acessibilidade do Componente ---');
+  await evaluate('window.Allyada.openPanel()');
+  await sleep(300);
+  assert('Painel aberto via openPanel()', await evaluate('window.Allyada.isOpen'));
+  assert('Painel com aria-hidden false', await evaluate('window.Allyada.shadowRoot.getElementById("allyada-panel").getAttribute("aria-hidden") === "false"'));
+  
+  await evaluate('window.Allyada.closePanel()');
+  await sleep(300);
+  assert('Painel fechado via closePanel()', !await evaluate('window.Allyada.isOpen'));
+  
+  await evaluate('window.Allyada.openPanel()');
+  await sleep(300);
+
+  console.log('\n--- 2. Modos de Apresentação (Perfis) ---');
+  // Modo Foco
+  await evaluate('window.Allyada.shadowRoot.getElementById("profile-focus").click()');
+  await sleep(200);
+  assert('Modo Foco ativado', await evaluate('window.Allyada.state.activeProfile === "focus" && window.Allyada.state.readingGuideMode === "ruler" && window.Allyada.state.stopAnimations === true'));
+
+  // Modo Ampliação
+  await evaluate('window.Allyada.shadowRoot.getElementById("profile-zoom").click()');
+  await sleep(200);
+  assert('Modo Ampliação ativado', await evaluate('window.Allyada.state.activeProfile === "zoom" && window.Allyada.state.fontSizeLevel === 2 && window.Allyada.state.contrast === "dark"'));
+
+  // Modo Leitura
+  await evaluate('window.Allyada.shadowRoot.getElementById("profile-reading").click()');
+  await sleep(200);
+  assert('Modo Leitura ativado', await evaluate('window.Allyada.state.activeProfile === "reading" && window.Allyada.state.dyslexicFont === true && window.Allyada.state.textAlignLeft === true'));
+
+  // Modo Cores
+  await evaluate('window.Allyada.shadowRoot.getElementById("profile-colors").click()');
+  await sleep(200);
+  assert('Modo Cores ativado', await evaluate('window.Allyada.state.activeProfile === "colors" && window.Allyada.state.highlightLinks === true'));
+
+  console.log('\n--- 3. Redefinir Preferências ---');
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
+  await sleep(300);
+  const isReset = await evaluate(`
+    (() => {
+      const s = window.Allyada.state;
+      return s.activeProfile === null && s.fontSizeLevel === 0 && s.contrast === 'normal' && !s.dyslexicFont && !s.highlightLinks && s.readingGuideMode === 'none';
+    })()
+  `);
+  assert('Botão fixo "Redefinir" restaurou padrões', isReset);
+
+  console.log('\n--- 4. Leitura em Voz Alta (TTS) ---');
+  // Antes de clicar: player oculto
+  const ttsHiddenBefore = await evaluate(`
+    (() => {
+      const s = window.Allyada.shadowRoot;
+      return s.getElementById('tts-quick-controls').style.display === 'none' && s.getElementById('tts-player-panel').style.display === 'none';
+    })()
+  `);
+  assert('Player e velocidades ocultos antes de ouvir', ttsHiddenBefore);
+
+  // Clica em Ouvir Página
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-tts-toggle").click()');
+  await sleep(500);
+  const ttsActive = await evaluate(`
+    (() => {
+      const s = window.Allyada.shadowRoot;
+      return window.Allyada.isSpeaking && s.getElementById('tts-player-panel').style.display === 'flex';
+    })()
+  `);
+  assert('Player exibido após clicar em Ouvir Página', ttsActive);
+
+  // Pausar Leitura
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-tts-play-pause").click()');
+  await sleep(300);
+  assert('Pausar leitura funcional', await evaluate('window.Allyada.isSpeechPaused && window.Allyada.shadowRoot.getElementById("tts-play-label").textContent === "Continuar"'));
+
+  // Continuar Leitura
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-tts-play-pause").click()');
+  await sleep(1000);
+  assert('Continuar leitura funcional', await evaluate('!window.Allyada.isSpeechPaused && window.Allyada.shadowRoot.getElementById("tts-play-label").textContent === "Pausar"'));
+
+  // Alterar velocidade para 1.5x e verificar que NÃO recomeça do início
+  await evaluate('window.Allyada.shadowRoot.getElementById("rate-150").click()');
+  await sleep(300);
+  const rateResumeCheck = await evaluate(`
+    (() => {
+      return {
+        rate: window.Allyada.state.speechRate,
+        baseOffset: window.Allyada.utteranceBaseOffset,
+        remLen: window.Allyada.currentSpeakingText ? window.Allyada.currentSpeakingText.length : 0,
+        fullLen: window.Allyada.fullSpeakingText ? window.Allyada.fullSpeakingText.length : 0
+      };
+    })()
+  `);
+  assert(
+    'Velocidade 1.5x continua do ponto atual (sem voltar ao início)',
+    rateResumeCheck.rate === 1.5 && rateResumeCheck.baseOffset > 0 && rateResumeCheck.remLen < rateResumeCheck.fullLen,
+    `(offset: ${rateResumeCheck.baseOffset} chars, restante: ${rateResumeCheck.remLen}/${rateResumeCheck.fullLen})`
+  );
+
+  // Parar Leitura
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-tts-stop").click()');
+  await sleep(300);
+  const ttsStopped = await evaluate(`
+    (() => {
+      const s = window.Allyada.shadowRoot;
+      return !window.Allyada.isSpeaking && s.getElementById('tts-player-panel').style.display === 'none';
+    })()
+  `);
+  assert('Botão Parar interrompe fala e oculta player', ttsStopped);
+
+  console.log('\n--- 5. VLibras ---');
+  // Ativa VLibras
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-vlibras-toggle").click()');
+  await sleep(1500);
+  const vlibrasOn = await evaluate(`
+    (() => {
+      return window.Allyada.state.vlibrasActive &&
+             !!document.querySelector('[vw]') &&
+             document.querySelector('[vw]').style.display !== 'none' &&
+             window.VLibrasWidget &&
+             window.VLibrasWidget.path === 'https://vlibras.gov.br/app';
+    })()
+  `);
+  assert('VLibras ativado, container visível e VLibrasWidget.path preservado (https://vlibras.gov.br/app)', vlibrasOn);
+  assert('Zero erros 404 de assets/fontes/unity no console ao ativar VLibras', local404Errors.length === 0, local404Errors.length ? JSON.stringify(local404Errors) : '');
+
+  // Simula recarregamento de estado (loadState) e verifica que VLibras não abre sozinho ao abrir a página
+  const noAutoOpenOnLoad = await evaluate(`
+    (() => {
+      window.Allyada.loadState();
+      return window.Allyada.state.vlibrasActive === false;
+    })()
+  `);
+  assert('VLibras inicia desativado ao abrir a página (não abre sozinho)', noAutoOpenOnLoad);
+
+  // Garante desativação visual completa
+  await evaluate('window.Allyada.hideVLibras(); window.Allyada.updatePanelUI();');
+  await sleep(300);
+  const vlibrasOff = await evaluate(`
+    (() => {
+      return !window.Allyada.state.vlibrasActive && document.querySelector('[vw]').style.display === 'none';
+    })()
+  `);
+  assert('VLibras desativado e container [vw] oculto', vlibrasOff);
+
+  console.log('\n--- 6. Tipografia e Ajustes Manuais ---');
+  // Aumentar tamanho de fonte via stepper
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-font-increase").click()');
+  await sleep(200);
+  assert('Aumento de fonte via stepper (+15%)', await evaluate('window.Allyada.state.fontSizeLevel === 1'));
+
+  // Definir tamanho 200% (nível 6)
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-fs-6").click()');
+  await sleep(200);
+  assert('Tamanho máximo 200% (WCAG 1.4.4) selecionado', await evaluate('window.Allyada.state.fontSizeLevel === 6'));
+
+  // Espaçamento WCAG 1.4.12
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-wcag-spacing").click()');
+  await sleep(200);
+  assert('Espaçamento WCAG 1.4.12 aplicado', await evaluate('window.Allyada.state.wcagSpacing && document.documentElement.classList.contains("ally-wcag-spacing")'));
+
+  // Fonte Lexend
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-dyslexic-font").click()');
+  await sleep(200);
+  assert('Fonte Lexend aplicada', await evaluate('window.Allyada.state.dyslexicFont && document.documentElement.classList.contains("ally-dyslexic-font")'));
+
+  // Contraste Invertido
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-contrast-invert").click()');
+  await sleep(200);
+  assert('Contraste Invertido aplicado', await evaluate('window.Allyada.state.contrast === "invert" && document.documentElement.classList.contains("ally-contrast-invert")'));
+
+  // Foco reforçado
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-enhanced-focus").click()');
+  await sleep(200);
+  assert('Foco reforçado duplo contraste aplicado', await evaluate('window.Allyada.state.enhancedFocus && document.documentElement.classList.contains("ally-enhanced-focus")'));
+
+  // Redefinir Tudo final
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
+  await sleep(300);
+  assert('Redefinição final com sucesso', await evaluate('window.Allyada.state.fontSizeLevel === 0 && window.Allyada.state.contrast === "normal" && !window.Allyada.state.wcagSpacing'));
+
+  console.log('\n--- 7. Tamanho do Widget Responsivo à Tela (Multi-Viewport) ---');
+  const viewports = [
+    { name: 'Desktop Full HD (1920x1080)', width: 1920, height: 1080, mobile: false },
+    { name: 'Notebook (1366x768)', width: 1366, height: 768, mobile: false },
+    { name: 'Tela Compacta (1024x600)', width: 1024, height: 600, mobile: false },
+    { name: 'Mobile (375x667)', width: 375, height: 667, mobile: true }
+  ];
+  const scales = [
+    { id: 'btn-scale-090', val: '0.9', label: 'Compacto (90%)' },
+    { id: 'btn-scale-100', val: '1', label: 'Normal (100%)' },
+    { id: 'btn-scale-115', val: '1.15', label: 'Grande (115%)' },
+    { id: 'btn-scale-130', val: '1.3', label: 'Muito Grande (130%)' }
+  ];
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("tab-btn-settings").click()');
+  await sleep(200);
+
+  for (const vp of viewports) {
+    await send('Emulation.setDeviceMetricsOverride', {
+      width: vp.width,
+      height: vp.height,
+      deviceScaleFactor: 1,
+      mobile: vp.mobile
+    });
+    await evaluate('window.dispatchEvent(new Event("resize"))');
+    await sleep(150);
+
+    for (const sc of scales) {
+      await evaluate(`window.Allyada.shadowRoot.getElementById("${sc.id}").click()`);
+      await sleep(150);
+      const metrics = await evaluate(`
+        (() => {
+          const panel = window.Allyada.shadowRoot.getElementById('allyada-panel');
+          const rect = panel.getBoundingClientRect();
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          return {
+            top: Math.round(rect.top),
+            left: Math.round(rect.left),
+            right: Math.round(rect.right),
+            bottom: Math.round(rect.bottom),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+            vw,
+            vh,
+            uiScale: window.Allyada.state.uiScale
+          };
+        })()
+      `);
+      const fitsViewport =
+        metrics.top >= 8 &&
+        metrics.left >= 8 &&
+        metrics.right <= metrics.vw - 8 &&
+        metrics.bottom <= metrics.vh - 8 &&
+        metrics.uiScale === sc.val;
+      assert(
+        `[${vp.name}] Escala ${sc.label} cabe 100% na tela`,
+        fitsViewport,
+        `(box: ${metrics.width}x${metrics.height}, top:${metrics.top}, bottom:${metrics.bottom}/${metrics.vh}, left:${metrics.left}, right:${metrics.right}/${metrics.vw})`
+      );
+    }
+  }
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
+  await sleep(200);
+  assert('Botão Redefinir restaura tamanho do painel para Normal (100%)', await evaluate('window.Allyada.state.uiScale === "1"'));
+
+  // Verificar que nenhum card ou control-box estoura horizontalmente o painel
+  await send('Emulation.setDeviceMetricsOverride', { width: 1366, height: 768, deviceScaleFactor: 1, mobile: false });
+  await evaluate('window.Allyada.shadowRoot.getElementById("tab-btn-foryou").click()');
+  await sleep(200);
+  const overflowCheck = await evaluate(`
+    (() => {
+      const root = window.Allyada.shadowRoot;
+      const panelRect = root.getElementById('allyada-panel').getBoundingClientRect();
+      const cards = Array.from(root.querySelectorAll('.tool-card, .control-box'));
+      const overflowing = [];
+      for (const el of cards) {
+        const r = el.getBoundingClientRect();
+        if (r.width > 0 && (r.right > panelRect.right + 1 || r.left < panelRect.left - 1)) {
+          overflowing.push(el.id || el.className);
+        }
+      }
+      const wcagRect = root.getElementById('card-wcag-spacing').getBoundingClientRect();
+      const wordRect = root.getElementById('card-word-spacing').getBoundingClientRect();
+      return {
+        overflowing,
+        wcagWidth: Math.round(wcagRect.width),
+        wordWidth: Math.round(wordRect.width),
+        sameWidth: wcagRect.width > 0 && Math.abs(wcagRect.width - wordRect.width) <= 1
+      };
+    })()
+  `);
+  assert(
+    'Card Espaçamento WCAG 1.4.12 e todos os cards alinhados sem estourar a largura do painel',
+    overflowCheck.overflowing.length === 0 && overflowCheck.sameWidth,
+    `(wcagWidth: ${overflowCheck.wcagWidth}px, wordWidth: ${overflowCheck.wordWidth}px, overflowing: ${overflowCheck.overflowing.join(', ') || 'nenhum'})`
+  );
+
+  console.log(`\n========================================`);
+  console.log(`📊 RESULTADO FINAL: ${passed}/${total} testes passaram (${Math.round((passed/total)*100)}%)`);
+  console.log(`🚨 Total de exceções na página: ${pageErrors.length}`);
+  console.log(`========================================\n`);
+
+  chrome.kill();
+  process.exit(pageErrors.length === 0 && passed === total ? 0 : 1);
+}
+
+main().catch(err => {
+  console.error('Erro na execução dos testes:', err);
+  process.exit(1);
+});
