@@ -351,18 +351,18 @@ async function main() {
   await sleep(200);
   assert('Foco reforçado duplo contraste aplicado', await evaluate('window.Allyada.state.enhancedFocus && document.documentElement.classList.contains("ally-enhanced-focus")'));
 
-  // Cursores Grande (64px) e Extra (96px) sem borda branca + Cor Roxo (#7956c2) do Allyada
+  // Cursores Grande (44px) e Extra (60px) sem borda branca + Cor Roxo (#7956c2) do Allyada
   await evaluate('window.Allyada.shadowRoot.getElementById("btn-cursor-large").click()');
   await sleep(150);
   const largeCursorCheck = await evaluate(`
     (() => {
       const css = (document.getElementById('allyada-dynamic-styles') || {}).textContent || '';
       return window.Allyada.state.cursorSize === 'large' &&
-             css.includes("width='64' height='64'") &&
+             css.includes("width='44' height='44'") &&
              !css.includes("stroke='%23ffffff'");
     })()
   `);
-  assert('Cursor Grande (64px) proporcional e sem borda branca', largeCursorCheck);
+  assert('Cursor Grande (44px) proporcional e sem borda branca', largeCursorCheck);
 
   await evaluate('window.Allyada.shadowRoot.getElementById("btn-cursor-xlarge").click()');
   await sleep(150);
@@ -370,12 +370,12 @@ async function main() {
     (() => {
       const css = (document.getElementById('allyada-dynamic-styles') || {}).textContent || '';
       return window.Allyada.state.cursorSize === 'xlarge' &&
-             css.includes("width='96' height='96'") &&
+             css.includes("width='60' height='60'") &&
              !css.includes("stroke='%23ffffff'") &&
              window.Allyada.config.primaryColor === '#7956c2';
     })()
   `);
-  assert('Cursor Extra (96px) sem borda branca e cor principal do Allyada em roxo (#7956c2)', xlargeCursorCheck);
+  assert('Cursor Extra (60px) sem borda branca e cor principal do Allyada em roxo (#7956c2)', xlargeCursorCheck);
 
   // Redefinir Tudo final
   await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
@@ -530,6 +530,144 @@ async function main() {
     'Leitor de voz (TTS) extrai texto de dentro do iframe automaticamente',
     iframeSync.includesIframeText
   );
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
+  await sleep(200);
+
+  console.log('\n--- 9. Novos Recursos Inspirados no Rybená (Estrutura em Caixa, Cores Títulos/Texto/Fundo, Alinhamento Completo, Descrever Imagens IA e Voz Natural) ---');
+
+  // 9.1 Alinhamento Completo do Texto (Esquerda, Centro, Direita, Justificado)
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-align-center").click()');
+  await sleep(150);
+  assert(
+    'Alinhamento Centralizado aplicado na página',
+    await evaluate('window.Allyada.state.textAlign === "center" && document.documentElement.classList.contains("ally-text-align-center")')
+  );
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-align-right").click()');
+  await sleep(150);
+  assert(
+    'Alinhamento à Direita aplicado na página',
+    await evaluate('window.Allyada.state.textAlign === "right" && document.documentElement.classList.contains("ally-text-align-right") && !document.documentElement.classList.contains("ally-text-align-center")')
+  );
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-align-justify").click()');
+  await sleep(150);
+  assert(
+    'Alinhamento Justificado aplicado na página',
+    await evaluate('window.Allyada.state.textAlign === "justify" && document.documentElement.classList.contains("ally-text-align-justify")')
+  );
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-align-left").click()');
+  await sleep(150);
+  assert(
+    'Alinhamento à Esquerda aplicado e sincronizado com textAlignLeft',
+    await evaluate('window.Allyada.state.textAlign === "left" && window.Allyada.state.textAlignLeft === true && document.documentElement.classList.contains("ally-text-align-left")')
+  );
+
+  // 9.2 Personalização de Cores de Títulos, Texto e Fundo
+  await evaluate(`
+    (() => {
+      const root = window.Allyada.shadowRoot;
+      root.querySelector('.custom-swatch-btn[data-target="title"][data-color="#7956c2"]').click();
+      root.querySelector('.custom-swatch-btn[data-target="text"][data-color="#0f172a"]').click();
+      root.querySelector('.custom-swatch-btn[data-target="bg"][data-color="#fdf6e3"]').click();
+    })()
+  `);
+  await sleep(200);
+  const customColorsCheck = await evaluate(`
+    (() => {
+      const s = window.Allyada.state;
+      const dynCss = (document.getElementById('allyada-dynamic-styles') || {}).textContent || '';
+      return s.customTitleColor === '#7956c2' &&
+             s.customTextColor === '#0f172a' &&
+             s.customBgColor === '#fdf6e3' &&
+             dynCss.includes('#7956c2') &&
+             dynCss.includes('#0f172a') &&
+             dynCss.includes('#fdf6e3');
+    })()
+  `);
+  assert('Personalização independente de Cor dos Títulos, Cor do Texto e Cor do Fundo aplicada', customColorsCheck);
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-custom-colors").click()');
+  await sleep(150);
+  assert(
+    'Botão Restaurar limpa as cores personalizadas de Títulos, Texto e Fundo',
+    await evaluate('!window.Allyada.state.customTitleColor && !window.Allyada.state.customTextColor && !window.Allyada.state.customBgColor')
+  );
+
+  // 9.3 Estrutura da Página em Caixa Flutuante Dedicada (Títulos, Regiões e Links + Busca)
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-toggle-headings").click()');
+  await sleep(250);
+  const structModalOpened = await evaluate(`
+    (() => {
+      const modal = window.Allyada.shadowRoot.getElementById('allyada-structure-modal');
+      const items = window.Allyada.shadowRoot.querySelectorAll('#headings-items-ul .btn-heading-target');
+      return !window.Allyada.isOpen &&
+             window.Allyada.isStructureOpen === true &&
+             modal && modal.classList.contains('open') &&
+             items.length > 0;
+    })()
+  `);
+  assert('Estrutura da Página abre caixa flutuante dedicada, fecha o painel lateral e lista Títulos', structModalOpened);
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("struct-tab-landmarks").click()');
+  await sleep(150);
+  assert(
+    'Aba Regiões da Estrutura da Página lista regiões semânticas da página',
+    await evaluate('window.Allyada.activeStructureTab === "landmarks" && window.Allyada.shadowRoot.querySelectorAll("#headings-items-ul .btn-heading-target").length > 0')
+  );
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("struct-tab-links").click()');
+  await sleep(150);
+  assert(
+    'Aba Links da Estrutura da Página lista links navegáveis da página',
+    await evaluate('window.Allyada.activeStructureTab === "links" && window.Allyada.shadowRoot.querySelectorAll("#headings-items-ul .btn-heading-target").length > 0')
+  );
+
+  await evaluate('window.Allyada.shadowRoot.getElementById("btn-close-structure-modal").click()');
+  await sleep(150);
+  assert(
+    'Fechar caixa de Estrutura da Página oculta o modal corretamente',
+    await evaluate('!window.Allyada.isStructureOpen && !window.Allyada.shadowRoot.getElementById("allyada-structure-modal").classList.contains("open")')
+  );
+
+  // 9.4 Descrever Imagens (IA) + Voz Mais Natural e Humana (TTS)
+  await evaluate('window.Allyada.openPanel()');
+  await sleep(200);
+  await evaluate('window.Allyada.shadowRoot.getElementById("card-image-inspector").click()');
+  await sleep(200);
+  const imgInspectorCheck = await evaluate(`
+    (() => {
+      const fig = document.createElement('figure');
+      fig.id = 'test-ai-figure';
+      fig.innerHTML = '<img id="test-ai-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Equipe reunida analisando métricas de acessibilidade" /><figcaption>Relatório anual de inclusão digital 2026</figcaption>';
+      document.body.appendChild(fig);
+      const img = document.getElementById('test-ai-img');
+      window.Allyada.showImageInspectorTooltip(img);
+      const tooltip = document.getElementById('allyada-image-tooltip');
+      const desc = window.Allyada.describeImageElement(img);
+      return {
+        active: window.Allyada.state.imageInspector,
+        tooltipVisible: !!(tooltip && tooltip.style.display === 'block'),
+        hasAlt: typeof desc === 'string' && desc.includes('Equipe reunida analisando métricas'),
+        hasContext: typeof desc === 'string' && desc.includes('Relatório anual de inclusão digital 2026')
+      };
+    })()
+  `);
+  assert(
+    'Descrever Imagens (IA) analisa imagem + contexto semântico e exibe tooltip flutuante com botão Ouvir',
+    !!(imgInspectorCheck && imgInspectorCheck.active && imgInspectorCheck.tooltipVisible && imgInspectorCheck.hasAlt && imgInspectorCheck.hasContext)
+  );
+
+  const naturalVoiceCheck = await evaluate(`
+    (() => {
+      const sel1 = window.Allyada.shadowRoot.getElementById('select-tts-voice');
+      const sel2 = window.Allyada.shadowRoot.getElementById('q-select-tts-voice');
+      return !!sel1 && !!sel2 && typeof window.Allyada.getRankedPortugueseVoices === 'function';
+    })()
+  `);
+  assert('Motor de Voz Natural/Humana (Neural/Online) e seletores de timbre presentes no TTS', naturalVoiceCheck);
 
   await evaluate('window.Allyada.shadowRoot.getElementById("btn-reset-fixed").click()');
   await sleep(200);

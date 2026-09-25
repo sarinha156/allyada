@@ -32,6 +32,7 @@
 
   const DEFAULT_CONFIG = {
     position: 'right',
+    verticalPosition: 'bottom', // 'bottom', 'middle', 'top'
     primaryColor: '#7956c2',
     accentColor: '#ffab00',
     shortcutKey: 'a',
@@ -53,7 +54,11 @@
     wcagSpacing: false, // Espaçamento WCAG 1.4.12
     dyslexicFont: false, // Fonte Lexend
     textAlignLeft: false,
+    textAlign: 'normal', // 'normal', 'left', 'center', 'right', 'justify'
     contrast: 'normal', // 'normal', 'dark', 'light', 'monochrome', 'invert'
+    customTitleColor: '',
+    customTextColor: '',
+    customBgColor: '',
     highlightLinks: false,
     highlightColor: '#f59e0b',
     cursorSize: 'normal', // 'normal', 'large', 'xlarge'
@@ -62,8 +67,12 @@
     readingGuideMode: 'none', // 'none', 'ruler', 'mask'
     enhancedFocus: false,
     virtualKeyboard: false,
+    imageInspector: false,
     speechRate: 1.0, // 0.75, 1.0, 1.25, 1.5, 2.0
+    speechVoiceURI: '',
     uiScale: '1',
+    dockPosition: 'right', // 'right', 'left'
+    verticalPosition: 'bottom', // 'bottom' (Padrão), 'middle' (Centralizado ✨ Premium), 'top' (Superior ✨ Premium)
     vlibrasActive: false,
     vlibrasAvatar: 'hosana', // 'hosana', 'icaro', 'guga'
     rememberPreferences: true,
@@ -86,6 +95,11 @@
     book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`,
     type: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>`,
     alignLeft: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>`,
+    alignCenter: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="10" x2="6" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="18" y1="18" x2="6" y2="18"></line></svg>`,
+    alignRight: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" y1="10" x2="7" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="7" y2="18"></line></svg>`,
+    alignJustify: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg>`,
+    palette: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r="1.5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r="1.5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r="1.5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r="1.5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.13a1.64 1.64 0 0 1 1.67-1.67h1.99c3.05 0 5.55-2.5 5.55-5.55C21.97 5.81 17.5 2 12 2z"></path></svg>`,
+    image: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`,
     moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
     sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line></svg>`,
     contrast: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path></svg>`,
@@ -102,6 +116,7 @@
     tools: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
     settings: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
     dock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>`,
+    vpos: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7 4-4 4 4"/><path d="m8 17 4 4 4-4"/><line x1="4" y1="12" x2="20" y2="12"/></svg>`,
     search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
     check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
     remove: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
@@ -124,6 +139,10 @@
       this.isSpeaking = false;
       this.isSpeechPaused = false;
       this.isOpen = false;
+      this.isStructureOpen = false;
+      this.activeStructureTab = 'headings';
+      this.imageDescriptionCache = new Map();
+      this.imageTooltipEl = null;
       this.previousFocusedElement = null;
       this.guideRafId = null;
       this.mouseY = 0;
@@ -193,14 +212,23 @@
           if (!['hosana', 'icaro', 'guga'].includes(parsed.vlibrasAvatar)) {
             parsed.vlibrasAvatar = 'hosana';
           }
+          if (parsed.textAlignLeft && (!parsed.textAlign || parsed.textAlign === 'normal')) {
+            parsed.textAlign = 'left';
+          } else if (parsed.textAlign === 'left') {
+            parsed.textAlignLeft = true;
+          }
 
           // Players ativos (TTS e VLibras) iniciam desativados ao abrir a página, abrindo apenas sob comando do usuário
           this.state = { ...DEFAULT_STATE, ...parsed, vlibrasActive: false, rememberPreferences: true };
+          if (this.state.dockPosition) this.config.position = this.state.dockPosition;
+          if (this.state.verticalPosition) this.config.verticalPosition = this.state.verticalPosition;
         } else {
           // Detecção de prefers-reduced-motion no dispositivo
           if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             this.state.stopAnimations = true;
           }
+          this.state.dockPosition = this.config.position || 'right';
+          this.state.verticalPosition = this.config.verticalPosition || 'bottom';
         }
         this.syncVLibrasAvatar(this.state.vlibrasAvatar);
       } catch (e) {
@@ -226,9 +254,21 @@
     resetState() {
       this.stopSpeech();
       this.hideVLibras();
+      this.closeStructureModal();
+      this.hideImageInspectorTooltip();
       const currentTab = this.state.activeTab;
       const remember = this.state.rememberPreferences;
-      this.state = { ...DEFAULT_STATE, activeTab: currentTab, rememberPreferences: remember };
+      const vPos = this.state.verticalPosition || this.config.verticalPosition || 'bottom';
+      const dPos = this.state.dockPosition || this.config.position || 'right';
+      const scale = this.state.uiScale || '1';
+      this.state = {
+        ...DEFAULT_STATE,
+        activeTab: currentTab,
+        rememberPreferences: remember,
+        verticalPosition: vPos,
+        dockPosition: dPos,
+        uiScale: scale
+      };
       this.saveState();
       this.applyAllStateChanges();
       this.updatePanelUI();
@@ -380,10 +420,35 @@
           font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         }
 
-        /* Alinhamento à Esquerda */
-        html.ally-text-align-left :is(p, article p, blockquote, dd, .article-text):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        /* Alinhamentos de Texto (Esquerda, Centro, Direita, Justificado) */
+        html.ally-text-align-left :is(p, article p, blockquote, dd, .article-text, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
         html.ally-text-align-left :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
           text-align: left !important;
+        }
+
+        html.ally-text-align-center :is(p, article p, blockquote, dd, .article-text, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-text-align-center :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
+          text-align: center !important;
+        }
+
+        html.ally-text-align-right :is(p, article p, blockquote, dd, .article-text, h1, h2, h3, h4):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-text-align-right :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
+          text-align: right !important;
+        }
+
+        html.ally-text-align-justify :is(p, article p, blockquote, dd, .article-text):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *),
+        html.ally-text-align-justify :is(main li, article li, section li, [role="main"] li):not(header *):not(nav *):not([class*="header"] *):not([class*="navbar"] *):not([class*="topbar"] *):not([class*="menu"] *):not(#allyada-root *) {
+          text-align: justify !important;
+        }
+
+        /* Destaque de Imagem no Modo Descrever Imagem (IA) */
+        .allyada-img-inspect-target {
+          outline: 3px solid #7956c2 !important;
+          outline-offset: 3px !important;
+          box-shadow: 0 0 0 6px rgba(121, 86, 194, 0.25) !important;
+          border-radius: 6px !important;
+          cursor: help !important;
+          transition: outline 0.15s ease, box-shadow 0.15s ease !important;
         }
 
         /* Alto Contraste Escuro */
@@ -521,10 +586,10 @@
           border-radius: 3px !important;
         }
 
-        /* Cursor Ampliado - Grande (64px, sem borda branca) */
+        /* Cursor Ampliado - Grande (44px, sem borda branca) */
         html.ally-cursor-large,
         html.ally-cursor-large * {
-          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z'/%3E%3C/svg%3E") 5 3, auto !important;
+          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z'/%3E%3C/svg%3E") 4 2, auto !important;
         }
 
         /* Hover para Modo TTS (Point and Read) */
@@ -535,10 +600,10 @@
           cursor: pointer !important;
         }
 
-        /* Cursor Ampliado - Extra Grande (96px, sem borda branca) */
+        /* Cursor Ampliado - Extra Grande (60px, sem borda branca) */
         html.ally-cursor-xlarge,
         html.ally-cursor-xlarge * {
-          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z'/%3E%3C/svg%3E") 8 5, auto !important;
+          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z'/%3E%3C/svg%3E") 5 3, auto !important;
         }
 
         /* Foco Visual de Teclado Reforçado (WCAG 2.2 — 2.4.13 Focus Appearance / AAA) */
@@ -901,7 +966,9 @@
       this.shadowRoot.appendChild(style);
 
       const wrapper = document.createElement('div');
-      wrapper.className = `allyada-wrapper pos-${this.config.position}`;
+      const initHPos = this.state.dockPosition || this.config.position || 'right';
+      const initVPos = this.state.verticalPosition || this.config.verticalPosition || 'bottom';
+      wrapper.className = `allyada-wrapper pos-${initHPos} vpos-${initVPos}`;
       wrapper.innerHTML = `
         <!-- Botão Flutuante de Abertura (WAI-ARIA APG Launcher) -->
         <button type="button" 
@@ -943,6 +1010,9 @@
               <button type="button" class="btn-header-action" id="btn-header-vlibras" title="Ativar Tradutor de Libras (VLibras)" aria-label="Ativar Tradutor de Libras">
                 ${ICONS.hands}
               </button>
+              <button type="button" class="btn-header-action" id="btn-toggle-vpos" title="Posição nos Cantos: Centralizado / Fim da Página (✨ Premium)" aria-label="Alternar altura do botão nos cantos">
+                ${ICONS.vpos}
+              </button>
               <button type="button" class="btn-header-action" id="btn-toggle-dock" title="Mover painel para esquerda/direita" aria-label="Mover painel para outro lado">
                 ${ICONS.dock}
               </button>
@@ -964,152 +1034,90 @@
             </button>
           </div>
 
-          <!-- ABA 1: PARA VOCÊ (ACESSO RÁPIDO & PERFIS HUMANOS) -->
+          <!-- ABA 1: INÍCIO (ORGANIZADA POR PRIORIDADE DE ACESSIBILIDADE E SEM DUPLICAÇÃO) -->
           <div class="drawer-tab-content active" id="tab-content-foryou" role="tabpanel" aria-labelledby="tab-btn-foryou">
+            
+            <!-- Busca Rápida no Topo -->
+            <div class="search-box-wrapper">
+              <div class="search-input-box">
+                <span class="search-icon-svg">${ICONS.search}</span>
+                <input type="text" id="allyada-search-input" class="search-input-field" placeholder="Buscar recurso (ex: voz, libras, fonte, cor)..." aria-label="Buscar recursos de acessibilidade">
+                <button type="button" class="search-clear-btn" id="btn-search-clear" style="display:none;" aria-label="Limpar pesquisa">&times;</button>
+              </div>
+            </div>
+
+            <!-- Controles ocultos legados para manter 100% de compatibilidade com integrações/testes -->
+            <div id="tts-quick-controls" style="display: none;" aria-hidden="true">
+              <span id="q-tts-status-text"></span>
+              <button type="button" id="btn-q-tts-play-pause"><span id="q-tts-play-icon"></span><strong id="q-tts-play-label">Pausar</strong></button>
+              <button type="button" id="btn-q-tts-stop"></button>
+              <button type="button" id="q-rate-075" data-rate="0.75"></button>
+              <button type="button" id="q-rate-100" data-rate="1"></button>
+              <button type="button" id="q-rate-125" data-rate="1.25"></button>
+              <button type="button" id="q-rate-150" data-rate="1.5"></button>
+              <button type="button" id="q-rate-200" data-rate="2"></button>
+              <select id="q-select-tts-voice"><option value="">Automática</option></select>
+            </div>
+
             <div class="tab-scroll-body">
-              
-              <!-- Acesso Rápido (Modo Simples) -->
-              <section class="menu-section">
+
+              <!-- 1. PERFIS PRONTOS DE 1 CLIQUE (NO TOPO) -->
+              <section class="menu-section" data-section="profiles">
                 <div class="section-heading">
-                  <h3>Acesso Rápido</h3>
-                  <span class="pill-badge">Mais Usados</span>
-                </div>
-
-                <div class="quick-grid">
-                  <button type="button" class="quick-tile" id="quick-font-size" aria-pressed="false" title="Aumenta o tamanho de todas as letras do site em até 60%">
-                    <div class="tile-icon">${ICONS.type}</div>
-                    <span class="tile-label">Texto Maior</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-contrast" aria-pressed="false" title="Aplica um fundo escuro e letras claras para não cansar a vista">
-                    <div class="tile-icon">${ICONS.moon}</div>
-                    <span class="tile-label">Alto Contraste</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-links" aria-pressed="false" title="Destaca todos os botões e links clicáveis com uma cor forte">
-                    <div class="tile-icon">${ICONS.link}</div>
-                    <span class="tile-label">Destacar Links</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-tts" aria-pressed="false" title="Leitura em voz alta da página">
-                    <div class="tile-icon">${ICONS.sound}</div>
-                    <span class="tile-label" id="quick-tts-label">Ouvir Página</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-motion" aria-pressed="false" title="Pausa animações, vídeos de fundo e transições que causam tontura">
-                    <div class="tile-icon">${ICONS.zap}</div>
-                    <span class="tile-label">Menos Movimento</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-cursor" aria-pressed="false" title="Troca o mouse por um cursor gigante e fácil de não perder de vista">
-                    <div class="tile-icon">${ICONS.cursor}</div>
-                    <span class="tile-label">Cursor Maior</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-dyslexic" aria-pressed="false" title="Aplica a família tipográfica Lexend, com maior espaçamento e legibilidade">
-                    <div class="tile-icon">${ICONS.book}</div>
-                    <span class="tile-label">Fonte Lexend</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-focus" aria-pressed="false" title="Destaca o elemento atual selecionado com o teclado, facilitando a navegação sem mouse">
-                    <div class="tile-icon">${ICONS.target}</div>
-                    <span class="tile-label">Foco Reforçado</span>
-                  </button>
-
-                  <button type="button" class="quick-tile" id="quick-vk" aria-pressed="false" title="Exibe um teclado virtual compacto na tela ao clicar em qualquer campo de texto">
-                    <div class="tile-icon">${ICONS.keyboard}</div>
-                    <span class="tile-label">Teclado Virtual</span>
-                  </button>
-                </div>
-
-                <!-- Painel do Player TTS Rápido (Aparece SOMENTE ao ouvir a página) -->
-                <div id="tts-quick-controls" class="tts-player-panel" style="display: none; margin-top: 8px;">
-                  <div class="tts-status-row">
-                    <span class="tts-pulse-indicator" aria-hidden="true"></span>
-                    <span class="tts-status-text" id="q-tts-status-text">Lendo conteúdo em voz alta...</span>
-                  </div>
-                  <div class="tts-controls-row">
-                    <button type="button" class="btn-tts-action primary" id="btn-q-tts-play-pause">
-                      <span class="tts-icon" id="q-tts-play-icon">${ICONS.pause}</span>
-                      <strong id="q-tts-play-label">Pausar</strong>
-                    </button>
-                    <button type="button" class="btn-tts-action stop" id="btn-q-tts-stop" aria-label="Parar Leitura">
-                      <span class="tts-icon">${ICONS.stop}</span>
-                      <strong>Parar</strong>
-                    </button>
-                  </div>
-                  <div class="tts-speed-row">
-                    <span class="speed-label">Velocidade da Leitura:</span>
-                    <div class="segmented-control tts-rates">
-                      <button type="button" class="seg-btn" data-rate="0.75" id="q-rate-075">0.75x</button>
-                      <button type="button" class="seg-btn active" data-rate="1" id="q-rate-100">1.0x</button>
-                      <button type="button" class="seg-btn" data-rate="1.25" id="q-rate-125">1.25x</button>
-                      <button type="button" class="seg-btn" data-rate="1.5" id="q-rate-150">1.5x</button>
-                      <button type="button" class="seg-btn" data-rate="2" id="q-rate-200">2.0x</button>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </section>
-
-              <!-- Modos de Apresentação -->
-              <section class="menu-section">
-                <div class="section-heading">
-                  <h3>Modos de Apresentação</h3>
-                  <span class="pill-badge">Ajustes Rápidos</span>
+                  <h3>Perfis Prontos (1 Clique)</h3>
+                  <span class="pill-badge">Combinações</span>
                 </div>
                 
                 <div class="profiles-grid">
-                  <button type="button" class="profile-card" id="profile-focus" aria-pressed="false" title="Modo Foco: Régua de leitura, redução de movimento e espaçamento confortável">
-                    <div class="card-top-row">
-                      <div class="card-icon-bubble">${ICONS.brain}</div>
-                      <span class="card-tag">Foco</span>
-                    </div>
-                    <strong class="card-heading">Modo Foco</strong>
-                    <p class="card-subtext">Régua de leitura, redução de movimento e espaçamento confortável.</p>
-                  </button>
-
-                  <button type="button" class="profile-card" id="profile-zoom" aria-pressed="false" title="Modo Ampliação: Texto ampliado (130%), alto contraste escuro, links destacados e cursor grande">
+                  <button type="button" class="profile-card" id="profile-zoom" aria-pressed="false" title="Baixa Visão: Texto ampliado (130%), contraste escuro, links destacados e cursor grande">
                     <div class="card-top-row">
                       <div class="card-icon-bubble">${ICONS.glasses}</div>
-                      <span class="card-tag">Zoom</span>
+                      <span class="card-tag">Baixa Visão</span>
                     </div>
                     <strong class="card-heading">Modo Ampliação</strong>
-                    <p class="card-subtext">Texto ampliado (130%), alto contraste escuro, links e cursor grande.</p>
+                    <p class="card-subtext">Letra maior (130%), fundo escuro e cursor grande.</p>
                   </button>
 
-                  <button type="button" class="profile-card" id="profile-reading" aria-pressed="false" title="Modo Leitura: Tipografia Lexend, entrelinhas confortável e alinhamento à esquerda">
+                  <button type="button" class="profile-card" id="profile-reading" aria-pressed="false" title="Leitura Fácil & Dislexia: Fonte Lexend, linhas espaçadas e alinhamento à esquerda">
                     <div class="card-top-row">
                       <div class="card-icon-bubble">${ICONS.book}</div>
-                      <span class="card-tag">Leitura</span>
+                      <span class="card-tag">Dislexia</span>
                     </div>
-                    <strong class="card-heading">Modo Leitura</strong>
-                    <p class="card-subtext">Tipografia aberta Lexend, entrelinhas 1.9x e alinhamento à esquerda.</p>
+                    <strong class="card-heading">Leitura Fácil</strong>
+                    <p class="card-subtext">Fonte Lexend aberta e linhas mais espaçadas.</p>
                   </button>
 
-                  <button type="button" class="profile-card" id="profile-colors" aria-pressed="false" title="Modo Cores: Simulação de visão de cores para percepção cromática">
+                  <button type="button" class="profile-card" id="profile-focus" aria-pressed="false" title="Foco & TDAH: Régua de leitura, sem animações e espaçamento confortável">
                     <div class="card-top-row">
-                      <div class="card-icon-bubble">${ICONS.eye}</div>
-                      <span class="card-tag">Cores</span>
+                      <div class="card-icon-bubble">${ICONS.brain}</div>
+                      <span class="card-tag">TDAH / Foco</span>
                     </div>
-                    <strong class="card-heading">Modo Cores</strong>
-                    <p class="card-subtext">Simulação de visão de cores (Deuteranopia, Protanopia e Tritanopia).</p>
+                    <strong class="card-heading">Modo Foco</strong>
+                    <p class="card-subtext">Régua guia de leitura e pausa distrações visuais.</p>
                   </button>
 
-                  <button type="button" class="profile-card" id="profile-motion" aria-pressed="false" title="Reduzir Movimento: Pausa animações CSS, reduz transições e pausa vídeos">
+                  <button type="button" class="profile-card" id="profile-motion" aria-pressed="false" title="Sem Movimento: Pausa animações, vídeos e transições que causam desconforto">
                     <div class="card-top-row">
                       <div class="card-icon-bubble">${ICONS.zap}</div>
                       <span class="card-tag">Calma</span>
                     </div>
-                    <strong class="card-heading">Reduzir Movimento</strong>
-                    <p class="card-subtext">Pausa animações CSS, reduz transições e pausa vídeos compatíveis.</p>
+                    <strong class="card-heading">Sem Movimento</strong>
+                    <p class="card-subtext">Bloqueia animações e efeitos que causam tontura.</p>
+                  </button>
+
+                  <button type="button" class="profile-card" id="profile-colors" aria-pressed="false" title="Daltonismo & Cores: Realça links e ativa filtros de percepção de cores">
+                    <div class="card-top-row">
+                      <div class="card-icon-bubble">${ICONS.eye}</div>
+                      <span class="card-tag">Daltonismo</span>
+                    </div>
+                    <strong class="card-heading">Modo Cores</strong>
+                    <p class="card-subtext">Ajuste cromático para Deuteranopia, Protanopia e Tritanopia.</p>
                   </button>
                 </div>
 
-                <!-- Seletor de Tipo de Daltonismo (quando o perfil de cores está ativo) -->
+                <!-- Seletor rápido quando o Perfil Cores é clicado -->
                 <div class="sub-selector-box" id="colorblind-selector-box" style="display: none;">
-                  <span class="sub-selector-title">Simulação de Visão de Cores:</span>
+                  <span class="sub-selector-title">Escolha o filtro de daltonismo:</span>
                   <div class="segmented-control">
                     <button type="button" class="seg-btn active" data-type="deuteranopia" id="cb-deuteranopia">Deuteranopia</button>
                     <button type="button" class="seg-btn" data-type="protanopia" id="cb-protanopia">Protanopia</button>
@@ -1118,210 +1126,96 @@
                 </div>
               </section>
 
-              <!-- Botão de Redefinir Visível (Pedido do Usuário) -->
-              <section class="menu-section mt-3">
-                <button type="button" class="btn-reset-all-full" id="btn-reset-foryou">
-                  ${ICONS.rotate}
-                  <span>Redefinir Todos os Ajustes</span>
-                </button>
-              </section>
-
-            
-<!-- INJECTED FROM TOOLS TAB -->
-
-              <!-- 1. TIPOGRAFIA & LEITURA -->
-              <section class="menu-section" data-section="typography">
-                <div class="section-heading">
-                  <h3>Tipografia & Leitura</h3>
-                </div>
-
-                <div class="control-box">
-                  <div class="control-box-header">
-                    <div>
-                      <strong class="control-title">Tamanho do Texto</strong>
-                      <span class="control-val" id="font-size-indicator">Normal (100%)</span>
-                    </div>
-                    <div class="stepper-actions">
-                      <button type="button" class="btn-step" id="btn-font-decrease" aria-label="Diminuir tamanho do texto">-</button>
-                      <button type="button" class="btn-step" id="btn-font-increase" aria-label="Aumentar tamanho do texto">+</button>
-                    </div>
-                  </div>
-                  
-                  <!-- Seletor direto de porcentagem (WCAG 1.4.4 até 200%) -->
-                  <div class="segmented-control mt-2" id="font-size-segmented" role="group" aria-label="Escolher tamanho do texto">
-                    <button type="button" class="seg-btn active" id="btn-fs-0">100%</button>
-                    <button type="button" class="seg-btn" id="btn-fs-1">115%</button>
-                    <button type="button" class="seg-btn" id="btn-fs-2">130%</button>
-                    <button type="button" class="seg-btn" id="btn-fs-3">145%</button>
-                    <button type="button" class="seg-btn" id="btn-fs-4">160%</button>
-                    <button type="button" class="seg-btn" id="btn-fs-5">180%</button>
-                    <button type="button" class="seg-btn" id="btn-fs-6">200%</button>
-                  </div>
-
-                  <!-- Slider para ajuste livre até 200% -->
-                  <div class="slider-control-row mt-2" style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 12px; color: #64748b; font-weight: 600;">100%</span>
-                    <input type="range" class="font-size-slider" id="slider-font-size" min="0" max="6" step="1" value="0" aria-label="Ajustar tamanho do texto" style="flex: 1; accent-color: var(--primary); cursor: pointer;">
-                    <span style="font-size: 12px; color: #64748b; font-weight: 600;">200%</span>
-                  </div>
-                </div>
-
-                <div class="control-box">
-                  <div class="control-box-header">
-                    <div>
-                      <strong class="control-title">Espaçamento de Linhas</strong>
-                      <span class="control-val" id="line-height-indicator">Normal</span>
-                    </div>
-                  </div>
-                  <div class="segmented-control mt-2">
-                    <button type="button" class="seg-btn active" id="btn-lh-0">Normal</button>
-                    <button type="button" class="seg-btn" id="btn-lh-1">1.9x</button>
-                    <button type="button" class="seg-btn" id="btn-lh-2">2.3x</button>
-                  </div>
-                </div>
-                
-                <div class="control-box">
-                  <div class="control-box-header">
-                    <div>
-                      <strong class="control-title">Espaçamento de Letras</strong>
-                      <span class="control-val" id="letter-spacing-indicator">Normal</span>
-                    </div>
-                  </div>
-                  <div class="segmented-control mt-2">
-                    <button type="button" class="seg-btn active" id="btn-ls-0">Normal</button>
-                    <button type="button" class="seg-btn" id="btn-ls-1">Médio</button>
-                    <button type="button" class="seg-btn" id="btn-ls-2">Amplo</button>
-                  </div>
-                </div>
-
-                <div class="tools-grid mt-3">
-                  <!-- Espaçamento Acessível WCAG 1.4.12 -->
-                  <button type="button" class="tool-card full-width" id="card-wcag-spacing" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.type}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Espaçamento WCAG 1.4.12</strong>
-                      <span class="tool-desc">Entrelinhas 1.5, letras 0.12em, palavras 0.16em e parágrafos 2em</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="tool-card full-width" id="card-word-spacing" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.type}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Separar Palavras</strong>
-                      <span class="tool-desc">Mais respiro entre termos</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="tool-card full-width" id="card-text-align-left" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.alignLeft}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Alinhar à Esquerda</strong>
-                      <span class="tool-desc">Evita texto justificado</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="tool-card full-width" id="card-dyslexic-font" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.book}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Fonte Lexend</strong>
-                      <span class="tool-desc">Tipografia aberta e espaçada para maior legibilidade</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-                </div>
-
-                
-              </section>
-
-              <!-- 2. FOCO & NAVEGAÇÃO -->
+              <!-- 2. GUIA DE FOCO, TECLADO & MOUSE -->
               <section class="menu-section" data-section="navigation">
                 <div class="section-heading">
-                  <h3>Foco & Navegação</h3>
+                  <h3>Guia de Foco, Teclado & Mouse</h3>
                 </div>
 
-                <div class="structure-nav-group">
-                  <button type="button" class="btn-action-tile" id="btn-toggle-headings" aria-expanded="false">
-                    <span class="tile-icon-action">${ICONS.headings}</span>
-                    <div class="tile-info-action">
-                      <strong>Navegar pelos Títulos</strong>
-                      <span id="headings-count-summary">Ver índice de cabeçalhos</span>
-                    </div>
-                  </button>
-
-                  <div class="headings-drawer" id="headings-list-container" style="display:none;">
-                    <ul class="headings-list-items" id="headings-items-ul"></ul>
-                  </div>
-
-                  <button type="button" class="btn-action-tile" id="btn-skip-to-main">
-                    <span class="tile-icon-action">${ICONS.skip}</span>
-                    <div class="tile-info-action">
-                      <strong>Ir para o Conteúdo</strong>
-                      <span>Pula direto para o texto principal</span>
-                    </div>
-                  </button>
-                </div>
-
-                <div class="tools-grid mt-3">
-                  <button type="button" class="tool-card full-width" id="card-enhanced-focus" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.target}</div>
+                <div class="tools-grid-2col">
+                  <button type="button" class="tool-card" id="card-reading-ruler" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.ruler}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Foco Reforçado</strong>
-                      <span class="tool-desc">Anel luminoso ao usar a tecla TAB</span>
+                      <strong class="tool-title">Régua Guia</strong>
+                      <span class="tool-desc">Linha de leitura</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
 
-                  <button type="button" class="tool-card full-width" id="card-highlight-links" aria-pressed="false">
+                  <button type="button" class="tool-card" id="card-reading-mask" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.eye}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Máscara Foco</strong>
+                      <span class="tool-desc">Destaca o trecho</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-highlight-links" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.link}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Destacar Links</strong>
-                      <span class="tool-desc">Borda amarela visível</span>
+                      <span class="tool-desc">Realça cliques</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
-                  
-                  <button type="button" class="tool-card full-width" id="card-virtual-keyboard" aria-pressed="false">
+
+                  <button type="button" class="tool-card" id="card-enhanced-focus" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.target}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Foco Teclado</strong>
+                      <span class="tool-desc">Borda no Tab</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-virtual-keyboard" aria-pressed="false">
                     <div class="tool-icon-box">${ICONS.keyboard}</div>
                     <div class="tool-info">
                       <strong class="tool-title">Teclado Virtual</strong>
-                      <span class="tool-desc">Exibe teclado na tela ao digitar</span>
+                      <span class="tool-desc">Digitar na tela</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-stop-animations" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.pause}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Sem Animação</strong>
+                      <span class="tool-desc">Pausa efeitos</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
                 </div>
 
-                <div class="control-box mt-3">
+                <div class="control-box mt-2">
                   <div class="control-box-header">
                     <div>
-                      <strong class="control-title">Tamanho do Cursor</strong>
+                      <strong class="control-title">Tamanho e Cor do Cursor</strong>
                       <span class="control-val" id="cursor-size-label">Normal</span>
                     </div>
                   </div>
                   <div class="segmented-control mt-2">
                     <button type="button" class="seg-btn active" id="btn-cursor-normal">Normal</button>
-                    <button type="button" class="seg-btn" id="btn-cursor-large">Grande</button>
-                    <button type="button" class="seg-btn" id="btn-cursor-xlarge">Extra</button>
+                    <button type="button" class="seg-btn" id="btn-cursor-large">Grande (44px)</button>
+                    <button type="button" class="seg-btn" id="btn-cursor-xlarge">Extra (60px)</button>
                   </div>
                   
-                  <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+                  <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
                     <div class="setting-text mb-2" style="display: flex; justify-content: space-between; align-items: center;">
-                      <span class="control-val" style="display: block; font-size: 13px; font-weight: 600;">Cor do Cursor</span>
+                      <span class="control-val" style="display: block; font-size: 12.5px; font-weight: 600;">Cor do Cursor</span>
                       <span id="cursor-color-hex" style="font-size: 12px; color: #64748b; font-family: monospace;">#000000</span>
                     </div>
                     <div class="color-presets" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                      <button type="button" class="color-preset-btn" data-color="#000000" aria-label="Preto" title="Preto" style="width: 30px; height: 30px; border-radius: 50%; background: #000000; border: 2px solid #cbd5e1; cursor: pointer;"></button>
-                      <button type="button" class="color-preset-btn" data-color="#7956c2" aria-label="Roxo" title="Roxo" style="width: 30px; height: 30px; border-radius: 50%; background: #7956c2; border: 2px solid #cbd5e1; cursor: pointer;"></button>
-                      <button type="button" class="color-preset-btn" data-color="#ffffff" aria-label="Branco" title="Branco" style="width: 30px; height: 30px; border-radius: 50%; background: #ffffff; border: 2px solid #cbd5e1; cursor: pointer;"></button>
-                      <button type="button" class="color-preset-btn" data-color="#facc15" aria-label="Amarelo" title="Amarelo" style="width: 30px; height: 30px; border-radius: 50%; background: #facc15; border: 2px solid #cbd5e1; cursor: pointer;"></button>
-                      <button type="button" class="color-preset-btn" data-color="#ef4444" aria-label="Vermelho" title="Vermelho" style="width: 30px; height: 30px; border-radius: 50%; background: #ef4444; border: 2px solid #cbd5e1; cursor: pointer;"></button>
-                      <button type="button" class="color-preset-btn" data-color="#0284c7" aria-label="Azul" title="Azul" style="width: 30px; height: 30px; border-radius: 50%; background: #0284c7; border: 2px solid #cbd5e1; cursor: pointer;"></button>
-                      <button type="button" class="color-preset-btn" data-color="#16a34a" aria-label="Verde" title="Verde" style="width: 30px; height: 30px; border-radius: 50%; background: #16a34a; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#000000" aria-label="Preto" title="Preto" style="width: 28px; height: 28px; border-radius: 50%; background: #000000; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#7956c2" aria-label="Roxo" title="Roxo" style="width: 28px; height: 28px; border-radius: 50%; background: #7956c2; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#ffffff" aria-label="Branco" title="Branco" style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#facc15" aria-label="Amarelo" title="Amarelo" style="width: 28px; height: 28px; border-radius: 50%; background: #facc15; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#ef4444" aria-label="Vermelho" title="Vermelho" style="width: 28px; height: 28px; border-radius: 50%; background: #ef4444; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#0284c7" aria-label="Azul" title="Azul" style="width: 28px; height: 28px; border-radius: 50%; background: #0284c7; border: 2px solid #cbd5e1; cursor: pointer;"></button>
+                      <button type="button" class="color-preset-btn" data-color="#16a34a" aria-label="Verde" title="Verde" style="width: 28px; height: 28px; border-radius: 50%; background: #16a34a; border: 2px solid #cbd5e1; cursor: pointer;"></button>
                       
-                      <!-- Seletor Livre de Cores (EqualWeb style) -->
-                      <label class="custom-color-picker-label" title="Escolher qualquer cor personalizada" style="position: relative; width: 30px; height: 30px; border-radius: 50%; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #cbd5e1; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+                      <label class="custom-color-picker-label" title="Escolher qualquer cor personalizada" style="position: relative; width: 28px; height: 28px; border-radius: 50%; background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #cbd5e1; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
                         <input type="color" id="input-cursor-custom-color" value="#000000" aria-label="Escolher qualquer cor personalizada para o cursor" style="opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer;">
                         <span style="font-size: 11px; font-weight: 900; color: #fff; text-shadow: 0 0 3px #000; pointer-events: none;">+</span>
                       </label>
@@ -1330,70 +1224,11 @@
                 </div>
               </section>
 
-              <!-- 3. CORES & CONTRASTE -->
-              <section class="menu-section" data-section="colors">
-                <div class="section-heading">
-                  <h3>Cores & Contraste</h3>
-                </div>
-
-                <div class="tools-grid">
-                  <button type="button" class="tool-card full-width" id="card-contrast-dark" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.moon}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Modo Escuro</strong>
-                      <span class="tool-desc">Fundo escuro suave</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="tool-card full-width" id="card-contrast-light" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.sun}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Modo Claro</strong>
-                      <span class="tool-desc">Fundo branco nítido</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="tool-card full-width" id="card-contrast-monochrome" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.contrast}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Monocromático</strong>
-                      <span class="tool-desc">Tons de cinza</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="tool-card full-width" id="card-contrast-invert" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.refresh}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Inverter Cores</strong>
-                      <span class="tool-desc">Inversão de alto contraste</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-                </div>
-
-                <div class="control-box mt-3">
-                  <div class="control-box-header">
-                    <div>
-                      <strong class="control-title">Simulação de Visão de Cores</strong>
-                      <span class="control-val" id="colorblind-active-label">Padrão</span>
-                    </div>
-                  </div>
-                  <div class="segmented-control mt-2">
-                    <button type="button" class="seg-btn active" id="btn-cb-none">Padrão</button>
-                    <button type="button" class="seg-btn" id="btn-cb-deuteranopia">Deuteranopia</button>
-                    <button type="button" class="seg-btn" id="btn-cb-protanopia">Protanopia</button>
-                    <button type="button" class="seg-btn" id="btn-cb-tritanopia">Tritanopia</button>
-                  </div>
-                </div>
-              </section>
-
-              <!-- 4. ASSISTÊNCIA DE TELA -->
+              <!-- 3. VOZ, LIBRAS & ESTRUTURA -->
               <section class="menu-section" data-section="assistive">
                 <div class="section-heading">
-                  <h3>Assistência de Tela</h3>
+                  <h3>Voz, Libras & Estrutura</h3>
+                  <span class="pill-badge">Essenciais</span>
                 </div>
 
                 <div class="tools-grid">
@@ -1401,7 +1236,7 @@
                     <div class="tool-icon-box">${ICONS.sound}</div>
                     <div class="tool-info">
                       <strong class="tool-title" id="card-tts-title">Ouvir Página</strong>
-                      <span class="tool-desc" id="card-tts-desc">Leitura do conteúdo em voz alta</span>
+                      <span class="tool-desc" id="card-tts-desc">Leitura do site com voz humana natural</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
@@ -1432,36 +1267,24 @@
                         <button type="button" class="seg-btn" data-rate="2" id="rate-200">2.0x</button>
                       </div>
                     </div>
+                    <div class="tts-voice-row">
+                      <label class="speed-label" for="select-tts-voice">Timbre de Voz (Humana / Natural):</label>
+                      <select id="select-tts-voice" class="allyada-select tts-voice-select" aria-label="Escolher voz de leitura">
+                        <option value="">✨ Automática (Voz mais natural)</option>
+                      </select>
+                    </div>
                   </div>
 
-                  <button type="button" class="tool-card full-width" id="card-reading-ruler" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.ruler}</div>
+                  <button type="button" class="tool-card full-width" id="card-image-inspector" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.image}</div>
                     <div class="tool-info">
-                      <strong class="tool-title">Régua de Leitura</strong>
-                      <span class="tool-desc">Faixa guia horizontal</span>
+                      <strong class="tool-title">Descrever Imagens (IA)</strong>
+                      <span class="tool-desc">Mostra e lê a descrição ao passar o mouse nas imagens</span>
                     </div>
                     <div class="toggle-indicator"></div>
                   </button>
 
-                  <button type="button" class="tool-card full-width" id="card-reading-mask" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.eye}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Máscara de Foco</strong>
-                      <span class="tool-desc">Escurece o restante</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-                  
-                  <button type="button" class="tool-card full-width" id="card-stop-animations" aria-pressed="false">
-                    <div class="tool-icon-box">${ICONS.pause}</div>
-                    <div class="tool-info">
-                      <strong class="tool-title">Reduzir Movimento</strong>
-                      <span class="tool-desc">Pausa animações CSS, transições e vídeos</span>
-                    </div>
-                    <div class="toggle-indicator"></div>
-                  </button>
-
-                  <button type="button" class="vlibras-banner-card mt-2" id="card-vlibras-toggle" aria-pressed="false" style="width: 100%;">
+                  <button type="button" class="vlibras-banner-card" id="card-vlibras-toggle" aria-pressed="false" style="width: 100%;">
                     <div class="vlibras-icon-box">${ICONS.hands}</div>
                     <div class="vlibras-info">
                       <strong>Língua de Sinais (Libras)</strong>
@@ -1469,42 +1292,285 @@
                     </div>
                     <div class="vlibras-status-pill" id="vlibras-status-pill">Desativado</div>
                   </button>
+                </div>
 
-                  <div class="control-box mt-2" id="vlibras-avatar-box">
-                    <div class="control-box-header">
-                      <div>
-                        <strong class="control-title">Intérprete VLibras (3D)</strong>
-                        <span class="control-val" id="vlibras-avatar-label">Hosana</span>
-                      </div>
+                <div class="structure-nav-group mt-2">
+                  <button type="button" class="btn-action-tile" id="btn-toggle-headings" aria-expanded="false">
+                    <span class="tile-icon-action">${ICONS.headings}</span>
+                    <div class="tile-info-action" style="flex:1;">
+                      <strong>Estrutura da Página</strong>
+                      <span id="headings-count-summary">Navegar por Títulos, Regiões e Links</span>
                     </div>
-                    <div class="segmented-control mt-2" role="group" aria-label="Escolher intérprete 3D do VLibras">
-                      <button type="button" class="seg-btn active" id="btn-vlibras-hosana" data-avatar="hosana">Hosana</button>
-                      <button type="button" class="seg-btn" id="btn-vlibras-icaro" data-avatar="icaro">Ícaro</button>
-                      <button type="button" class="seg-btn" id="btn-vlibras-guga" data-avatar="guga">Guga</button>
+                    <span class="pill-badge" style="font-size:11px;">Abrir</span>
+                  </button>
+
+                  <button type="button" class="btn-action-tile" id="btn-skip-to-main">
+                    <span class="tile-icon-action">${ICONS.skip}</span>
+                    <div class="tile-info-action">
+                      <strong>Pular para o Conteúdo Principal</strong>
+                      <span>Vai direto ao texto principal da página</span>
                     </div>
+                  </button>
+                </div>
+              </section>
+
+              <!-- 4. TEXTO & LEITURA -->
+              <section class="menu-section" data-section="typography">
+                <div class="section-heading">
+                  <h3>Texto & Leitura</h3>
+                </div>
+
+                <div class="control-box">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Tamanho da Letra</strong>
+                      <span class="control-val" id="font-size-indicator">Normal (100%)</span>
+                    </div>
+                    <div class="stepper-actions">
+                      <button type="button" class="btn-step" id="btn-font-decrease" aria-label="Diminuir tamanho da letra">-</button>
+                      <button type="button" class="btn-step" id="btn-font-increase" aria-label="Aumentar tamanho da letra">+</button>
+                    </div>
+                  </div>
+                  
+                  <!-- Seletor direto de porcentagem (WCAG 1.4.4 até 200%) -->
+                  <div class="segmented-control mt-2" id="font-size-segmented" role="group" aria-label="Escolher tamanho do texto">
+                    <button type="button" class="seg-btn active" id="btn-fs-0">100%</button>
+                    <button type="button" class="seg-btn" id="btn-fs-1">115%</button>
+                    <button type="button" class="seg-btn" id="btn-fs-2">130%</button>
+                    <button type="button" class="seg-btn" id="btn-fs-3">145%</button>
+                    <button type="button" class="seg-btn" id="btn-fs-4">160%</button>
+                    <button type="button" class="seg-btn" id="btn-fs-5">180%</button>
+                    <button type="button" class="seg-btn" id="btn-fs-6">200%</button>
+                  </div>
+                  <input type="hidden" id="slider-font-size" value="0">
+                </div>
+
+                <div class="control-box" id="text-align-control-box">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Alinhamento do Texto</strong>
+                      <span class="control-val" id="text-align-indicator">Padrão</span>
+                    </div>
+                  </div>
+                  <div class="segmented-control mt-2" role="group" aria-label="Escolher alinhamento do texto">
+                    <button type="button" class="seg-btn active" id="btn-align-normal" data-align="normal" title="Alinhamento original do site">Padrão</button>
+                    <button type="button" class="seg-btn" id="btn-align-left" data-align="left" title="Alinhar texto à esquerda">${ICONS.alignLeft}<span>Esq.</span></button>
+                    <button type="button" class="seg-btn" id="btn-align-center" data-align="center" title="Centralizar texto">${ICONS.alignCenter}<span>Centro</span></button>
+                    <button type="button" class="seg-btn" id="btn-align-right" data-align="right" title="Alinhar texto à direita">${ICONS.alignRight}<span>Dir.</span></button>
+                    <button type="button" class="seg-btn" id="btn-align-justify" data-align="justify" title="Justificar texto">${ICONS.alignJustify}<span>Justif.</span></button>
+                  </div>
+                </div>
+
+                <div class="control-box">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Distância entre Linhas</strong>
+                      <span class="control-val" id="line-height-indicator">Normal</span>
+                    </div>
+                  </div>
+                  <div class="segmented-control mt-2">
+                    <button type="button" class="seg-btn active" id="btn-lh-0">Normal</button>
+                    <button type="button" class="seg-btn" id="btn-lh-1">Confortável</button>
+                    <button type="button" class="seg-btn" id="btn-lh-2">Amplo</button>
+                  </div>
+                </div>
+                
+                <div class="control-box">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Distância entre Letras</strong>
+                      <span class="control-val" id="letter-spacing-indicator">Normal</span>
+                    </div>
+                  </div>
+                  <div class="segmented-control mt-2">
+                    <button type="button" class="seg-btn active" id="btn-ls-0">Normal</button>
+                    <button type="button" class="seg-btn" id="btn-ls-1">Médio</button>
+                    <button type="button" class="seg-btn" id="btn-ls-2">Amplo</button>
+                  </div>
+                </div>
+
+                <div class="tools-grid mt-2">
+                  <button type="button" class="tool-card full-width" id="card-dyslexic-font" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.book}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Fonte para Dislexia (Lexend)</strong>
+                      <span class="tool-desc">Letras mais abertas e fáceis de distinguir na leitura</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card full-width" id="card-wcag-spacing" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.type}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Texto Arejado (Leitura Fácil)</strong>
+                      <span class="tool-desc">Amplia o respiro entre linhas, letras e parágrafos</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card full-width" id="card-word-spacing" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.type}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Separar Palavras</strong>
+                      <span class="tool-desc">Aumenta o espaço entre cada palavra da frase</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+                </div>
+              </section>
+
+              <!-- 5. CORES & CONTRASTE -->
+              <section class="menu-section" data-section="colors">
+                <div class="section-heading">
+                  <h3>Cores & Contraste</h3>
+                </div>
+
+                <div class="tools-grid-2col">
+                  <button type="button" class="tool-card" id="card-contrast-dark" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.moon}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Modo Escuro</strong>
+                      <span class="tool-desc">Fundo escuro</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-contrast-light" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.sun}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Modo Claro</strong>
+                      <span class="tool-desc">Fundo branco</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-contrast-monochrome" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.contrast}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Tons de Cinza</strong>
+                      <span class="tool-desc">Sem cores</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+
+                  <button type="button" class="tool-card" id="card-contrast-invert" aria-pressed="false">
+                    <div class="tool-icon-box">${ICONS.refresh}</div>
+                    <div class="tool-info">
+                      <strong class="tool-title">Inverter Cores</strong>
+                      <span class="tool-desc">Alto contraste</span>
+                    </div>
+                    <div class="toggle-indicator"></div>
+                  </button>
+                </div>
+
+                <!-- Personalização de Cores: Títulos, Texto e Fundo -->
+                <div class="control-box mt-2" id="custom-colors-box">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Personalizar Cores da Página</strong>
+                      <span class="control-val" id="custom-colors-status">Títulos, Texto e Fundo</span>
+                    </div>
+                    <button type="button" class="btn-mini-reset" id="btn-reset-custom-colors" style="display:none;" title="Restaurar cores originais da página">Restaurar</button>
+                  </div>
+
+                  <!-- 1. Cor dos Títulos -->
+                  <div class="custom-color-group mt-2">
+                    <div class="custom-color-row-header">
+                      <span class="custom-color-label">Cor dos Títulos</span>
+                      <span class="custom-color-hex" id="hex-custom-title">Padrão</span>
+                    </div>
+                    <div class="custom-color-swatches">
+                      <button type="button" class="custom-swatch-btn" data-target="title" data-color="#7956c2" aria-label="Título Roxo" title="Roxo" style="background:#7956c2;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="title" data-color="#1e293b" aria-label="Título Grafite" title="Grafite Escuro" style="background:#1e293b;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="title" data-color="#0284c7" aria-label="Título Azul" title="Azul" style="background:#0284c7;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="title" data-color="#15803d" aria-label="Título Verde" title="Verde" style="background:#15803d;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="title" data-color="#b45309" aria-label="Título Âmbar" title="Âmbar" style="background:#b45309;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="title" data-color="#dc2626" aria-label="Título Vermelho" title="Vermelho" style="background:#dc2626;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="title" data-color="#fde047" aria-label="Título Amarelo Claro" title="Amarelo Alto Contraste" style="background:#fde047;"></button>
+                      <label class="custom-color-picker-label swatch-picker" title="Escolher cor livre para Títulos">
+                        <input type="color" id="input-custom-title-color" value="#7956c2" aria-label="Escolher cor personalizada para títulos">
+                        <span>+</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- 2. Cor do Texto -->
+                  <div class="custom-color-group mt-2">
+                    <div class="custom-color-row-header">
+                      <span class="custom-color-label">Cor do Texto</span>
+                      <span class="custom-color-hex" id="hex-custom-text">Padrão</span>
+                    </div>
+                    <div class="custom-color-swatches">
+                      <button type="button" class="custom-swatch-btn" data-target="text" data-color="#0f172a" aria-label="Texto Preto Suave" title="Preto Suave" style="background:#0f172a;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="text" data-color="#1e3a8a" aria-label="Texto Azul Marinho" title="Azul Marinho" style="background:#1e3a8a;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="text" data-color="#14532d" aria-label="Texto Verde Escuro" title="Verde Escuro" style="background:#14532d;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="text" data-color="#4c1d95" aria-label="Texto Roxo Escuro" title="Roxo Escuro" style="background:#4c1d95;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="text" data-color="#78350f" aria-label="Texto Sépia" title="Marrom Sépia" style="background:#78350f;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="text" data-color="#ffffff" aria-label="Texto Branco" title="Branco" style="background:#ffffff;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="text" data-color="#fef08a" aria-label="Texto Amarelo Pastel" title="Amarelo Pastel" style="background:#fef08a;"></button>
+                      <label class="custom-color-picker-label swatch-picker" title="Escolher cor livre para Texto">
+                        <input type="color" id="input-custom-text-color" value="#0f172a" aria-label="Escolher cor personalizada para o texto">
+                        <span>+</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- 3. Cor do Fundo -->
+                  <div class="custom-color-group mt-2">
+                    <div class="custom-color-row-header">
+                      <span class="custom-color-label">Cor do Fundo</span>
+                      <span class="custom-color-hex" id="hex-custom-bg">Padrão</span>
+                    </div>
+                    <div class="custom-color-swatches">
+                      <button type="button" class="custom-swatch-btn" data-target="bg" data-color="#ffffff" aria-label="Fundo Branco" title="Branco" style="background:#ffffff;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="bg" data-color="#fdf6e3" aria-label="Fundo Creme Sépia" title="Creme Conforto Visual (Irlen)" style="background:#fdf6e3;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="bg" data-color="#f0fdf4" aria-label="Fundo Verde Pastel" title="Verde Pastel Suave" style="background:#f0fdf4;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="bg" data-color="#eff6ff" aria-label="Fundo Azul Pastel" title="Azul Pastel Suave" style="background:#eff6ff;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="bg" data-color="#f5f3ff" aria-label="Fundo Lilás Pastel" title="Lilás Pastel Suave" style="background:#f5f3ff;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="bg" data-color="#18181b" aria-label="Fundo Cinza Escuro" title="Cinza Noturno" style="background:#18181b;"></button>
+                      <button type="button" class="custom-swatch-btn" data-target="bg" data-color="#0f172a" aria-label="Fundo Azul Noturno" title="Azul Noturno Profundo" style="background:#0f172a;"></button>
+                      <label class="custom-color-picker-label swatch-picker" title="Escolher cor livre para Fundo">
+                        <input type="color" id="input-custom-bg-color" value="#fdf6e3" aria-label="Escolher cor personalizada para o fundo">
+                        <span>+</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="control-box mt-2">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Filtro para Daltonismo</strong>
+                      <span class="control-val" id="colorblind-active-label">Padrão</span>
+                    </div>
+                  </div>
+                  <div class="segmented-control mt-2">
+                    <button type="button" class="seg-btn active" id="btn-cb-none">Padrão</button>
+                    <button type="button" class="seg-btn" id="btn-cb-deuteranopia" title="Dificuldade com tons de verde">Deuteranopia</button>
+                    <button type="button" class="seg-btn" id="btn-cb-protanopia" title="Dificuldade com tons de vermelho">Protanopia</button>
+                    <button type="button" class="seg-btn" id="btn-cb-tritanopia" title="Dificuldade com azul e amarelo">Tritanopia</button>
                   </div>
                 </div>
               </section>
 
+              <!-- 6. PERSONALIZAÇÃO DO INTÉRPRETE VLIBRAS (NO FINAL) -->
+              <section class="menu-section" data-section="vlibras-avatar">
+                <div class="control-box" id="vlibras-avatar-box">
+                  <div class="control-box-header">
+                    <div>
+                      <strong class="control-title">Intérprete VLibras (3D)</strong>
+                      <span class="control-val" id="vlibras-avatar-label">Hosana</span>
+                    </div>
+                  </div>
+                  <div class="segmented-control mt-2" role="group" aria-label="Escolher intérprete 3D do VLibras">
+                    <button type="button" class="seg-btn active" id="btn-vlibras-hosana" data-avatar="hosana">Hosana</button>
+                    <button type="button" class="seg-btn" id="btn-vlibras-icaro" data-avatar="icaro">Ícaro</button>
+                    <button type="button" class="seg-btn" id="btn-vlibras-guga" data-avatar="guga">Guga</button>
+                  </div>
+                </div>
+              </section>
 
-</div>
-          </div>
-
-          <!-- ABA 2: TODAS AS FERRAMENTAS ASSISTIVAS -->
-          <div class="drawer-tab-content" id="tab-content-tools" role="tabpanel" aria-labelledby="tab-btn-tools" style="display:none;">
-            
-            <!-- Campo de Busca Rápida -->
-            <div class="search-box-wrapper">
-              <div class="search-input-box">
-                <span class="search-icon-svg">${ICONS.search}</span>
-                <input type="text" id="allyada-search-input" class="search-input-field" placeholder="Buscar ferramenta (ex: fonte, foco, cursor)..." aria-label="Filtrar ferramentas de acessibilidade">
-                <button type="button" class="search-clear-btn" id="btn-search-clear" style="display:none;" aria-label="Limpar pesquisa">&times;</button>
-              </div>
             </div>
-
-            <div class="tab-scroll-body">
-<!-- MOVED TO FORYOU -->
-</div>
           </div>
 
           <!-- ABA 3: CONFIGURAÇÕES, ATALHOS & AJUSTES ATIVOS -->
@@ -1529,10 +1595,39 @@
                 </div>
               </section>
 
-              <!-- Aparência do Widget -->
+              <!-- Aparência e Posição do Widget -->
               <section class="menu-section">
                 <div class="section-heading">
-                  <h3>Aparência do Painel e Cursor</h3>
+                  <h3>Aparência e Posição do Plugin</h3>
+                  <span class="premium-tag-badge">✨ Premium</span>
+                </div>
+
+                <!-- Posição nos Cantos da Tela (Item Premium) -->
+                <div class="setting-item-row premium-setting-card" style="flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 10px;">
+                  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+                    <div class="setting-text">
+                      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                        <strong>Posição nos Cantos da Tela</strong>
+                        <span class="premium-pill-mini">✨ PRO</span>
+                      </div>
+                      <span>Fique centralizado na lateral para não cobrir botões de WhatsApp ou Chat no fim da página.</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px;">Altura na Lateral:</span>
+                    <div class="segmented-control" role="group" aria-label="Posição vertical do plugin na tela">
+                      <button type="button" class="seg-btn active" id="btn-vpos-bottom" data-vpos="bottom">Fim da Página</button>
+                      <button type="button" class="seg-btn" id="btn-vpos-middle" data-vpos="middle">✨ Centro Lateral</button>
+                      <button type="button" class="seg-btn" id="btn-vpos-top" data-vpos="top">✨ Topo Lateral</button>
+                    </div>
+                  </div>
+                  <div>
+                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px;">Lado da Página:</span>
+                    <div class="segmented-control" role="group" aria-label="Lado do plugin na tela">
+                      <button type="button" class="seg-btn active" id="btn-hpos-right" data-hpos="right">Canto Direito</button>
+                      <button type="button" class="seg-btn" id="btn-hpos-left" data-hpos="left">Canto Esquerdo</button>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="setting-item-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
@@ -1628,6 +1723,45 @@
 
         </div>
 
+        <!-- Caixa Flutuante de Estrutura da Página (Títulos, Regiões e Links — Estilo Rybená) -->
+        <div class="allyada-structure-modal" id="allyada-structure-modal" role="dialog" aria-modal="false" aria-labelledby="allyada-structure-title" aria-hidden="true" style="display:none;">
+          <div class="structure-modal-header">
+            <div class="structure-title-group">
+              <span class="structure-header-icon">${ICONS.headings}</span>
+              <div>
+                <h3 id="allyada-structure-title">Estrutura da Página</h3>
+                <span class="structure-subtitle" id="structure-modal-count">Navegação rápida por elementos</span>
+              </div>
+            </div>
+            <div class="structure-header-actions">
+              <button type="button" class="btn-structure-back" id="btn-back-structure-modal" aria-label="Voltar para o painel principal do Allyada" title="Voltar para o painel principal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                <span>Voltar</span>
+              </button>
+              <button type="button" class="btn-icon-close" id="btn-close-structure-modal" aria-label="Fechar Estrutura da Página" title="Fechar">
+                ${ICONS.close}
+              </button>
+            </div>
+          </div>
+
+          <div class="structure-tabs" role="tablist" aria-label="Categorias da estrutura da página">
+            <button type="button" class="struct-tab-btn active" id="struct-tab-headings" data-struct-tab="headings" role="tab" aria-selected="true">Títulos</button>
+            <button type="button" class="struct-tab-btn" id="struct-tab-landmarks" data-struct-tab="landmarks" role="tab" aria-selected="false">Regiões</button>
+            <button type="button" class="struct-tab-btn" id="struct-tab-links" data-struct-tab="links" role="tab" aria-selected="false">Links</button>
+          </div>
+
+          <div class="structure-search-row">
+            <div class="search-input-box">
+              <span class="search-icon-svg">${ICONS.search}</span>
+              <input type="text" id="struct-search-input" class="search-input-field" placeholder="Filtrar itens da página..." aria-label="Filtrar itens da estrutura da página">
+            </div>
+          </div>
+
+          <div class="structure-modal-body" id="headings-list-container">
+            <ul class="headings-list-items" id="headings-items-ul"></ul>
+          </div>
+        </div>
+
         <div class="allyada-backdrop" id="allyada-backdrop" aria-hidden="true"></div>
       `;
 
@@ -1676,13 +1810,21 @@
 
       
 
-      // 3. Mover Doca (Esquerda / Direita)
+      // 3. Mover Doca (Esquerda / Direita) e Altura nos Cantos (Centralizado / Fim da Página)
       const dockBtn = root.getElementById('btn-toggle-dock');
       if (dockBtn) {
         dockBtn.addEventListener('click', () => this.toggleDockPosition());
       }
+      const vposBtn = root.getElementById('btn-toggle-vpos');
+      if (vposBtn) {
+        vposBtn.addEventListener('click', () => {
+          const cur = this.state.verticalPosition || this.config.verticalPosition || 'bottom';
+          const next = (cur === 'middle') ? 'bottom' : 'middle';
+          this.setVerticalPosition(next);
+        });
+      }
 
-      // 4. Busca Instantânea nas Ferramentas
+      // 4. Busca Instantânea nas Ferramentas (Aba Principal)
       const searchInput = root.getElementById('allyada-search-input');
       const searchClearBtn = root.getElementById('btn-search-clear');
       if (searchInput) {
@@ -1690,15 +1832,15 @@
           const query = e.target.value.toLowerCase().trim();
           if (searchClearBtn) searchClearBtn.style.display = query ? 'flex' : 'none';
 
-          const cards = root.querySelectorAll('#tab-content-tools .tool-card, #tab-content-tools .control-box, #tab-content-tools .structure-nav-group, #tab-content-tools .tts-player-panel, #tab-content-tools .vlibras-banner-card');
+          const cards = root.querySelectorAll('#tab-content-foryou .tool-card, #tab-content-foryou .control-box, #tab-content-foryou .structure-nav-group, #tab-content-foryou .vlibras-banner-card, #tab-content-foryou .profile-card');
           cards.forEach(card => {
             const text = card.textContent.toLowerCase();
             const match = !query || text.includes(query);
             card.style.display = match ? '' : 'none';
           });
 
-          root.querySelectorAll('#tab-content-tools .menu-section').forEach(sec => {
-            const visible = sec.querySelectorAll('.tool-card:not([style*="display: none"]), .control-box:not([style*="display: none"]), .structure-nav-group:not([style*="display: none"]), .tts-player-panel:not([style*="display: none"]), .vlibras-banner-card:not([style*="display: none"])');
+          root.querySelectorAll('#tab-content-foryou .menu-section').forEach(sec => {
+            const visible = sec.querySelectorAll('.tool-card:not([style*="display: none"]), .control-box:not([style*="display: none"]), .structure-nav-group:not([style*="display: none"]), .vlibras-banner-card:not([style*="display: none"]), .profile-card:not([style*="display: none"])');
             sec.style.display = (visible.length > 0 || !query) ? '' : 'none';
           });
         });
@@ -1803,6 +1945,9 @@
               ...DEFAULT_STATE, 
               activeTab: this.state.activeTab, 
               rememberPreferences: this.state.rememberPreferences,
+              verticalPosition: this.state.verticalPosition || this.config.verticalPosition || 'bottom',
+              dockPosition: this.state.dockPosition || this.config.position || 'right',
+              uiScale: this.state.uiScale || '1',
               activeProfile: profileKey 
             };
             applyFn();
@@ -1826,6 +1971,7 @@
         this.state.fontSizeLevel = 2;
         this.state.contrast = 'dark';
         this.state.cursorSize = 'large';
+        this.state.cursorColor = '#ffffff';
         this.state.highlightLinks = true;
       });
 
@@ -1833,6 +1979,7 @@
         this.state.dyslexicFont = true;
         this.state.lineHeightLevel = 1;
         this.state.textAlignLeft = true;
+        this.state.textAlign = 'left';
       });
 
       bindBoth('profile-colors', 'profile-colorblind', 'colors', () => {
@@ -1899,6 +2046,18 @@
         });
       });
 
+      // Alinhamento de Texto Completo (Padrão, Esquerda, Centro, Direita, Justificado)
+      ['normal', 'left', 'center', 'right', 'justify'].forEach(align => {
+        const btn = root.getElementById(`btn-align-${align}`);
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          this.state.textAlign = align;
+          this.state.textAlignLeft = (align === 'left');
+          this.state.activeProfile = null;
+          this.syncStateAndUI();
+        });
+      });
+
       const bindToggle = (id, stateKey) => {
         const el = root.getElementById(id);
         if (!el) return;
@@ -1910,8 +2069,8 @@
       };
 
       bindToggle('card-word-spacing', 'wordSpacingLevel');
-      bindToggle('card-text-align-left', 'textAlignLeft');
       bindToggle('card-dyslexic-font', 'dyslexicFont');
+      bindToggle('card-image-inspector', 'imageInspector');
 
       // 8. Cores e Contraste
       ['dark', 'light', 'monochrome', 'invert'].forEach(opt => {
@@ -1923,6 +2082,50 @@
           this.syncStateAndUI();
         });
       });
+
+      // Personalização de Cores: Títulos, Texto e Fundo
+      const setCustomPageColor = (target, color, toggleIfSame = false) => {
+        const keyMap = { title: 'customTitleColor', text: 'customTextColor', bg: 'customBgColor' };
+        const stateKey = keyMap[target];
+        if (!stateKey) return;
+        const current = (this.state[stateKey] || '').toLowerCase();
+        if (toggleIfSame && current === (color || '').toLowerCase()) {
+          this.state[stateKey] = '';
+        } else {
+          this.state[stateKey] = color;
+        }
+        this.state.activeProfile = null;
+        this.syncStateAndUI();
+      };
+
+      root.querySelectorAll('.custom-swatch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setCustomPageColor(btn.dataset.target, btn.dataset.color, true);
+        });
+      });
+
+      const inputCustomTitle = root.getElementById('input-custom-title-color');
+      if (inputCustomTitle) {
+        inputCustomTitle.addEventListener('input', (e) => setCustomPageColor('title', e.target.value, false));
+      }
+      const inputCustomText = root.getElementById('input-custom-text-color');
+      if (inputCustomText) {
+        inputCustomText.addEventListener('input', (e) => setCustomPageColor('text', e.target.value, false));
+      }
+      const inputCustomBg = root.getElementById('input-custom-bg-color');
+      if (inputCustomBg) {
+        inputCustomBg.addEventListener('input', (e) => setCustomPageColor('bg', e.target.value, false));
+      }
+
+      const btnResetCustomColors = root.getElementById('btn-reset-custom-colors');
+      if (btnResetCustomColors) {
+        btnResetCustomColors.addEventListener('click', () => {
+          this.state.customTitleColor = '';
+          this.state.customTextColor = '';
+          this.state.customBgColor = '';
+          this.syncStateAndUI();
+        });
+      }
 
       // Filtros de Daltonismo na aba Ferramentas
       ['none', 'deuteranopia', 'protanopia', 'tritanopia'].forEach(type => {
@@ -1977,10 +2180,35 @@
         });
       }
 
-      // Navegar pelos Títulos da Página
+      // Estrutura da Página (Caixa Flutuante com Títulos, Regiões e Links)
       const btnHeadings = root.getElementById('btn-toggle-headings');
       if (btnHeadings) {
         btnHeadings.addEventListener('click', () => this.toggleHeadingsList());
+      }
+
+      const btnBackStruct = root.getElementById('btn-back-structure-modal');
+      if (btnBackStruct) {
+        btnBackStruct.addEventListener('click', () => {
+          this.closeStructureModal();
+          this.openPanel();
+        });
+      }
+
+      const btnCloseStruct = root.getElementById('btn-close-structure-modal');
+      if (btnCloseStruct) {
+        btnCloseStruct.addEventListener('click', () => this.closeStructureModal());
+      }
+
+      ['headings', 'landmarks', 'links'].forEach(tabKey => {
+        const tabBtn = root.getElementById(`struct-tab-${tabKey}`);
+        if (tabBtn) {
+          tabBtn.addEventListener('click', () => this.switchStructureTab(tabKey));
+        }
+      });
+
+      const structSearch = root.getElementById('struct-search-input');
+      if (structSearch) {
+        structSearch.addEventListener('input', () => this.renderStructureList());
       }
 
       // 10. Leitura em Voz Alta (TTS)
@@ -2013,6 +2241,15 @@
       };
       bindRates('');
       bindRates('q-');
+
+      ['select-tts-voice', 'q-select-tts-voice'].forEach(selId => {
+        const sel = root.getElementById(selId);
+        if (sel) {
+          sel.addEventListener('change', (e) => {
+            this.changeSpeechVoice(e.target.value);
+          });
+        }
+      });
 
       // 11. Movimento
       bindToggle('card-stop-animations', 'stopAnimations');
@@ -2076,7 +2313,7 @@
 
       // 15. Teclado Virtual
       bindToggle('card-virtual-keyboard', 'virtualKeyboard');
-      // 16. Configurações de Aparência (Tamanho do Painel responsivo à tela)
+      // 16. Configurações de Aparência e Posição (Tamanho e Posição nos Cantos ✨ Premium)
       const setWidgetScale = (val) => {
         this.state.uiScale = String(val);
         this.syncStateAndUI();
@@ -2089,6 +2326,18 @@
         const btnScale = root.getElementById(`btn-scale-${code}`);
         if (btnScale) {
           btnScale.addEventListener('click', () => setWidgetScale(btnScale.getAttribute('data-scale')));
+        }
+      });
+      ['bottom', 'middle', 'top'].forEach(vpos => {
+        const btnV = root.getElementById(`btn-vpos-${vpos}`);
+        if (btnV) {
+          btnV.addEventListener('click', () => this.setVerticalPosition(vpos));
+        }
+      });
+      ['right', 'left'].forEach(hpos => {
+        const btnH = root.getElementById(`btn-hpos-${hpos}`);
+        if (btnH) {
+          btnH.addEventListener('click', () => this.setDockPosition(hpos));
         }
       });
       window.addEventListener('resize', () => {
@@ -2170,27 +2419,73 @@
     }
 
     getCursorCssObject() {
-      const rawColor = (this.state.cursorColor || '#000000').trim();
+      const isDarkPage = this.state.contrast === 'dark' || ['#18181b', '#0f172a', '#000000', '#121212'].includes((this.state.customBgColor || '').toLowerCase());
+      let rawColor = (this.state.cursorColor || '#000000').trim();
+      if (isDarkPage && rawColor.toLowerCase() === '#000000') {
+        rawColor = '#ffffff';
+      }
       const cColor = encodeURIComponent(rawColor);
-      const isWhite = rawColor.toLowerCase() === '#ffffff' || rawColor.toLowerCase() === '#fff';
-      const strokeAttr = isWhite ? " stroke='%231e293b' stroke-width='0.8'" : '';
+      const isLightCursor = ['#ffffff', '#fff', '#facc15', '#fef08a', '#eab308'].includes(rawColor.toLowerCase());
+      const strokeAttr = isLightCursor
+        ? " stroke='%230f172a' stroke-width='1.3' stroke-linejoin='round'"
+        : " stroke='%23ffffff' stroke-width='1.3' stroke-linejoin='round'";
       const pathD = 'M2 1.5V21.5L7.6 15.9L11.2 22.8L14.3 21.2L10.7 14.3H18.5L2 1.5Z';
 
+      let hostCss = '';
+      let shadowCss = '';
+
       if (this.state.cursorSize === 'large') {
-        const uri = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}'${strokeAttr} d='${pathD}'/%3E%3C/svg%3E") 5 3, auto`;
-        return {
-          hostCss: `html.ally-cursor-large, html.ally-cursor-large * { cursor: ${uri} !important; }`,
-          shadowCss: `:host, :host * { cursor: ${uri} !important; }`
-        };
+        const uri = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}'${strokeAttr} d='${pathD}'/%3E%3C/svg%3E") 4 2, auto`;
+        hostCss += `html.ally-cursor-large, html.ally-cursor-large * { cursor: ${uri} !important; }\n`;
+        shadowCss += `:host, :host * { cursor: ${uri} !important; }\n`;
+      } else if (this.state.cursorSize === 'xlarge') {
+        const uri = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}'${strokeAttr} d='${pathD}'/%3E%3C/svg%3E") 5 3, auto`;
+        hostCss += `html.ally-cursor-xlarge, html.ally-cursor-xlarge * { cursor: ${uri} !important; }\n`;
+        shadowCss += `:host, :host * { cursor: ${uri} !important; }\n`;
       }
-      if (this.state.cursorSize === 'xlarge') {
-        const uri = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24'%3E%3Cpath fill='${cColor}'${strokeAttr} d='${pathD}'/%3E%3C/svg%3E") 8 5, auto`;
-        return {
-          hostCss: `html.ally-cursor-xlarge, html.ally-cursor-xlarge * { cursor: ${uri} !important; }`,
-          shadowCss: `:host, :host * { cursor: ${uri} !important; }`
-        };
+
+      // Cores Personalizadas de Fundo, Texto e Títulos (Estilo Rybená)
+      if (this.state.customBgColor) {
+        const bg = this.state.customBgColor;
+        hostCss += `
+          html.ally-custom-bg,
+          html.ally-custom-bg body,
+          html.ally-custom-bg main,
+          html.ally-custom-bg article,
+          html.ally-custom-bg section,
+          html.ally-custom-bg header,
+          html.ally-custom-bg nav,
+          html.ally-custom-bg footer,
+          html.ally-custom-bg aside,
+          html.ally-custom-bg [class*="card"]:not(#allyada-root *):not([vw] *),
+          html.ally-custom-bg [class*="panel"]:not(#allyada-root *):not([vw] *),
+          html.ally-custom-bg [class*="container"]:not(#allyada-root *):not([vw] *),
+          html.ally-custom-bg [class*="wrapper"]:not(#allyada-root *):not([vw] *),
+          html.ally-custom-bg [class*="hero"]:not(#allyada-root *):not([vw] *) {
+            background-color: ${bg} !important;
+            background-image: none !important;
+          }
+        `;
       }
-      return { hostCss: '', shadowCss: '' };
+      if (this.state.customTextColor) {
+        const txt = this.state.customTextColor;
+        hostCss += `
+          html.ally-custom-text body,
+          html.ally-custom-text :is(p, span, li, a, label, td, th, blockquote, dd, dt, figcaption, strong, em, b, i, small):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(#allyada-root *):not([vw] *):not([data-allyada-ignore] *) {
+            color: ${txt} !important;
+          }
+        `;
+      }
+      if (this.state.customTitleColor) {
+        const ttl = this.state.customTitleColor;
+        hostCss += `
+          html.ally-custom-title :is(h1, h2, h3, h4, h5, h6, [role="heading"], h1 *, h2 *, h3 *, h4 *, h5 *, h6 *):not(#allyada-root *):not([vw] *):not([data-allyada-ignore] *) {
+            color: ${ttl} !important;
+          }
+        `;
+      }
+
+      return { hostCss, shadowCss };
     }
 
     applyDynamicStyles() {
@@ -2264,81 +2559,1009 @@
       this.saveState();
     }
 
+    /**
+     * Abre/fecha a Caixa Flutuante de Estrutura da Página (Títulos, Regiões e Links)
+     */
     toggleHeadingsList() {
-      const root = this.shadowRoot;
-      const listContainer = root.getElementById('headings-list-container');
-      const btnHeadings = root.getElementById('btn-toggle-headings');
-      const ul = root.getElementById('headings-items-ul');
-      if (!listContainer || !ul) return;
-
-      const isHidden = listContainer.style.display === 'none';
-      if (isHidden) {
-        listContainer.style.display = 'block';
-        btnHeadings.setAttribute('aria-expanded', 'true');
-        ul.innerHTML = '';
-
-        const headings = [];
-        this.getAllAccessibleDocuments().forEach(({ iframe, doc, win }) => {
-          if (!doc) return;
-          const docHeadings = Array.from(doc.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"][aria-level]')).filter(el => {
-            if (el.closest('#allyada-root') || el.closest('[data-allyada-ignore]') || el.closest('[vw]')) return false;
-            if (el.closest('[aria-hidden="true"], [hidden], [inert]')) return false;
-            try {
-              if (win.getComputedStyle(el).display === 'none') return false;
-            } catch (err) {}
-            return true;
-          });
-          docHeadings.forEach(h => headings.push({ el: h, iframe }));
-        });
-
-        if (headings.length === 0) {
-          ul.innerHTML = `<li class="heading-empty-item">Nenhum cabeçalho estrutural (H1, H2, H3) foi encontrado nesta página.</li>`;
-          return;
-        }
-
-        headings.forEach(({ el: h, iframe }, idx) => {
-          const text = (h.textContent || '').trim();
-          if (!text) return;
-          let level = 'H2';
-          if (/^H[1-6]$/i.test(h.tagName)) {
-            level = h.tagName.toUpperCase();
-          } else if (h.getAttribute('aria-level')) {
-            level = 'H' + h.getAttribute('aria-level');
-          }
-          const prefix = iframe ? '[Quadro] ' : '';
-          const li = document.createElement('li');
-          li.className = 'heading-list-item';
-          li.innerHTML = `
-            <button type="button" class="btn-heading-target" data-heading-idx="${idx}">
-              <span class="heading-level-pill ${level.toLowerCase()}">${level}</span>
-              <span class="heading-text-label">${this.escapeHTML((prefix + text).slice(0, 80))}</span>
-            </button>
-          `;
-          li.querySelector('button').addEventListener('click', () => {
-            this.closePanel();
-            if (iframe) {
-              iframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            h.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            if (!h.hasAttribute('tabindex')) {
-              h.setAttribute('tabindex', '-1');
-            }
-            h.focus();
-            h.classList.add('allyada-heading-target-highlight');
-            setTimeout(() => {
-              h.classList.remove('allyada-heading-target-highlight');
-            }, 2500);
-          });
-          ul.appendChild(li);
-        });
+      if (this.isStructureOpen) {
+        this.closeStructureModal();
       } else {
-        listContainer.style.display = 'none';
+        this.openStructureModal('headings');
+      }
+    }
+
+    openStructureModal(initialTab = 'headings') {
+      const root = this.shadowRoot;
+      if (!root) return;
+      const modal = root.getElementById('allyada-structure-modal');
+      const btnHeadings = root.getElementById('btn-toggle-headings');
+      if (!modal) return;
+
+      this.isStructureOpen = true;
+      this.isStructureModalOpen = true;
+      this.activeStructureTab = initialTab || 'headings';
+      // Fecha o painel principal para que a caixa de Estrutura da Página fique livre sobre o site (Estilo Rybená)
+      if (this.isOpen) {
+        this.closePanel();
+      }
+
+      modal.style.display = 'flex';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      if (btnHeadings) btnHeadings.setAttribute('aria-expanded', 'true');
+
+      this.switchStructureTab(this.activeStructureTab);
+      setTimeout(() => {
+        const searchInput = root.getElementById('struct-search-input');
+        if (searchInput) searchInput.focus();
+      }, 60);
+    }
+
+    closeStructureModal() {
+      const root = this.shadowRoot;
+      if (!root) return;
+      const modal = root.getElementById('allyada-structure-modal');
+      const btnHeadings = root.getElementById('btn-toggle-headings');
+      this.isStructureOpen = false;
+      this.isStructureModalOpen = false;
+      if (modal) {
+        modal.classList.remove('open');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      }
+      if (btnHeadings) {
         btnHeadings.setAttribute('aria-expanded', 'false');
       }
     }
 
+    switchStructureTab(tabKey) {
+      this.activeStructureTab = tabKey || 'headings';
+      const root = this.shadowRoot;
+      if (!root) return;
+      ['headings', 'landmarks', 'links'].forEach(k => {
+        const btn = root.getElementById(`struct-tab-${k}`);
+        if (btn) {
+          const isAct = (k === this.activeStructureTab);
+          btn.classList.toggle('active', isAct);
+          btn.setAttribute('aria-selected', isAct ? 'true' : 'false');
+        }
+      });
+      this.renderStructureList();
+    }
+
+    renderStructureList() {
+      const root = this.shadowRoot;
+      if (!root) return;
+      const ul = root.getElementById('headings-items-ul');
+      const countLabel = root.getElementById('structure-modal-count');
+      const searchInput = root.getElementById('struct-search-input');
+      if (!ul) return;
+
+      const query = (searchInput && searchInput.value ? searchInput.value : '').toLowerCase().trim();
+      ul.innerHTML = '';
+      const items = [];
+
+      const isVisibleNode = (el, win) => {
+        if (!el) return false;
+        if (el.closest('#allyada-root') || el.closest('[data-allyada-ignore]') || el.closest('[vw]')) return false;
+        if (el.closest('[aria-hidden="true"], [hidden], [inert]')) return false;
+        try {
+          const cs = win.getComputedStyle(el);
+          if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+        } catch (err) {}
+        return true;
+      };
+
+      if (this.activeStructureTab === 'headings') {
+        this.getAllAccessibleDocuments().forEach(({ iframe, doc, win }) => {
+          if (!doc) return;
+          const docHeadings = Array.from(doc.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"][aria-level]')).filter(el => isVisibleNode(el, win));
+          docHeadings.forEach(h => {
+            const text = (h.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!text) return;
+            let badge = 'H2';
+            if (/^H[1-6]$/i.test(h.tagName)) badge = h.tagName.toUpperCase();
+            else if (h.getAttribute('aria-level')) badge = 'H' + h.getAttribute('aria-level');
+            items.push({ el: h, iframe, badge, badgeClass: badge.toLowerCase(), text: (iframe ? '[Quadro] ' : '') + text });
+          });
+        });
+      } else if (this.activeStructureTab === 'landmarks') {
+        const landmarkDefs = [
+          { sel: 'header, [role="banner"]', badge: 'Topo', name: 'Cabeçalho da Página' },
+          { sel: 'nav, [role="navigation"]', badge: 'Menu', name: 'Menu de Navegação' },
+          { sel: '[role="search"], form[role*="search" i]', badge: 'Busca', name: 'Área de Pesquisa' },
+          { sel: 'main, [role="main"]', badge: 'Principal', name: 'Conteúdo Principal' },
+          { sel: 'article', badge: 'Artigo', name: 'Artigo' },
+          { sel: 'section[aria-label], section[aria-labelledby], section', badge: 'Seção', name: 'Seção da Página' },
+          { sel: 'aside, [role="complementary"]', badge: 'Lateral', name: 'Conteúdo Complementar' },
+          { sel: 'footer, [role="contentinfo"]', badge: 'Rodapé', name: 'Rodapé da Página' }
+        ];
+        const seen = new Set();
+        this.getAllAccessibleDocuments().forEach(({ iframe, doc, win }) => {
+          if (!doc) return;
+          landmarkDefs.forEach(def => {
+            Array.from(doc.querySelectorAll(def.sel)).forEach(el => {
+              if (seen.has(el) || !isVisibleNode(el, win)) return;
+              seen.add(el);
+              const ariaLabel = el.getAttribute('aria-label') || '';
+              const headingInside = el.querySelector('h1, h2, h3, h4');
+              const headingText = headingInside ? (headingInside.textContent || '').replace(/\s+/g, ' ').trim() : '';
+              const label = ariaLabel || headingText || def.name;
+              items.push({ el, iframe, badge: def.badge, badgeClass: 'h1', text: (iframe ? '[Quadro] ' : '') + label });
+            });
+          });
+        });
+      } else if (this.activeStructureTab === 'links') {
+        this.getAllAccessibleDocuments().forEach(({ iframe, doc, win }) => {
+          if (!doc) return;
+          Array.from(doc.querySelectorAll('a[href]')).forEach(a => {
+            if (!isVisibleNode(a, win)) return;
+            const text = (a.getAttribute('aria-label') || a.textContent || a.getAttribute('title') || a.getAttribute('href') || '').replace(/\s+/g, ' ').trim();
+            if (!text) return;
+            const href = a.getAttribute('href') || '';
+            const isExternal = /^https?:\/\//i.test(href) && (!win.location || !href.includes(win.location.hostname));
+            items.push({ el: a, iframe, badge: isExternal ? 'Externo' : 'Link', badgeClass: isExternal ? 'h2' : 'h3', text: (iframe ? '[Quadro] ' : '') + text });
+          });
+        });
+      }
+
+      const filtered = query ? items.filter(it => it.text.toLowerCase().includes(query) || it.badge.toLowerCase().includes(query)) : items;
+
+      if (countLabel) {
+        const tabNames = { headings: 'títulos', landmarks: 'regiões', links: 'links' };
+        countLabel.textContent = `${filtered.length} ${tabNames[this.activeStructureTab] || 'itens'} encontrados`;
+      }
+
+      if (filtered.length === 0) {
+        ul.innerHTML = `<li class="heading-empty-item">Nenhum item encontrado para esta categoria.</li>`;
+        return;
+      }
+
+      filtered.forEach((item, idx) => {
+        const li = document.createElement('li');
+        li.className = 'heading-list-item';
+        li.innerHTML = `
+          <button type="button" class="btn-heading-target" data-heading-idx="${idx}">
+            <span class="heading-level-pill ${item.badgeClass}">${this.escapeHTML(item.badge)}</span>
+            <span class="heading-text-label">${this.escapeHTML(item.text.slice(0, 90))}</span>
+          </button>
+        `;
+        li.querySelector('button').addEventListener('click', () => {
+          if (item.iframe) {
+            item.iframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (!item.el.hasAttribute('tabindex')) {
+            item.el.setAttribute('tabindex', '-1');
+          }
+          item.el.focus();
+          item.el.classList.add('allyada-heading-target-highlight');
+          setTimeout(() => {
+            item.el.classList.remove('allyada-heading-target-highlight');
+          }, 2500);
+        });
+        ul.appendChild(li);
+      });
+    }
+
+    /**
+     * Inspetor e Descritor Inteligente de Imagens (Visão Computacional Neural + OCR + Contexto Semântico + Voz)
+     */
+    enableImageInspector() {
+      if (this.imageInspectorActive) return;
+      this.imageInspectorActive = true;
+      if (!this.imageVisualAnalyzedKeys) {
+        this.imageVisualAnalyzedKeys = new Set();
+      }
+      if (!this.imagePendingAnalyses) {
+        this.imagePendingAnalyses = new Map();
+      }
+
+      // Pré-carrega em background os motores de Visão Computacional (COCO-SSD) e OCR (Tesseract.js)
+      this.preloadVisionEngines();
+
+      if (!this.imageTooltipEl) {
+        const tip = document.createElement('div');
+        tip.id = 'allyada-image-tooltip';
+        tip.setAttribute('data-allyada-ignore', 'true');
+        tip.setAttribute('role', 'status');
+        tip.setAttribute('aria-live', 'polite');
+        tip.style.cssText = `
+          display: none;
+          position: fixed;
+          z-index: 2147483646;
+          max-width: 370px;
+          min-width: 240px;
+          background: rgba(15, 23, 42, 0.96);
+          color: #ffffff;
+          border: 2px solid #7956c2;
+          border-radius: 14px;
+          padding: 12px 14px;
+          box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45);
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          font-size: 13.5px;
+          line-height: 1.45;
+          pointer-events: auto;
+          backdrop-filter: blur(10px);
+        `;
+        document.documentElement.appendChild(tip);
+        this.imageTooltipEl = tip;
+      }
+
+      this.imgOverHandler = (e) => {
+        const img = e.target && e.target.closest ? e.target.closest('img, svg[role="img"], [role="img"], figure, picture') : null;
+        if (!img || img.closest('#allyada-root') || img.closest('[vw]') || img.closest('[data-allyada-ignore]')) return;
+        if (this.currentInspectedImg && this.currentInspectedImg !== img) {
+          this.currentInspectedImg.classList.remove('allyada-img-inspect-target');
+        }
+        this.currentInspectedImg = img;
+        img.classList.add('allyada-img-inspect-target');
+
+        const targetImg = this.resolveTargetImageNode(img);
+        const cacheKey = this.getImageCacheKey(targetImg);
+        const isAlreadyAnalyzed = this.imageVisualAnalyzedKeys && this.imageVisualAnalyzedKeys.has(cacheKey);
+        const initialDesc = this.describeImageElement(img);
+        const rect = img.getBoundingClientRect();
+
+        this.showImageInspectorTooltip(img, initialDesc, rect, !isAlreadyAnalyzed);
+
+        if (!isAlreadyAnalyzed) {
+          this.analyzeImageVisualsAsync(img, (richDesc) => {
+            if (this.currentInspectedImg === img) {
+              const updatedRect = img.getBoundingClientRect();
+              this.showImageInspectorTooltip(img, richDesc, updatedRect, false);
+            }
+          });
+        }
+      };
+
+      this.imgOutHandler = (e) => {
+        const img = e.target && e.target.closest ? e.target.closest('img, svg[role="img"], [role="img"], figure, picture') : null;
+        if (!img) return;
+        const related = e.relatedTarget;
+        if (related && (img.contains(related) || (this.imageTooltipEl && this.imageTooltipEl.contains(related)))) return;
+        img.classList.remove('allyada-img-inspect-target');
+      };
+
+      this.imgClickHandler = (e) => {
+        const img = e.target && e.target.closest ? e.target.closest('img, svg[role="img"], [role="img"], figure, picture') : null;
+        if (!img || img.closest('#allyada-root') || img.closest('[vw]') || img.closest('[data-allyada-ignore]')) return;
+        const targetImg = this.resolveTargetImageNode(img);
+        const cacheKey = this.getImageCacheKey(targetImg);
+        const isAlreadyAnalyzed = this.imageVisualAnalyzedKeys && this.imageVisualAnalyzedKeys.has(cacheKey);
+        const currentDesc = this.describeImageElement(img);
+        const rect = img.getBoundingClientRect();
+
+        if (isAlreadyAnalyzed) {
+          this.showImageInspectorTooltip(img, currentDesc, rect, false);
+          this.speakText(`Descrição da imagem: ${currentDesc}`, img, 0);
+        } else {
+          this.showImageInspectorTooltip(img, currentDesc, rect, true);
+          this.analyzeImageVisualsAsync(img, (richDesc) => {
+            const updatedRect = img.getBoundingClientRect();
+            this.showImageInspectorTooltip(img, richDesc, updatedRect, false);
+            this.speakText(`Descrição da imagem: ${richDesc}`, img, 0);
+          });
+        }
+      };
+
+      this.getAllAccessibleDocuments().forEach(({ doc }) => {
+        if (!doc || !doc.documentElement) return;
+        doc.addEventListener('mouseover', this.imgOverHandler, true);
+        doc.addEventListener('mouseout', this.imgOutHandler, true);
+        doc.addEventListener('focusin', this.imgOverHandler, true);
+        doc.addEventListener('click', this.imgClickHandler, true);
+      });
+    }
+
+    disableImageInspector() {
+      this.imageInspectorActive = false;
+      if (this.currentInspectedImg) {
+        this.currentInspectedImg.classList.remove('allyada-img-inspect-target');
+        this.currentInspectedImg = null;
+      }
+      this.hideImageInspectorTooltip();
+      this.getAllAccessibleDocuments().forEach(({ doc }) => {
+        if (!doc || !doc.documentElement) return;
+        if (this.imgOverHandler) {
+          doc.removeEventListener('mouseover', this.imgOverHandler, true);
+          doc.removeEventListener('mouseout', this.imgOutHandler, true);
+          doc.removeEventListener('focusin', this.imgOverHandler, true);
+          doc.removeEventListener('click', this.imgClickHandler, true);
+        }
+        doc.querySelectorAll('.allyada-img-inspect-target').forEach(el => el.classList.remove('allyada-img-inspect-target'));
+      });
+      this.imgOverHandler = null;
+      this.imgOutHandler = null;
+      this.imgClickHandler = null;
+    }
+
+    resolveTargetImageNode(el) {
+      if (!el) return null;
+      if (el.tagName === 'IMG' || el.tagName === 'SVG') return el;
+      if (el.querySelector) {
+        const inner = el.querySelector('img, svg');
+        if (inner) return inner;
+      }
+      return el;
+    }
+
+    getImageCacheKey(targetImg) {
+      if (!targetImg) return 'unknown-img';
+      return (targetImg.currentSrc || targetImg.src || targetImg.id || (targetImg.outerHTML ? targetImg.outerHTML.slice(0, 140) : 'img')).trim();
+    }
+
+    loadExternalScriptOnce(url, globalCheckFn) {
+      if (globalCheckFn && globalCheckFn()) return Promise.resolve(true);
+      if (!this._scriptPromises) this._scriptPromises = new Map();
+      if (this._scriptPromises.has(url)) return this._scriptPromises.get(url);
+
+      const p = new Promise((resolve) => {
+        try {
+          const s = document.createElement('script');
+          s.src = url;
+          s.async = true;
+          s.crossOrigin = 'anonymous';
+          s.onload = () => resolve(true);
+          s.onerror = () => resolve(false);
+          (document.head || document.documentElement).appendChild(s);
+        } catch (e) {
+          resolve(false);
+        }
+      });
+      this._scriptPromises.set(url, p);
+      return p;
+    }
+
+    preloadVisionEngines() {
+      if (this._visionPreloadPromise) return this._visionPreloadPromise;
+      this._visionPreloadPromise = (async () => {
+        try {
+          const tfOk = await this.loadExternalScriptOnce(
+            'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js',
+            () => typeof window.tf !== 'undefined'
+          );
+          if (tfOk) {
+            const cocoOk = await this.loadExternalScriptOnce(
+              'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js',
+              () => typeof window.cocoSsd !== 'undefined'
+            );
+            if (cocoOk && window.cocoSsd && !this._cocoModel) {
+              try {
+                this._cocoModel = await window.cocoSsd.load({ base: 'mobilenet_v2' });
+              } catch (e1) {
+                try {
+                  this._cocoModel = await window.cocoSsd.load();
+                } catch (e2) {}
+              }
+            }
+          }
+        } catch (err) {}
+
+        try {
+          await this.loadExternalScriptOnce(
+            'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',
+            () => typeof window.Tesseract !== 'undefined'
+          );
+        } catch (err) {}
+        return true;
+      })();
+      return this._visionPreloadPromise;
+    }
+
+    /**
+     * Extrai textos/títulos sobrepostos na imagem (HTML overlay, badges, legendas, alt curto ou SVG text)
+     */
+    extractImageContextAndOverlays(el) {
+      const targetImg = this.resolveTargetImageNode(el);
+      if (!targetImg) return { alt: '', figCap: '', overlayTitle: '', nearHeading: '', srcHint: '', genderHint: '' };
+
+      const alt = ((targetImg.getAttribute && (targetImg.getAttribute('alt') || targetImg.getAttribute('aria-label') || targetImg.getAttribute('title'))) || '').replace(/\s+/g, ' ').trim();
+      const fig = targetImg.closest ? targetImg.closest('figure') : null;
+      const figCap = fig && fig.querySelector('figcaption') ? (fig.querySelector('figcaption').textContent || '').replace(/\s+/g, ' ').trim() : '';
+
+      // 1. Procura textos HTML posicionados visualmente sobre a imagem ou dentro do mesmo container/card/banner
+      let overlayTitle = '';
+      try {
+        const imgRect = targetImg.getBoundingClientRect();
+        const container = (targetImg.closest && targetImg.closest('figure, picture, a, [class*="banner"], [class*="card"], [class*="hero"], [class*="slide"], [class*="thumb"], [class*="image"], [class*="img"], [class*="media"], [class*="box"]')) || targetImg.parentElement;
+        if (container && imgRect.width > 20 && imgRect.height > 20) {
+          const candidates = container.querySelectorAll('h1, h2, h3, h4, h5, h6, strong, b, span, p, div, figcaption, [class*="title"], [class*="titulo"], [class*="label"], [class*="caption"], [class*="badge"]');
+          const foundTexts = [];
+          candidates.forEach(node => {
+            if (node === targetImg || node.contains(targetImg) || node.closest('#allyada-root')) return;
+            // Pega apenas nós folha ou com texto direto curto
+            const txt = (node.innerText || node.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!txt || txt.length < 2 || txt.length > 90) return;
+            const r = node.getBoundingClientRect();
+            if (r.width === 0 || r.height === 0) return;
+            // Verifica se está sobreposto à área da imagem ou imediatamente colado a ela
+            const overlapsHoriz = r.left < imgRect.right + 12 && r.right > imgRect.left - 12;
+            const overlapsVert = r.top < imgRect.bottom + 28 && r.bottom > imgRect.top - 28;
+            if (overlapsHoriz && overlapsVert && !foundTexts.includes(txt)) {
+              foundTexts.push(txt);
+            }
+          });
+          if (foundTexts.length > 0) {
+            overlayTitle = foundTexts[0];
+          }
+        }
+      } catch (e) {}
+
+      // Se for SVG com <text> interno
+      if (!overlayTitle && targetImg.tagName === 'SVG') {
+        const svgTexts = Array.from(targetImg.querySelectorAll('text, tspan')).map(t => (t.textContent || '').trim()).filter(Boolean);
+        if (svgTexts.length > 0) overlayTitle = svgTexts.join(' ');
+      }
+
+      const parentCard = targetImg.closest ? targetImg.closest('article, section, li, [class*="card"], [class*="product"], [class*="post"]') : null;
+      const nearHeadingNode = parentCard ? parentCard.querySelector('h1, h2, h3, h4, strong') : null;
+      const nearHeading = nearHeadingNode ? (nearHeadingNode.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 90) : '';
+
+      const rawSrc = (targetImg.currentSrc || (targetImg.getAttribute && targetImg.getAttribute('src')) || '');
+      let srcHint = '';
+      if (!rawSrc.startsWith('data:')) {
+        srcHint = rawSrc
+          .split('/').pop().split('?')[0]
+          .replace(/\.(png|jpe?g|webp|svg|gif|avif)$/i, '')
+          .replace(/[-_]+/g, ' ')
+          .replace(/\b\d{3,}\b/g, '')
+          .trim();
+      }
+
+      // Pistas contextuais de gênero (caso existam em atributos, classes, nome do arquivo ou texto ao redor)
+      const combinedContext = `${alt} ${figCap} ${srcHint} ${overlayTitle} ${nearHeading} ${(targetImg.className || '')}`.toLowerCase();
+      let genderHint = '';
+      if (/\b(homem|homens|man|men|male|boy|rapaz|senhor|pai|masculino|executivo|empresario|empresário|garoto|cara)\b/i.test(combinedContext)) {
+        genderHint = 'male';
+      } else if (/\b(mulher|mulheres|woman|women|female|girl|moca|moça|senhora|mae|mãe|feminino|executiva|empresaria|empresária|garota)\b/i.test(combinedContext)) {
+        genderHint = 'female';
+      }
+
+      return { alt, figCap, overlayTitle, nearHeading, srcHint, genderHint };
+    }
+
+    /**
+     * Converte um elemento <img> em um <canvas> legível (tratando CORS via fetch/blob ou crossOrigin anonymous)
+     */
+    async getImageCanvasForAnalysis(targetImg) {
+      if (!targetImg || targetImg.tagName !== 'IMG') return null;
+      const src = targetImg.currentSrc || targetImg.src || '';
+      if (!src) return null;
+
+      const tryDrawToCanvas = (imgSource) => {
+        try {
+          const natW = imgSource.naturalWidth || imgSource.width || 300;
+          const natH = imgSource.naturalHeight || imgSource.height || 300;
+          if (natW < 16 || natH < 16) return null;
+          const maxDim = 640;
+          const scale = Math.min(1, maxDim / Math.max(natW, natH));
+          const w = Math.max(32, Math.round(natW * scale));
+          const h = Math.max(32, Math.round(natH * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d', { willReadFrequently: true });
+          ctx.drawImage(imgSource, 0, 0, w, h);
+          // Testa se o canvas não está bloqueado por CORS (tainted)
+          ctx.getImageData(0, 0, 1, 1);
+          return { canvas, ctx, width: w, height: h };
+        } catch (err) {
+          return null;
+        }
+      };
+
+      // 1. Tenta desenhar a própria imagem já carregada na página
+      if (targetImg.complete && (targetImg.naturalWidth || 0) > 0) {
+        const direct = tryDrawToCanvas(targetImg);
+        if (direct) return direct;
+      }
+
+      // 2. Tenta carregar via Image com crossOrigin="anonymous"
+      const viaAnonImg = await new Promise((resolve) => {
+        try {
+          const im = new Image();
+          im.crossOrigin = 'anonymous';
+          const timer = setTimeout(() => resolve(null), 3500);
+          im.onload = () => {
+            clearTimeout(timer);
+            resolve(tryDrawToCanvas(im));
+          };
+          im.onerror = () => {
+            clearTimeout(timer);
+            resolve(null);
+          };
+          im.src = src;
+        } catch (e) {
+          resolve(null);
+        }
+      });
+      if (viaAnonImg) return viaAnonImg;
+
+      // 3. Tenta via fetch -> Blob -> ObjectURL
+      try {
+        const resp = await fetch(src, { mode: 'cors', credentials: 'omit' });
+        if (resp.ok) {
+          const blob = await resp.blob();
+          const objUrl = URL.createObjectURL(blob);
+          const viaBlob = await new Promise((resolve) => {
+            const im = new Image();
+            im.onload = () => {
+              URL.revokeObjectURL(objUrl);
+              resolve(tryDrawToCanvas(im));
+            };
+            im.onerror = () => {
+              URL.revokeObjectURL(objUrl);
+              resolve(null);
+            };
+            im.src = objUrl;
+          });
+          if (viaBlob) return viaBlob;
+        }
+      } catch (e) {}
+
+      return null;
+    }
+
+    /**
+     * Analisa visualmente os pixels da região da pessoa para refinar características
+     * (ex.: Homem vs Mulher vs Pessoa, e se segura um celular/objeto retangular próximo às mãos/peito)
+     */
+    analyzePersonAndHandheldInCanvas(ctx, width, height, personBbox, genderHint, allDetections) {
+      const [px, py, pw, ph] = personBbox;
+      const x0 = Math.max(0, Math.floor(px));
+      const y0 = Math.max(0, Math.floor(py));
+      const w = Math.min(width - x0, Math.floor(pw));
+      const h = Math.min(height - y0, Math.floor(ph));
+
+      let resolvedPersonNoun = 'Pessoa';
+      if (genderHint === 'male') {
+        resolvedPersonNoun = 'Homem';
+      } else if (genderHint === 'female') {
+        resolvedPersonNoun = 'Mulher';
+      } else if (w > 24 && h > 36) {
+        try {
+          // Verifica se há gravata (tie) detectada perto da pessoa
+          const hasTie = (allDetections || []).some(d => d.class === 'tie' && d.score >= 0.15);
+          if (hasTie) {
+            resolvedPersonNoun = 'Homem';
+          } else {
+            // Heurística visual na região da cabeça/mandíbula/ombros (topo 0% a 36% da pessoa)
+            const headH = Math.max(12, Math.floor(h * 0.36));
+            const imgData = ctx.getImageData(x0, y0, w, headH).data;
+
+            // Compara densidade de cabelo/escuro nas laterais inferiores do pescoço vs mandíbula/barba no centro inferior da face
+            let sideLongHairPixels = 0;
+            let sideTotal = 0;
+            let jawDarkPixels = 0;
+            let jawTotal = 0;
+            let crownDarkPixels = 0;
+            let crownTotal = 0;
+
+            for (let ry = 0; ry < headH; ry++) {
+              const normY = ry / headH;
+              for (let rx = 0; rx < w; rx++) {
+                const normX = rx / w;
+                const idx = (ry * w + rx) * 4;
+                const r = imgData[idx];
+                const g = imgData[idx + 1];
+                const b = imgData[idx + 2];
+                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                // Topo da cabeça (cabelo curto concentrado no topo)
+                if (normY >= 0.05 && normY <= 0.30 && normX >= 0.30 && normX <= 0.70) {
+                  crownTotal++;
+                  if (lum < 95) crownDarkPixels++;
+                }
+                // Laterais na altura do queixo/pescoço (cabelo comprido solto nas laterais)
+                if (normY >= 0.55 && normY <= 0.92 && ((normX >= 0.12 && normX <= 0.28) || (normX >= 0.72 && normX <= 0.88))) {
+                  sideTotal++;
+                  if (lum < 85) sideLongHairPixels++;
+                }
+                // Região central da mandíbula/barba
+                if (normY >= 0.58 && normY <= 0.85 && normX >= 0.36 && normX <= 0.64) {
+                  jawTotal++;
+                  if (lum < 105) jawDarkPixels++;
+                }
+              }
+            }
+
+            const sideHairRatio = sideTotal > 0 ? sideLongHairPixels / sideTotal : 0;
+            const jawDarkRatio = jawTotal > 0 ? jawDarkPixels / jawTotal : 0;
+            const crownRatio = crownTotal > 0 ? crownDarkPixels / crownTotal : 0;
+
+            if (sideHairRatio > 0.42 && jawDarkRatio < 0.22) {
+              resolvedPersonNoun = 'Mulher';
+            } else if (crownRatio > 0.18 && sideHairRatio < 0.28) {
+              resolvedPersonNoun = 'Homem';
+            } else if (jawDarkRatio >= 0.22) {
+              resolvedPersonNoun = 'Homem';
+            }
+          }
+        } catch (e) {}
+      }
+
+      // Verifica se há celular detectado pelo modelo neural (mesmo com score moderado >= 0.13)
+      const phoneDetection = (allDetections || []).find(d =>
+        (d.class === 'cell phone' && d.score >= 0.12) ||
+        (d.class === 'remote' && d.score >= 0.15)
+      );
+
+      let holdingPhone = !!phoneDetection;
+
+      // Caso a mão encubra parte do celular e o COCO-SSD dê score baixo, verifica na zona das mãos/peito (entre 28% e 88% da altura da pessoa)
+      // se há um objeto retangular compacto de alto contraste (borda de smartphone + reflexo/tela) próximo a pixels de pele (mão)
+      if (!holdingPhone && w > 40 && h > 50) {
+        try {
+          const zoneY0 = Math.min(height - 1, Math.floor(y0 + h * 0.28));
+          const zoneH = Math.min(height - zoneY0, Math.floor(h * 0.58));
+          if (zoneH > 16) {
+            const zData = ctx.getImageData(x0, zoneY0, w, zoneH).data;
+            let skinPixels = 0;
+            let darkDevicePixels = 0;
+            let sharpEdgeTransitions = 0;
+            const totalPx = w * zoneH;
+
+            for (let ry = 1; ry < zoneH - 1; ry += 2) {
+              for (let rx = 1; rx < w - 1; rx += 2) {
+                const idx = (ry * w + rx) * 4;
+                const r = zData[idx], g = zData[idx + 1], b = zData[idx + 2];
+                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                // Detecção de tom de pele (mão segurando objeto na zona do peito/rosto)
+                const isSkin = r > 95 && g > 40 && b > 20 && (Math.max(r, g, b) - Math.min(r, g, b) > 15) && Math.abs(r - g) > 15 && r > g && r > b;
+                if (isSkin) skinPixels++;
+                if (lum < 48) darkDevicePixels++;
+
+                const nextIdx = (ry * w + (rx + 1)) * 4;
+                const nextLum = 0.299 * zData[nextIdx] + 0.587 * zData[nextIdx + 1] + 0.114 * zData[nextIdx + 2];
+                if (Math.abs(lum - nextLum) > 55) sharpEdgeTransitions++;
+              }
+            }
+
+            const sampled = Math.max(1, totalPx / 4);
+            const skinRatio = skinPixels / sampled;
+            const darkRatio = darkDevicePixels / sampled;
+            const edgeRatio = sharpEdgeTransitions / sampled;
+
+            // Se há mão visível na altura do peito/rosto + superfície escura/retangular com bordas nítidas
+            if (skinRatio >= 0.04 && skinRatio <= 0.45 && darkRatio >= 0.04 && darkRatio <= 0.55 && edgeRatio >= 0.035) {
+              holdingPhone = true;
+            }
+          }
+        } catch (e) {}
+      }
+
+      return { resolvedPersonNoun, holdingPhone };
+    }
+
+    /**
+     * Executa OCR real (Tesseract.js) em duas passadas (original + alto contraste para textos claros sobre fotos)
+     */
+    async extractTextFromCanvasOCR(canvas) {
+      if (!canvas || typeof window.Tesseract === 'undefined') return '';
+      try {
+        const cleanOcrText = (raw) => {
+          if (!raw) return '';
+          const lines = raw
+            .split(/\r?\n/)
+            .map(l => l.replace(/[^a-zA-ZÀ-ÿ0-9\s!?:.,$-]/g, ' ').replace(/\s+/g, ' ').trim())
+            .filter(l => {
+              if (l.length < 2) return false;
+              // Deve conter ao menos uma palavra real com 3+ letras seguidas
+              return /[a-zA-ZÀ-ÿ]{3,}/.test(l);
+            });
+          return lines.join(' — ').slice(0, 110).trim();
+        };
+
+        // 1ª passada: imagem original
+        const res1 = await window.Tesseract.recognize(canvas, 'por+eng');
+        const confidence1 = res1 && res1.data ? (res1.data.confidence || 0) : 0;
+        const text1 = (res1 && res1.data && res1.data.text) ? cleanOcrText(res1.data.text) : '';
+        if (text1 && (confidence1 >= 45 || text1.length >= 4)) {
+          return text1;
+        }
+
+        // 2ª passada: filtro de alto contraste P&B para títulos claros escritos sobre fotos (ex.: título "Exemplo" sobre a foto)
+        const hcCanvas = document.createElement('canvas');
+        hcCanvas.width = canvas.width;
+        hcCanvas.height = canvas.height;
+        const hcCtx = hcCanvas.getContext('2d');
+        hcCtx.drawImage(canvas, 0, 0);
+        const imgData = hcCtx.getImageData(0, 0, hcCanvas.width, hcCanvas.height);
+        const d = imgData.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+          // Destaca texto branco/claro (lum > 195) como preto puro no fundo branco para o OCR ler com perfeição
+          const v = lum > 190 ? 0 : 255;
+          d[i] = d[i + 1] = d[i + 2] = v;
+        }
+        hcCtx.putImageData(imgData, 0, 0);
+
+        const res2 = await window.Tesseract.recognize(hcCanvas, 'por+eng');
+        const text2 = (res2 && res2.data && res2.data.text) ? cleanOcrText(res2.data.text) : '';
+        return text2 || text1 || '';
+      } catch (e) {
+        return '';
+      }
+    }
+
+    /**
+     * Analisa a imagem de forma assíncrona combinando:
+     * 1. Visão Computacional Neural (COCO-SSD + análise de cena/pessoa/celular/objetos)
+     * 2. OCR Real nos pixels da imagem (Tesseract.js) + Textos HTML sobrepostos
+     * 3. Gemini Flash Vision (se chave de API opcional estiver configurada)
+     */
+    async analyzeImageVisualsAsync(el, onUpdate) {
+      const targetImg = this.resolveTargetImageNode(el);
+      if (!targetImg) return '';
+      const cacheKey = this.getImageCacheKey(targetImg);
+
+      if (this.imageVisualAnalyzedKeys && this.imageVisualAnalyzedKeys.has(cacheKey) && this.imageDescriptionCache.has(cacheKey)) {
+        const cached = this.imageDescriptionCache.get(cacheKey);
+        if (onUpdate) onUpdate(cached);
+        return cached;
+      }
+
+      if (this.imagePendingAnalyses && this.imagePendingAnalyses.has(cacheKey)) {
+        const pending = await this.imagePendingAnalyses.get(cacheKey);
+        if (onUpdate && pending) onUpdate(pending);
+        return pending;
+      }
+
+      const analysisPromise = (async () => {
+        const ctxInfo = this.extractImageContextAndOverlays(el);
+        await this.preloadVisionEngines();
+
+        const canvasInfo = await this.getImageCanvasForAnalysis(targetImg);
+        let visualSceneDesc = '';
+        let ocrText = '';
+
+        if (canvasInfo) {
+          const { canvas, ctx, width, height } = canvasInfo;
+
+          // 1. Opcional: Se o desenvolvedor configurou chave Gemini Vision API, usa modelo multimodal completo
+          const geminiKey = (this.config && this.config.geminiApiKey) || (typeof localStorage !== 'undefined' && localStorage.getItem('allyada_gemini_key')) || '';
+          if (geminiKey) {
+            try {
+              const b64 = canvas.toDataURL('image/jpeg', 0.82).split(',')[1];
+              const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(geminiKey)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: [{
+                    parts: [
+                      { text: 'Descreva esta imagem em português de forma direta, humana e acessível em 1 frase curta. Diga se há um homem, mulher ou pessoa, o que está fazendo (ex: segurando um celular) e cite qualquer título ou texto escrito na imagem.' },
+                      { inline_data: { mime_type: 'image/jpeg', data: b64 } }
+                    ]
+                  }]
+                })
+              });
+              if (resp.ok) {
+                const json = await resp.json();
+                const aiText = json?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+                if (aiText) {
+                  this.imageDescriptionCache.set(cacheKey, aiText);
+                  this.imageVisualAnalyzedKeys.add(cacheKey);
+                  return aiText;
+                }
+              }
+            } catch (e) {}
+          }
+
+          // 2. Detecção Neural de Pessoas, Celular, Objetos e Interações (TensorFlow.js COCO-SSD)
+          let detections = [];
+          if (this._cocoModel) {
+            try {
+              detections = await this._cocoModel.detect(canvas, 20, 0.12);
+            } catch (e) {}
+          }
+
+          const persons = detections.filter(d => d.class === 'person' && d.score >= 0.28);
+          const hasLaptop = detections.some(d => d.class === 'laptop' && d.score >= 0.20);
+          const hasBook = detections.some(d => d.class === 'book' && d.score >= 0.22);
+          const hasCup = detections.some(d => (d.class === 'cup' || d.class === 'wine glass' || d.class === 'bottle') && d.score >= 0.22);
+          const hasCar = detections.some(d => (d.class === 'car' || d.class === 'bus' || d.class === 'truck' || d.class === 'motorcycle') && d.score >= 0.28);
+          const hasDog = detections.some(d => d.class === 'dog' && d.score >= 0.28);
+          const hasCat = detections.some(d => d.class === 'cat' && d.score >= 0.28);
+
+          if (persons.length > 0) {
+            const mainPerson = persons.sort((a, b) => (b.bbox[2] * b.bbox[3]) - (a.bbox[2] * a.bbox[3]))[0];
+            const { resolvedPersonNoun, holdingPhone } = this.analyzePersonAndHandheldInCanvas(
+              ctx, width, height, mainPerson.bbox, ctxInfo.genderHint, detections
+            );
+
+            const subject = persons.length === 1
+              ? resolvedPersonNoun
+              : `${persons.length} pessoas`;
+
+            const actions = [];
+            if (holdingPhone) actions.push('segurando o celular');
+            if (hasLaptop) actions.push('utilizando um notebook');
+            if (!holdingPhone && !hasLaptop && hasBook) actions.push('segurando um livro');
+            if (hasCup) actions.push('com uma xícara/copo');
+
+            visualSceneDesc = actions.length > 0
+              ? `${subject} ${actions.join(' e ')}`
+              : subject;
+          } else {
+            const ptMap = {
+              'cell phone': 'Um celular em destaque',
+              'laptop': 'Um notebook',
+              'book': 'Um livro',
+              'car': 'Um automóvel',
+              'dog': 'Um cachorro',
+              'cat': 'Um gato',
+              'chair': 'Uma cadeira/ambiente interno',
+              'couch': 'Um sofá em ambiente interno',
+              'potted plant': 'Planta decorativa',
+              'tv': 'Uma tela/monitor',
+              'Keyboard': 'Um teclado',
+              'keyboard': 'Um teclado',
+              'clock': 'Um relógio'
+            };
+            const topObj = detections.filter(d => d.score >= 0.28 && ptMap[d.class])[0];
+            if (topObj) {
+              visualSceneDesc = ptMap[topObj.class];
+            } else if (hasCar) {
+              visualSceneDesc = 'Veículo na cena';
+            } else if (hasDog) {
+              visualSceneDesc = 'Cachorro na imagem';
+            } else if (hasCat) {
+              visualSceneDesc = 'Gato na imagem';
+            }
+          }
+
+          // 3. OCR Real para ler título/texto escrito dentro da própria imagem (ex.: "Exemplo")
+          ocrText = await this.extractTextFromCanvasOCR(canvas);
+        }
+
+        // 4. Determina o título na imagem (priorizando texto sobreposto, OCR na imagem ou alt curto que funciona como título)
+        const isShortTitleAlt = ctxInfo.alt && ctxInfo.alt.length >= 2 && ctxInfo.alt.length <= 35 && !/\b(segurando|usando|olhando|sorrindo|sentad|em pé|pessoa|homem|mulher)\b/i.test(ctxInfo.alt);
+        const imageTitle = ctxInfo.overlayTitle || ocrText || (isShortTitleAlt ? ctxInfo.alt : '') || ctxInfo.figCap;
+
+        // Se o próprio alt já era uma descrição longa completa e não tivemos detecção visual melhor:
+        let finalDesc = '';
+        if (visualSceneDesc && imageTitle) {
+          // Evita repetir se visualSceneDesc já contiver o imageTitle
+          if (visualSceneDesc.toLowerCase().includes(imageTitle.toLowerCase())) {
+            finalDesc = visualSceneDesc;
+          } else {
+            finalDesc = `${visualSceneDesc} com o título na imagem "${imageTitle}"`;
+          }
+        } else if (visualSceneDesc && ctxInfo.alt && !visualSceneDesc.toLowerCase().includes(ctxInfo.alt.toLowerCase())) {
+          finalDesc = `${visualSceneDesc} (${ctxInfo.alt})`;
+        } else if (visualSceneDesc) {
+          finalDesc = ctxInfo.nearHeading
+            ? `${visualSceneDesc} — seção "${ctxInfo.nearHeading}"`
+            : visualSceneDesc;
+        } else if (imageTitle && ctxInfo.alt && imageTitle !== ctxInfo.alt) {
+          finalDesc = `${ctxInfo.alt}, com o título na imagem "${imageTitle}"`;
+        } else if (imageTitle) {
+          finalDesc = `Imagem com o título "${imageTitle}"`;
+        } else {
+          finalDesc = this.describeImageElement(el);
+        }
+
+        this.imageDescriptionCache.set(cacheKey, finalDesc);
+        if (this.imageVisualAnalyzedKeys) {
+          this.imageVisualAnalyzedKeys.add(cacheKey);
+        }
+        return finalDesc;
+      })();
+
+      if (this.imagePendingAnalyses) {
+        this.imagePendingAnalyses.set(cacheKey, analysisPromise);
+      }
+
+      try {
+        const result = await analysisPromise;
+        if (onUpdate && result) onUpdate(result);
+        return result;
+      } finally {
+        if (this.imagePendingAnalyses) {
+          this.imagePendingAnalyses.delete(cacheKey);
+        }
+      }
+    }
+
+    describeImageElement(el) {
+      if (!el) return 'Imagem ilustrativa na página';
+      const targetImg = this.resolveTargetImageNode(el);
+      const cacheKey = this.getImageCacheKey(targetImg);
+      if (this.imageDescriptionCache.has(cacheKey)) {
+        return this.imageDescriptionCache.get(cacheKey);
+      }
+
+      const { alt, figCap, overlayTitle, nearHeading, srcHint } = this.extractImageContextAndOverlays(el);
+      const isMeaningfulAlt = alt && alt.length > 2 && !/^(img|image|foto|photo|banner|dsc|untitled|\d+)[\w.-]*$/i.test(alt);
+
+      let desc = '';
+      const parts = [];
+
+      if (isMeaningfulAlt) {
+        // Se o alt é apenas uma palavra curta (ex: "Exemplo"), marca como título da imagem
+        if (alt.split(/\s+/).length <= 3 && !/\b(segurando|usando|homem|mulher|pessoa|foto de|imagem de)\b/i.test(alt)) {
+          parts.push(`Título na imagem: "${alt}"`);
+        } else {
+          parts.push(alt);
+        }
+      }
+
+      if (overlayTitle && (!alt || !alt.toLowerCase().includes(overlayTitle.toLowerCase()))) {
+        parts.push(`Título na imagem: "${overlayTitle}"`);
+      }
+
+      if (figCap && !parts.some(p => p.toLowerCase().includes(figCap.toLowerCase()))) {
+        parts.push(figCap);
+      }
+
+      if (parts.length > 0) {
+        desc = parts.join(' — ');
+      } else {
+        const parentLink = targetImg.closest ? targetImg.closest('a, button') : null;
+        if (parentLink && (parentLink.textContent || parentLink.getAttribute('aria-label') || '').trim()) {
+          desc = `Imagem vinculada a: "${(parentLink.getAttribute('aria-label') || parentLink.textContent).replace(/\s+/g, ' ').trim().slice(0, 90)}"`;
+        } else if (nearHeading) {
+          desc = `Ilustração referente ao tópico "${nearHeading}"`;
+        } else if (srcHint && srcHint.length > 3) {
+          desc = `Imagem visual: ${srcHint.charAt(0).toUpperCase() + srcHint.slice(1)}`;
+        } else {
+          desc = 'Analisando elementos visuais da imagem...';
+        }
+      }
+
+      this.imageDescriptionCache.set(cacheKey, desc);
+      return desc;
+    }
+
+    showImageInspectorTooltip(el, desc, rect, isAnalyzing = false) {
+      if (!this.imageTooltipEl) return;
+      const resolvedDesc = desc || this.describeImageElement(el);
+      const resolvedRect = rect || (el && typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : null);
+      const tip = this.imageTooltipEl;
+      const badgeLabel = isAnalyzing ? '🔍 Analisando imagem (IA)...' : '✨ Descrição Visual IA';
+      tip.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; background:#7956c2; color:#fff; padding:2px 8px; border-radius:999px;">
+            ${badgeLabel}
+          </span>
+          <button type="button" id="allyada-tip-speak-btn" style="border:none; background:rgba(255,255,255,0.14); color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; cursor:pointer;">
+            🔊 Ouvir
+          </button>
+        </div>
+        <div id="allyada-tip-desc-text" style="color:#f8fafc; font-weight:500;">${this.escapeHTML(resolvedDesc)}</div>
+      `;
+      tip.style.display = 'block';
+
+      const speakBtn = tip.querySelector('#allyada-tip-speak-btn');
+      if (speakBtn) {
+        speakBtn.onclick = (ev) => {
+          ev.stopPropagation();
+          const latestDesc = this.describeImageElement(el);
+          this.speakText(`Descrição da imagem: ${latestDesc}`, el, 0);
+        };
+      }
+
+      const vw = window.innerWidth || 1024;
+      const vh = window.innerHeight || 768;
+      const topCandidate = (resolvedRect && typeof resolvedRect.bottom === 'number') ? resolvedRect.bottom + 10 : 80;
+      const leftCandidate = (resolvedRect && typeof resolvedRect.left === 'number') ? resolvedRect.left : 24;
+
+      const finalTop = Math.max(12, Math.min(topCandidate, vh - 130));
+      const finalLeft = Math.max(12, Math.min(leftCandidate, vw - 376));
+      tip.style.top = `${finalTop}px`;
+      tip.style.left = `${finalLeft}px`;
+    }
+
+    hideImageInspectorTooltip() {
+      if (this.imageTooltipEl) {
+        this.imageTooltipEl.style.display = 'none';
+      }
+    }
+
     escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, tag => ({
+      return String(str == null ? '' : str).replace(/[&<>'"]/g, tag => ({
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
@@ -2401,6 +3624,13 @@
         this.lastFontSizeLevel = this.state.fontSizeLevel;
       }
 
+      // Mantém sincronia bidirecional entre textAlignLeft legado e textAlign completo
+      if (this.state.textAlignLeft && (!this.state.textAlign || this.state.textAlign === 'normal')) {
+        this.state.textAlign = 'left';
+      } else if (this.state.textAlign && this.state.textAlign !== 'normal') {
+        this.state.textAlignLeft = (this.state.textAlign === 'left');
+      }
+
       const { hostCss: dynCss, shadowCss } = this.getCursorCssObject();
       if (this.shadowRoot) {
         let shadowCursorStyle = this.shadowRoot.getElementById('allyada-shadow-cursor-styles');
@@ -2439,15 +3669,24 @@
         // Espaçamento WCAG 1.4.12
         html.classList.toggle('ally-wcag-spacing', !!this.state.wcagSpacing);
 
-        // Fonte & Alinhamento
+        // Fonte & Alinhamento Completo (Esquerda, Centro, Direita, Justificado)
         html.classList.toggle('ally-dyslexic-font', this.state.dyslexicFont);
-        html.classList.toggle('ally-text-align-left', this.state.textAlignLeft);
+        html.classList.remove('ally-text-align-left', 'ally-text-align-center', 'ally-text-align-right', 'ally-text-align-justify');
+        const activeAlign = this.state.textAlign || (this.state.textAlignLeft ? 'left' : 'normal');
+        if (activeAlign && activeAlign !== 'normal') {
+          html.classList.add(`ally-text-align-${activeAlign}`);
+        }
 
         // Contraste
         html.classList.remove('ally-contrast-dark', 'ally-contrast-light', 'ally-contrast-monochrome', 'ally-contrast-invert');
         if (this.state.contrast !== 'normal') {
           html.classList.add(`ally-contrast-${this.state.contrast}`);
         }
+
+        // Cores Personalizadas (Títulos, Texto e Fundo)
+        html.classList.toggle('ally-custom-title', !!this.state.customTitleColor);
+        html.classList.toggle('ally-custom-text', !!this.state.customTextColor);
+        html.classList.toggle('ally-custom-bg', !!this.state.customBgColor);
 
         // Daltonismo
         html.classList.remove('ally-filter-deuteranopia', 'ally-filter-protanopia', 'ally-filter-tritanopia');
@@ -2468,7 +3707,7 @@
           html.classList.add('ally-cursor-xlarge');
         }
 
-        // Estilos Dinâmicos (Cor do Cursor)
+        // Estilos Dinâmicos (Cor do Cursor + Cores Personalizadas)
         let dynStyle = doc.getElementById('allyada-dynamic-styles');
         if (!dynStyle) {
           dynStyle = doc.createElement('style');
@@ -2508,6 +3747,13 @@
         this.disableVirtualKeyboard();
       }
 
+      // Inspetor de Imagens com IA
+      if (this.state.imageInspector) {
+        this.enableImageInspector();
+      } else {
+        this.disableImageInspector();
+      }
+
       // Guia de Leitura (Régua ou Máscara)
       if (this.readingGuideElement) {
         this.readingGuideElement.style.display = (this.state.readingGuideMode === 'ruler') ? 'block' : 'none';
@@ -2524,6 +3770,17 @@
     applyResponsiveWidgetSize() {
       if (!this.hostContainer) return;
 
+      const vPos = this.state.verticalPosition || this.config.verticalPosition || 'bottom';
+      const hPos = this.state.dockPosition || this.config.position || 'right';
+
+      if (this.shadowRoot) {
+        const wrapper = this.shadowRoot.querySelector('.allyada-wrapper');
+        if (wrapper) {
+          wrapper.classList.remove('pos-right', 'pos-left', 'vpos-bottom', 'vpos-middle', 'vpos-top');
+          wrapper.classList.add(`pos-${hPos}`, `vpos-${vPos}`);
+        }
+      }
+
       const requestedScale = parseFloat(this.state.uiScale || '1') || 1;
       const docEl = document.documentElement;
       const vw = (docEl && docEl.clientWidth) ? Math.min(window.innerWidth || docEl.clientWidth, docEl.clientWidth) : (window.innerWidth || 1024);
@@ -2531,7 +3788,7 @@
 
       const isMobile = vw <= 480;
       const sideMargin = isMobile ? 12 : 24;
-      const bottomOffset = isMobile ? 88 : 96;
+      const bottomOffset = vPos === 'middle' ? (isMobile ? 24 : 36) : (isMobile ? 88 : 96);
       const topMargin = isMobile ? 16 : 20;
 
       const availWidth = Math.max(260, vw - sideMargin * 2);
@@ -2560,12 +3817,14 @@
       const unscaledMaxHeight = visualMaxHeight / effectiveScale;
       const unscaledBottom = bottomOffset / effectiveScale;
       const unscaledSide = sideMargin / effectiveScale;
+      const unscaledCenterTop = (vh / 2) / effectiveScale;
 
       this.hostContainer.style.setProperty('--allyada-ui-scale', effectiveScale.toFixed(3));
       this.hostContainer.style.setProperty('--allyada-drawer-width', `${unscaledWidth.toFixed(2)}px`);
       this.hostContainer.style.setProperty('--allyada-drawer-max-height', `${unscaledMaxHeight.toFixed(2)}px`);
       this.hostContainer.style.setProperty('--allyada-drawer-bottom', `${unscaledBottom.toFixed(2)}px`);
       this.hostContainer.style.setProperty('--allyada-drawer-side', `${unscaledSide.toFixed(2)}px`);
+      this.hostContainer.style.setProperty('--allyada-drawer-center-top', `${unscaledCenterTop.toFixed(2)}px`);
 
       if (this.shadowRoot) {
         const panel = this.shadowRoot.getElementById('allyada-panel');
@@ -2731,11 +3990,13 @@
         });
       }
 
-      if (this.state.textAlignLeft) {
+      const activeAlign = this.state.textAlign || (this.state.textAlignLeft ? 'left' : 'normal');
+      if (activeAlign && activeAlign !== 'normal') {
+        const alignNames = { left: 'Esquerda', center: 'Centralizado', right: 'Direita', justify: 'Justificado' };
         items.push({
-          id: 'align-left',
-          label: 'Alinhamento à esquerda',
-          reset: () => { this.state.textAlignLeft = false; }
+          id: 'text-align',
+          label: `Alinhamento (${alignNames[activeAlign] || activeAlign})`,
+          reset: () => { this.state.textAlign = 'normal'; this.state.textAlignLeft = false; }
         });
       }
 
@@ -2745,6 +4006,30 @@
           id: 'contrast',
           label: `Contraste (${cLabels[this.state.contrast] || this.state.contrast})`,
           reset: () => { this.state.contrast = 'normal'; }
+        });
+      }
+
+      if (this.state.customTitleColor) {
+        items.push({
+          id: 'custom-title-color',
+          label: `Cor Títulos (${this.state.customTitleColor.toUpperCase()})`,
+          reset: () => { this.state.customTitleColor = ''; }
+        });
+      }
+
+      if (this.state.customTextColor) {
+        items.push({
+          id: 'custom-text-color',
+          label: `Cor Texto (${this.state.customTextColor.toUpperCase()})`,
+          reset: () => { this.state.customTextColor = ''; }
+        });
+      }
+
+      if (this.state.customBgColor) {
+        items.push({
+          id: 'custom-bg-color',
+          label: `Cor Fundo (${this.state.customBgColor.toUpperCase()})`,
+          reset: () => { this.state.customBgColor = ''; }
         });
       }
 
@@ -2777,6 +4062,14 @@
           id: 'virtual-keyboard',
           label: 'Teclado Virtual',
           reset: () => { this.state.virtualKeyboard = false; }
+        });
+      }
+
+      if (this.state.imageInspector) {
+        items.push({
+          id: 'image-inspector',
+          label: 'Descrever Imagens (IA)',
+          reset: () => { this.state.imageInspector = false; }
         });
       }
 
@@ -2873,7 +4166,7 @@
       const isAudioActive = !!(this.isSpeaking || this.isTtsSelectionMode);
       const qTtsControls = root.getElementById('tts-quick-controls');
       if (qTtsControls) {
-        qTtsControls.style.display = isAudioActive ? 'flex' : 'none';
+        qTtsControls.style.display = 'none';
       }
       const sTtsControls = root.getElementById('tts-player-panel');
       if (sTtsControls) {
@@ -2921,6 +4214,20 @@
         if (btn) btn.classList.toggle('active', this.state.letterSpacingLevel === l);
       });
 
+      // Alinhamento de Texto
+      const currentAlign = this.state.textAlign || (this.state.textAlignLeft ? 'left' : 'normal');
+      const alignLabels = { normal: 'Padrão', left: 'Esquerda', center: 'Centralizado', right: 'Direita', justify: 'Justificado' };
+      const alignInd = root.getElementById('text-align-indicator');
+      if (alignInd) alignInd.textContent = alignLabels[currentAlign] || 'Padrão';
+      ['normal', 'left', 'center', 'right', 'justify'].forEach(al => {
+        const btn = root.getElementById(`btn-align-${al}`);
+        if (btn) {
+          const isAct = (currentAlign === al);
+          btn.classList.toggle('active', isAct);
+          btn.setAttribute('aria-pressed', isAct ? 'true' : 'false');
+        }
+      });
+
       const updateTool = (id, active) => {
         const el = root.getElementById(id);
         if (el) {
@@ -2930,17 +4237,46 @@
       };
 
       updateTool('card-word-spacing', !!this.state.wordSpacingLevel);
-      updateTool('card-text-align-left', this.state.textAlignLeft);
       updateTool('card-wcag-spacing', this.state.wcagSpacing);
       updateTool('card-dyslexic-font', this.state.dyslexicFont);
       updateTool('card-virtual-keyboard', this.state.virtualKeyboard);
+      updateTool('card-image-inspector', this.state.imageInspector);
 
-      
-
-      // 4. Cores e Contraste
+      // 4. Cores e Contraste + Cores Personalizadas
       ['dark', 'light', 'monochrome', 'invert'].forEach(opt => {
         updateTool(`card-contrast-${opt}`, this.state.contrast === opt);
       });
+
+      const hexTitle = root.getElementById('hex-custom-title');
+      if (hexTitle) hexTitle.textContent = this.state.customTitleColor ? this.state.customTitleColor.toUpperCase() : 'Padrão';
+      const hexText = root.getElementById('hex-custom-text');
+      if (hexText) hexText.textContent = this.state.customTextColor ? this.state.customTextColor.toUpperCase() : 'Padrão';
+      const hexBg = root.getElementById('hex-custom-bg');
+      if (hexBg) hexBg.textContent = this.state.customBgColor ? this.state.customBgColor.toUpperCase() : 'Padrão';
+
+      const hasAnyCustomColor = !!(this.state.customTitleColor || this.state.customTextColor || this.state.customBgColor);
+      const btnResetCustom = root.getElementById('btn-reset-custom-colors');
+      if (btnResetCustom) {
+        btnResetCustom.style.display = hasAnyCustomColor ? 'inline-flex' : 'none';
+      }
+
+      root.querySelectorAll('.custom-swatch-btn').forEach(btn => {
+        const target = btn.dataset.target;
+        const col = (btn.dataset.color || '').toLowerCase();
+        const activeVal = ((
+          target === 'title' ? this.state.customTitleColor :
+          target === 'text' ? this.state.customTextColor :
+          this.state.customBgColor
+        ) || '').toLowerCase();
+        btn.classList.toggle('active', !!activeVal && activeVal === col);
+      });
+
+      const inpTitleCol = root.getElementById('input-custom-title-color');
+      if (inpTitleCol && this.state.customTitleColor) inpTitleCol.value = this.state.customTitleColor;
+      const inpTextCol = root.getElementById('input-custom-text-color');
+      if (inpTextCol && this.state.customTextColor) inpTextCol.value = this.state.customTextColor;
+      const inpBgCol = root.getElementById('input-custom-bg-color');
+      if (inpBgCol && this.state.customBgColor) inpBgCol.value = this.state.customBgColor;
 
       const cbLabel = root.getElementById('colorblind-active-label');
       if (cbLabel) {
@@ -2960,7 +4296,7 @@
 
       const cSizeLabel = root.getElementById('cursor-size-label');
       if (cSizeLabel) {
-        const cNames = { normal: 'Normal', large: 'Grande (36px)', xlarge: 'Extra Grande (48px)' };
+        const cNames = { normal: 'Normal', large: 'Grande (44px)', xlarge: 'Extra Grande (60px)' };
         cSizeLabel.textContent = cNames[this.state.cursorSize] || 'Normal';
       }
       ['normal', 'large', 'xlarge'].forEach(size => {
@@ -3003,7 +4339,7 @@
         }
       });
 
-      // 8. Velocidade de Fala (TTS) em ambas as abas
+      // 8. Velocidade e Timbre de Fala (TTS) em ambas as abas
       const updateRates = (prefix) => {
         const rates = { '075': 0.75, '100': 1, '125': 1.25, '150': 1.5, '200': 2 };
         Object.entries(rates).forEach(([idPart, r]) => {
@@ -3015,6 +4351,13 @@
       };
       updateRates('');
       updateRates('q-');
+
+      ['select-tts-voice', 'q-select-tts-voice'].forEach(selId => {
+        const sel = root.getElementById(selId);
+        if (sel && sel.value !== (this.state.speechVoiceURI || '')) {
+          sel.value = this.state.speechVoiceURI || '';
+        }
+      });
 
       // 9. Configurações: Switch de Lembrar, Atalho e Aparência
       const chkRem = root.getElementById('chk-remember-preferences');
@@ -3040,9 +4383,40 @@
         }
       });
 
+      const curVPos = this.state.verticalPosition || this.config.verticalPosition || 'bottom';
+      const curHPos = this.state.dockPosition || this.config.position || 'right';
+
+      ['bottom', 'middle', 'top'].forEach(vpos => {
+        const btnV = root.getElementById(`btn-vpos-${vpos}`);
+        if (btnV) {
+          const isAct = (curVPos === vpos);
+          btnV.classList.toggle('active', isAct);
+          btnV.setAttribute('aria-pressed', isAct ? 'true' : 'false');
+        }
+      });
+      ['right', 'left'].forEach(hpos => {
+        const btnH = root.getElementById(`btn-hpos-${hpos}`);
+        if (btnH) {
+          const isAct = (curHPos === hpos);
+          btnH.classList.toggle('active', isAct);
+          btnH.setAttribute('aria-pressed', isAct ? 'true' : 'false');
+        }
+      });
+      const headerVposBtn = root.getElementById('btn-toggle-vpos');
+      if (headerVposBtn) {
+        const isCentered = (curVPos === 'middle');
+        headerVposBtn.classList.toggle('active', isCentered);
+        headerVposBtn.setAttribute('aria-pressed', isCentered ? 'true' : 'false');
+      }
+
+      const isDarkPage = this.state.contrast === 'dark' || ['#18181b', '#0f172a', '#000000', '#121212'].includes((this.state.customBgColor || '').toLowerCase());
+      const effectiveCursorColor = (isDarkPage && (this.state.cursorColor || '#000000').toLowerCase() === '#000000')
+        ? '#ffffff'
+        : (this.state.cursorColor || '#000000');
+
       const cursorColorBtns = root.querySelectorAll('.color-preset-btn');
       cursorColorBtns.forEach(btn => {
-        if (btn.dataset.color.toLowerCase() === (this.state.cursorColor || '#000000').toLowerCase()) {
+        if (btn.dataset.color.toLowerCase() === effectiveCursorColor.toLowerCase()) {
           btn.style.outline = '3px solid var(--primary)';
           btn.style.outlineOffset = '2px';
         } else {
@@ -3051,10 +4425,10 @@
       });
 
       const customColorInput = root.getElementById('input-cursor-custom-color');
-      if (customColorInput) customColorInput.value = this.state.cursorColor || '#000000';
+      if (customColorInput) customColorInput.value = effectiveCursorColor;
 
       const hexTag = root.getElementById('cursor-color-hex');
-      if (hexTag) hexTag.textContent = (this.state.cursorColor || '#000000').toUpperCase();
+      if (hexTag) hexTag.textContent = effectiveCursorColor.toUpperCase();
 
       // 10. Ajustes Ativos: Chips e Contadores
       const activeItems = this.getActiveAdjustments();
@@ -3112,13 +4486,34 @@
       }
     }
 
-    toggleDockPosition() {
-      const newPos = (this.config.position === 'right') ? 'left' : 'right';
+    setVerticalPosition(vpos) {
+      const valid = ['bottom', 'middle', 'top'].includes(vpos) ? vpos : 'bottom';
+      this.config.verticalPosition = valid;
+      this.state.verticalPosition = valid;
+      if (this.shadowRoot) {
+        const wrapper = this.shadowRoot.querySelector('.allyada-wrapper');
+        if (wrapper) {
+          wrapper.classList.remove('vpos-bottom', 'vpos-middle', 'vpos-top');
+          wrapper.classList.add(`vpos-${valid}`);
+        }
+      }
+      this.applyResponsiveWidgetSize();
+      this.saveState();
+      this.updatePanelUI();
+      const labels = { bottom: 'Fim da página', middle: 'Centro lateral da tela', top: 'Topo lateral da tela' };
+      this.announce(`Posição vertical alterada para ${labels[valid]}`);
+    }
+
+    setDockPosition(hpos) {
+      const newPos = (hpos === 'left') ? 'left' : 'right';
       this.config.position = newPos;
-      const wrapper = this.shadowRoot.querySelector('.allyada-wrapper');
-      if (wrapper) {
-        wrapper.classList.remove('pos-right', 'pos-left');
-        wrapper.classList.add(`pos-${newPos}`);
+      this.state.dockPosition = newPos;
+      if (this.shadowRoot) {
+        const wrapper = this.shadowRoot.querySelector('.allyada-wrapper');
+        if (wrapper) {
+          wrapper.classList.remove('pos-right', 'pos-left');
+          wrapper.classList.add(`pos-${newPos}`);
+        }
       }
       const vlibrasBtn = document.querySelector('div[vw] [vw-access-button]');
       if (vlibrasBtn) {
@@ -3131,6 +4526,14 @@
         }
       }
       this.applyVLibrasCustomTheme();
+      this.saveState();
+      this.updatePanelUI();
+    }
+
+    toggleDockPosition() {
+      const cur = this.state.dockPosition || this.config.position || 'right';
+      const newPos = (cur === 'right') ? 'left' : 'right';
+      this.setDockPosition(newPos);
     }
 
     togglePanel() {
@@ -3139,6 +4542,9 @@
     }
 
     openPanel() {
+      if (this.isStructureModalOpen) {
+        this.closeStructureModal();
+      }
       this.isOpen = true;
       this.previousFocusedElement = document.activeElement;
 
@@ -3271,9 +4677,14 @@
           this.togglePanel();
         }
 
-        if (e.key === 'Escape' && this.isOpen) {
-          e.preventDefault();
-          this.closePanel();
+        if (e.key === 'Escape') {
+          if (this.isStructureModalOpen) {
+            e.preventDefault();
+            this.closeStructureModal();
+          } else if (this.isOpen) {
+            e.preventDefault();
+            this.closePanel();
+          }
         }
       });
     }
@@ -3288,6 +4699,93 @@
         return;
       }
       this.speechSynthesizer = window.speechSynthesis;
+      this.populateVoiceSelectors();
+      if ('onvoiceschanged' in this.speechSynthesizer) {
+        this.speechSynthesizer.addEventListener('voiceschanged', () => {
+          this.populateVoiceSelectors();
+        });
+      }
+    }
+
+    /**
+     * Classifica e ordena as vozes em Português priorizando síntese Neural / Natural / Humana
+     * (ex.: Microsoft Francisca/Antonio/Thalita Online Natural, Google Português do Brasil, Apple Luciana Enhanced)
+     * em vez das antigas vozes offline robóticas SAPI5.
+     */
+    getRankedPortugueseVoices() {
+      if (!this.speechSynthesizer || typeof this.speechSynthesizer.getVoices !== 'function') return [];
+      const allVoices = this.speechSynthesizer.getVoices() || [];
+      if (allVoices.length === 0) return [];
+
+      const scoreVoice = (v) => {
+        let score = 0;
+        const lang = (v.lang || '').toLowerCase();
+        const name = (v.name || '').toLowerCase();
+
+        if (lang.includes('pt-br') || lang.includes('pt_br')) score += 100;
+        else if (lang.startsWith('pt')) score += 50;
+
+        // Prioridade máxima para vozes Neurais / Naturais / Online humanas
+        if (name.includes('natural') || name.includes('neural')) score += 90;
+        if (name.includes('online') || name.includes('multilingual')) score += 65;
+        if (name.includes('francisca') || name.includes('antonio') || name.includes('thalita')) score += 55;
+        if (name.includes('google')) score += 60;
+        if (name.includes('luciana') || name.includes('felipe') || name.includes('fernanda') || name.includes('premium') || name.includes('enhanced')) score += 45;
+        if (!v.localService) score += 30;
+        if (v.default) score += 10;
+
+        // Penaliza levemente vozes SAPI5 locais conhecidas por timbre mais robótico quando há opções neurais
+        if (v.localService && (name.includes('maria') || name.includes('daniel') || name.includes('espeak'))) {
+          score -= 15;
+        }
+        return score;
+      };
+
+      const ptVoices = allVoices.filter(v => (v.lang || '').toLowerCase().startsWith('pt'));
+      const pool = ptVoices.length > 0 ? ptVoices : allVoices;
+
+      return pool.slice().sort((a, b) => scoreVoice(b) - scoreVoice(a));
+    }
+
+    populateVoiceSelectors() {
+      if (!this.shadowRoot) return;
+      const ranked = this.getRankedPortugueseVoices();
+      const selectors = ['select-tts-voice', 'q-select-tts-voice']
+        .map(id => this.shadowRoot.getElementById(id))
+        .filter(Boolean);
+
+      if (selectors.length === 0) return;
+
+      const formatVoiceLabel = (v) => {
+        const rawName = (v.name || 'Voz').replace(/^Microsoft\s+/i, '').replace(/Desktop\s*-\s*Portuguese.*$/i, '').trim();
+        const isNatural = /natural|neural|online|google|luciana|premium|enhanced/i.test(v.name || '') || !v.localService;
+        return isNatural ? `✨ ${rawName}` : rawName;
+      };
+
+      selectors.forEach(sel => {
+        const currentVal = this.state.speechVoiceURI || '';
+        sel.innerHTML = `<option value="">✨ Automática (Mais Natural)</option>`;
+        ranked.forEach(v => {
+          const opt = document.createElement('option');
+          opt.value = v.voiceURI || v.name;
+          opt.textContent = formatVoiceLabel(v);
+          sel.appendChild(opt);
+        });
+        sel.value = currentVal;
+      });
+    }
+
+    changeSpeechVoice(voiceURI) {
+      const wasSpeaking = !!(this.isSpeaking && this.speechSynthesizer && this.fullSpeakingText);
+      const resumeOffset = wasSpeaking ? this.getCurrentReadingOffset() : 0;
+
+      this.state.speechVoiceURI = voiceURI || '';
+      this.saveState();
+
+      if (wasSpeaking) {
+        this.speakText(this.fullSpeakingText, this.currentSpeakingNode, resumeOffset);
+      }
+      this.syncStateAndUI();
     }
 
     toggleSpeechPause() {
@@ -3423,6 +4921,15 @@
         if (e.target.closest && e.target.closest('#allyada-root')) return;
         e.preventDefault();
         e.stopPropagation();
+
+        const clickedImg = e.target.closest ? e.target.closest('img, svg[role="img"], [role="img"], figure, picture') : null;
+        if (clickedImg) {
+          this.disableTtsSelectionListeners();
+          this.analyzeImageVisualsAsync(clickedImg, (richDesc) => {
+            this.speakText(`Descrição da imagem: ${richDesc}`, clickedImg, 0);
+          });
+          return;
+        }
         
         const textToRead = e.target.innerText || e.target.textContent;
         if (textToRead && textToRead.trim().length > 0) {
@@ -3518,12 +5025,19 @@
       utterance.rate = this.activeUtteranceRate;
       utterance.pitch = 1.0;
 
-      const voices = this.speechSynthesizer.getVoices();
-      const ptVoice =
-        voices.find(v => (v.lang.includes('pt-BR') || v.lang.includes('pt_BR')) && v.localService) ||
-        voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR')) ||
-        voices.find(v => v.lang.includes('pt'));
-      if (ptVoice) utterance.voice = ptVoice;
+      const rankedVoices = this.getRankedPortugueseVoices();
+      let chosenVoice = null;
+      if (this.state.speechVoiceURI) {
+        const allVoices = this.speechSynthesizer.getVoices() || [];
+        chosenVoice = allVoices.find(v => v.voiceURI === this.state.speechVoiceURI || v.name === this.state.speechVoiceURI);
+      }
+      if (!chosenVoice && rankedVoices.length > 0) {
+        chosenVoice = rankedVoices[0];
+      }
+      if (chosenVoice) {
+        utterance.voice = chosenVoice;
+        if (chosenVoice.lang) utterance.lang = chosenVoice.lang;
+      }
 
       utterance.onboundary = (e) => {
         if (this.speechUtterance !== utterance) return;
@@ -3632,7 +5146,7 @@
       // Exibe ou oculta os painéis de player apenas quando a leitura estiver ativa
       const qControls = root.getElementById('tts-quick-controls');
       if (qControls) {
-        qControls.style.display = isAudioActive ? 'flex' : 'none';
+        qControls.style.display = 'none';
       }
 
       const sControls = root.getElementById('tts-player-panel');
@@ -4096,10 +5610,49 @@
         .allyada-wrapper {
           position: fixed;
           bottom: 24px;
+          top: auto;
           z-index: 2147483645;
+          transition: top 0.25s ease, bottom 0.25s ease;
+        }
+        .allyada-wrapper.vpos-middle {
+          top: calc(50vh - 32px);
+          bottom: auto;
+        }
+        .allyada-wrapper.vpos-top {
+          top: 24px;
+          bottom: auto;
         }
         .pos-right { right: 24px; }
         .pos-left { left: 24px; }
+
+        .premium-tag-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 11px;
+          font-weight: 800;
+          padding: 3px 9px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+          color: #92400e;
+          border: 1px solid #f59e0b;
+          box-shadow: 0 2px 6px rgba(245, 158, 11, 0.18);
+        }
+        .premium-pill-mini {
+          display: inline-flex;
+          align-items: center;
+          font-size: 10.5px;
+          font-weight: 800;
+          padding: 2px 7px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
+          color: #ffffff;
+          letter-spacing: 0.03em;
+        }
+        .premium-setting-card {
+          border: 1.5px solid #dcd0f5 !important;
+          background: linear-gradient(180deg, #faf8ff 0%, #ffffff 100%) !important;
+        }
 
         .allyada-fab {
           width: 64px;
@@ -4192,6 +5745,18 @@
           visibility: visible;
           pointer-events: auto;
           transform: translateY(0) scale(1);
+        }
+        .allyada-wrapper.vpos-middle .allyada-drawer {
+          top: var(--allyada-drawer-center-top, calc(50vh / var(--allyada-ui-scale, 1)));
+          bottom: auto;
+          transform: translateY(-50%) scale(0.98);
+        }
+        .allyada-wrapper.vpos-middle .allyada-drawer.open {
+          transform: translateY(-50%) scale(1);
+        }
+        .allyada-wrapper.vpos-top .allyada-drawer {
+          top: var(--allyada-drawer-bottom, calc(96px / var(--allyada-ui-scale, 1)));
+          bottom: auto;
         }
         .allyada-drawer.ally-compact-grid .tools-grid-2,
         .allyada-drawer.ally-compact-grid .profiles-grid {
@@ -4779,6 +6344,15 @@
           transition: all 0.2s ease;
           text-align: center;
           min-height: 32px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+        }
+        .seg-btn svg {
+          width: 15px;
+          height: 15px;
+          flex-shrink: 0;
         }
         .seg-btn:hover { color: var(--text-main); }
         .seg-btn.active {
@@ -4791,11 +6365,126 @@
           outline-offset: 1px;
         }
 
-        /* Cards de Ferramentas com Toggle (Linear List) */
+        /* Personalização de Cores (Títulos, Texto e Fundo) */
+        .custom-color-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+        .custom-color-group:last-of-type {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+        .custom-color-row-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .custom-color-label {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--text-secondary);
+        }
+        .custom-color-swatches {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .custom-swatch-btn {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 2px solid #cbd5e1;
+          cursor: pointer;
+          transition: transform 0.15s ease, box-shadow 0.15s ease;
+          padding: 0;
+          flex-shrink: 0;
+        }
+        .custom-swatch-btn:hover {
+          transform: scale(1.12);
+        }
+        .custom-swatch-btn.active {
+          outline: 3px solid var(--primary);
+          outline-offset: 2px;
+          transform: scale(1.08);
+        }
+        .swatch-picker {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 2px dashed #94a3b8;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          background: conic-gradient(#ef4444, #eab308, #22c55e, #3b82f6, #a855f7, #ef4444);
+          color: #ffffff;
+          flex-shrink: 0;
+        }
+        .swatch-picker svg {
+          width: 14px;
+          height: 14px;
+          filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+          pointer-events: none;
+        }
+        .swatch-picker input[type="color"] {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+          border: none;
+        }
+        .btn-mini-reset {
+          border: 1px solid #fca5a5;
+          background: #fef2f2;
+          color: #dc2626;
+          font-size: 11px;
+          font-weight: 700;
+          padding: 3px 8px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-mini-reset:hover {
+          background: #fee2e2;
+          color: #b91c1c;
+        }
+
+        /* Cards de Ferramentas com Toggle (Linear List e Grade 2x2 Compacta) */
         .tools-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 10px;
+        }
+        .tools-grid-2col {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .tools-grid-2col .tool-card {
+          padding: 10px 10px;
+          min-height: 54px;
+          gap: 8px;
+        }
+        .tools-grid-2col .tool-icon-box {
+          width: 28px;
+          height: 28px;
+          border-radius: 7px;
+        }
+        .tools-grid-2col .tool-title {
+          font-size: 13px;
+        }
+        .tools-grid-2col .tool-desc {
+          font-size: 11px;
         }
         .tool-card {
           display: flex;
@@ -5004,6 +6693,7 @@
         .heading-level-pill.h1 { background: #f3effb; color: #5e3ea1; }
         .heading-level-pill.h2 { background: #fef3c7; color: #92400e; }
         .heading-level-pill.h3 { background: #f1f5f9; color: #475569; }
+        .heading-level-pill.h4, .heading-level-pill.h5, .heading-level-pill.h6 { background: #e0f2fe; color: #0369a1; }
         .heading-text-label {
           font-size: 13px;
           color: var(--text-main);
@@ -5017,6 +6707,206 @@
           color: var(--text-muted);
           padding: 10px;
           text-align: center;
+        }
+
+        /* Modal Flutuante Compacto de Estrutura da Página (Ancorado na Lateral) */
+        .allyada-structure-modal {
+          position: fixed;
+          bottom: 88px;
+          right: 24px;
+          left: auto;
+          top: auto;
+          transform: translateY(10px) scale(0.97);
+          width: min(340px, calc(100vw - 32px));
+          max-height: min(430px, calc(100vh - 116px));
+          background: #ffffff;
+          border-radius: 16px;
+          border: 1px solid #cbd5e1;
+          box-shadow: 0 18px 38px -10px rgba(15, 23, 42, 0.26), 0 0 0 1px rgba(121, 86, 194, 0.14);
+          display: flex;
+          flex-direction: column;
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 2147483647;
+          overflow: hidden;
+        }
+        .allyada-wrapper.pos-left .allyada-structure-modal {
+          left: 24px;
+          right: auto;
+        }
+        .allyada-structure-modal.open {
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+          transform: translateY(0) scale(1);
+        }
+        .allyada-wrapper.vpos-middle .allyada-structure-modal {
+          top: 50vh;
+          bottom: auto;
+          transform: translateY(-50%) scale(0.97);
+        }
+        .allyada-wrapper.vpos-middle .allyada-structure-modal.open {
+          transform: translateY(-50%) scale(1);
+        }
+        .allyada-wrapper.vpos-top .allyada-structure-modal {
+          top: 96px;
+          bottom: auto;
+        }
+        .structure-modal-header {
+          background: var(--primary);
+          color: #ffffff;
+          padding: 12px 14px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          flex-shrink: 0;
+        }
+        .structure-title-group {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-width: 0;
+        }
+        .structure-header-icon {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.18);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          color: #ffffff;
+        }
+        .structure-header-icon svg {
+          width: 18px;
+          height: 18px;
+          display: block;
+        }
+        .structure-title-group h3 {
+          font-size: 14.5px;
+          font-weight: 800;
+          color: #ffffff;
+          margin: 0;
+          line-height: 1.2;
+        }
+        .structure-subtitle {
+          display: block;
+          font-size: 11.5px;
+          color: rgba(255, 255, 255, 0.86);
+          margin-top: 2px;
+          line-height: 1.2;
+        }
+        .structure-header-actions {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          flex-shrink: 0;
+        }
+        .btn-structure-back {
+          height: 30px;
+          padding: 0 10px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.28);
+          background: rgba(255, 255, 255, 0.16);
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: 700;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          cursor: pointer;
+          transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .btn-structure-back:hover {
+          background: rgba(255, 255, 255, 0.28);
+        }
+        .btn-structure-back svg {
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
+        }
+        .structure-modal-header .btn-icon-close {
+          width: 30px;
+          height: 30px;
+          border-radius: 8px;
+          border: none;
+          background: rgba(255, 255, 255, 0.16);
+          color: #ffffff;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          flex-shrink: 0;
+          transition: background 0.15s ease;
+        }
+        .structure-modal-header .btn-icon-close:hover {
+          background: rgba(255, 255, 255, 0.28);
+        }
+        .structure-modal-header .btn-icon-close svg {
+          width: 16px;
+          height: 16px;
+        }
+        .structure-tabs {
+          display: flex;
+          background: #f1f5f9;
+          padding: 5px;
+          gap: 4px;
+          border-bottom: 1px solid #e2e8f0;
+          flex-shrink: 0;
+        }
+        .struct-tab-btn {
+          flex: 1;
+          padding: 7px 8px;
+          border: none;
+          border-radius: 8px;
+          background: transparent;
+          color: #475569;
+          font-size: 12.5px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.18s ease;
+        }
+        .struct-tab-btn:hover {
+          color: #0f172a;
+          background: rgba(255, 255, 255, 0.5);
+        }
+        .struct-tab-btn.active {
+          background: #ffffff;
+          color: var(--primary);
+          box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+        }
+        .structure-search-row {
+          padding: 10px 12px 6px 12px;
+          background: #ffffff;
+          flex-shrink: 0;
+        }
+        .structure-search-row input.search-input-field {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 8px 12px 8px 36px;
+          border-radius: 9px;
+          border: 1px solid #cbd5e1;
+          font-size: 12.5px;
+          color: #0f172a;
+          background: #f8fafc;
+          outline: none;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .structure-search-row input.search-input-field:focus {
+          border-color: var(--primary);
+          background: #ffffff;
+          box-shadow: 0 0 0 3px rgba(121, 86, 194, 0.15);
+        }
+        .structure-modal-body {
+          padding: 8px 12px 12px 12px;
+          overflow-y: auto;
+          flex: 1;
+          max-height: 280px;
         }
 
         /* Player de Leitura TTS (Exibido apenas quando ativo) */
@@ -5035,6 +6925,28 @@
         }
         .tts-player-panel.full-width {
           grid-column: 1 / -1;
+        }
+        .tts-voice-row {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          width: 100%;
+        }
+        .tts-voice-select {
+          width: 100%;
+          padding: 8px 10px;
+          border-radius: 8px;
+          border: 1px solid #cbd5e1;
+          background: #ffffff;
+          color: #0f172a;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          outline: none;
+        }
+        .tts-voice-select:focus {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 2px rgba(121, 86, 194, 0.2);
         }
         .tts-status-row {
           display: flex;
