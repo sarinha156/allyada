@@ -35,6 +35,11 @@
     verticalPosition: 'bottom', // 'bottom', 'middle', 'top'
     primaryColor: '#7956c2',
     accentColor: '#ffab00',
+    fabIcon: 'allyada', // 'allyada', 'universal', 'hands', 'heart', 'shield'
+    vlibrasShirtColor: '',
+    vlibrasPantsColor: '',
+    vlibrasLogoUrl: '',
+    allowedDomain: '',
     shortcutKey: 'a',
     enableShortcut: true,
     enableSpeech: true,
@@ -82,6 +87,9 @@
   // SVGs de Ícones Acessíveis
   const ICONS = {
     allyada: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4.8" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="rgba(255,255,255,0.35)"/><circle cx="11.5" cy="38.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="88.5" cy="38.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="28" cy="83.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="72" cy="83.5" r="5.2" fill="rgba(255,255,255,0.35)"/></svg>`,
+    universal: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.2" r="1.6" fill="currentColor"/><path d="M7.2 10.5h9.6"/><path d="M12 10.5v4.2"/><path d="m9.2 18.5 2.8-3.8 2.8 3.8"/></svg>`,
+    heart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><circle cx="12" cy="9.5" r="1.4" fill="currentColor"/><path d="M9.2 12h5.6"/></svg>`,
+    shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="8.5" r="1.4" fill="currentColor"/><path d="M8.8 11.3h6.4"/><path d="m10 16.2 2-3.2 2 3.2"/></svg>`,
     close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
     reset: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>`,
     sound: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`,
@@ -147,17 +155,75 @@
       this.guideRafId = null;
       this.mouseY = 0;
       this.panelKeyDownHandler = null;
+      this.isAdminStudioUnlocked = false;
+      this._logoClickCount = 0;
+      this._logoClickTimer = null;
     }
 
     init(options = {}) {
       if (this.hostContainer) return this;
 
-      const normalizedOptions = { ...options };
+      // Lê configurações globais window.ALLYADA_CONFIG e atributos data-* da tag <script> do cliente PRO
+      const scriptEl = (typeof document !== 'undefined')
+        ? (document.currentScript || document.querySelector('script[src*="allyada"], script[src*="acessibilidade"], script[data-allyada]'))
+        : null;
+      const scriptOpts = {};
+      if (scriptEl && scriptEl.getAttribute) {
+        if (scriptEl.getAttribute('data-color')) scriptOpts.primaryColor = scriptEl.getAttribute('data-color');
+        if (scriptEl.getAttribute('data-icon')) scriptOpts.fabIcon = scriptEl.getAttribute('data-icon');
+        if (scriptEl.getAttribute('data-vpos')) scriptOpts.verticalPosition = scriptEl.getAttribute('data-vpos');
+        if (scriptEl.getAttribute('data-position')) scriptOpts.position = scriptEl.getAttribute('data-position');
+        if (scriptEl.getAttribute('data-vlibras-shirt')) scriptOpts.vlibrasShirtColor = scriptEl.getAttribute('data-vlibras-shirt');
+        if (scriptEl.getAttribute('data-vlibras-pants')) scriptOpts.vlibrasPantsColor = scriptEl.getAttribute('data-vlibras-pants');
+        if (scriptEl.getAttribute('data-vlibras-logo')) scriptOpts.vlibrasLogoUrl = scriptEl.getAttribute('data-vlibras-logo');
+        if (scriptEl.getAttribute('data-domain')) scriptOpts.allowedDomain = scriptEl.getAttribute('data-domain');
+      }
+      const globalCfg = (typeof window !== 'undefined' && window.ALLYADA_CONFIG && typeof window.ALLYADA_CONFIG === 'object')
+        ? window.ALLYADA_CONFIG
+        : {};
+
+      const normalizedOptions = { ...globalCfg, ...scriptOpts, ...options };
       if (normalizedOptions.primaryColor && normalizedOptions.primaryColor.toLowerCase() === '#0052cc') {
         normalizedOptions.primaryColor = '#7956c2';
       }
+
+      // Validação de licença por domínio: se allowedDomain estiver definido e não bater com o domínio atual, reverte para o padrão gratuito
+      if (normalizedOptions.allowedDomain && typeof window !== 'undefined' && window.location && window.location.hostname) {
+        const currentHost = window.location.hostname.toLowerCase().replace(/^www\./, '');
+        const allowedList = String(normalizedOptions.allowedDomain).toLowerCase().split(',').map(d => d.trim().replace(/^www\./, '')).filter(Boolean);
+        const isAllowed = allowedList.some(d => currentHost === d || currentHost.endsWith('.' + d) || currentHost === 'localhost' || currentHost === '127.0.0.1');
+        if (!isAllowed) {
+          console.warn(`[Allyada PRO] Licença vinculada ao domínio "${normalizedOptions.allowedDomain}". Revertendo para visual padrão gratuito.`);
+          normalizedOptions.primaryColor = '#7956c2';
+          normalizedOptions.fabIcon = 'allyada';
+          normalizedOptions.verticalPosition = 'bottom';
+          normalizedOptions.vlibrasShirtColor = '';
+          normalizedOptions.vlibrasPantsColor = '';
+          normalizedOptions.vlibrasLogoUrl = '';
+        }
+      }
+
       this.config = { ...this.config, ...normalizedOptions };
+      if (this.config.primaryColor) {
+        this.config.vlibrasColor = this.config.primaryColor;
+      }
+
+      // Verifica se o modo Studio PRO (Configurador do Cliente) foi acionado via URL (?allyada_admin=1 ou ?allyada_pro=1)
+      try {
+        if (typeof window !== 'undefined' && window.location && /[?&](allyada_admin|allyada_pro|allyada_studio)=1/i.test(window.location.search)) {
+          this.isAdminStudioUnlocked = true;
+        }
+      } catch (e) {}
+
       this.loadState();
+      // A posição vertical nos cantos respeita a configuração definida pelo cliente dono do site
+      if (normalizedOptions.verticalPosition) {
+        this.state.verticalPosition = normalizedOptions.verticalPosition;
+      }
+      if (normalizedOptions.position) {
+        this.state.dockPosition = normalizedOptions.position;
+      }
+
       this.injectHostStyles();
       this.injectSvgFilters();
       this.injectSkipLink();
@@ -968,6 +1034,7 @@
       const wrapper = document.createElement('div');
       const initHPos = this.state.dockPosition || this.config.position || 'right';
       const initVPos = this.state.verticalPosition || this.config.verticalPosition || 'bottom';
+      const initFabIconSvg = ICONS[this.config.fabIcon] || ICONS.allyada;
       wrapper.className = `allyada-wrapper pos-${initHPos} vpos-${initVPos}`;
       wrapper.innerHTML = `
         <!-- Botão Flutuante de Abertura (WAI-ARIA APG Launcher) -->
@@ -979,7 +1046,7 @@
                 aria-controls="allyada-panel"
                 aria-expanded="false"
                 title="Allyada — Acessibilidade e Preferências (Alt + A)">
-          <span class="fab-icon">${ICONS.allyada}</span>
+          <span class="fab-icon" id="allyada-fab-icon-span">${initFabIconSvg}</span>
           <span class="fab-badge" aria-hidden="true" id="allyada-active-count">0</span>
         </button>
 
@@ -996,8 +1063,8 @@
           
           <!-- Header do Widget -->
           <div class="drawer-header">
-            <div class="header-brand-group">
-              <div class="brand-badge-icon" aria-hidden="true">${ICONS.allyada}</div>
+            <div class="header-brand-group" id="allyada-brand-logo-btn" style="cursor: pointer;" title="Allyada Acessibilidade">
+              <div class="brand-badge-icon" id="allyada-header-icon-box" aria-hidden="true">${initFabIconSvg}</div>
               <div class="brand-text">
                 <div class="title-row">
                   <h2 id="allyada-title">Allyada</h2>
@@ -1010,7 +1077,7 @@
               <button type="button" class="btn-header-action" id="btn-header-vlibras" title="Ativar Tradutor de Libras (VLibras)" aria-label="Ativar Tradutor de Libras">
                 ${ICONS.hands}
               </button>
-              <button type="button" class="btn-header-action" id="btn-toggle-vpos" title="Posição nos Cantos: Centralizado / Fim da Página (✨ Premium)" aria-label="Alternar altura do botão nos cantos">
+              <button type="button" class="btn-header-action" id="btn-toggle-vpos" style="display:${this.isAdminStudioUnlocked ? 'inline-flex' : 'none'};" title="Posição nos Cantos: Centralizado / Fim da Página (✨ Exclusivo Cliente PRO)" aria-label="Alternar altura do botão nos cantos">
                 ${ICONS.vpos}
               </button>
               <button type="button" class="btn-header-action" id="btn-toggle-dock" title="Mover painel para esquerda/direita" aria-label="Mover painel para outro lado">
@@ -1595,32 +1662,13 @@
                 </div>
               </section>
 
-              <!-- Aparência e Posição do Widget -->
+              <!-- Aparência do Painel (Para o Usuário do Site) -->
               <section class="menu-section">
                 <div class="section-heading">
-                  <h3>Aparência e Posição do Plugin</h3>
-                  <span class="premium-tag-badge">✨ Premium</span>
+                  <h3>Aparência do Painel</h3>
                 </div>
 
-                <!-- Posição nos Cantos da Tela (Item Premium) -->
-                <div class="setting-item-row premium-setting-card" style="flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 10px;">
-                  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
-                    <div class="setting-text">
-                      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                        <strong>Posição nos Cantos da Tela</strong>
-                        <span class="premium-pill-mini">✨ PRO</span>
-                      </div>
-                      <span>Fique centralizado na lateral para não cobrir botões de WhatsApp ou Chat no fim da página.</span>
-                    </div>
-                  </div>
-                  <div>
-                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px;">Altura na Lateral:</span>
-                    <div class="segmented-control" role="group" aria-label="Posição vertical do plugin na tela">
-                      <button type="button" class="seg-btn active" id="btn-vpos-bottom" data-vpos="bottom">Fim da Página</button>
-                      <button type="button" class="seg-btn" id="btn-vpos-middle" data-vpos="middle">✨ Centro Lateral</button>
-                      <button type="button" class="seg-btn" id="btn-vpos-top" data-vpos="top">✨ Topo Lateral</button>
-                    </div>
-                  </div>
+                <div class="setting-item-row" style="flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 10px;">
                   <div>
                     <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px;">Lado da Página:</span>
                     <div class="segmented-control" role="group" aria-label="Lado do plugin na tela">
@@ -1649,6 +1697,88 @@
                     <button type="button" class="seg-btn" id="btn-scale-115" data-scale="1.15">Grande</button>
                     <button type="button" class="seg-btn" id="btn-scale-130" data-scale="1.3">Muito Grande</button>
                   </div>
+                </div>
+              </section>
+
+              <!-- PAINEL EXCLUSIVO DO CLIENTE / ADMIN (OCULTO PARA VISITANTES DO SITE) -->
+              <section class="menu-section" id="allyada-client-studio-section" style="display: ${this.isAdminStudioUnlocked ? 'flex' : 'none'};">
+                <div class="section-heading">
+                  <h3>Personalização da Marca (Cliente)</h3>
+                  <span class="premium-tag-badge">✨ Studio PRO</span>
+                </div>
+
+                <div class="setting-item-row premium-setting-card" style="flex-direction: column; align-items: stretch; gap: 12px;">
+                  <div class="setting-text">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                      <strong>Configurador Exclusivo do Dono do Site</strong>
+                      <span class="premium-pill-mini">✨ PRO</span>
+                    </div>
+                    <span>Estes ajustes ficam ocultos para os visitantes e definem o visual oficial e o código PRO do site.</span>
+                  </div>
+
+                  <!-- 1. Escolha do Ícone do Botão Flutuante -->
+                  <div>
+                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">1. Ícone do Botão Flutuante:</span>
+                    <div class="segmented-control" role="group" aria-label="Escolher ícone do botão flutuante">
+                      <button type="button" class="seg-btn btn-studio-icon active" data-icon="allyada" title="Símbolo Allyada">${ICONS.allyada}<span>Allyada</span></button>
+                      <button type="button" class="seg-btn btn-studio-icon" data-icon="universal" title="Acessibilidade Universal">${ICONS.universal}<span>Universal</span></button>
+                      <button type="button" class="seg-btn btn-studio-icon" data-icon="hands" title="Mãos Libras">${ICONS.hands}<span>Libras</span></button>
+                      <button type="button" class="seg-btn btn-studio-icon" data-icon="heart" title="Coração Acessível">${ICONS.heart}<span>Cuidado</span></button>
+                      <button type="button" class="seg-btn btn-studio-icon" data-icon="shield" title="Escudo Conformidade">${ICONS.shield}<span>Escudo</span></button>
+                    </div>
+                  </div>
+
+                  <!-- 2. Cor Oficial da Marca (Allyada + VLibras) -->
+                  <div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px;">
+                      <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">2. Cor da Marca (Allyada & VLibras):</span>
+                      <span id="studio-brand-color-hex" style="font-size: 11px; font-weight: 800; color: var(--primary);">${(this.config.primaryColor || '#7956c2').toUpperCase()}</span>
+                    </div>
+                    <div class="custom-color-swatches">
+                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
+                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo / Novembro Azul"></button>
+                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#0f766e" style="background:#0f766e;" title="Verde Saúde / Inclusão"></button>
+                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
+                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
+                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
+                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#1e293b" style="background:#1e293b;" title="Grafite Elegante"></button>
+                      <label class="swatch-picker" title="Escolher cor personalizada da marca">
+                        ${ICONS.palette}
+                        <input type="color" id="input-brand-custom-color" value="${this.config.primaryColor || '#7956c2'}" aria-label="Escolher cor personalizada da marca">
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- 3. Posição nos Cantos da Tela -->
+                  <div>
+                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px;">3. Posição nos Cantos da Tela:</span>
+                    <div class="segmented-control" role="group" aria-label="Posição vertical do plugin na tela">
+                      <button type="button" class="seg-btn active" id="btn-vpos-bottom" data-vpos="bottom">Fim da Página</button>
+                      <button type="button" class="seg-btn" id="btn-vpos-middle" data-vpos="middle">✨ Centro Lateral</button>
+                      <button type="button" class="seg-btn" id="btn-vpos-top" data-vpos="top">✨ Topo Lateral</button>
+                    </div>
+                  </div>
+
+                  <!-- 4. Personalização da Roupa e Logo do Avatar VLibras 3D -->
+                  <div style="border-top: 1px dashed #cbd5e1; padding-top: 10px;">
+                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">4. Uniforme do Avatar 3D VLibras (Camisa, Calça e Logo):</span>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                      <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;">
+                        <span>Camisa:</span>
+                        <input type="color" id="input-vlibras-shirt" value="${this.config.vlibrasShirtColor || this.config.primaryColor || '#7956c2'}" style="width:28px; height:28px; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; padding:1px;">
+                      </label>
+                      <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;">
+                        <span>Calça:</span>
+                        <input type="color" id="input-vlibras-pants" value="${this.config.vlibrasPantsColor || '#201E62'}" style="width:28px; height:28px; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; padding:1px;">
+                      </label>
+                    </div>
+                    <input type="url" id="input-vlibras-logo" placeholder="URL da Logo PNG 500x500 fundo transparente (opcional)" value="${this.config.vlibrasLogoUrl || ''}" style="width:100%; padding:7px 10px; border-radius:8px; border:1px solid #cbd5e1; font-size:12px; color:#0f172a; background:#fff; outline:none;">
+                  </div>
+
+                  <!-- 5. Gerador de Código PRO do Cliente -->
+                  <button type="button" id="btn-copy-client-pro-script" style="width:100%; padding:10px 14px; border-radius:10px; border:none; background:var(--primary); color:#ffffff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(121,86,194,0.25);">
+                    <span>📋 Copiar Código &lt;script&gt; PRO deste Cliente</span>
+                  </button>
                 </div>
               </section>
 
@@ -2340,6 +2470,79 @@
           btnH.addEventListener('click', () => this.setDockPosition(hpos));
         }
       });
+
+      // Desbloqueio do Modo Studio PRO (Exclusivo do Cliente/Dono do Site: 5 cliques na logo Allyada)
+      const brandLogoBtn = root.getElementById('allyada-brand-logo-btn');
+      if (brandLogoBtn) {
+        this._adminClickCount = 0;
+        this._adminClickTimer = null;
+        brandLogoBtn.addEventListener('click', () => {
+          this._adminClickCount = (this._adminClickCount || 0) + 1;
+          clearTimeout(this._adminClickTimer);
+          this._adminClickTimer = setTimeout(() => { this._adminClickCount = 0; }, 1800);
+          if (this._adminClickCount >= 5) {
+            this._adminClickCount = 0;
+            this.openAdmin();
+          }
+        });
+      }
+
+      // Controles do Studio PRO (Ícone, Cor da Marca, Uniforme 3D VLibras e Gerador de Script)
+      root.querySelectorAll('.btn-studio-icon').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.setFabIcon(btn.getAttribute('data-icon'));
+        });
+      });
+
+      root.querySelectorAll('.studio-brand-swatch').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.setBrandColor(btn.getAttribute('data-brand-color'));
+        });
+      });
+
+      const brandColorInput = root.getElementById('input-brand-custom-color');
+      if (brandColorInput) {
+        brandColorInput.addEventListener('input', (e) => {
+          this.setBrandColor(e.target.value);
+        });
+      }
+
+      const vlibrasShirtInput = root.getElementById('input-vlibras-shirt');
+      const vlibrasPantsInput = root.getElementById('input-vlibras-pants');
+      const vlibrasLogoInput = root.getElementById('input-vlibras-logo');
+      const handleUniformChange = () => {
+        this.setVLibrasUniform({
+          shirt: vlibrasShirtInput ? vlibrasShirtInput.value : this.config.vlibrasShirtColor,
+          pants: vlibrasPantsInput ? vlibrasPantsInput.value : this.config.vlibrasPantsColor,
+          logo: vlibrasLogoInput ? vlibrasLogoInput.value.trim() : this.config.vlibrasLogoUrl
+        });
+      };
+      if (vlibrasShirtInput) vlibrasShirtInput.addEventListener('input', handleUniformChange);
+      if (vlibrasPantsInput) vlibrasPantsInput.addEventListener('input', handleUniformChange);
+      if (vlibrasLogoInput) vlibrasLogoInput.addEventListener('change', handleUniformChange);
+
+      const btnCopyScript = root.getElementById('btn-copy-client-pro-script');
+      if (btnCopyScript) {
+        btnCopyScript.addEventListener('click', () => {
+          const domain = (window.location && window.location.hostname) ? window.location.hostname : 'seudominio.com.br';
+          const color = this.config.primaryColor || '#7956c2';
+          const icon = this.config.fabIcon || 'allyada';
+          const vpos = this.state.verticalPosition || this.config.verticalPosition || 'bottom';
+          const hpos = this.state.dockPosition || this.config.position || 'right';
+          const shirt = this.config.vlibrasShirtColor || color;
+          const pants = this.config.vlibrasPantsColor || '#201E62';
+          const logoAttr = this.config.vlibrasLogoUrl ? `\n  data-vlibras-logo="${this.config.vlibrasLogoUrl}"` : '';
+          const scriptCode = `<script src="https://cdn.allyada.com.br/allyada.min.js"\n  data-domain="${domain}"\n  data-color="${color}"\n  data-icon="${icon}"\n  data-vpos="${vpos}"\n  data-position="${hpos}"\n  data-vlibras-shirt="${shirt}"\n  data-vlibras-pants="${pants}"${logoAttr}\n  defer></script>`;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(scriptCode).catch(() => {});
+          }
+          const origHtml = btnCopyScript.innerHTML;
+          btnCopyScript.innerHTML = '<span>✅ Código &lt;script&gt; PRO copiado!</span>';
+          setTimeout(() => { btnCopyScript.innerHTML = origHtml; }, 2600);
+          this.announce('Código de instalação PRO copiado para a área de transferência');
+        });
+      }
+
       window.addEventListener('resize', () => {
         this.applyResponsiveWidgetSize();
       });
@@ -4407,7 +4610,38 @@
         const isCentered = (curVPos === 'middle');
         headerVposBtn.classList.toggle('active', isCentered);
         headerVposBtn.setAttribute('aria-pressed', isCentered ? 'true' : 'false');
+        headerVposBtn.style.display = this.isAdminMode ? 'inline-flex' : 'none';
       }
+
+      const studioSection = root.getElementById('allyada-client-studio-section');
+      if (studioSection) {
+        studioSection.style.display = this.isAdminMode ? 'block' : 'none';
+      }
+
+      // Sincroniza controles do Studio PRO (Ícone, Cor da Marca e Uniforme VLibras)
+      const activeFabIcon = this.config.fabIcon || 'allyada';
+      root.querySelectorAll('.btn-studio-icon').forEach(btn => {
+        const isAct = (btn.getAttribute('data-icon') === activeFabIcon);
+        btn.classList.toggle('active', isAct);
+        btn.setAttribute('aria-pressed', isAct ? 'true' : 'false');
+      });
+
+      const activeBrandColor = (this.config.primaryColor || '#7956c2').toLowerCase();
+      root.querySelectorAll('.studio-brand-swatch').forEach(btn => {
+        const isAct = ((btn.getAttribute('data-brand-color') || '').toLowerCase() === activeBrandColor);
+        btn.classList.toggle('active', isAct);
+      });
+      const brandHexEl = root.getElementById('studio-brand-color-hex');
+      if (brandHexEl) brandHexEl.textContent = activeBrandColor.toUpperCase();
+      const brandColorInput = root.getElementById('input-brand-custom-color');
+      if (brandColorInput) brandColorInput.value = activeBrandColor;
+
+      const shirtInput = root.getElementById('input-vlibras-shirt');
+      if (shirtInput) shirtInput.value = this.config.vlibrasShirtColor || this.config.primaryColor || '#7956c2';
+      const pantsInput = root.getElementById('input-vlibras-pants');
+      if (pantsInput) pantsInput.value = this.config.vlibrasPantsColor || '#201E62';
+      const logoInput = root.getElementById('input-vlibras-logo');
+      if (logoInput && logoInput !== root.activeElement) logoInput.value = this.config.vlibrasLogoUrl || '';
 
       const isDarkPage = this.state.contrast === 'dark' || ['#18181b', '#0f172a', '#000000', '#121212'].includes((this.state.customBgColor || '').toLowerCase());
       const effectiveCursorColor = (isDarkPage && (this.state.cursorColor || '#000000').toLowerCase() === '#000000')
@@ -4484,6 +4718,74 @@
           });
         }
       }
+    }
+
+    /**
+     * Desbloqueia o painel "Studio PRO (Exclusivo do Cliente)" para o dono do site
+     * (pode ser acionado via 5 cliques na logo Allyada do topo, ?allyada_admin=1 na URL ou Allyada.openAdmin() no console).
+     */
+    openAdmin() {
+      this.isAdminMode = true;
+      if (!this.isOpen) {
+        this.openPanel();
+      }
+      this.switchTab('settings');
+      this.updatePanelUI();
+      if (this.shadowRoot) {
+        const studioSection = this.shadowRoot.getElementById('allyada-client-studio-section');
+        if (studioSection) {
+          setTimeout(() => {
+            studioSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 80);
+        }
+      }
+      this.announce('Modo Studio PRO de personalização do cliente desbloqueado');
+    }
+
+    setFabIcon(iconKey) {
+      const validIcons = ['allyada', 'universal', 'hands', 'heart', 'shield'];
+      const chosen = validIcons.includes(iconKey) ? iconKey : 'allyada';
+      this.config.fabIcon = chosen;
+      if (this.shadowRoot) {
+        const fabIconSpan = this.shadowRoot.getElementById('allyada-fab-icon-svg');
+        if (fabIconSpan) {
+          fabIconSpan.innerHTML = ICONS[chosen] || ICONS.allyada;
+        }
+      }
+      this.updatePanelUI();
+      this.announce(`Ícone do botão flutuante alterado para ${chosen}`);
+    }
+
+    setBrandColor(hexColor) {
+      if (!hexColor || typeof hexColor !== 'string') return;
+      const cleanHex = hexColor.trim();
+      this.config.primaryColor = cleanHex;
+      this.config.vlibrasColor = cleanHex;
+      if (!this._customShirtEdited) {
+        this.config.vlibrasShirtColor = cleanHex;
+      }
+      if (this.shadowRoot && this.shadowRoot.host) {
+        this.shadowRoot.host.style.setProperty('--primary', cleanHex);
+        this.shadowRoot.host.style.setProperty('--primary-hover', cleanHex);
+      }
+      this.applyVLibrasCustomTheme();
+      this.syncVLibrasAvatar(this.state.vlibrasAvatar || 'hosana');
+      this.updatePanelUI();
+    }
+
+    setVLibrasUniform(opts = {}) {
+      if (opts.shirt) {
+        this._customShirtEdited = true;
+        this.config.vlibrasShirtColor = opts.shirt;
+      }
+      if (opts.pants) {
+        this.config.vlibrasPantsColor = opts.pants;
+      }
+      if (typeof opts.logo === 'string') {
+        this.config.vlibrasLogoUrl = opts.logo.trim();
+      }
+      this.syncVLibrasAvatar(this.state.vlibrasAvatar || 'hosana');
+      this.updatePanelUI();
     }
 
     setVerticalPosition(vpos) {
@@ -5255,13 +5557,59 @@
     }
 
     /**
-     * Sincroniza o intérprete escolhido (Hosana por padrão, Ícaro ou Guga) no storage do VLibras,
-     * no objeto global window.VLibrasWidget e no player 3D ativo em tempo real.
+     * Gera o JSON oficial de personalização do uniforme 3D do VLibras (CustomizationBridge.setURL),
+     * permitindo definir a cor da camisa, cor da calça e logo 500x500 fundo transparente no peito do avatar.
+     */
+    getVLibrasPersonalizationUrl() {
+      const shirt = (this.config && this.config.vlibrasShirtColor) || (this.config && this.config.primaryColor) || '';
+      const pants = (this.config && this.config.vlibrasPantsColor) || '';
+      const logo = (this.config && this.config.vlibrasLogoUrl) || '';
+
+      // Se o cliente definiu uma URL direta de arquivo .json de personalização
+      if (logo && /\.json(\?.*)?$/i.test(logo)) {
+        return logo;
+      }
+
+      // Gera um JSON compatível com o schema oficial do VLibras (https://vlibras.gov.br/config/default_logo.json)
+      const customConfig = {
+        calca: pants || '#201E62',
+        camisa: shirt || '#7956c2',
+        cabelo: '#000000',
+        corpo: '#C18471',
+        iris: '#000000',
+        olhos: '#FFFFFF',
+        sombrancelhas: '#000000',
+        pos: 'center',
+        logo: logo || 'https://vlibras.gov.br/config/img/gov_br_original.png'
+      };
+
+      try {
+        const jsonStr = JSON.stringify(customConfig);
+        if (this._lastVlibrasJsonStr === jsonStr && this._vlibrasPersonalizationBlobUrl) {
+          return this._vlibrasPersonalizationBlobUrl;
+        }
+        if (this._vlibrasPersonalizationBlobUrl && typeof URL !== 'undefined' && URL.revokeObjectURL) {
+          try { URL.revokeObjectURL(this._vlibrasPersonalizationBlobUrl); } catch (e) {}
+        }
+        if (typeof Blob !== 'undefined' && typeof URL !== 'undefined' && URL.createObjectURL) {
+          const blob = new Blob([jsonStr], { type: 'application/json' });
+          this._vlibrasPersonalizationBlobUrl = URL.createObjectURL(blob);
+          this._lastVlibrasJsonStr = jsonStr;
+          return this._vlibrasPersonalizationBlobUrl;
+        }
+      } catch (e) {}
+      return '';
+    }
+
+    /**
+     * Sincroniza o intérprete escolhido (Hosana por padrão, Ícaro ou Guga) e o uniforme personalizado
+     * no storage do VLibras, no objeto global window.VLibrasWidget e no player 3D ativo em tempo real.
      */
     syncVLibrasAvatar(avatar) {
       const VLIBRAS_APP_URL = 'https://vlibras.gov.br/app';
       const validAvatar = ['hosana', 'icaro', 'guga'].includes(avatar) ? avatar : 'hosana';
       const posCode = (this.config && this.config.position === 'left') ? 'R' : 'L';
+      const personalizationUrl = this.getVLibrasPersonalizationUrl();
 
       try {
         let playerStore = {
@@ -5269,7 +5617,7 @@
             speed: 1,
             showSubtitles: true,
             avatar: validAvatar,
-            config: { baseUrl: '', personalizationUrl: '' }
+            config: { baseUrl: '', personalizationUrl: personalizationUrl }
           },
           version: 1
         };
@@ -5278,9 +5626,14 @@
           const parsed = JSON.parse(existing);
           if (parsed && typeof parsed === 'object') {
             parsed.state = Object.assign(
-              { speed: 1, showSubtitles: true, config: { baseUrl: '', personalizationUrl: '' } },
+              { speed: 1, showSubtitles: true, config: { baseUrl: '', personalizationUrl: personalizationUrl } },
               parsed.state || {},
-              { avatar: validAvatar }
+              {
+                avatar: validAvatar,
+                config: Object.assign({}, (parsed.state && parsed.state.config) || {}, {
+                  personalizationUrl: personalizationUrl
+                })
+              }
             );
             playerStore = parsed;
           }
@@ -5292,12 +5645,22 @@
         window.VLibrasWidget = Object.assign({ path: VLIBRAS_APP_URL }, window.VLibrasWidget || {}, {
           path: VLIBRAS_APP_URL,
           avatar: validAvatar,
-          position: posCode
+          position: posCode,
+          personalization: personalizationUrl
         });
 
         try {
-          if (window.plugin && window.plugin.player && typeof window.plugin.player.changeAvatar === 'function') {
-            window.plugin.player.changeAvatar(validAvatar);
+          if (window.plugin && window.plugin.player) {
+            if (typeof window.plugin.player.changeAvatar === 'function') {
+              window.plugin.player.changeAvatar(validAvatar);
+            }
+            if (personalizationUrl) {
+              if (typeof window.plugin.player.setPersonalization === 'function') {
+                window.plugin.player.setPersonalization(personalizationUrl);
+              } else if (window.plugin.player.player && typeof window.plugin.player.player.SendMessage === 'function') {
+                window.plugin.player.player.SendMessage('CustomizationBridge', 'setURL', personalizationUrl);
+              }
+            }
           } else if (window.vlibras && typeof window.vlibras.toggleAvatar === 'function') {
             window.vlibras.toggleAvatar(validAvatar);
           }
@@ -5432,6 +5795,7 @@
       const validAvatar = ['hosana', 'icaro', 'guga'].includes(this.state.vlibrasAvatar) ? this.state.vlibrasAvatar : 'hosana';
       // Sempre no lado OPOSTO ao do Allyada ('L' quando o Allyada está na direita, 'R' quando o Allyada está na esquerda)
       const posCode = (this.config && this.config.position === 'left') ? 'R' : 'L';
+      const personalizationUrl = this.getVLibrasPersonalizationUrl();
 
       this.syncVLibrasAvatar(validAvatar);
 
@@ -5439,7 +5803,8 @@
       window.VLibrasWidget = Object.assign({ path: VLIBRAS_APP_URL }, window.VLibrasWidget || {}, {
         path: VLIBRAS_APP_URL,
         avatar: validAvatar,
-        position: posCode
+        position: posCode,
+        personalization: personalizationUrl
       });
 
       // 1. Injeta estrutura de suporte do VLibras no host caso não exista
@@ -5477,6 +5842,7 @@
           window.VLibrasWidget.path = VLIBRAS_APP_URL;
           window.VLibrasWidget.avatar = currentAvatar;
           window.VLibrasWidget.position = posCode;
+          window.VLibrasWidget.personalization = personalizationUrl;
         }
         this.syncVLibrasAvatar(currentAvatar);
 
@@ -5511,7 +5877,8 @@
             new window.VLibras.Widget({
               rootPath: VLIBRAS_APP_URL,
               avatar: currentAvatar,
-              position: posCode
+              position: posCode,
+              personalization: personalizationUrl
             });
           } catch(e) {}
         }
@@ -5519,6 +5886,7 @@
           window.VLibrasWidget.path = VLIBRAS_APP_URL;
           window.VLibrasWidget.avatar = currentAvatar;
           window.VLibrasWidget.position = posCode;
+          window.VLibrasWidget.personalization = personalizationUrl;
         }
         setTimeout(ensureOpen, 250);
         return;
@@ -5535,13 +5903,15 @@
               new window.VLibras.Widget({
                 rootPath: VLIBRAS_APP_URL,
                 avatar: currentAvatar,
-                position: posCode
+                position: posCode,
+                personalization: personalizationUrl
               });
             } catch(e) {}
             if (window.VLibrasWidget) {
               window.VLibrasWidget.path = VLIBRAS_APP_URL;
               window.VLibrasWidget.avatar = currentAvatar;
               window.VLibrasWidget.position = posCode;
+              window.VLibrasWidget.personalization = personalizationUrl;
             }
             setTimeout(ensureOpen, 350);
           }
@@ -5581,6 +5951,19 @@
           box-sizing: border-box !important;
           -webkit-font-smoothing: antialiased !important;
           -moz-osx-font-smoothing: grayscale !important;
+        }
+        .btn-studio-icon {
+          display: inline-flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 3px !important;
+          padding: 6px 4px !important;
+          font-size: 10.5px !important;
+        }
+        .btn-studio-icon svg {
+          width: 18px !important;
+          height: 18px !important;
         }
 
         *, *::before, *::after {
