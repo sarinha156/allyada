@@ -1075,9 +1075,6 @@
               <button type="button" class="btn-header-action" id="btn-header-vlibras" title="Ativar Tradutor de Libras (VLibras)" aria-label="Ativar Tradutor de Libras">
                 ${ICONS.hands}
               </button>
-              <button type="button" class="btn-header-action" id="btn-toggle-vpos" style="display:${this.isAdminStudioUnlocked ? 'inline-flex' : 'none'};" title="Posição nos Cantos: Centralizado / Fim da Página (✨ Exclusivo Cliente PRO)" aria-label="Alternar altura do botão nos cantos">
-                ${ICONS.vpos}
-              </button>
               <button type="button" class="btn-header-action" id="btn-toggle-dock" title="Mover painel para esquerda/direita" aria-label="Mover painel para outro lado">
                 ${ICONS.dock}
               </button>
@@ -1697,88 +1694,6 @@
                     <button type="button" class="seg-btn" id="btn-scale-115" data-scale="1.15">Grande</button>
                     <button type="button" class="seg-btn" id="btn-scale-130" data-scale="1.3">Muito Grande</button>
                   </div>
-                </div>
-              </section>
-
-              <!-- PAINEL EXCLUSIVO DO CLIENTE / ADMIN (OCULTO PARA VISITANTES DO SITE) -->
-              <section class="menu-section" id="allyada-client-studio-section" style="display: ${this.isAdminStudioUnlocked ? 'flex' : 'none'};">
-                <div class="section-heading">
-                  <h3>Personalização da Marca (Cliente)</h3>
-                  <span class="premium-tag-badge">✨ Studio PRO</span>
-                </div>
-
-                <div class="setting-item-row premium-setting-card" style="flex-direction: column; align-items: stretch; gap: 12px;">
-                  <div class="setting-text">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
-                      <strong>Configurador Exclusivo do Dono do Site</strong>
-                      <span class="premium-pill-mini">✨ PRO</span>
-                    </div>
-                    <span>Estes ajustes ficam ocultos para os visitantes e definem o visual oficial e o código PRO do site.</span>
-                  </div>
-
-                  <!-- 1. Escolha do Ícone do Botão Flutuante -->
-                  <div>
-                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">1. Ícone do Botão Flutuante:</span>
-                    <div class="segmented-control" role="group" aria-label="Escolher ícone do botão flutuante">
-                      <button type="button" class="seg-btn btn-studio-icon active" data-icon="allyada" title="Símbolo Allyada">${ICONS.allyada}<span>Allyada</span></button>
-                      <button type="button" class="seg-btn btn-studio-icon" data-icon="universal" title="Acessibilidade Universal">${ICONS.universal}<span>Universal</span></button>
-                      <button type="button" class="seg-btn btn-studio-icon" data-icon="hands" title="Mãos Libras">${ICONS.hands}<span>Libras</span></button>
-                      <button type="button" class="seg-btn btn-studio-icon" data-icon="heart" title="Coração Acessível">${ICONS.heart}<span>Cuidado</span></button>
-                      <button type="button" class="seg-btn btn-studio-icon" data-icon="shield" title="Escudo Conformidade">${ICONS.shield}<span>Escudo</span></button>
-                    </div>
-                  </div>
-
-                  <!-- 2. Cor Oficial da Marca (Allyada + VLibras) -->
-                  <div>
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px;">
-                      <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">2. Cor da Marca (Allyada & VLibras):</span>
-                      <span id="studio-brand-color-hex" style="font-size: 11px; font-weight: 800; color: var(--primary);">${(this.config.primaryColor || '#7956c2').toUpperCase()}</span>
-                    </div>
-                    <div class="custom-color-swatches">
-                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
-                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo / Novembro Azul"></button>
-                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#0f766e" style="background:#0f766e;" title="Verde Saúde / Inclusão"></button>
-                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
-                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
-                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
-                      <button type="button" class="custom-swatch-btn studio-brand-swatch" data-brand-color="#1e293b" style="background:#1e293b;" title="Grafite Elegante"></button>
-                      <label class="swatch-picker" title="Escolher cor personalizada da marca">
-                        ${ICONS.palette}
-                        <input type="color" id="input-brand-custom-color" value="${this.config.primaryColor || '#7956c2'}" aria-label="Escolher cor personalizada da marca">
-                      </label>
-                    </div>
-                  </div>
-
-                  <!-- 3. Posição nos Cantos da Tela -->
-                  <div>
-                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px;">3. Posição nos Cantos da Tela:</span>
-                    <div class="segmented-control" role="group" aria-label="Posição vertical do plugin na tela">
-                      <button type="button" class="seg-btn active" id="btn-vpos-bottom" data-vpos="bottom">Fim da Página</button>
-                      <button type="button" class="seg-btn" id="btn-vpos-middle" data-vpos="middle">✨ Centro Lateral</button>
-                      <button type="button" class="seg-btn" id="btn-vpos-top" data-vpos="top">✨ Topo Lateral</button>
-                    </div>
-                  </div>
-
-                  <!-- 4. Personalização da Roupa e Logo do Avatar VLibras 3D -->
-                  <div style="border-top: 1px dashed #cbd5e1; padding-top: 10px;">
-                    <span style="display:block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">4. Uniforme do Avatar 3D VLibras (Camisa, Calça e Logo):</span>
-                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
-                      <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;">
-                        <span>Camisa:</span>
-                        <input type="color" id="input-vlibras-shirt" value="${this.config.vlibrasShirtColor || this.config.primaryColor || '#7956c2'}" style="width:28px; height:28px; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; padding:1px;">
-                      </label>
-                      <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer;">
-                        <span>Calça:</span>
-                        <input type="color" id="input-vlibras-pants" value="${this.config.vlibrasPantsColor || '#201E62'}" style="width:28px; height:28px; border:1px solid #cbd5e1; border-radius:6px; cursor:pointer; padding:1px;">
-                      </label>
-                    </div>
-                    <input type="url" id="input-vlibras-logo" placeholder="URL da Logo PNG 500x500 fundo transparente (opcional)" value="${this.config.vlibrasLogoUrl || ''}" style="width:100%; padding:7px 10px; border-radius:8px; border:1px solid #cbd5e1; font-size:12px; color:#0f172a; background:#fff; outline:none;">
-                  </div>
-
-                  <!-- 5. Gerador de Código PRO do Cliente -->
-                  <button type="button" id="btn-copy-client-pro-script" style="width:100%; padding:10px 14px; border-radius:10px; border:none; background:var(--primary); color:#ffffff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 4px 12px rgba(121,86,194,0.25);">
-                    <span>📋 Copiar Código &lt;script&gt; PRO deste Cliente</span>
-                  </button>
                 </div>
               </section>
 

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Allyada Studio PRO — Configurador do Cliente (Estilo AdOpt)</title>
+  <style>
+    :root {
+      --brand: #7956c2;
+      --brand-dark: #5e3ea1;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Topbar Estilo SaaS / AdOpt */
+    .studio-topbar {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 12px; }
+    .topbar-logo {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
+      display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;
+    }
+    .topbar-title strong { font-size: 17px; display: block; }
+    .topbar-title span { font-size: 12px; color: #94a3b8; }
+    .topbar-badge {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 999px;
+    }
+
+    /* Layout Principal: Esquerda (Configurador) + Direita (Preview ao Vivo) */
+    .studio-layout {
+      display: grid;
+      grid-template-columns: 480px 1fr;
+      gap: 24px;
+      padding: 24px 28px;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    .studio-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .config-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+    .config-card h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pro-pill {
+      font-size: 10.5px;
+      font-weight: 800;
+      background: #f3effb;
+      color: #5e3ea1;
+      border: 1px solid #dcd0f5;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .field-sub {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .text-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 13.5px;
+      color: var(--text);
+      outline: none;
+    }
+    .text-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(121, 86, 194, 0.15); }
+
+    /* Grade de 5 Ícones */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .icon-option-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 6px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: #f8fafc;
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.18s ease;
+    }
+    .icon-option-btn svg { width: 24px; height: 24px; color: var(--text); }
+    .icon-option-btn:hover { border-color: #94a3b8; background: #ffffff; }
+    .icon-option-btn.active {
+      border-color: var(--brand);
+      background: #f5f2fb;
+      color: var(--brand);
+      box-shadow: 0 0 0 1px var(--brand);
+    }
+    .icon-option-btn.active svg { color: var(--brand); }
+
+    /* Swatches de Cores + Sazonais + Color Picker Livre */
+    .swatches-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .swatch-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 2px solid rgba(0,0,0,0.12);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      position: relative;
+    }
+    .swatch-btn:hover { transform: scale(1.08); }
+    .swatch-btn.active {
+      outline: 3px solid #0f172a;
+      outline-offset: 2px;
+    }
+    .color-picker-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 10px;
+      border: 1.5px dashed #94a3b8;
+      background: #f8fafc;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .color-picker-wrap input[type="color"] {
+      width: 26px;
+      height: 26px;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    /* Botões Segmentados de Posição */
+    .seg-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .seg-row-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .seg-choice {
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: #f8fafc;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .seg-choice.active {
+      border-color: var(--brand);
+      background: #f5f2fb;
+      color: var(--brand);
+    }
+
+    /* Código Gerado */
+    .code-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-bottom: 10px;
+      border: 1px solid #334155;
+    }
+    .btn-primary-copy {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(121, 86, 194, 0.3);
+      transition: transform 0.15s ease;
+    }
+    .btn-primary-copy:hover { transform: translateY(-1px); }
+
+    /* Área Direita: Simulador do Site do Cliente */
+    .studio-preview-area {
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 680px;
+    }
+    .browser-bar {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .browser-dots { display: flex; gap: 6px; }
+    .browser-dots span { width: 11px; height: 11px; border-radius: 50%; background: #cbd5e1; }
+    .browser-dots span:nth-child(1) { background: #ef4444; }
+    .browser-dots span:nth-child(2) { background: #f59e0b; }
+    .browser-dots span:nth-child(3) { background: #10b981; }
+    .browser-url {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .preview-content {
+      padding: 40px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .preview-hero {
+      max-width: 640px;
+    }
+    .preview-hero span.tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .preview-hero h1 {
+      font-size: 30px;
+      color: #0f172a;
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+    .preview-hero p {
+      font-size: 15.5px;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .preview-seal-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    @media (max-width: 1024px) {
+      .studio-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="studio-topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">A</div>
+      <div class="topbar-title">
+        <strong>Allyada Studio PRO</strong>
+        <span>Painel de Personalização do Cliente & Gerador de Script (Estilo AdOpt)</span>
+      </div>
+    </div>
+    <span class="topbar-badge">✨ Ambiente do Cliente / Implantação</span>
+  </header>
+
+  <main class="studio-layout">
+    <!-- COLUNA ESQUERDA: CONTROLES EXCLUSIVOS DO CLIENTE -->
+    <aside class="studio-sidebar">
+
+      <!-- 1. Domínio Licenciado -->
+      <section class="config-card">
+        <h2>1. Domínio do Site Cliente <span class="pro-pill">Licença por Domínio</span></h2>
+        <label class="field-label" for="cfg-domain">Endereço do site (sem https://)</label>
+        <span class="field-sub">O código PRO gerado será vinculado a este domínio (com subpáginas e acessos ilimitados).</span>
+        <input type="text" id="cfg-domain" class="text-input" value="empresaexemplo.com.br" placeholder="ex: cartorioexemplo.com.br">
+      </section>
+
+      <!-- 2. Escolha do Ícone -->
+      <section class="config-card">
+        <h2>2. Ícone do Botão Flutuante <span class="pro-pill">✨ PRO</span></h2>
+        <span class="field-sub">Escolha o símbolo que ficará visível no canto do site do cliente:</span>
+        <div class="icon-grid">
+          <button type="button" class="icon-option-btn active" data-icon="allyada">
+            <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
+            <span>Allyada</span>
+          </button>
+          <button type="button" class="icon-option-btn" data-icon="universal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7" r="1.5" fill="currentColor"/><path d="M7 10.5c3 .8 7 .8 10 0"/><path d="M12 11v4"/><path d="M9.5 18.5L12 15l2.5 3.5"/></svg>
+            <span>Universal</span>
+          </button>
+          <button type="button" class="icon-option-btn" data-icon="hands">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+            <span>Libras</span>
+          </button>
+          <button type="button" class="icon-option-btn" data-icon="heart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <span>Cuidado</span>
+          </button>
+          <button type="button" class="icon-option-btn" data-icon="shield">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Escudo</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. Cor da Marca e Campanhas Sazonais -->
+      <section class="config-card">
+        <h2>3. Cor da Marca (Allyada + VLibras) <span class="pro-pill" id="hex-badge">#7956C2</span></h2>
+        <span class="field-sub">Altera simultaneamente a cor do Allyada e do botão/janela do VLibras:</span>
+        <div class="swatches-row">
+          <button type="button" class="swatch-btn active" data-color="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
+          <button type="button" class="swatch-btn" data-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo / Novembro Azul"></button>
+          <button type="button" class="swatch-btn" data-color="#0f766e" style="background:#0f766e;" title="Verde Saúde / Inclusão"></button>
+          <button type="button" class="swatch-btn" data-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
+          <button type="button" class="swatch-btn" data-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
+          <button type="button" class="swatch-btn" data-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
+          <button type="button" class="swatch-btn" data-color="#1e293b" style="background:#1e293b;" title="Grafite Elegante"></button>
+          <label class="color-picker-wrap" title="Escolher qualquer cor personalizada">
+            <input type="color" id="cfg-custom-color" value="#7956c2">
+            <span>Personalizada</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 4. Posição nos Cantos da Tela -->
+      <section class="config-card">
+        <h2>4. Posição nos Cantos da Tela <span class="pro-pill">✨ PRO</span></h2>
+        <label class="field-label">Lado da Tela (o VLibras fica automaticamente no lado oposto):</label>
+        <div class="seg-row-2">
+          <button type="button" class="seg-choice active" data-hpos="right">Direita da Tela</button>
+          <button type="button" class="seg-choice" data-hpos="left">Esquerda da Tela</button>
+        </div>
+        <label class="field-label">Altura nos Cantos:</label>
+        <div class="seg-row">
+          <button type="button" class="seg-choice active" data-vpos="bottom">Fim da Página</button>
+          <button type="button" class="seg-choice" data-vpos="middle">✨ Centro Lateral</button>
+          <button type="button" class="seg-choice" data-vpos="top">✨ Topo Lateral</button>
+        </div>
+      </section>
+
+      <!-- 5. Uniforme 3D do VLibras -->
+      <section class="config-card">
+        <h2>5. Roupa & Logo do Avatar 3D VLibras <span class="pro-pill">✨ PRO</span></h2>
+        <span class="field-sub">Personaliza o uniforme 3D da Hosana, Ícaro e Guga via JSON oficial:</span>
+        <div style="display:flex; gap:14px; margin-bottom:10px;">
+          <label class="color-picker-wrap" style="flex:1;">
+            <input type="color" id="cfg-shirt-color" value="#7956c2">
+            <span>Cor da Camisa</span>
+          </label>
+          <label class="color-picker-wrap" style="flex:1;">
+            <input type="color" id="cfg-pants-color" value="#201E62">
+            <span>Cor da Calça</span>
+          </label>
+        </div>
+        <input type="url" id="cfg-vlibras-logo" class="text-input" placeholder="URL da Logo PNG 500x500 transparente no peito (opcional)">
+      </section>
+
+      <!-- 6. Código Pronto para Copiar -->
+      <section class="config-card">
+        <h2>6. Código de Instalação deste Cliente <span class="pro-pill">Pronto para Colar</span></h2>
+        <pre class="code-box" id="generated-script-box"></pre>
+        <button type="button" class="btn-primary-copy" id="btn-copy-script">📋 Copiar Código &lt;script&gt; do Cliente</button>
+      </section>
+
+    </aside>
+
+    <!-- COLUNA DIREITA: SIMULADOR EM TEMPO REAL -->
+    <section class="studio-preview-area">
+      <div class="browser-bar">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url" id="preview-url-bar">https://empresaexemplo.com.br</div>
+      </div>
+
+      <div class="preview-content">
+        <div class="preview-hero">
+          <span class="tag">Preview Interativo em Tempo Real</span>
+          <h1>Teste o plugin ao vivo com a identidade visual do seu cliente</h1>
+          <p>
+            Use os controles da coluna à esquerda para trocar o <strong>ícone do botão flutuante</strong>, a <strong>cor da marca</strong> (ou campanha sazonal como Outubro Rosa / Novembro Azul), a <strong>posição nos cantos da tela</strong> e o <strong>uniforme do VLibras</strong>. O botão flutuante e o painel do Allyada nesta página atualizam na mesma hora!
+          </p>
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Equipe colaborando em escritório moderno" style="width:100%; max-width:540px; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,0.08);">
+        </div>
+
+        <!-- Preview do Selo Oficial de Compromisso no Rodapé do Site do Cliente -->
+        <div class="preview-seal-footer">
+          <div>
+            <strong style="font-size:13px; display:block; color:#0f172a;">Selo Oficial de Compromisso (Rodapé do Site do Cliente):</strong>
+            <span style="font-size:12px; color:#64748b;">Incluído no Plano PRO com link para a Declaração de Conformidade LBI / WCAG 2.2 AA.</span>
+          </div>
+          <a href="#declaracao-acessibilidade" id="preview-seal-badge" style="display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; background:#0f172a; color:#ffffff; text-decoration:none; font-size:12px; font-weight:700; border:1px solid #334155;">
+            <span id="seal-dot" style="width:10px; height:10px; border-radius:50%; background:#7956c2; display:inline-block;"></span>
+            <span>Site Acessível • Conformidade LBI & WCAG 2.2 AA por <strong>Allyada</strong></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Carrega o Plugin Allyada Real -->
+  <script src="./src/allyada.js"></script>
+  <script>
+    (function() {
+      const state = {
+        domain: 'empresaexemplo.com.br',
+        icon: 'allyada',
+        color: '#7956c2',
+        hpos: 'right',
+        vpos: 'bottom',
+        shirt: '#7956c2',
+        pants: '#201E62',
+        logo: ''
+      };
+
+      const domainInput = document.getElementById('cfg-domain');
+      const urlBar = document.getElementById('preview-url-bar');
+      const hexBadge = document.getElementById('hex-badge');
+      const customColorInput = document.getElementById('cfg-custom-color');
+      const shirtInput = document.getElementById('cfg-shirt-color');
+      const pantsInput = document.getElementById('cfg-pants-color');
+      const logoInput = document.getElementById('cfg-vlibras-logo');
+      const codeBox = document.getElementById('generated-script-box');
+      const copyBtn = document.getElementById('btn-copy-script');
+      const sealDot = document.getElementById('seal-dot');
+
+      function updateGeneratedCodeAndPreview() {
+        const cleanDomain = (state.domain || 'seudominio.com.br').replace(/^https?:\/\//i, '').replace(/\/.*$/, '').trim();
+        urlBar.textContent = 'https://' + cleanDomain;
+        hexBadge.textContent = state.color.toUpperCase();
+        if (sealDot) sealDot.style.background = state.color;
+
+        const logoAttr = state.logo ? `\n  data-vlibras-logo="${state.logo}"` : '';
+        const code = `<script src="https://cdn.allyada.com.br/allyada.min.js"\n  data-domain="${cleanDomain}"\n  data-color="${state.color}"\n  data-icon="${state.icon}"\n  data-position="${state.hpos}"\n  data-vpos="${state.vpos}"\n  data-vlibras-shirt="${state.shirt}"\n  data-vlibras-pants="${state.pants}"${logoAttr}\n  defer><\/script>`;
+        codeBox.textContent = code;
+
+        if (window.Allyada) {
+          window.Allyada.setFabIcon(state.icon);
+          window.Allyada.setBrandColor(state.color);
+          window.Allyada.setDockPosition(state.hpos);
+          window.Allyada.setVerticalPosition(state.vpos);
+          window.Allyada.setVLibrasUniform({
+            shirt: state.shirt,
+            pants: state.pants,
+            logo: state.logo
+          });
+        }
+      }
+
+      domainInput.addEventListener('input', (e) => {
+        state.domain = e.target.value;
+        updateGeneratedCodeAndPreview();
+      });
+
+      document.querySelectorAll('.icon-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.icon-option-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.icon = btn.getAttribute('data-icon');
+          updateGeneratedCodeAndPreview();
+        });
+      });
+
+      document.querySelectorAll('.swatch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.color = btn.getAttribute('data-color');
+          customColorInput.value = state.color;
+          state.shirt = state.color;
+          shirtInput.value = state.color;
+          updateGeneratedCodeAndPreview();
+        });
+      });
+
+      customColorInput.addEventListener('input', (e) => {
+        document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active'));
+        state.color = e.target.value;
+        state.shirt = state.color;
+        shirtInput.value = state.color;
+        updateGeneratedCodeAndPreview();
+      });
+
+      document.querySelectorAll('[data-hpos]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-hpos]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.hpos = btn.getAttribute('data-hpos');
+          updateGeneratedCodeAndPreview();
+        });
+      });
+
+      document.querySelectorAll('[data-vpos]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-vpos]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.vpos = btn.getAttribute('data-vpos');
+          updateGeneratedCodeAndPreview();
+        });
+      });
+
+      shirtInput.addEventListener('input', (e) => {
+        state.shirt = e.target.value;
+        updateGeneratedCodeAndPreview();
+      });
+
+      pantsInput.addEventListener('input', (e) => {
+        state.pants = e.target.value;
+        updateGeneratedCodeAndPreview();
+      });
+
+      logoInput.addEventListener('input', (e) => {
+        state.logo = e.target.value.trim();
+        updateGeneratedCodeAndPreview();
+      });
+
+      copyBtn.addEventListener('click', () => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(codeBox.textContent);
+        }
+        const orig = copyBtn.textContent;
+        copyBtn.textContent = '✅ Código <script> PRO Copiado!';
+        setTimeout(() => { copyBtn.textContent = orig; }, 2500);
+      });
+
+      setTimeout(updateGeneratedCodeAndPreview, 150);
+    })();
+  </script>
+</body>
+</html>
