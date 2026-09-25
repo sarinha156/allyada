@@ -1047,7 +1047,6 @@
                 aria-expanded="false"
                 title="Allyada — Acessibilidade e Preferências (Alt + A)">
           <span class="fab-icon" id="allyada-fab-icon-span">${initFabIconSvg}</span>
-          <span class="fab-badge" aria-hidden="true" id="allyada-active-count">0</span>
         </button>
 
         <!-- Região Live para Anúncios Acessíveis -->
@@ -1068,7 +1067,6 @@
               <div class="brand-text">
                 <div class="title-row">
                   <h2 id="allyada-title">Allyada</h2>
-                  <span class="active-badge-pill" id="header-active-badge" style="display:none;">0 ativos</span>
                 </div>
                 <span class="brand-sub">Acessibilidade para você</span>
               </div>
@@ -1128,7 +1126,7 @@
 
             <div class="tab-scroll-body">
 
-              <!-- 1. PERFIS PRONTOS DE 1 CLIQUE (NO TOPO) -->
+              <!-- 1. PERFIS PRONTOS DE 1 CLIQUE (NO TOPO, EM 2 COLUNAS COMPACTAS) -->
               <section class="menu-section" data-section="profiles">
                 <div class="section-heading">
                   <h3>Perfis Prontos (1 Clique)</h3>
@@ -1141,8 +1139,8 @@
                       <div class="card-icon-bubble">${ICONS.glasses}</div>
                       <span class="card-tag">Baixa Visão</span>
                     </div>
-                    <strong class="card-heading">Modo Ampliação</strong>
-                    <p class="card-subtext">Letra maior (130%), fundo escuro e cursor grande.</p>
+                    <strong class="card-heading">Ampliação</strong>
+                    <p class="card-subtext">Letra 130%, fundo escuro e cursor grande.</p>
                   </button>
 
                   <button type="button" class="profile-card" id="profile-reading" aria-pressed="false" title="Leitura Fácil & Dislexia: Fonte Lexend, linhas espaçadas e alinhamento à esquerda">
@@ -1151,7 +1149,7 @@
                       <span class="card-tag">Dislexia</span>
                     </div>
                     <strong class="card-heading">Leitura Fácil</strong>
-                    <p class="card-subtext">Fonte Lexend aberta e linhas mais espaçadas.</p>
+                    <p class="card-subtext">Fonte Lexend e linhas espaçadas.</p>
                   </button>
 
                   <button type="button" class="profile-card" id="profile-focus" aria-pressed="false" title="Foco & TDAH: Régua de leitura, sem animações e espaçamento confortável">
@@ -1160,7 +1158,7 @@
                       <span class="card-tag">TDAH / Foco</span>
                     </div>
                     <strong class="card-heading">Modo Foco</strong>
-                    <p class="card-subtext">Régua guia de leitura e pausa distrações visuais.</p>
+                    <p class="card-subtext">Régua guia e pausa distrações.</p>
                   </button>
 
                   <button type="button" class="profile-card" id="profile-motion" aria-pressed="false" title="Sem Movimento: Pausa animações, vídeos e transições que causam desconforto">
@@ -1169,16 +1167,18 @@
                       <span class="card-tag">Calma</span>
                     </div>
                     <strong class="card-heading">Sem Movimento</strong>
-                    <p class="card-subtext">Bloqueia animações e efeitos que causam tontura.</p>
+                    <p class="card-subtext">Bloqueia animações e tontura.</p>
                   </button>
 
-                  <button type="button" class="profile-card" id="profile-colors" aria-pressed="false" title="Daltonismo & Cores: Realça links e ativa filtros de percepção de cores">
-                    <div class="card-top-row">
-                      <div class="card-icon-bubble">${ICONS.eye}</div>
-                      <span class="card-tag">Daltonismo</span>
+                  <button type="button" class="profile-card profile-card-wide" id="profile-colors" aria-pressed="false" title="Daltonismo & Cores: Realça links e ativa filtros de percepção de cores">
+                    <div class="card-icon-bubble">${ICONS.eye}</div>
+                    <div class="profile-wide-info">
+                      <div style="display:flex; align-items:center; gap:6px;">
+                        <strong class="card-heading" style="padding-right:0;">Modo Cores</strong>
+                        <span class="card-tag">Daltonismo</span>
+                      </div>
+                      <p class="card-subtext">Deuteranopia, Protanopia e Tritanopia.</p>
                     </div>
-                    <strong class="card-heading">Modo Cores</strong>
-                    <p class="card-subtext">Ajuste cromático para Deuteranopia, Protanopia e Tritanopia.</p>
                   </button>
                 </div>
 
@@ -4747,9 +4747,13 @@
       const chosen = validIcons.includes(iconKey) ? iconKey : 'allyada';
       this.config.fabIcon = chosen;
       if (this.shadowRoot) {
-        const fabIconSpan = this.shadowRoot.getElementById('allyada-fab-icon-svg');
+        const fabIconSpan = this.shadowRoot.getElementById('allyada-fab-icon-span') || this.shadowRoot.getElementById('allyada-fab-icon-svg');
         if (fabIconSpan) {
           fabIconSpan.innerHTML = ICONS[chosen] || ICONS.allyada;
+        }
+        const headerIconBox = this.shadowRoot.getElementById('allyada-header-icon-box');
+        if (headerIconBox) {
+          headerIconBox.innerHTML = ICONS[chosen] || ICONS.allyada;
         }
       }
       this.updatePanelUI();
@@ -6521,24 +6525,38 @@
         }
         .arrow-icon svg { width: 16px; height: 16px; }
 
-        /* Perfis Humanos Premium */
+        /* Perfis Humanos Premium (2 Colunas Compactas) */
         .profiles-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
         }
         .profile-card {
-          padding: 16px 18px;
-          border-radius: var(--radius-card);
+          padding: 11px 12px;
+          border-radius: 13px;
           border: 1px solid var(--border-subtle);
-          background: rgba(255, 255, 255, 0.6);
+          background: rgba(255, 255, 255, 0.72);
           cursor: pointer;
           text-align: left;
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 4px;
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
           position: relative;
+        }
+        .profile-card.profile-card-wide {
+          grid-column: 1 / -1;
+          flex-direction: row;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 12px;
+        }
+        .profile-wide-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          flex: 1;
+          min-width: 0;
         }
         .profile-card:hover {
           background: #ffffff;
@@ -6547,21 +6565,25 @@
           box-shadow: 0 8px 16px rgba(0,0,0,0.06);
         }
         .profile-card.active {
-          background: rgba(121, 86, 194, 0.05);
+          background: rgba(121, 86, 194, 0.06);
           border-color: var(--border-active);
           box-shadow: 0 0 0 1px var(--border-active);
         }
         .profile-card.active::after {
-          content: "✓ Ativo";
+          content: "✓";
           position: absolute;
-          top: 16px;
-          right: 18px;
-          font-size: 12px;
-          font-weight: 800;
-          color: var(--primary);
-          background: rgba(121, 86, 194, 0.12);
-          padding: 4px 10px;
-          border-radius: 999px;
+          top: 8px;
+          right: 8px;
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 11px;
+          font-weight: 900;
+          color: #ffffff;
+          background: var(--primary);
+          border-radius: 50%;
         }
         .profile-card:focus-visible {
           outline: 3px solid var(--primary);
@@ -6571,13 +6593,14 @@
           display: flex;
           align-items: center;
           justify-content: flex-start;
-          gap: 10px;
-          margin-bottom: 4px;
+          gap: 7px;
+          margin-bottom: 1px;
         }
         .card-icon-bubble {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
+          width: 30px;
+          height: 30px;
+          flex-shrink: 0;
+          border-radius: 8px;
           background: #e2e8f0;
           display: flex;
           align-items: center;
@@ -6590,24 +6613,25 @@
           color: #ffffff;
           box-shadow: 0 4px 8px rgba(121, 86, 194, 0.3);
         }
-        .card-icon-bubble svg { width: 20px; height: 20px; }
+        .card-icon-bubble svg { width: 17px; height: 17px; }
         .card-tag {
-          font-size: 12px;
+          font-size: 10.5px;
           font-weight: 800;
           text-transform: uppercase;
           color: var(--text-muted);
-          letter-spacing: 0.05em;
+          letter-spacing: 0.04em;
         }
         .card-heading {
-          font-size: 16px;
+          font-size: 13.5px;
           font-weight: 800;
           color: var(--text-main);
-          padding-right: 70px;
+          padding-right: 18px;
+          line-height: 1.2;
         }
         .card-subtext {
-          font-size: 14px;
+          font-size: 11.5px;
           color: var(--text-secondary);
-          line-height: 1.4;
+          line-height: 1.3;
         }
 
         .sub-selector-box {

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-palette="iris">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Allyada — Suíte Brasileira de Acessibilidade Web, IA Assistiva & Conformidade LBI / WCAG 2.2</title>
+  <meta name="description" content="Acessibilidade completa em 1 linha de código, 100% pensada para o Brasil (LBI + e-MAG + VLibras 3D + Voz Neural + IA Visual de Imagens com OCR), com isolamento total em Shadow DOM.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%237956C2' stroke-width='6'%3E%3Crect width='100' height='100' rx='22' fill='%23130D26' stroke='none'/%3E%3Cpath d='M13.8 30.2A40 40 0 0 1 86.2 30.2' stroke='%23FFFFFF'/%3E%3Cpath d='M15.8 40.5Q50 58 84.2 40.5' stroke='%23F59E0B'/%3E%3Cpath d='M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2' stroke='%23FFFFFF'/%3E%3Ccircle cx='50' cy='29.5' r='10.2' fill='%23F59E0B' stroke='none'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- BARRA DE EXPERIMENTAÇÃO DE IDENTIDADE VISUAL (4 PROPOSTAS DE PALETA AO VIVO) -->
+  <div class="palette-switcher-bar" role="region" aria-label="Seletor de Propostas de Identidade Visual">
+    <div class="palette-switcher-inner">
+      <div class="palette-switcher-label">
+        <span class="badge-try">🎨 Estúdio de Marca</span>
+        <span>Teste as 4 propostas de paleta no site e no plugin ao vivo:</span>
+      </div>
+      <div class="palette-pills">
+        <button type="button" class="palette-pill-btn active" data-set-palette="iris" onclick="applySitePalette('iris')">
+          <span class="swatch-dot-pair">
+            <span class="swatch-dot" style="background:#7956C2"></span>
+            <span class="swatch-dot" style="background:#F59E0B"></span>
+          </span>
+          1. Íris & Âmbar (Roxo Allyada)
+        </button>
+        <button type="button" class="palette-pill-btn" data-set-palette="neural" onclick="applySitePalette('neural')">
+          <span class="swatch-dot-pair">
+            <span class="swatch-dot" style="background:#4F46E5"></span>
+            <span class="swatch-dot" style="background:#14B8A6"></span>
+          </span>
+          2. Neural & Turquesa (Tech IA)
+        </button>
+        <button type="button" class="palette-pill-btn" data-set-palette="safira" onclick="applySitePalette('safira')">
+          <span class="swatch-dot-pair">
+            <span class="swatch-dot" style="background:#0052CC"></span>
+            <span class="swatch-dot" style="background:#10B981"></span>
+          </span>
+          3. Safira & Esmeralda (Confiança LBI)
+        </button>
+        <button type="button" class="palette-pill-btn" data-set-palette="ametista" onclick="applySitePalette('ametista')">
+          <span class="swatch-dot-pair">
+            <span class="swatch-dot" style="background:#7C3AED"></span>
+            <span class="swatch-dot" style="background:#F43F5E"></span>
+          </span>
+          4. Ametista & Coral (Empatia)
+        </button>
+        <a href="identidade-visual.html" style="color: #FCD34D; font-weight: 700; text-decoration: none; font-size: 0.78rem; margin-left: 6px;">
+          Abrir Brandbook Completo &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CABEÇALHO PRINCIPAL DO SITE OFICIAL -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="allyada-logo" aria-label="Allyada — Página Inicial">
+        <div class="allyada-logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/>
+            <path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/>
+            <path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/>
+            <path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/>
+            <path d="M15.8 40.5Q50 58 84.2 40.5"/>
+            <path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/>
+            <circle cx="50" cy="29.5" r="10.2" fill="rgba(255,255,255,0.4)"/>
+          </svg>
+        </div>
+        <div class="allyada-logo-text">
+          <span class="allyada-wordmark">allyada<span class="dot">.</span></span>
+          <span class="allyada-tagline-mini">Acessibilidade & IA Assistiva</span>
+        </div>
+      </a>
+
+      <nav aria-label="Navegação Principal">
+        <ul class="nav-links">
+          <li><a href="#funcionalidades">Funcionalidades</a></li>
+          <li><a href="#perfis">Perfis Clínicos</a></li>
+          <li><a href="#instalacao">Instalação (1 Linha)</a></li>
+          <li><a href="#conformidade">Conformidade LBI</a></li>
+          <li><a href="#planos">Planos & Preços</a></li>
+          <li><a href="identidade-visual.html">Identidade Visual</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="btn btn-outline" onclick="if(window.Allyada) Allyada.openPanel();">
+          ♿ Testar Plugin (Alt + A)
+        </button>
+        <a href="#planos" class="btn btn-primary">
+          ✨ Testar PRO 7 Dias Grátis
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            <span>Suíte Brasileira de Acessibilidade Web &bull; LBI, e-MAG & WCAG 2.2 AAA</span>
+          </div>
+          <h1 class="hero-title">
+            Acessibilidade humana e <span class="highlight">IA assistiva</span> em 1 linha de código.
+          </h1>
+          <p class="hero-subtitle">
+            Torne seu site, clínica, cartório, e-commerce ou sistema em <code>&lt;iframe&gt;</code> imediatamente acessível.
+            Com <strong>Descritor Visual de Imagens (IA + OCR)</strong>, <strong>Voz Neural Contínua</strong>,
+            <strong>VLibras 3D Sincronizado</strong> e <strong>Shadow DOM</strong> que nunca quebra o seu layout.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#planos" class="btn btn-accent">
+              🚀 Começar Teste Grátis de 7 Dias (PRO)
+            </a>
+            <button type="button" class="btn btn-ghost-light" onclick="if(window.Allyada) Allyada.openPanel();">
+              ✨ Abrir Painel Allyada Ao Vivo
+            </button>
+            <a href="identidade-visual.html" class="btn btn-ghost-light">
+              🎨 Ver Manual da Marca
+            </a>
+          </div>
+
+          <div class="hero-trust-badges">
+            <span class="trust-pill">🛡️ Isolamento 100% Shadow DOM</span>
+            <span class="trust-pill">🧠 Visão Computacional + OCR no Navegador</span>
+            <span class="trust-pill">🤟 VLibras 3D Lado Oposto Automático</span>
+            <span class="trust-pill">📐 Posição Centro Lateral (Não cobre WhatsApp)</span>
+            <span class="trust-pill">♾️ Pageviews Ilimitados em Todos os Planos</span>
+          </div>
+        </div>
+
+        <!-- Card de Demonstração Visual da Tecnologia Assistiva -->
+        <div class="hero-visual-card" aria-label="Demonstração visual da Inteligência Assistiva Allyada">
+          <div class="showcase-window-bar">
+            <div class="window-dots" aria-hidden="true">
+              <span style="background:#EF4444"></span>
+              <span style="background:#F59E0B"></span>
+              <span style="background:#10B981"></span>
+            </div>
+            <span style="font-size: 0.76rem; font-family: 'JetBrains Mono', monospace; color: #CBD5E1;">
+              &lt;script src="cdn.allyada.com.br/allyada.js" defer&gt;&lt;/script&gt;
+            </span>
+          </div>
+
+          <div class="ai-vision-demo-box">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:0.75rem; font-weight:700; color:var(--brand-accent); text-transform:uppercase; letter-spacing:0.04em;">
+                🧠 Descritor Visual de Imagens com IA + OCR (✨ PRO)
+              </span>
+              <span style="font-size:0.7rem; background:rgba(16,185,129,0.2); color:#6EE7B7; padding:2px 8px; border-radius:999px; font-weight:600;">
+                TensorFlow + Tesseract OCR
+              </span>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 96px 1fr; gap:12px; align-items:center;">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80"
+                   alt="Mulher sorrindo utilizando um notebook em ambiente de trabalho moderno"
+                   style="width:96px; height:76px; object-fit:cover; border-radius:10px; border:2px solid var(--brand-accent);">
+              <div>
+                <div style="font-size:0.76rem; color:#94A3B8; margin-bottom:4px;">Leitura de Pixels Reais + Texto na Foto:</div>
+                <div class="ai-speech-bubble" style="margin-top:0;">
+                  🔊 <em>"Mulher utilizando um notebook em ambiente interno com o título na imagem 'Inovação Digital'."</em>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.78rem; color:#CBD5E1; margin-top:14px; margin-bottom:6px;">
+            <span><strong>Perfis Clínicos em 1 Clique</strong> (Zero Duplicação UX AAA)</span>
+            <span style="color:var(--brand-accent); font-weight:700;">Atalho: Alt + A</span>
+          </div>
+          <div class="mini-profiles-row">
+            <div class="mini-profile-chip">🔍 Baixa Visão (130%)</div>
+            <div class="mini-profile-chip">📖 Dislexia (Lexend)</div>
+            <div class="mini-profile-chip">🎯 Foco (TDAH)</div>
+            <div class="mini-profile-chip">🧘 Sem Movimento</div>
+            <div class="mini-profile-chip">🎨 Daltonismo SVG</div>
+            <div class="mini-profile-chip">🤟 VLibras 3D</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 1: FUNCIONALIDADES EM DESTAQUE -->
+  <section class="section" id="funcionalidades">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Tecnologia Assistiva Sênior</span>
+        <h2 class="section-title">Projetada para autonomia real, não apenas para cumprir tabela</h2>
+        <p class="section-desc">
+          Arquitetura de Ergonomia Cognitiva com <strong>Zero Duplicação de Botões</strong>, busca instantânea no topo
+          e proteção cirúrgica de cabeçalhos e menus do seu site.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Card 1: IA Visual + OCR (Destaque Largo) -->
+        <div class="feature-card featured-wide">
+          <div>
+            <div class="feature-icon-box">🧠</div>
+            <h3>
+              Descritor Visual de Imagens com IA + OCR em Tempo Real
+              <span class="badge-pro">✨ Inclusivo & PRO</span>
+            </h3>
+            <p>
+              Mais de 80% das imagens na web não possuem atributo <code>alt</code> adequado. A Allyada combina
+              <strong>Visão Computacional Neural no navegador (TensorFlow.js + COCO-SSD)</strong> com
+              <strong>Reconhecimento Óptico de Caracteres (Tesseract.js OCR em 2 passadas)</strong> e inspeção de camadas DOM
+              para descrever pessoas, objetos, ações e textos embutidos dentro de banners e fotos.
+            </p>
+          </div>
+          <ul class="feature-bullets">
+            <li>Detecta pessoas (Homem, Mulher, Pessoa), celulares, notebooks, livros e contexto visual nos pixels reais</li>
+            <li>Lê títulos e frases desenhadas dentro da imagem com OCR de dupla passada + suporte opcional a Gemini Vision</li>
+            <li>Custo de servidor zero: processamento neural executado 100% no navegador do usuário</li>
+          </ul>
+        </div>
+
+        <!-- Card 2: Posicionamento Centro Lateral & Shadow DOM -->
+        <div class="feature-card">
+          <div>
+            <div class="feature-icon-box">📐</div>
+            <h3>
+              Centro Lateral & Blindagem Shadow DOM
+              <span class="badge-pro">✨ PRO</span>
+            </h3>
+            <p>
+              Chega de plugins que ficam em cima do botão de WhatsApp ou quebram o menu do site. Posicione o botão
+              no <strong>Centro Lateral</strong> ou <strong>Topo Lateral</strong> com isolamento absoluto.
+            </p>
+          </div>
+          <ul class="feature-bullets">
+            <li>3 alturas: Fim da Página, Centro Lateral e Topo Lateral</li>
+            <li>Header Shield: protege <code>header</code>, <code>nav</code> e <code>topbar</code> ao ampliar fontes até 200%</li>
+            <li>Ponte nativa para sistemas em <code>&lt;iframe&gt;</code></li>
+          </ul>
+        </div>
+
+        <!-- Card 3: Leitor de Voz Neural -->
+        <div class="feature-card">
+          <div>
+            <div class="feature-icon-box">🗣️</div>
+            <h3>
+              Leitor de Voz Neural (TTS) com Retomada Exata
+              <span class="badge-pro">✨ PRO</span>
+            </h3>
+            <p>
+              Prioriza automaticamente as vozes neurais e naturais em Português (<code>pt-BR</code>). Ao alterar a velocidade
+              entre <code>0.75x</code> e <code>2.0x</code>, a leitura continua exatamente da palavra onde parou.
+            </p>
+          </div>
+          <ul class="feature-bullets">
+            <li>Seletor de Vozes Mais Humanas / Naturais</li>
+            <li>Modo Apontar e Ler com realce sincronizado</li>
+            <li>Leitura imediata de trechos selecionados</li>
+          </ul>
+        </div>
+
+        <!-- Card 4: VLibras 3D Sincronizado -->
+        <div class="feature-card">
+          <div>
+            <div class="feature-icon-box">🤟</div>
+            <h3>
+              Tradutor VLibras 3D Sincronizado & Customizável
+              <span class="badge-pro">✨ PRO</span>
+            </h3>
+            <p>
+              Integração inteligente com o VLibras Oficial: o avatar 3D posiciona-se automaticamente no <strong>lado oposto</strong>
+              ao painel da Allyada e sincroniza cores e abertura.
+            </p>
+          </div>
+          <ul class="feature-bullets">
+            <li>Escolha entre os intérpretes Hosana, Ícaro e Guga</li>
+            <li>Cor do player VLibras sincronizada com a marca</li>
+            <li>Opção corporativa de uniforme/logo customizado</li>
+          </ul>
+        </div>
+
+        <!-- Card 5: Guia de Foco, Teclado & Cursor Adaptativo -->
+        <div class="feature-card">
+          <div>
+            <div class="feature-icon-box">🎯</div>
+            <h3>
+              Guia de Foco, Teclado Virtual & Cursor Inteligente
+            </h3>
+            <p>
+              Ferramentas completas de auxílio motor e rastreamento visual: Régua Guia, Máscara de Foco, Teclado Virtual na tela
+              e Cursores de <code>44px</code> e <code>60px</code>.
+            </p>
+          </div>
+          <ul class="feature-bullets">
+            <li>Cursor adapta-se automaticamente para branco no modo escuro</li>
+            <li>Foco de teclado duplo de alta visibilidade (WCAG 2.4.13 AAA)</li>
+            <li>Explorador flutuante de Títulos (H1–H6), Regiões e Links</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Subseção: 5 Perfis Clínicos em 1 Clique -->
+      <div id="perfis" style="margin-top: 48px; background: var(--brand-surface); border: 1px solid var(--brand-border); border-radius: 18px; padding: 32px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+          <div>
+            <span class="section-tag" style="margin-bottom:6px;">Ergonomia Cognitiva em 1 Clique</span>
+            <h3 style="font-size:1.45rem; font-weight:800;">5 Perfis Clínicos Prontos na Aba Início</h3>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="if(window.Allyada) Allyada.openPanel();">
+            Experimentar Perfis no Painel &rarr;
+          </button>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:16px;">
+          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">🔍</div>
+            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">1. Modo Ampliação (Baixa Visão)</h4>
+            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Texto em 130%, contraste escuro confortável, links realçados e Cursor Grande (44px) branco de alto contraste.</p>
+          </div>
+          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">📖</div>
+            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">2. Leitura Fácil (Dislexia)</h4>
+            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Aplica a fonte especializada <strong>Lexend</strong>, entrelinhas de 1.9x, espaçamento ampliado e alinhamento à esquerda.</p>
+          </div>
+          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">🎯</div>
+            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">3. Modo Foco (TDAH)</h4>
+            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Ativa a Régua Guia luminosa, pausa animações/carrosséis que causam distração e otimiza o espaçamento textual.</p>
+          </div>
+          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">🧘</div>
+            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">4. Sem Movimento (Calma)</h4>
+            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Bloqueia instantaneamente animações CSS, transições bruscas e vídeos automáticos (Epilepsia Fotossensível / WCAG 2.2.2).</p>
+          </div>
+          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">🎨</div>
+            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">5. Modo Cores (Daltonismo)</h4>
+            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Destaca links interativos e ativa matrizes de filtros cromáticos SVG clínicos para Deuteranopia, Protanopia e Tritanopia.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2: INSTALAÇÃO EM 1 LINHA DE CÓDIGO -->
+  <section class="section section-alt" id="instalacao">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Integração Universal em 30 Segundos</span>
+        <h2 class="section-title">Instale em qualquer site com 1 linha de código</h2>
+        <p class="section-desc">
+          Compatível com HTML puro, WordPress, Elementor, Shopify, Nuvemshop, React, Next.js, Vue e portais governamentais ou cartorários.
+        </p>
+      </div>
+
+      <div class="code-showcase-box">
+        <div class="code-tabs-header">
+          <div class="code-tab-buttons">
+            <button type="button" class="code-tab-btn active" id="tab-code-pro" onclick="switchCodeTab('pro')">
+              ✨ Script PRO Personalizado (Data Attributes)
+            </button>
+            <button type="button" class="code-tab-btn" id="tab-code-free" onclick="switchCodeTab('free')">
+              🟢 1 Linha (Padrão Automático)
+            </button>
+            <button type="button" class="code-tab-btn" id="tab-code-js" onclick="switchCodeTab('js')">
+              ⚙️ Inicialização via API JS
+            </button>
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-copy-snippet" onclick="copyCurrentSnippet()" style="padding: 6px 14px; font-size: 0.8rem;">
+            📋 Copiar Código
+          </button>
+        </div>
+        <div class="code-pre-wrapper">
+          <pre id="code-snippet-display" class="font-mono" style="color: #E2E8F0; white-space: pre-wrap;"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3: CONFORMIDADE LEGAL (LBI / WCAG 2.2 / SELO OFICIAL) -->
+  <section class="section" id="conformidade">
+    <div class="container">
+      <div class="compliance-grid">
+        <div>
+          <span class="section-tag">Segurança Jurídica & Inclusão</span>
+          <h2 class="section-title" style="text-align:left;">
+            Conformidade com a LBI (Lei 13.146/15), WCAG 2.2 AAA e Prêmio PQTA / CNJ
+          </h2>
+          <p class="section-desc" style="text-align:left; margin-bottom:28px;">
+            No Brasil, o <strong>Artigo 63 da Lei Brasileira de Inclusão (Estatuto da Pessoa com Deficiência)</strong>
+            torna obrigatória a acessibilidade nos sítios da internet mantidos por empresas com sede ou representação comercial no país
+            ou por órgãos de governo.
+          </p>
+
+          <div class="law-cards-stack">
+            <div class="law-card">
+              <h4>⚖️ Lei Federal nº 13.146/2015 (LBI — Art. 63)</h4>
+              <p>Atende aos requisitos de tecnologia assistiva, síntese de voz, tradução para Libras (VLibras) e autonomia de navegação para pessoas com deficiência.</p>
+            </div>
+            <div class="law-card">
+              <h4>🏛️ Cartórios Extrajudiciais (Prêmio PQTA / CNJ & Provimentos)</h4>
+              <p>Ideal para serventias que buscam pontuação máxima em acessibilidade digital, atendimento inclusivo em Libras 3D e Declaração Oficial de Acessibilidade no rodapé.</p>
+            </div>
+            <div class="law-card">
+              <h4>🌐 Diretrizes Internacionais W3C WCAG 2.2 (Níveis AA e AAA) & e-MAG</h4>
+              <p>Cumpre critérios rigorosos como Redimensionamento até 200% (1.4.4), Espaçamento de Texto (1.4.12), Foco Visível Duplo AAA (2.4.13) e Pausa de Movimento (2.2.2).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vitrine do Selo Oficial de Compromisso PRO -->
+        <div class="seal-showcase-card">
+          <span style="background:rgba(245,158,11,0.2); color:#FCD34D; padding:4px 12px; border-radius:999px; font-size:0.75rem; font-weight:700;">
+            🏅 Exclusivo Plano PRO
+          </span>
+          <h3 style="font-size:1.5rem; font-weight:800; color:#FFFFFF; margin-top:12px; margin-bottom:8px;">
+            Selo Oficial de Compromisso com a Acessibilidade
+          </h3>
+          <p style="font-size:0.9rem; color:#CBD5E1; margin-bottom:16px;">
+            Clientes do Plano PRO recebem o Selo Oficial interativo para o rodapé do site, acompanhado da Declaração Jurídica de Conformidade LBI & WCAG 2.2:
+          </p>
+
+          <!-- O Selo Oficial Renderizado -->
+          <div class="official-seal-badge">
+            <div class="official-seal-icon" aria-hidden="true">
+              <svg viewBox="0 0 100 100" width="28" height="28" fill="none" stroke="currentColor" stroke-width="6">
+                <path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/>
+                <path d="M15.8 40.5Q50 58 84.2 40.5"/>
+                <path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/>
+                <circle cx="50" cy="29.5" r="10.2" fill="currentColor"/>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--brand-accent);">
+                ✓ Site Acessível &bull; Conformidade Verificada
+              </div>
+              <div style="font-size:1rem; font-weight:800; color:#FFFFFF; line-height:1.2; margin:2px 0;">
+                Tecnologia Assistiva Allyada PRO
+              </div>
+              <div style="font-size:0.74rem; color:#CBD5E1;">
+                Lei Brasileira de Inclusão (Lei 13.146/15) &bull; WCAG 2.2 AAA &bull; VLibras
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.28); border-radius:12px; padding:14px; text-align:left; font-size:0.8rem; color:#E2E8F0; margin-bottom:18px; border:1px solid rgba(255,255,255,0.1);">
+            <strong>📋 O que acompanha o Selo PRO:</strong>
+            <ul style="list-style:none; margin-top:8px; display:flex; flex-direction:column; gap:6px;">
+              <li>✅ Badge SVG em alta definição para rodapé escuro ou claro</li>
+              <li>✅ Declaração Técnica de Acessibilidade Digital (LBI Art. 63 + Lei 12.527/11)</li>
+              <li>✅ Validação vinculada ao domínio oficial da empresa ou cartório</li>
+            </ul>
+          </div>
+
+          <a href="identidade-visual.html#selo-oficial" class="btn btn-accent" style="width:100%;">
+            Ver Variações do Selo no Brandbook &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4: PLANOS E PREÇOS (FREE VS PRO) -->
+  <section class="section section-alt" id="planos">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Transparência & Modelo Justo</span>
+        <h2 class="section-title">Planos por domínio, com pageviews ilimitados</h2>
+        <p class="section-desc">
+          Sem surpresas na fatura e sem cobrança por número de visitas. Teste o <strong>Plano PRO grátis por 7 dias</strong> no seu domínio.
+        </p>
+      </div>
+
+      <!-- Banner de Filosofia da Marca -->
+      <div class="philosophy-banner">
+        <div style="font-size:2.2rem; flex-shrink:0;">💜</div>
+        <div>
+          <h3 style="font-size:1.08rem; font-weight:800; margin-bottom:4px; color:var(--brand-text-main);">
+            Filosofia Allyada: "Acessibilidade é um direito humano, não um privilégio."
+          </h3>
+          <p style="font-size:0.9rem; color:var(--brand-text-muted);">
+            Por isso, <strong>todos os módulos de acessibilidade estão inclusos em todos os planos</strong> (inclusive no Gratuito), sem limite de visualizações de página. O <strong>Plano PRO</strong> existe para empresas, clínicas, cartórios e agências que desejam personalizar o plugin com a cor e o ícone da sua marca, posicionar no centro lateral da tela, usar vozes neurais e exibir o Selo Oficial de Conformidade.
+          </p>
+        </div>
+      </div>
+
+      <!-- Cards de Preços -->
+      <div class="pricing-grid">
+        <!-- Plano 1: Gratuito -->
+        <div class="pricing-card">
+          <div>
+            <div class="plan-name">🟢 Comunidade</div>
+            <p class="plan-target">Blogs pessoais, ONGs, projetos sociais e sites comunitários</p>
+            <div class="plan-price">R$ 0 <span class="period">/ mês</span></div>
+            <div class="plan-setup">Instalação Gratuita (R$ 0)</div>
+
+            <ul class="plan-features">
+              <li><span>✅</span> <strong>Todos os módulos assistivos inclusos</strong></li>
+              <li><span>✅</span> <strong>Pageviews e páginas ilimitadas</strong></li>
+              <li><span>✅</span> IA Visual de Imagens + OCR e VLibras 3D</li>
+              <li><span>✅</span> 5 Perfis Clínicos em 1 Clique</li>
+              <li><span>⚪</span> Visual Roxo padrão Allyada</li>
+              <li><span>⚪</span> Fixo no canto inferior da tela</li>
+            </ul>
+          </div>
+          <a href="#instalacao" class="btn btn-outline" style="width:100%;">
+            Instalar Código Gratuito
+          </a>
+        </div>
+
+        <!-- Plano 2: PRO 1 Domínio (Mais Popular) -->
+        <div class="pricing-card popular">
+          <div class="popular-ribbon">✨ Mais Escolhido &bull; 7 Dias Grátis</div>
+          <div>
+            <div class="plan-name">✨ Plano PRO</div>
+            <p class="plan-target">Empresas, clínicas, e-commerces, escritórios e portais (1 domínio completo)</p>
+            <div class="plan-price">R$ 149 <span class="period">/ mês</span></div>
+            <div class="plan-setup">ou R$ 119/mês no anual &bull; Setup PRO: R$ 250</div>
+
+            <ul class="plan-features">
+              <li><span>✅</span> <strong>Tudo do Gratuito + Pageviews Ilimitados</strong></li>
+              <li><span>✅</span> <strong>Posição no Centro Lateral ou Topo</strong> (não cobre WhatsApp/Chat)</li>
+              <li><span>✅</span> <strong>Cor Oficial da Sua Marca</strong> no Allyada e no VLibras</li>
+              <li><span>✅</span> <strong>Escolha do Ícone Flutuante (FAB)</strong></li>
+              <li><span>✅</span> <strong>Vozes Neurais Mais Humanas</strong> + 5 velocidades contínuas</li>
+              <li><span>✅</span> <strong>Selo Oficial de Compromisso</strong> + Declaração LBI/WCAG</li>
+            </ul>
+          </div>
+          <a href="mailto:contato@allyada.com.br?subject=Teste%20Gratis%207%20Dias%20-%20Allyada%20PRO" class="btn btn-primary" style="width:100%;">
+            Testar 7 Dias Grátis
+          </a>
+        </div>
+
+        <!-- Plano 3: Corporativo & Cartórios -->
+        <div class="pricing-card">
+          <div>
+            <div class="plan-name">🏛️ Cartórios & Corp</div>
+            <p class="plan-target">Cartórios (Prêmio PQTA/CNJ), prefeituras, hospitais e grandes marcas</p>
+            <div class="plan-price">R$ 249 <span class="period">/ mês</span></div>
+            <div class="plan-setup">Setup + Avatar Customizado: R$ 490 a R$ 990</div>
+
+            <ul class="plan-features">
+              <li><span>✅</span> <strong>Todos os recursos do Plano PRO</strong></li>
+              <li><span>✅</span> <strong>Uniforme 3D do VLibras com as cores e logo da instituição</strong></li>
+              <li><span>✅</span> <strong>Suporte completo a sistemas em <code>&lt;iframe&gt;</code></strong></li>
+              <li><span>✅</span> <strong>Certificado & Declaração Jurídica LBI / LAI / PQTA</strong></li>
+              <li><span>✅</span> Configuração assistida pela nossa equipe</li>
+            </ul>
+          </div>
+          <a href="mailto:contato@allyada.com.br?subject=Plano%20Cartorios%20e%20Corporativo%20-%20Allyada" class="btn btn-outline" style="width:100%;">
+            Solicitar Proposta Corporativa
+          </a>
+        </div>
+
+        <!-- Plano 4: Pacote Agência / Multi-Domínios -->
+        <div class="pricing-card">
+          <div>
+            <div class="plan-name">🤝 Pacote Agência</div>
+            <p class="plan-target">Agências web, redes de clínicas ou grupos empresariais (até 5 domínios)</p>
+            <div class="plan-price">R$ 399 <span class="period">/ mês</span></div>
+            <div class="plan-setup">Sai apenas R$ 79/mês por site! &bull; Setup: R$ 390</div>
+
+            <ul class="plan-features">
+              <li><span>✅</span> <strong>Até 5 domínios completos com licença PRO</strong></li>
+              <li><span>✅</span> Cada site com sua própria cor, ícone e posição lateral</li>
+              <li><span>✅</span> Pageviews ilimitados em todos os 5 domínios</li>
+              <li><span>✅</span> Selo Oficial de Acessibilidade em todos os clientes</li>
+              <li><span>✅</span> Alta margem de revenda para agências parceiras</li>
+            </ul>
+          </div>
+          <a href="mailto:contato@allyada.com.br?subject=Parceria%20Agencia%20Multi-Dominios%20-%20Allyada" class="btn btn-outline" style="width:100%;">
+            Falar com Consultor
+          </a>
+        </div>
+      </div>
+
+      <!-- Tabela Comparativa Completa -->
+      <h3 style="font-size:1.45rem; font-weight:800; text-align:center; margin-bottom:24px;">
+        Comparativo Detalhado: Plano Gratuito vs. Plano PRO
+      </h3>
+      <div class="comparison-table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th style="width:46%;">Funcionalidade / Recurso</th>
+              <th style="width:27%; text-align:center;">🟢 Plano Gratuito (Comunidade)</th>
+              <th style="width:27%; text-align:center; color:var(--brand-primary);">✨ Plano PRO (Teste 7 Dias Grátis)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Todos os Módulos de Acessibilidade</strong> (Perfis, Fonte 200%, Lexend, Contraste, Cursor, Régua, Máscara, Teclado Virtual, IA de Imagens e VLibras)</td>
+              <td style="text-align:center;">✅ <strong>Inclusos</strong></td>
+              <td style="text-align:center;">✅ <strong>Inclusos</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Limite de Páginas e Pageviews Mensais</strong></td>
+              <td style="text-align:center;">✅ <strong>Ilimitado</strong></td>
+              <td style="text-align:center;">✅ <strong>Ilimitado</strong> (Zero cobrança extra)</td>
+            </tr>
+            <tr>
+              <td><strong>1. Posição nos Cantos da Tela (<code>verticalPosition</code>)</strong></td>
+              <td style="text-align:center; color:var(--brand-text-muted);">Fixo no fim da página</td>
+              <td style="text-align:center;">✅ <strong>Centro Lateral ou Topo Lateral</strong> (Não cobre WhatsApp)</td>
+            </tr>
+            <tr>
+              <td><strong>2. Cor do Allyada + Cor do VLibras Sincronizada</strong></td>
+              <td style="text-align:center; color:var(--brand-text-muted);">Cor padrão Allyada</td>
+              <td style="text-align:center;">✅ <strong>Cor Oficial da Marca do Cliente</strong> + Campanhas</td>
+            </tr>
+            <tr>
+              <td><strong>3. Escolha do Ícone do Botão Flutuante (FAB)</strong></td>
+              <td style="text-align:center; color:var(--brand-text-muted);">Ícone padrão Allyada</td>
+              <td style="text-align:center;">✅ <strong>5 Ícones Exclusivos</strong> (Allyada, Universal, Libras, Coração, Escudo)</td>
+            </tr>
+            <tr>
+              <td><strong>4. Leitura em Voz Alta (TTS Neural)</strong></td>
+              <td style="text-align:center; color:var(--brand-text-muted);">Voz padrão do navegador</td>
+              <td style="text-align:center;">✅ <strong>Seletor de Vozes Neurais (Mais Humanas) + 5 Velocidades</strong></td>
+            </tr>
+            <tr>
+              <td><strong>5. Personalização do VLibras 3D (Intérpretes + Uniforme)</strong></td>
+              <td style="text-align:center; color:var(--brand-text-muted);">Intérprete padrão</td>
+              <td style="text-align:center;">✅ <strong>Hosana, Ícaro e Guga</strong> + Uniforme Customizável</td>
+            </tr>
+            <tr>
+              <td><strong>6. Suporte Avançado a Sistemas em <code>&lt;iframe&gt;</code></strong></td>
+              <td style="text-align:center; color:var(--brand-text-muted);">Configuração padrão</td>
+              <td style="text-align:center;">✅ <strong>Ponte de Acessibilidade <code>&lt;iframe&gt;</code> Pré-Configurada</strong></td>
+            </tr>
+            <tr>
+              <td><strong>7. Selo Oficial de Compromisso + Declaração LBI / WCAG 2.2</strong></td>
+              <td style="text-align:center; color:var(--brand-text-muted);">—</td>
+              <td style="text-align:center;">✅ <strong>Selo Oficial p/ Rodapé + Declaração Jurídica</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5: CHAMADA PARA O MANUAL DE IDENTIDADE VISUAL (BRANDBOOK) -->
+  <section class="section">
+    <div class="container">
+      <div style="background: var(--brand-hero-gradient); color: #FFFFFF; border-radius: 24px; padding: 48px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+        <div style="max-width: 680px;">
+          <span style="background: rgba(255,255,255,0.14); color: #FCD34D; padding: 5px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">
+            🎨 Brandbook Oficial Allyada
+          </span>
+          <h2 style="font-size: 2rem; font-weight: 800; margin: 14px 0 10px; color: #FFFFFF;">
+            Explore o Manual de Identidade Visual Completo
+          </h2>
+          <p style="font-size: 1rem; color: rgba(255,255,255,0.85);">
+            Compare lado a lado as 4 propostas de paleta de cores com taxas de contraste WCAG AAA, anatomia do logotipo, variações de ícones do botão flutuante, tipografia oficial e especificações técnicas.
+          </p>
+        </div>
+        <div>
+          <a href="identidade-visual.html" class="btn btn-accent" style="padding: 14px 28px; font-size: 1rem;">
+            Abrir Manual de Identidade Visual &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RODAPÉ OFICIAL -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="allyada-logo" style="margin-bottom: 14px;">
+            <div class="allyada-logo-mark">
+              <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/>
+                <path d="M15.8 40.5Q50 58 84.2 40.5"/>
+                <path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/>
+                <circle cx="50" cy="29.5" r="10.2" fill="rgba(255,255,255,0.4)"/>
+              </svg>
+            </div>
+            <div class="allyada-logo-text">
+              <span class="allyada-wordmark" style="color:#FFFFFF;">allyada<span class="dot">.</span></span>
+              <span class="allyada-tagline-mini" style="color:#94A3B8;">Acessibilidade para você</span>
+            </div>
+          </a>
+          <p style="font-size: 0.88rem; color: #94A3B8; max-width: 340px;">
+            Suíte brasileira de tecnologia assistiva, inteligência artificial visual e conformidade legal (LBI Lei 13.146/15, e-MAG e WCAG 2.2 AAA).
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Produto</h5>
+          <ul>
+            <li><a href="#funcionalidades">Funcionalidades</a></li>
+            <li><a href="#perfis">Perfis Clínicos 1-Clique</a></li>
+            <li><a href="#instalacao">Instalação em 1 Linha</a></li>
+            <li><a href="../demo/index.html">Laboratório de Testes (Demo)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Comercial & Legal</h5>
+          <ul>
+            <li><a href="#planos">Planos Gratuito vs. PRO</a></li>
+            <li><a href="#conformidade">Conformidade LBI & WCAG 2.2</a></li>
+            <li><a href="#conformidade">Selo Oficial de Acessibilidade</a></li>
+            <li><a href="#planos">Pacote para Cartórios (PQTA)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Marca & Design</h5>
+          <ul>
+            <li><a href="identidade-visual.html">Manual da Marca (Brandbook)</a></li>
+            <li><a href="identidade-visual.html#paletas">Propostas de Paleta de Cores</a></li>
+            <li><a href="identidade-visual.html#logotipo">Logotipo & Ícones FAB</a></li>
+            <li><a href="identidade-visual.html#tipografia">Tipografia Acessível</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 0.82rem;">
+        <span>&copy; 2026 Allyada Tecnologia Assistiva. Todos os direitos reservados.</span>
+        <span>Pressione <kbd style="background:#1E293B; color:#FFF; padding:2px 6px; border-radius:4px;">Alt</kbd> + <kbd style="background:#1E293B; color:#FFF; padding:2px 6px; border-radius:4px;">A</kbd> a qualquer momento para abrir o assistente.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- INCLUSÃO DO PLUGIN ALLYADA AO VIVO -->
+  <script src="../src/allyada.js"></script>
+  <script>
+    const PALETTE_PRIMARY_HEX = {
+      iris: '#7956C2',
+      neural: '#4F46E5',
+      safira: '#0052CC',
+      ametista: '#7C3AED'
+    };
+
+    const CODE_SNIPPETS = {
+      pro: `<!-- Instalação PRO Personalizada (Cor da Marca + Centro Lateral + Domínio Licenciado) -->
+<script src="https://cdn.allyada.com.br/allyada.min.js"
+  data-domain="suaempresa.com.br"
+  data-color="#7956C2"
+  data-icon="allyada"
+  data-vpos="middle"
+  data-position="right"
+  defer><\/script>`,
+      free: `<!-- Instalação Gratuita em 1 Linha (Antes do fechamento da tag </body>) -->
+<script src="https://cdn.allyada.com.br/allyada.min.js" defer><\/script>`,
+      js: `<!-- Inicialização Avançada via API JavaScript -->
+<script src="https://cdn.allyada.com.br/allyada.min.js"><\/script>
+<script>
+  window.Allyada.init({
+    position: 'right',          // 'right' (Direita) ou 'left' (Esquerda)
+    verticalPosition: 'middle', // 'middle' (Centro Lateral ✨ PRO) | 'top' | 'bottom'
+    primaryColor: '#7956C2',    // Cor principal da sua marca
+    shortcutKey: 'a',           // Atalho Alt + A
+    speechLang: 'pt-BR'         // Voz Neural em Português
+  });
+<\/script>`
+    };
+
+    let currentCodeTab = 'pro';
+
+    function switchCodeTab(tab) {
+      currentCodeTab = tab;
+      ['pro', 'free', 'js'].forEach(t => {
+        const btn = document.getElementById('tab-code-' + t);
+        if (btn) btn.classList.toggle('active', t === tab);
+      });
+      const display = document.getElementById('code-snippet-display');
+      if (display) display.textContent = CODE_SNIPPETS[tab];
+    }
+
+    function copyCurrentSnippet() {
+      const text = CODE_SNIPPETS[currentCodeTab];
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+      const btn = document.getElementById('btn-copy-snippet');
+      if (btn) {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✅ Código Copiado!';
+        setTimeout(() => { btn.innerHTML = orig; }, 2200);
+      }
+    }
+
+    function applySitePalette(paletteKey) {
+      const hex = PALETTE_PRIMARY_HEX[paletteKey] || '#7956C2';
+      document.documentElement.setAttribute('data-palette', paletteKey);
+      try {
+        localStorage.setItem('allyada_site_palette', paletteKey);
+      } catch (e) {}
+
+      document.querySelectorAll('.palette-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-set-palette') === paletteKey);
+      });
+
+      // Atualiza o snippet de código com a cor da paleta escolhida
+      CODE_SNIPPETS.pro = `<!-- Instalação PRO Personalizada (Cor da Marca + Centro Lateral + Domínio Licenciado) -->
+<script src="https://cdn.allyada.com.br/allyada.min.js"
+  data-domain="suaempresa.com.br"
+  data-color="${hex}"
+  data-icon="allyada"
+  data-vpos="middle"
+  data-position="right"
+  defer><\/script>`;
+      switchCodeTab(currentCodeTab);
+
+      // Sincroniza a cor do próprio plugin Allyada ao vivo na página!
+      if (window.Allyada && typeof window.Allyada.setBrandColor === 'function') {
+        window.Allyada.setBrandColor(hex);
+      }
+    }
+
+    // Inicializa o código e o plugin Allyada no Centro Lateral (PRO)
+    document.addEventListener('DOMContentLoaded', () => {
+      let savedPalette = 'iris';
+      try {
+        savedPalette = localStorage.getItem('allyada_site_palette') || 'iris';
+      } catch (e) {}
+
+      const initialHex = PALETTE_PRIMARY_HEX[savedPalette] || '#7956C2';
+
+      if (window.Allyada) {
+        window.Allyada.init({
+          position: 'right',
+          verticalPosition: 'middle',
+          primaryColor: initialHex,
+          shortcutKey: 'a',
+          speechLang: 'pt-BR'
+        });
+      }
+
+      applySitePalette(savedPalette);
+    });
+  </script>
+</body>
+</html>
