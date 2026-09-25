@@ -3123,11 +3123,11 @@
       const vlibrasBtn = document.querySelector('div[vw] [vw-access-button]');
       if (vlibrasBtn) {
         if (newPos === 'right') {
-          vlibrasBtn.style.right = '24px';
-          vlibrasBtn.style.left = 'auto';
-        } else {
           vlibrasBtn.style.left = '24px';
           vlibrasBtn.style.right = 'auto';
+        } else {
+          vlibrasBtn.style.right = '24px';
+          vlibrasBtn.style.left = 'auto';
         }
       }
       this.applyVLibrasCustomTheme();
@@ -3747,7 +3747,7 @@
     syncVLibrasAvatar(avatar) {
       const VLIBRAS_APP_URL = 'https://vlibras.gov.br/app';
       const validAvatar = ['hosana', 'icaro', 'guga'].includes(avatar) ? avatar : 'hosana';
-      const posCode = (this.config && this.config.position === 'left') ? 'L' : 'R';
+      const posCode = (this.config && this.config.position === 'left') ? 'R' : 'L';
 
       try {
         let playerStore = {
@@ -3806,16 +3806,21 @@
     /**
      * Personaliza o visual da janela e do botão de acesso do VLibras (Shadow DOM aberto),
      * aplicando cor lilás (#7956c2), bordas arredondadas, remoção da opção "Emoções",
-     * posição sincronizada e ícone da Hosana/avatar ativo.
+     * posição sincronizada no lado oposto ao do Allyada e ícone da Hosana/avatar ativo.
      */
     applyVLibrasCustomTheme() {
       if (typeof document === 'undefined') return;
       const VLIBRAS_APP_URL = 'https://vlibras.gov.br/app';
       const validAvatar = ['hosana', 'icaro', 'guga'].includes(this.state.vlibrasAvatar) ? this.state.vlibrasAvatar : 'hosana';
-      const isLeft = (this.config && this.config.position === 'left');
-      const side = isLeft ? 'left' : 'right';
-      const opposite = isLeft ? 'right' : 'left';
+      const allyadaIsLeft = (this.config && this.config.position === 'left');
+      // Posiciona o VLibras sempre no lado OPOSTO ao do Allyada
+      const vlibrasIsLeft = !allyadaIsLeft;
+      const side = vlibrasIsLeft ? 'left' : 'right';
+      const opposite = vlibrasIsLeft ? 'right' : 'left';
       const vlibrasColor = (this.config && this.config.vlibrasColor) ? this.config.vlibrasColor : '#7956c2';
+      if (typeof window !== 'undefined' && window.VLibrasWidget) {
+        window.VLibrasWidget.position = vlibrasIsLeft ? 'L' : 'R';
+      }
 
       // 1. Estiliza o botão flutuante de acesso do VLibras (#vlibras-access-wrapper)
       const accessWrapper = document.getElementById('vlibras-access-wrapper');
@@ -3828,11 +3833,11 @@
         }
         accessStyle.textContent = `
           #vlibras-access {
-            bottom: 96px !important;
+            bottom: 24px !important;
             top: auto !important;
             ${side}: 24px !important;
             ${opposite}: auto !important;
-            flex-direction: ${isLeft ? 'row-reverse' : 'row'} !important;
+            flex-direction: ${vlibrasIsLeft ? 'row-reverse' : 'row'} !important;
             --vlibras-btn-focus-visible-shadow: 0 0 10px 4px ${vlibrasColor} !important;
           }
           #vlibras-button {
@@ -3911,7 +3916,8 @@
     loadVLibras() {
       const VLIBRAS_APP_URL = 'https://vlibras.gov.br/app';
       const validAvatar = ['hosana', 'icaro', 'guga'].includes(this.state.vlibrasAvatar) ? this.state.vlibrasAvatar : 'hosana';
-      const posCode = (this.config && this.config.position === 'left') ? 'L' : 'R';
+      // Sempre no lado OPOSTO ao do Allyada ('L' quando o Allyada está na direita, 'R' quando o Allyada está na esquerda)
+      const posCode = (this.config && this.config.position === 'left') ? 'R' : 'L';
 
       this.syncVLibrasAvatar(validAvatar);
 

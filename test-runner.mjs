@@ -246,10 +246,11 @@ async function main() {
              document.querySelector('[vw]').style.display !== 'none' &&
              window.VLibrasWidget &&
              window.VLibrasWidget.path === 'https://vlibras.gov.br/app' &&
-             window.VLibrasWidget.avatar === 'hosana';
+             window.VLibrasWidget.avatar === 'hosana' &&
+             window.VLibrasWidget.position === 'L';
     })()
   `);
-  assert('VLibras ativado com Hosana e painel do Allyada fechado automaticamente', vlibrasOn);
+  assert('VLibras ativado no lado oposto ao do Allyada com Hosana e painel fechado automaticamente', vlibrasOn);
 
   // Reabre o painel do Allyada para continuar os testes
   await evaluate('window.Allyada.openPanel()');
