@@ -1,65 +1,90 @@
-# 📈 PLANO DE VENDAS, POSICIONAMENTO ÉTICO & GO-TO-MARKET — ALLYADA
+# 📈 PLANO DE VENDAS, INFRAESTRUTURA & MODELO PRO — ALLYADA
 **Suíte Brasileira de Acessibilidade Digital, IA Assistiva & Conformidade Legal (LBI / WCAG 2.2)**
 
 ---
 
-## 1. O MANIFESTO E DIFERENCIAL DA ALLYADA
-> **💜 "Acessibilidade é um direito humano e legal, não um privilégio. Por isso, na Allyada, 100% dos módulos de acessibilidade funcionam completos em todos os planos para quem precisa. As empresas contratam o Plano Premium para personalizar o plugin com a identidade da sua marca, escolher o posicionamento ideal na tela e garantir respaldo jurídico e suporte dedicado."**
+## 1. FILOSOFIA E POSICIONAMENTO DA ALLYADA
 
-Esse posicionamento resolve de uma só vez a questão ética e a questão comercial:
-1. **Para a Pessoa com Deficiência (Usuário Final):** Nenhum recurso assistivo (VLibras, Voz, IA de Imagens, Perfis de Baixa Visão/Dislexia/TDAH, Fontes ou Contrastes) é bloqueado. Todo visitante tem acesso integral à inclusão.
-2. **Para a Empresa / Cartório (Cliente Pagante):** A empresa tem motivos fortíssimos para assinar o **Plano Premium (PRO)** — porque toda empresa quer que o plugin combine com as **cores da sua marca**, fique **centralizado na lateral** (sem tampar o botão de WhatsApp do site), tenha **configurações personalizadas**, **suporte técnico** e o **Selo Oficial de Conformidade LBI/WCAG** no rodapé do site.
+> **💜 "Acessibilidade é um direito humano, não um privilégio. Por isso, na Allyada, todos os módulos de acessibilidade estão presentes em todos os planos, sem limite de visualizações (pageviews). O Plano PRO existe para que empresas, clínicas, cartórios e agências personalizem o plugin com a cor e o ícone da sua marca, posicionem o botão no centro lateral da tela, utilizem vozes neurais mais humanas, personalizem o VLibras e contem com o Selo Oficial de Conformidade no site."**
 
 ---
 
-## 2. ESTRUTURA DE PLANOS: COMUNIDADE (GRÁTIS) vs. PREMIUM / PRO (COM TESTE DE 7 DIAS)
+## 2. LISTA COMPLETA: PLANO GRATUITO vs. PLANO PRO (COM TESTE DE 7 DIAS)
 
-Qualquer empresa pode experimentar o **Plano Premium por 7 dias grátis** (com a cor da sua marca e posição centralizada na lateral). Após os 7 dias, se não contratar, o script volta automaticamente para o visual e posição padrão do Plano Gratuito.
+Qualquer empresa pode testar o **Plano PRO por 7 dias grátis** no seu domínio.
 
-| O que está incluso | 🟢 Plano Gratuito (Padrão) | ✨ Plano Premium / PRO *(7 Dias Grátis para Testar)* |
+| Funcionalidade / Configuração | 🟢 Plano Gratuito (Comunidade) | ✨ Plano PRO / Premium *(Teste Grátis de 7 Dias)* |
 | :--- | :---: | :---: |
-| **Todos os Módulos de Acessibilidade para o Usuário** *(Perfis Prontos, Fonte até 200%, Lexend, Contraste, Cursor, Régua, Máscara, Teclado Virtual, Voz Neural, IA de Imagens e VLibras)* | ✅ **100% Liberados** *(Acessibilidade é um direito)* | ✅ **100% Liberados** |
-| **✨ Posição nos Cantos da Tela** | ❌ Fixo no fim da página (Canto inferior padrão) | ✅ **Centro Lateral ou Topo Lateral** *(Não cobre o botão de WhatsApp ou Chat do site)* |
-| **✨ Personalização de Cores e Tema da Marca** | ❌ Roxo padrão da Allyada | ✅ **Cor Oficial da Marca do Cliente** + Cores de Campanhas (*Outubro Rosa, Setembro Amarelo, Novembro Azul*) |
-| **✨ Configurações Padrão do Plugin para o Site** | ❌ Configuração fixa padrão | ✅ **Código exclusivo pré-configurado** (lado inicial, tamanho padrão do painel, avatar padrão do VLibras, idioma e atalhos) |
-| **✨ Remoção da Assinatura / White-Label** | ❌ Exibe *"Allyada"* no rodapé do plugin | ✅ **Personalizado para a marca do cliente** |
-| **✨ Integração Avançada em Sistemas (`<iframe>` e Subdomínios)** | ❌ Apenas página principal | ✅ **Sincronização automática em sistemas embutidos e subdomínios** |
-| **🏅 Selo de Compromisso + Declaração Legal LBI / LAI para o Site** | ❌ Não incluso | ✅ **Selo Oficial para o rodapé do site** + Declaração Jurídica nominal (Lei 13.146/15 LBI + Lei 12.527/11 + WCAG 2.2) |
-| **🛠️ Instalação Assistida & Suporte Prioritário** | Autoatendimento | ✅ **Configuração feita pela nossa equipe + Suporte via WhatsApp** |
+| **Todos os Módulos de Acessibilidade** *(Perfis Prontos, Fonte até 200%, Lexend, Contraste, Cursor, Régua, Máscara, Teclado Virtual, Estrutura da Página, IA de Imagens e VLibras)* | ✅ **Todos os módulos inclusos** *(Acessibilidade é um direito)* | ✅ **Todos os módulos inclusos** |
+| **Limite de Páginas / Pageviews** | ✅ **Ilimitado** (em todas as páginas/subpáginas do site) | ✅ **Ilimitado** (sem cobrança por pageviews!) |
+| **1. 📐 Posição nos Cantos da Tela (`verticalPosition`)** | ❌ Fixo no fim da página (canto inferior) | ✅ **Centro Lateral ou Topo Lateral** *(Não fica em cima do botão de WhatsApp ou Chat do site)* |
+| **2. 🎨 Cor do Allyada + Cor do VLibras Sincronizada** | ❌ Roxo padrão da Allyada (`#7956c2`) | ✅ **Cor Oficial da Marca do Cliente** aplicada no Allyada e no botão/player do VLibras + Campanhas (*Outubro Rosa, Setembro Amarelo, Novembro Azul*) |
+| **3. 🔘 Escolha do Ícone do Botão Flutuante (FAB)** | ❌ Ícone padrão da Allyada | ✅ **Escolha entre múltiplos ícones de acessibilidade** (Símbolo Allyada, Universal Clássico, Mãos Libras, Minimalista, etc.) |
+| **4. 🗣️ Leitura em Voz Alta: Vozes Neurais e Mais Humanas** | Voz padrão básica do navegador | ✅ **Seletor de Vozes Neurais / Naturais (`✨ Mais Humana`) + 5 Velocidades contínuas** |
+| **5. 👕 Personalização do VLibras (Intérpretes + Uniforme)** | Intérprete padrão | ✅ **Escolha de Intérprete (Hosana, Ícaro, Guga)** + Opção de **Personalização da Camisa/Logo no Avatar 3D** *(sob demanda corporativa)* |
+| **6. ⚙️ Configurações Pré-Definidas & Sistemas em `<iframe>`** | Configuração padrão | ✅ **Código exclusivo pré-configurado** (lado inicial, tamanho do painel, suporte total a sistemas em `<iframe>`) |
+| **7. 🏅 Selo Oficial de Compromisso (No Site do Cliente)** | ❌ Não incluso | ✅ **Selo Oficial para o rodapé do site** + Declaração Jurídica (Lei 13.146/15 LBI + Lei 12.527/11 + WCAG 2.2) |
+| **8. 🔒 Regra de Uso por Domínio** | Uso livre c/ marca Allyada | **1 Assinatura = 1 Domínio completo** *(todas as páginas e subpáginas liberadas; outro site/domínio requer nova licença)* |
 
 ---
 
-## 3. PRECIFICAÇÃO COMERCIAL SUGERIDA (BENCHMARK REAL DE MERCADO)
+## 3. COMO FUNCIONA A REGRA DE "COBRAR POR DOMÍNIO, MAS SEM LIMITE DE PAGEVIEWS"?
 
-### Por que nossa proposta é imbatível frente aos concorrentes?
-- Na proposta analisada da **Perto Digital** (nº 2079.00), eles cobram **R\$ 1.990,00 de taxa de instalação (Onboarding)** + **12x de R\$ 999,00/mês** (**R\$ 13.978,00 no primeiro ano** para 1 único domínio).
-- Na **Allyada**, cobramos uma **pequena taxa de instalação e personalização (apenas no Plano PRO)** para gerar e implantar o código exclusivo da empresa, seguida de uma mensalidade justa para manter a licença Premium, o CDN, as atualizações técnicas e a validade anual do Selo de Conformidade:
-
-| Modalidade | Taxa Única de Instalação & Personalização PRO | Mensalidade (Licença Premium Ativa) | Economia para o Cliente (vs. Concorrentes) |
-| :--- | :---: | :---: | :---: |
-| **🎁 Teste Premium (7 Dias)** | **R\$ 0** | **R\$ 0 por 7 dias** | Experimenta no próprio site sem compromisso |
-| **🚀 Plano Premium Mensal** | **R\$ 290,00** *(pagamento único para gerar e configurar o código PRO da marca)* | **R\$ 149,00 / mês** | Economia de **mais de R\$ 10.000/ano** |
-| **🏛️ Plano Premium Anual (Cartórios, Clínicas & Empresas)** | **Grátis (Isento no Anual)** ou **R\$ 190,00** | **12x de R\$ 119,00 / mês** *(ou R\$ 1.290 à vista/ano)* | Melhor custo-benefício para conformidade contínua (CNJ / PQTA / LBI) |
-| **🤝 Condição Especial Parceiro (Ex: Clientes Inova Cartórios)** | **Setup Bonificado (R\$ 0)** | **R\$ 99,00 a R\$ 129,00 / mês** | Venda em volume para toda a carteira de cartórios |
+1. **O que o cliente PODE fazer com 1 assinatura PRO:**
+   - Usar em **todas as páginas, subpáginas, posts e categorias** daquele site (ex.: `meucartorio.com.br`, `meucartorio.com.br/contato`, `meucartorio.com.br/servicos`, com 1.000 ou 1.000.000 de acessos por mês, sem pagar nenhum centavo a mais por pageviews!).
+2. **Por que ele NÃO consegue pagar 1 assinatura e espalhar em 10 sites diferentes?**
+   - Porque o código PRO gerado na instalação leva a trava do domínio contratado (`allowedDomains: ['meucartorio.com.br']`).
+   - Se a pessoa copiar o script PRO do *Site de Receitas* e colar no *Site de Notícias*, o plugin detecta que `window.location.hostname` é outro domínio e **automaticamente volta para o visual padrão Gratuito** (roxo Allyada, fixo no fim da página) até que aquele novo domínio tenha sua própria licença!
 
 ---
 
-## 4. POR QUE AS EMPRESAS CONTINUAM PAGANDO A MENSALIDADE DO PREMIUM?
+## 4. TABELA DE PREÇOS (TAXA DE INSTALAÇÃO PRO + MENSALIDADE POR DOMÍNIO)
 
-Mesmo que os módulos assistivos existam no gratuito, **nenhuma empresa, clínica ou cartório quer voltar para o plano gratuito após os 7 dias de teste**, porque:
-1. **Conflito Visual com o WhatsApp:** No plano gratuito, o botão volta para o canto inferior da página (ficando exatamente em cima do botão de WhatsApp ou chatbot da empresa). Apenas com a assinatura **Premium** ativa o botão fica no **Centro Lateral da tela**.
-2. **Identidade Visual da Marca:** Se cancelar o Premium, o botão perde a cor oficial da empresa/cartório e volta para o roxo padrão da Allyada.
-3. **Selo de Compromisso no Site & Respaldo Jurídico (CNJ / LBI):** O Selo Oficial exibido no rodapé do site e o Certificado de Conformidade Digital (exigido nas auditorias anuais do PQTA/CNJ e fiscalizações do Ministério Público) dependem da licença Premium ativa.
-4. **Manutenção Contínua na Nuvem:** O script PRO fica hospedado na nossa estrutura; qualquer atualização de navegadores, vozes neurais, modelos de IA de imagens ou novas diretrizes WCAG é entregue automaticamente sem custo extra de programação para o cliente.
+Comparado aos concorrentes nacionais que cobram **R\$ 1.990,00 de instalação + R\$ 999,00/mês** (*Perto Digital*) ou **R\$ 600+ por mês** (*Rybená*), a **Allyada** tem um preço altamente competitivo para empresas, clínicas, cartórios e agências:
+
+| Plano | Taxa Única de Instalação & Configuração PRO | Mensalidade (Por Domínio) | Para quem é indicado |
+| :--- | :---: | :---: | :--- |
+| **🟢 Gratuito** | **R\$ 0** | **R\$ 0** | Blogs pessoais, ONGs e projetos comunitários |
+| **🎁 Teste PRO (7 Dias)** | **R\$ 0** | **7 dias grátis** | Empresas que querem ver o plugin com a sua cor e no centro lateral antes de fechar |
+| **✨ Plano PRO (1 Domínio)** | **R\$ 250,00** *(pagamento único p/ gerar código exclusivo da marca)* | **R\$ 149,00 / mês** *(ou R\$ 119/mês no anual)* | Empresas, clínicas, e-commerces, escritórios e cartórios (1 site completo com páginas/acessos ilimitados) |
+| **🏛️ Plano PRO + Avatar Customizado (Corporativo / Cartórios)** | **R\$ 490,00 a R\$ 990,00** *(conforme personalização)* | **R\$ 249,00 / mês** | Cartórios (Prêmio PQTA/CNJ), prefeituras e empresas que desejam personalização avançada + Certificado LBI/LAI |
+| **🤝 Pacote Agência / Multi-Domínios (5 a 10 sites)** | **R\$ 390,00** *(único)* | **R\$ 399,00 / mês** *(até 5 domínios — sai R\$ 79 por site!)* | Agências web, redes de clínicas ou grupos empresariais com vários sites |
 
 ---
 
-## 5. FLUXO DE VENDA COM TESTE DE 7 DIAS (CONVERSÃO PRÁTICA)
+## 5. ONDE HOSPEDAR O ALLYADA, QUAL O CUSTO REAL E COMO REPASSAR?
 
-1. **Dia 1 (Abordagem + Ativação do Teste de 7 Dias):**
-   - Você gera o snippet PRO com a **cor exata da logo do cliente** e configurado na **posição Centro Lateral** (`verticalPosition: 'middle'`).
-   - O cliente (ou sua equipe) coloca no site em 1 minuto e vê como ficou perfeito, sem atrapalhar o botão de WhatsApp e com todos os módulos funcionando.
-2. **Dia 5 (Acompanhamento Comercial):**
-   - Envia mensagem mostrando que o período de teste de 7 dias está encerrando e envia o **Selo Oficial de Compromisso com a Acessibilidade Digital** pronto para ser colocado no rodapé do site dele.
-3. **Dia 7 (Fechamento):**
-   - O cliente aprova a taxa de instalação/personalização + assinatura do Plano Premium para manter o código personalizado ativo definitivamente!
+Essa é a melhor parte da arquitetura que construímos: como o **Allyada** roda 100% no navegador do visitante (*Client-Side* em JavaScript puro + modelos de IA carregados via CDN pública `jsdelivr`), **o seu custo de servidor é próximo de ZERO!**
+
+### ☁️ 1. Onde Hospedar o Script (`allyada.js`) e o Site da Allyada?
+As **3 melhores opções profissionais** (com CDN Global ultra-rápida no Brasil):
+
+1. **Opção Recomendada nº 1: Cloudflare Pages + Cloudflare R2 / Workers**
+   - **Por que é a melhor:** A Cloudflare tem servidores em dezenas de cidades brasileiras (São Paulo, Rio, Curitiba, Fortaleza, Brasília, Blumenau, etc.), entregando o `allyada.js` em menos de `15ms`.
+   - **Custo mensal:** **R\$ 0,00 (Plano Free da Cloudflare tem banda ILIMITADA!)**
+   - Mesmo que você tenha **500 sites clientes** carregando o `allyada.js` milhões de vezes por mês, a Cloudflare **não cobra por tráfego (egress bandwidth zero)**!
+   - Seu único custo fixo obrigatório é o registro do domínio (`allyada.com.br` no Registro.br = **R\$ 40,00 por ANO**, ou seja, **R\$ 3,33 por mês**!).
+
+2. **Opção nº 2: Vercel ou Netlify (conectado direto ao seu GitHub)**
+   - Sempre que você der `git push`, ele atualiza a CDN automaticamente em 10 segundos.
+   - **Custo:** **R\$ 0,00** até 100 GB de tráfego/mês; **US\$ 20/mês (~R\$ 115/mês)** no plano Pro quando você já tiver dezenas de clientes pagantes.
+
+3. **Opção nº 3: VPS / Hospedagem Própria + Cloudflare na frente**
+   - Se você já tem um servidor na **Inova Cartórios** (AWS, DigitalOcean, Hostinger, etc.), basta colocar o domínio na Cloudflare (grátis) apontando para lá. A Cloudflare faz o cache de 99% dos acessos do `.js` sem pesar nada no seu servidor!
+
+---
+
+### 💵 2. Resumo do Custo Operacional vs. Lucro (Como Repassar)
+
+| Item de Infraestrutura | Custo para Você | Como Repassar para o Cliente |
+| :--- | :---: | :--- |
+| **Domínio (`allyada.com.br`)** | **R\$ 3,33 / mês** (R\$ 40/ano) | Já coberto com **1 único cliente**! |
+| **CDN Global p/ servir o `allyada.js` (Cloudflare)** | **R\$ 0,00 / mês** *(Banda Ilimitada)* | Incluído na mensalidade PRO como *"Hospedagem em CDN de Alta Disponibilidade + Atualizações Contínuas"* |
+| **IA de Imagens (COCO-SSD + OCR Tesseract.js)** | **R\$ 0,00 / mês** *(Roda no navegador do usuário via jsDelivr CDN)* | Valor percebido altíssimo (IA inclusa sem custo por requisição para você!) |
+| **Vozes Neurais Nativa & VLibras** | **R\$ 0,00 / mês** *(Web Speech API + VLibras Gov)* | Zero custo variável por minuto de áudio! |
+| **Geração do Código Personalizado PRO por Domínio** | **15 minutos do seu tempo** (ou automático no painel) | Cobrado na **Taxa de Instalação PRO (R\$ 250)** |
+
+> 🚀 **Resumo da Margem de Lucro:**
+> - **Margem Bruta do seu SaaS: ~99%!**
+> - Com apenas **10 clientes no Plano PRO (R\$ 149/mês)**, você já tem **R\$ 1.490,00/mês de receita recorrente + R\$ 2.500,00 de taxas de instalação**, com um custo de hospedagem de **menos de R\$ 5,00/mês**!
+> - Com **50 clientes (ex: cartórios e clínicas)**, são **R\$ 7.450,00/mês recorrentes (R\$ 89.400/ano)** praticamente livres de custo de servidor.
