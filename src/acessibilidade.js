@@ -72,7 +72,7 @@
 
   // SVGs de Ícones Acessíveis
   const ICONS = {
-    allyada: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="2"></circle><path d="M4 8h16"></path><path d="M12 8v6"></path><path d="M8 20l4-6 4 6"></path></svg>`,
+    allyada: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4.8" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="rgba(255,255,255,0.35)"/><circle cx="11.5" cy="38.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="88.5" cy="38.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="28" cy="83.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="72" cy="83.5" r="5.2" fill="rgba(255,255,255,0.35)"/></svg>`,
     close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
     reset: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>`,
     sound: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`,
@@ -3945,13 +3945,16 @@
         this.vlibrasThemeObserver.observe(document.body, { childList: true });
       }
 
+      const getValidAvatar = () => ['hosana', 'icaro', 'guga'].includes(this.state.vlibrasAvatar) ? this.state.vlibrasAvatar : 'hosana';
+
       const ensureOpen = () => {
+        const currentAvatar = getValidAvatar();
         if (window.VLibrasWidget) {
           window.VLibrasWidget.path = VLIBRAS_APP_URL;
-          window.VLibrasWidget.avatar = validAvatar;
+          window.VLibrasWidget.avatar = currentAvatar;
           window.VLibrasWidget.position = posCode;
         }
-        this.syncVLibrasAvatar(validAvatar);
+        this.syncVLibrasAvatar(currentAvatar);
 
         const vwEl = document.querySelector('[vw]');
         if (vwEl) vwEl.style.display = 'block';
@@ -3977,19 +3980,20 @@
       };
 
       if (window.VLibras && typeof window.VLibras.Widget === 'function') {
+        const currentAvatar = getValidAvatar();
         if (!document.getElementById('vlibras-access-wrapper')) {
           try {
             // IMPORTANTE: Não atribuir "window.VLibrasWidget = new ...", pois isso sobrescreve window.VLibrasWidget.path!
             new window.VLibras.Widget({
               rootPath: VLIBRAS_APP_URL,
-              avatar: validAvatar,
+              avatar: currentAvatar,
               position: posCode
             });
           } catch(e) {}
         }
         if (window.VLibrasWidget) {
           window.VLibrasWidget.path = VLIBRAS_APP_URL;
-          window.VLibrasWidget.avatar = validAvatar;
+          window.VLibrasWidget.avatar = currentAvatar;
           window.VLibrasWidget.position = posCode;
         }
         setTimeout(ensureOpen, 250);
@@ -4001,17 +4005,18 @@
         script = document.createElement('script');
         script.src = `${VLIBRAS_APP_URL}/vlibras-plugin.js`;
         script.onload = () => {
+          const currentAvatar = getValidAvatar();
           if (window.VLibras && typeof window.VLibras.Widget === 'function') {
             try {
               new window.VLibras.Widget({
                 rootPath: VLIBRAS_APP_URL,
-                avatar: validAvatar,
+                avatar: currentAvatar,
                 position: posCode
               });
             } catch(e) {}
             if (window.VLibrasWidget) {
               window.VLibrasWidget.path = VLIBRAS_APP_URL;
-              window.VLibrasWidget.avatar = validAvatar;
+              window.VLibrasWidget.avatar = currentAvatar;
               window.VLibrasWidget.position = posCode;
             }
             setTimeout(ensureOpen, 350);
@@ -4110,8 +4115,9 @@
           outline-offset: 4px;
         }
         .fab-icon svg {
-          width: 32px;
-          height: 32px;
+          width: 38px;
+          height: 38px;
+          display: block;
         }
         .fab-badge {
           position: absolute;
@@ -4229,7 +4235,7 @@
           flex-shrink: 0;
           box-shadow: 0 4px 12px rgba(121, 86, 194, 0.25);
         }
-        .brand-badge-icon svg { width: 22px; height: 22px; }
+        .brand-badge-icon svg { width: 26px; height: 26px; display: block; }
         .brand-text { display: flex; flex-direction: column; min-width: 0; }
         .title-row { display: flex; align-items: center; gap: 8px; }
         .title-row h2 {

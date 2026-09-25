@@ -250,19 +250,23 @@ async function main() {
   `);
   assert('VLibras ativado com Hosana, container visível e VLibrasWidget.path preservado', vlibrasOn);
 
-  // Verifica injeção do tema personalizado do Allyada na janela do VLibras (cor #7956c2 + ocultar Emoções) e sincronização no localStorage
+  // Verifica injeção do tema personalizado do Allyada no VLibras (cor #7956c2 + ocultar Emoções) e sincronização no localStorage
   const vlibrasCustomThemeAndStorage = await evaluate(`
     (() => {
       const appRoot = document.getElementById('vlibras-app-root');
-      const styleEl = appRoot && appRoot.shadowRoot ? appRoot.shadowRoot.getElementById('allyada-vlibras-custom-theme') : null;
-      const css = styleEl ? styleEl.textContent : '';
-      const hasLilacAndHiddenEmotions = css.includes('#7956c2') && css.includes('#emotions-subtitles-options > :first-child');
+      const accessWrap = document.getElementById('vlibras-access-wrapper');
+      const appStyle = appRoot && appRoot.shadowRoot ? appRoot.shadowRoot.getElementById('allyada-vlibras-custom-theme') : null;
+      const accessStyle = accessWrap && accessWrap.shadowRoot ? accessWrap.shadowRoot.getElementById('allyada-vlibras-access-theme') : null;
+      const css = (appStyle ? appStyle.textContent : '') + (accessStyle ? accessStyle.textContent : '');
+      const hasLilacTheme = css.includes('#7956c2');
       const rawStore = localStorage.getItem('@vlibras/player');
       const parsed = rawStore ? JSON.parse(rawStore) : null;
-      return hasLilacAndHiddenEmotions && parsed && parsed.state && parsed.state.avatar === 'hosana';
+      const fabSvg = window.Allyada.shadowRoot.querySelector('.fab-icon svg');
+      const hasNewSymbol = !!(fabSvg && fabSvg.getAttribute('viewBox') === '0 0 100 100' && fabSvg.querySelectorAll('circle').length === 5);
+      return hasLilacTheme && hasNewSymbol && parsed && parsed.state && parsed.state.avatar === 'hosana';
     })()
   `);
-  assert('Janela do VLibras personalizada com lilás (#7956c2), opção "Emoções" ocultada e Hosana sincronizada', vlibrasCustomThemeAndStorage);
+  assert('Novo símbolo do Allyada aplicado, VLibras personalizado com lilás (#7956c2) e Hosana sincronizada', vlibrasCustomThemeAndStorage);
 
   // Testa troca de intérprete (Ícaro -> Hosana) pelo painel do Allyada
   await evaluate('window.Allyada.shadowRoot.getElementById("btn-vlibras-icaro").click()');
