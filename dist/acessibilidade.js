@@ -2023,6 +2023,7 @@
         this.saveState();
         if (this.state.vlibrasActive) {
           this.loadVLibras();
+          this.closePanel();
         } else {
           this.hideVLibras();
         }
@@ -3871,6 +3872,9 @@
             --secondary: #5e3ea1 !important;
             --secondary-foreground: #f3effb !important;
             --ring: #9d7fe0 !important;
+          }
+          #vlibras-app {
+            z-index: 2147483640 !important;
           }
           #vlibras-app > .widget-radius {
             border-radius: 22px !important;

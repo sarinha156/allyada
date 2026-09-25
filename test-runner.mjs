@@ -235,12 +235,13 @@ async function main() {
   `);
   assert('Hosana configurada como intérprete 3D padrão do VLibras', defaultHosana);
 
-  // Ativa VLibras
+  // Ativa VLibras (e verifica que o painel do Allyada fecha automaticamente para não ficar atrás/atrapalhando)
   await evaluate('window.Allyada.shadowRoot.getElementById("card-vlibras-toggle").click()');
   await sleep(1500);
   const vlibrasOn = await evaluate(`
     (() => {
       return window.Allyada.state.vlibrasActive &&
+             !window.Allyada.isOpen &&
              !!document.querySelector('[vw]') &&
              document.querySelector('[vw]').style.display !== 'none' &&
              window.VLibrasWidget &&
@@ -248,7 +249,11 @@ async function main() {
              window.VLibrasWidget.avatar === 'hosana';
     })()
   `);
-  assert('VLibras ativado com Hosana, container visível e VLibrasWidget.path preservado', vlibrasOn);
+  assert('VLibras ativado com Hosana e painel do Allyada fechado automaticamente', vlibrasOn);
+
+  // Reabre o painel do Allyada para continuar os testes
+  await evaluate('window.Allyada.openPanel()');
+  await sleep(200);
 
   // Verifica injeção do tema personalizado do Allyada no VLibras (cor #7956c2 + ocultar Emoções) e sincronização no localStorage
   const vlibrasCustomThemeAndStorage = await evaluate(`
