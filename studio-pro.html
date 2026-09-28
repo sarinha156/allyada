@@ -3,597 +3,1761 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Allyada Studio PRO — Configurador do Cliente (Estilo AdOpt)</title>
+  <title>Allyada PRO — Painel Administrativo do Cliente</title>
   <style>
     :root {
-      --brand: #7956c2;
-      --brand-dark: #5e3ea1;
-      --bg: #f1f5f9;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #475569;
-      --border: #e2e8f0;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-
-    /* Topbar Estilo SaaS / AdOpt */
-    .studio-topbar {
-      background: #0f172a;
-      color: #ffffff;
-      padding: 14px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #1e293b;
-    }
-    .topbar-brand { display: flex; align-items: center; gap: 12px; }
-    .topbar-logo {
-      width: 38px; height: 38px; border-radius: 10px;
-      background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
-      display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;
-    }
-    .topbar-title strong { font-size: 17px; display: block; }
-    .topbar-title span { font-size: 12px; color: #94a3b8; }
-    .topbar-badge {
-      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-      color: #92400e; font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 999px;
+      --bg-body: #0b0f17;
+      --bg-surface: #111827;
+      --bg-card: #161f30;
+      --bg-input: #1e293b;
+      --border: #26334d;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #a855f7;
+      --accent-green: #10b981;
+      --brand-allyada: #7956c2;
     }
 
-    /* Layout Principal: Esquerda (Configurador) + Direita (Preview ao Vivo) */
-    .studio-layout {
-      display: grid;
-      grid-template-columns: 480px 1fr;
-      gap: 24px;
-      padding: 24px 28px;
-      max-width: 1600px;
-      width: 100%;
-      margin: 0 auto;
-      flex: 1;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    .studio-sidebar {
+    body {
+      background: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      padding-bottom: 84px;
     }
 
-    .config-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 20px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
-    }
-    .config-card h2 {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-      margin-bottom: 12px;
+    /* Barra Superior da Conta do Cliente PRO */
+    .admin-Navbar {
+      background: #070a10;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 20px;
     }
-    .pro-pill {
-      font-size: 10.5px;
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-logo-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .nav-logo-circle svg { width: 22px; height: 22px; }
+    .nav-brand-text strong { font-size: 16px; letter-spacing: -0.02em; display: block; }
+    .nav-brand-text span { font-size: 11.5px; color: var(--text-muted); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .domain-switcher-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 10px;
+    }
+    .domain-switcher-wrap label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .domain-select {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+    }
+    .domain-select option {
+      background: var(--bg-surface);
+      color: var(--text-main);
+    }
+    .btn-all-domains {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-all-domains:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      padding-left: 12px;
+      border-left: 1px solid var(--border);
+    }
+    .pro-badge-gold {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      font-size: 11px;
       font-weight: 800;
-      background: #f3effb;
-      color: #5e3ea1;
-      border: 1px solid #dcd0f5;
-      padding: 2px 8px;
+      padding: 3px 9px;
       border-radius: 999px;
     }
 
-    .field-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    .field-sub {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-    .text-input {
+    /* Container Central (Estilo AdOpt) */
+    .admin-container {
+      max-width: 1180px;
       width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 13.5px;
-      color: var(--text);
-      outline: none;
+      margin: 0 auto;
+      padding: 32px 24px;
     }
-    .text-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(121, 86, 194, 0.15); }
 
-    /* Grade de 5 Ícones */
-    .icon-grid {
+    /* TELA 1: Lista de Domínios Assinados (Para Clientes Multi-Domínio) */
+    .domains-list-view {
+      display: none;
+    }
+    .domains-list-view.active {
+      display: block;
+    }
+    .domains-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .domain-item-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .domain-item-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+    .domain-item-card.selected {
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 1px var(--accent-green);
+    }
+    .domain-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .domain-color-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .status-online {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.12);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .status-online::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+    .domain-url-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      font-family: monospace;
+    }
+
+    /* TELA 2: Editor do Domínio Selecionado (Estilo AdOpt) */
+    .domain-editor-view {
+      display: block;
+    }
+    .domain-editor-view.hidden {
+      display: none;
+    }
+
+    /* Breadcrumb Header do Domínio */
+    .notice-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .notice-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .notice-icon-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(168, 85, 247, 0.14);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c084fc;
+    }
+    .notice-title-group h1 {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
       gap: 8px;
     }
-    .icon-option-btn {
+    .notice-title-group h1 .arrow {
+      color: var(--accent-green);
+      font-size: 14px;
+    }
+    .notice-title-group p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* Abas Principais Horizontais (Estilo AdOpt) */
+    .adopt-tabs {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      overflow-x: auto;
+    }
+    .adopt-tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      padding: 12px 4px;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+    .adopt-tab-btn:hover {
+      color: var(--text-main);
+    }
+    .adopt-tab-btn.active {
+      color: var(--accent-green);
+      border-bottom-color: var(--accent-green);
+    }
+    .adopt-tab-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .tab-pane.active {
+      display: flex;
+    }
+
+    .section-intro h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .section-intro p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Card Padrão Escuro (Estilo AdOpt) */
+    .adopt-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    .adopt-card-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--accent-green);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .adopt-card-sub {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* Seletor de Modo de Cor: Sólida vs Degradê */
+    .color-mode-tabs {
+      display: inline-flex;
+      background: var(--bg-body);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 16px;
+    }
+    .color-mode-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .color-mode-btn.active {
+      background: var(--bg-input);
+      color: #ffffff;
+    }
+
+    /* Paleta de Sugestões + Anel de Cores Personalizadas */
+    .palette-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .swatch-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+    .swatch-circle:hover {
+      transform: scale(1.1);
+    }
+    .swatch-circle.active {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 3px var(--accent-green);
+    }
+
+    /* Anel de Cores Personalizadas (Color Wheel Ring) */
+    .color-ring-picker {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      padding: 6px 14px 6px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .color-ring-picker:hover {
+      border-color: var(--accent-green);
+    }
+    .ring-wheel {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: conic-gradient(#ef4444, #f59e0b, #eab308, #10b981, #06b6d4, #3b82f6, #8b5cf6, #ec4899, #ef4444);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .ring-wheel::after {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg-input);
+    }
+    .color-ring-picker input[type="color"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .ring-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .hex-input-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      border-radius: 8px;
+    }
+    .hex-preview-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .hex-input-pill input {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-family: monospace;
+      font-size: 13px;
+      width: 78px;
+      outline: none;
+    }
+    .btn-add-palette {
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--accent-green);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-add-palette:hover {
+      background: rgba(16, 185, 129, 0.24);
+    }
+
+    /* Construtor de Degradês */
+    .gradient-builder-box {
+      display: none;
+      background: var(--bg-body);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+    .gradient-builder-box.active {
+      display: block;
+    }
+    .grad-controls-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    /* Radio Buttons Estilo AdOpt */
+    .adopt-radio-group {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .adopt-radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .adopt-radio-label input[type="radio"] {
+      accent-color: var(--accent-green);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    /* Ícones do Controlador (Estilo AdOpt Foto 3) */
+    .adopt-icons-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .adopt-icon-circle-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.18s ease;
+    }
+    .adopt-icon-circle-btn svg {
+      width: 24px;
+      height: 24px;
+    }
+    .adopt-icon-circle-btn:hover {
+      border-color: var(--accent-green);
+      color: #fff;
+    }
+    .adopt-icon-circle-btn.active {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+      color: #06281e;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+    }
+    .icon-star-pro {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      font-size: 11px;
+    }
+
+    /* Preview Focado Apenas nas Cores do Plugin (Estilo Foto 3 do AdOpt) */
+    .color-preview-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .preview-widget-card {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+      max-width: 380px;
+    }
+    .pw-header {
+      padding: 16px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pw-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pw-logo-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: #7956c2;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pw-logo-box svg { width: 22px; height: 22px; }
+    .pw-body {
+      padding: 16px 20px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pw-sample-item {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid #7956c2;
+      background: rgba(121, 86, 194, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .pw-sample-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      background: #7956c2;
+    }
+
+    .preview-Launchers-box {
+      background: #0b0f17;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 10px 6px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: #f8fafc;
-      cursor: pointer;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--muted);
-      transition: all 0.18s ease;
+      gap: 22px;
+      min-height: 230px;
     }
-    .icon-option-btn svg { width: 24px; height: 24px; color: var(--text); }
-    .icon-option-btn:hover { border-color: #94a3b8; background: #ffffff; }
-    .icon-option-btn.active {
-      border-color: var(--brand);
-      background: #f5f2fb;
-      color: var(--brand);
-      box-shadow: 0 0 0 1px var(--brand);
-    }
-    .icon-option-btn.active svg { color: var(--brand); }
-
-    /* Swatches de Cores + Sazonais + Color Picker Livre */
-    .swatches-row {
+    .launchers-pair {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
       align-items: center;
+      gap: 32px;
     }
-    .swatch-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      border: 2px solid rgba(0,0,0,0.12);
+    .launcher-preview-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .launcher-preview-item span {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .mock-allyada-fab {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.4);
+    }
+    .mock-allyada-fab svg { width: 34px; height: 34px; }
+    .mock-vlibras-fab {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: #7956c2;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+    }
+    .mock-vlibras-fab svg { width: 28px; height: 28px; }
+
+    /* Aba Configuração (Estilo Foto 1 do AdOpt) */
+    .config-overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .quick-nav-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .quick-nav-tile {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform 0.15s ease;
-      position: relative;
+      transition: border-color 0.15s ease;
     }
-    .swatch-btn:hover { transform: scale(1.08); }
-    .swatch-btn.active {
-      outline: 3px solid #0f172a;
-      outline-offset: 2px;
+    .quick-nav-tile:hover {
+      border-color: var(--accent-green);
     }
-    .color-picker-wrap {
+    .quick-tile-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: var(--accent-green);
+      color: #052e16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .quick-tile-icon svg { width: 18px; height: 18px; }
+
+    .domain-meta-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .meta-row-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .meta-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .locked-domain-box {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 10px;
-      border-radius: 10px;
-      border: 1.5px dashed #94a3b8;
-      background: #f8fafc;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text);
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-main);
+      font-family: monospace;
     }
-    .color-picker-wrap input[type="color"] {
-      width: 26px;
-      height: 26px;
-      border: none;
+    .btn-support-url {
       background: none;
+      border: none;
+      color: var(--accent-green);
+      font-size: 12px;
+      text-decoration: underline;
       cursor: pointer;
+      margin-top: 6px;
+      display: inline-block;
     }
-
-    /* Botões Segmentados de Posição */
-    .seg-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-    .seg-row-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .seg-choice {
-      padding: 9px 10px;
-      border-radius: 10px;
-      border: 1.5px solid var(--border);
-      background: #f8fafc;
+    .btn-copy-id {
+      background: var(--accent-green);
+      color: #052e16;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 6px;
       font-size: 12.5px;
       font-weight: 700;
-      color: var(--muted);
       cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
-    }
-    .seg-choice.active {
-      border-color: var(--brand);
-      background: #f5f2fb;
-      color: var(--brand);
     }
 
-    /* Código Gerado */
-    .code-box {
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 14px;
-      border-radius: 12px;
-      font-family: 'Consolas', 'Monaco', monospace;
-      font-size: 12px;
-      line-height: 1.5;
+    /* Código de Instalação */
+    .code-pre {
+      background: #070a10;
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 10px;
+      color: #a7f3d0;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.6;
       overflow-x: auto;
       white-space: pre-wrap;
-      word-break: break-all;
-      margin-bottom: 10px;
-      border: 1px solid #334155;
     }
-    .btn-primary-copy {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 12px;
+
+    /* Barra Fixa Inferior (Cancelar / Salvar e publicar - Foto 4 do AdOpt) */
+    .adopt-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(11, 15, 23, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 14px 40px;
+      z-index: 100;
+    }
+    .bottom-bar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bottom-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+    }
+    .btn-cancel {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-save-publish {
+      background: var(--accent-green);
       border: none;
-      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
-      color: #ffffff;
-      font-size: 14px;
+      color: #052e16;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(121, 86, 194, 0.3);
-      transition: transform 0.15s ease;
+      transition: filter 0.15s ease;
     }
-    .btn-primary-copy:hover { transform: translateY(-1px); }
+    .btn-save-publish:hover {
+      filter: brightness(1.08);
+    }
 
-    /* Área Direita: Simulador do Site do Cliente */
-    .studio-preview-area {
-      background: #ffffff;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.06);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      min-height: 680px;
-    }
-    .browser-bar {
-      background: #f8fafc;
-      border-bottom: 1px solid var(--border);
-      padding: 12px 18px;
-      display: flex;
+    /* Modal de Solicitação de Troca de URL ao Suporte */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 200;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      padding: 20px;
     }
-    .browser-dots { display: flex; gap: 6px; }
-    .browser-dots span { width: 11px; height: 11px; border-radius: 50%; background: #cbd5e1; }
-    .browser-dots span:nth-child(1) { background: #ef4444; }
-    .browser-dots span:nth-child(2) { background: #f59e0b; }
-    .browser-dots span:nth-child(3) { background: #10b981; }
-    .browser-url {
-      flex: 1;
-      background: #ffffff;
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-box {
+      background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 12.5px;
-      color: var(--muted);
+      border-radius: 14px;
+      max-width: 480px;
+      width: 100%;
+      padding: 24px;
     }
-    .preview-content {
-      padding: 40px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .preview-hero {
-      max-width: 640px;
-    }
-    .preview-hero span.tag {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 999px;
-      background: #f1f5f9;
-      color: #475569;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .preview-hero h1 {
-      font-size: 30px;
-      color: #0f172a;
-      margin-bottom: 12px;
-      line-height: 1.25;
-    }
-    .preview-hero p {
-      font-size: 15.5px;
-      color: #475569;
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-    .preview-seal-footer {
-      border-top: 1px solid var(--border);
-      padding-top: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    @media (max-width: 1024px) {
-      .studio-layout { grid-template-columns: 1fr; }
+
+    @media (max-width: 860px) {
+      .config-overview-grid, .color-preview-showcase { grid-template-columns: 1fr; }
+      .admin-Navbar { padding: 12px 18px; flex-wrap: wrap; }
     }
   </style>
 </head>
 <body>
 
-  <header class="studio-topbar">
-    <div class="topbar-brand">
-      <div class="topbar-logo">A</div>
-      <div class="topbar-title">
-        <strong>Allyada Studio PRO</strong>
-        <span>Painel de Personalização do Cliente & Gerador de Script (Estilo AdOpt)</span>
+  <!-- BARRA SUPERIOR DO CLIENTE LOGADO -->
+  <header class="admin-Navbar">
+    <div class="nav-brand">
+      <div class="nav-logo-circle">
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-brand-text">
+        <strong>Allyada Portal</strong>
+        <span>Painel Administrativo de Licenças PRO</span>
       </div>
     </div>
-    <span class="topbar-badge">✨ Ambiente do Cliente / Implantação</span>
+
+    <div class="nav-right">
+      <div class="domain-switcher-wrap" title="Alternar entre as assinaturas/domínios contratados">
+        <label for="select-client-domain">Assinatura:</label>
+        <select id="select-client-domain" class="domain-select"></select>
+      </div>
+      <button type="button" class="btn-all-domains" id="btn-show-all-domains">Ver Meus Domínios (3)</button>
+      <div class="user-pill">
+        <span class="pro-badge-gold">✨ CLIENTE PRO</span>
+        <span>Grupo Inova / Criciúma</span>
+      </div>
+    </div>
   </header>
 
-  <main class="studio-layout">
-    <!-- COLUNA ESQUERDA: CONTROLES EXCLUSIVOS DO CLIENTE -->
-    <aside class="studio-sidebar">
+  <main class="admin-container">
 
-      <!-- 1. Domínio Licenciado -->
-      <section class="config-card">
-        <h2>1. Domínio do Site Cliente <span class="pro-pill">Licença por Domínio</span></h2>
-        <label class="field-label" for="cfg-domain">Endereço do site (sem https://)</label>
-        <span class="field-sub">O código PRO gerado será vinculado a este domínio (com subpáginas e acessos ilimitados).</span>
-        <input type="text" id="cfg-domain" class="text-input" value="empresaexemplo.com.br" placeholder="ex: cartorioexemplo.com.br">
-      </section>
-
-      <!-- 2. Escolha do Ícone -->
-      <section class="config-card">
-        <h2>2. Ícone do Botão Flutuante <span class="pro-pill">✨ PRO</span></h2>
-        <span class="field-sub">Escolha o símbolo que ficará visível no canto do site do cliente:</span>
-        <div class="icon-grid">
-          <button type="button" class="icon-option-btn active" data-icon="allyada">
-            <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
-            <span>Allyada</span>
-          </button>
-          <button type="button" class="icon-option-btn" data-icon="universal">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7" r="1.5" fill="currentColor"/><path d="M7 10.5c3 .8 7 .8 10 0"/><path d="M12 11v4"/><path d="M9.5 18.5L12 15l2.5 3.5"/></svg>
-            <span>Universal</span>
-          </button>
-          <button type="button" class="icon-option-btn" data-icon="hands">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
-            <span>Libras</span>
-          </button>
-          <button type="button" class="icon-option-btn" data-icon="heart">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            <span>Cuidado</span>
-          </button>
-          <button type="button" class="icon-option-btn" data-icon="shield">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            <span>Escudo</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- 3. Cor da Marca e Campanhas Sazonais -->
-      <section class="config-card">
-        <h2>3. Cor da Marca (Allyada + VLibras) <span class="pro-pill" id="hex-badge">#7956C2</span></h2>
-        <span class="field-sub">Altera simultaneamente a cor do Allyada e do botão/janela do VLibras:</span>
-        <div class="swatches-row">
-          <button type="button" class="swatch-btn active" data-color="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
-          <button type="button" class="swatch-btn" data-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo / Novembro Azul"></button>
-          <button type="button" class="swatch-btn" data-color="#0f766e" style="background:#0f766e;" title="Verde Saúde / Inclusão"></button>
-          <button type="button" class="swatch-btn" data-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
-          <button type="button" class="swatch-btn" data-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
-          <button type="button" class="swatch-btn" data-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
-          <button type="button" class="swatch-btn" data-color="#1e293b" style="background:#1e293b;" title="Grafite Elegante"></button>
-          <label class="color-picker-wrap" title="Escolher qualquer cor personalizada">
-            <input type="color" id="cfg-custom-color" value="#7956c2">
-            <span>Personalizada</span>
-          </label>
-        </div>
-      </section>
-
-      <!-- 4. Posição nos Cantos da Tela -->
-      <section class="config-card">
-        <h2>4. Posição nos Cantos da Tela <span class="pro-pill">✨ PRO</span></h2>
-        <label class="field-label">Lado da Tela (o VLibras fica automaticamente no lado oposto):</label>
-        <div class="seg-row-2">
-          <button type="button" class="seg-choice active" data-hpos="right">Direita da Tela</button>
-          <button type="button" class="seg-choice" data-hpos="left">Esquerda da Tela</button>
-        </div>
-        <label class="field-label">Altura nos Cantos:</label>
-        <div class="seg-row">
-          <button type="button" class="seg-choice active" data-vpos="bottom">Fim da Página</button>
-          <button type="button" class="seg-choice" data-vpos="middle">✨ Centro Lateral</button>
-          <button type="button" class="seg-choice" data-vpos="top">✨ Topo Lateral</button>
-        </div>
-      </section>
-
-      <!-- 5. Uniforme 3D do VLibras -->
-      <section class="config-card">
-        <h2>5. Roupa & Logo do Avatar 3D VLibras <span class="pro-pill">✨ PRO</span></h2>
-        <span class="field-sub">Personaliza o uniforme 3D da Hosana, Ícaro e Guga via JSON oficial:</span>
-        <div style="display:flex; gap:14px; margin-bottom:10px;">
-          <label class="color-picker-wrap" style="flex:1;">
-            <input type="color" id="cfg-shirt-color" value="#7956c2">
-            <span>Cor da Camisa</span>
-          </label>
-          <label class="color-picker-wrap" style="flex:1;">
-            <input type="color" id="cfg-pants-color" value="#201E62">
-            <span>Cor da Calça</span>
-          </label>
-        </div>
-        <input type="url" id="cfg-vlibras-logo" class="text-input" placeholder="URL da Logo PNG 500x500 transparente no peito (opcional)">
-      </section>
-
-      <!-- 6. Código Pronto para Copiar -->
-      <section class="config-card">
-        <h2>6. Código de Instalação deste Cliente <span class="pro-pill">Pronto para Colar</span></h2>
-        <pre class="code-box" id="generated-script-box"></pre>
-        <button type="button" class="btn-primary-copy" id="btn-copy-script">📋 Copiar Código &lt;script&gt; do Cliente</button>
-      </section>
-
-    </aside>
-
-    <!-- COLUNA DIREITA: SIMULADOR EM TEMPO REAL -->
-    <section class="studio-preview-area">
-      <div class="browser-bar">
-        <div class="browser-dots"><span></span><span></span><span></span></div>
-        <div class="browser-url" id="preview-url-bar">https://empresaexemplo.com.br</div>
+    <!-- VISÃO 1: LISTA DE DOMÍNIOS ASSINADOS PELO CLIENTE -->
+    <section class="domains-list-view" id="view-domains-list">
+      <div class="section-intro">
+        <h2>Meus Domínios Assinados (3 Licenças PRO)</h2>
+        <p>Selecione abaixo qual domínio da sua assinatura você deseja personalizar ou copiar o código de instalação:</p>
       </div>
-
-      <div class="preview-content">
-        <div class="preview-hero">
-          <span class="tag">Preview Interativo em Tempo Real</span>
-          <h1>Teste o plugin ao vivo com a identidade visual do seu cliente</h1>
-          <p>
-            Use os controles da coluna à esquerda para trocar o <strong>ícone do botão flutuante</strong>, a <strong>cor da marca</strong> (ou campanha sazonal como Outubro Rosa / Novembro Azul), a <strong>posição nos cantos da tela</strong> e o <strong>uniforme do VLibras</strong>. O botão flutuante e o painel do Allyada nesta página atualizam na mesma hora!
-          </p>
-          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Equipe colaborando em escritório moderno" style="width:100%; max-width:540px; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,0.08);">
-        </div>
-
-        <!-- Preview do Selo Oficial de Compromisso no Rodapé do Site do Cliente -->
-        <div class="preview-seal-footer">
-          <div>
-            <strong style="font-size:13px; display:block; color:#0f172a;">Selo Oficial de Compromisso (Rodapé do Site do Cliente):</strong>
-            <span style="font-size:12px; color:#64748b;">Incluído no Plano PRO com link para a Declaração de Conformidade LBI / WCAG 2.2 AA.</span>
-          </div>
-          <a href="#declaracao-acessibilidade" id="preview-seal-badge" style="display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; background:#0f172a; color:#ffffff; text-decoration:none; font-size:12px; font-weight:700; border:1px solid #334155;">
-            <span id="seal-dot" style="width:10px; height:10px; border-radius:50%; background:#7956c2; display:inline-block;"></span>
-            <span>Site Acessível • Conformidade LBI & WCAG 2.2 AA por <strong>Allyada</strong></span>
-          </a>
-        </div>
-      </div>
+      <div class="domains-grid" id="domains-cards-container"></div>
     </section>
+
+    <!-- VISÃO 2: PAINEL DE EDIÇÃO DO DOMÍNIO SELECIONADO (ESTILO ADOPT) -->
+    <section class="domain-editor-view" id="view-domain-editor">
+
+      <!-- Cabeçalho Estilo AdOpt: Aviso ▸ nome-do-projeto -->
+      <div class="notice-header">
+        <div class="notice-breadcrumb">
+          <div class="notice-icon-circle" id="header-domain-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="notice-title-group">
+            <h1>Widget <span class="arrow">▸</span> <span id="breadcrumb-slug">sc-criciuma-1ricriciuma</span></h1>
+            <p>Edite o estilo, as cores e a instalação do seu plugin para este domínio licenciado</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Abas Horizontais Estilo AdOpt -->
+      <nav class="adopt-tabs" role="tablist">
+        <button type="button" class="adopt-tab-btn active" data-tab="estilo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+          <span>Estilo</span>
+        </button>
+        <button type="button" class="adopt-tab-btn" data-tab="selo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Selo & Documentos</span>
+        </button>
+        <button type="button" class="adopt-tab-btn" data-tab="instalacao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span>Instalação</span>
+        </button>
+        <button type="button" class="adopt-tab-btn" data-tab="configuracao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Configuração</span>
+        </button>
+      </nav>
+
+      <!-- ===================================================================
+           ABA 1: ESTILO E VISUALIZAÇÃO (CORES, DEGRADÊS, VLIBRAS SEPARADO, POSIÇÃO E ÍCONES)
+      =================================================================== -->
+      <div class="tab-pane active" id="pane-estilo">
+        <div class="section-intro">
+          <h2>Estilo e Visualização</h2>
+          <p>Personalize as cores, degradês, ícone e posicionamento do controlador conforme o layout do seu site</p>
+        </div>
+
+        <!-- CARD 1: CORES DO PLUGIN ALLYADA (SÓLIDAS, ANEL PERSONALIZADO E DEGRADÊS) -->
+        <div class="adopt-card">
+          <div class="adopt-card-title">Cor Principal da Marca (Plugin Allyada)</div>
+          <div class="adopt-card-sub">Escolha uma sugestão pronta, adicione uma cor no anel personalizado ou crie um degradê para o seu botão:</div>
+
+          <div class="color-mode-tabs">
+            <button type="button" class="color-mode-btn active" id="mode-btn-solid">Cor Sólida</button>
+            <button type="button" class="color-mode-btn" id="mode-btn-gradient">✨ Degradê (Gradiente)</button>
+          </div>
+
+          <!-- Paleta de Cores Sólidas + Anel de Cores -->
+          <div id="solid-color-section">
+            <div class="palette-row" id="allyada-solid-palette">
+              <button type="button" class="swatch-circle active" data-color="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
+              <button type="button" class="swatch-circle" data-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo / Novembro Azul"></button>
+              <button type="button" class="swatch-circle" data-color="#0f766e" style="background:#0f766e;" title="Verde Saúde / Inclusão"></button>
+              <button type="button" class="swatch-circle" data-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
+              <button type="button" class="swatch-circle" data-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
+              <button type="button" class="swatch-circle" data-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
+              <button type="button" class="swatch-circle" data-color="#1e293b" style="background:#1e293b;" title="Grafite Elegante"></button>
+
+              <!-- Anel de Cores Personalizadas -->
+              <label class="color-ring-picker" title="Abrir anel de cores personalizadas">
+                <span class="ring-wheel"></span>
+                <span class="ring-label">Anel de Cores</span>
+                <input type="color" id="allyada-color-wheel" value="#7956c2">
+              </label>
+
+              <div class="hex-input-pill">
+                <span class="hex-preview-box" id="allyada-hex-box" style="background:#7956c2;"></span>
+                <input type="text" id="allyada-hex-input" value="#7956C2" maxlength="7">
+              </div>
+
+              <button type="button" class="btn-add-palette" id="btn-save-custom-solid">+ Adicionar à paleta</button>
+            </div>
+          </div>
+
+          <!-- Criador e Sugestões de Degradês -->
+          <div class="gradient-builder-box" id="gradient-color-section">
+            <span style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:10px;">Sugestões de Degradês ou crie o seu personalizado:</span>
+            <div class="palette-row" id="allyada-gradient-palette">
+              <button type="button" class="swatch-circle" data-grad="linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%)" data-primary="#7956c2" style="background:linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);" title="Degradê Roxo Allyada"></button>
+              <button type="button" class="swatch-circle" data-grad="linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)" data-primary="#2563eb" style="background:linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);" title="Azul Royal para Violeta"></button>
+              <button type="button" class="swatch-circle" data-grad="linear-gradient(135deg, #0d9488 0%, #2563eb 100%)" data-primary="#0d9488" style="background:linear-gradient(135deg, #0d9488 0%, #2563eb 100%);" title="Esmeralda para Oceano"></button>
+              <button type="button" class="swatch-circle" data-grad="linear-gradient(135deg, #db2777 0%, #9333ea 100%)" data-primary="#db2777" style="background:linear-gradient(135deg, #db2777 0%, #9333ea 100%);" title="Especial Outubro Rosa"></button>
+              <button type="button" class="swatch-circle" data-grad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" data-primary="#d97706" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Ouro Institucional / Cartório"></button>
+            </div>
+
+            <div class="grad-controls-row">
+              <label class="color-ring-picker">
+                <span class="ring-wheel"></span>
+                <span class="ring-label">Cor Inicial: <strong id="grad-c1-label">#7956C2</strong></span>
+                <input type="color" id="grad-color-1" value="#7956c2">
+              </label>
+              <label class="color-ring-picker">
+                <span class="ring-wheel"></span>
+                <span class="ring-label">Cor Final: <strong id="grad-c2-label">#DB2777</strong></span>
+                <input type="color" id="grad-color-2" value="#db2777">
+              </label>
+              <button type="button" class="btn-add-palette" id="btn-save-custom-grad">+ Adicionar Degradê</button>
+            </div>
+          </div>
+
+          <!-- COR DO VLIBRAS SEPARADA (ESTILO ADOPT) -->
+          <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border);">
+            <div class="adopt-card-title" style="color: var(--text-main);">Cor do Botão e Janela do VLibras</div>
+            <p style="font-size: 12.5px; color: var(--text-muted);">Selecione se você deseja utilizar a mesma cor da Allyada para o botão do VLibras ou definir uma cor diferente:</p>
+            <div class="adopt-radio-group">
+              <label class="adopt-radio-label">
+                <input type="radio" name="vlibras_same_color" value="sim" checked>
+                <span>Sim (usar mesma cor da Allyada)</span>
+              </label>
+              <label class="adopt-radio-label">
+                <input type="radio" name="vlibras_same_color" value="nao">
+                <span>Não (escolher cor separada para o VLibras)</span>
+              </label>
+            </div>
+
+            <div id="vlibras-separate-color-box" style="display: none; margin-top: 16px;">
+              <div class="palette-row" id="vlibras-palette">
+                <button type="button" class="swatch-circle active" data-vlcolor="#2563eb" style="background:#2563eb;" title="Azul Oficial VLibras"></button>
+                <button type="button" class="swatch-circle" data-vlcolor="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
+                <button type="button" class="swatch-circle" data-vlcolor="#0f766e" style="background:#0f766e;" title="Verde"></button>
+                <button type="button" class="swatch-circle" data-vlcolor="#b45309" style="background:#b45309;" title="Dourado"></button>
+                <button type="button" class="swatch-circle" data-vlcolor="#1e293b" style="background:#1e293b;" title="Grafite"></button>
+
+                <label class="color-ring-picker" title="Escolher qualquer cor para o VLibras">
+                  <span class="ring-wheel"></span>
+                  <span class="ring-label">Anel de Cor VLibras</span>
+                  <input type="color" id="vlibras-color-wheel" value="#2563eb">
+                </label>
+
+                <div class="hex-input-pill">
+                  <span class="hex-preview-box" id="vlibras-hex-box" style="background:#2563eb;"></span>
+                  <input type="text" id="vlibras-hex-input" value="#2563EB" maxlength="7">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: POSIÇÃO DO CONTROLADOR (ESTILO FOTO 2 DO ADOPT) -->
+        <div class="adopt-card">
+          <div class="adopt-card-title">Posição do Controlador</div>
+          <div class="adopt-card-sub">Selecione em que lado da página aparecerá o botão da Allyada (o VLibras ficará automaticamente no lado oposto):</div>
+          <div class="adopt-radio-group" style="margin-bottom: 22px;">
+            <label class="adopt-radio-label">
+              <input type="radio" name="allyada_hpos" value="right" checked>
+              <span>Direita</span>
+            </label>
+            <label class="adopt-radio-label">
+              <input type="radio" name="allyada_hpos" value="left">
+              <span>Esquerda</span>
+            </label>
+          </div>
+
+          <div class="adopt-card-title">Altura nos Cantos da Tela ✨</div>
+          <div class="adopt-card-sub">Defina a posição vertical do botão flutuante na lateral do site:</div>
+          <div class="adopt-radio-group">
+            <label class="adopt-radio-label">
+              <input type="radio" name="allyada_vpos" value="bottom" checked>
+              <span>Fim da página (Inferior)</span>
+            </label>
+            <label class="adopt-radio-label">
+              <input type="radio" name="allyada_vpos" value="middle">
+              <span>Centro lateral ✨</span>
+            </label>
+            <label class="adopt-radio-label">
+              <input type="radio" name="allyada_vpos" value="top">
+              <span>Topo lateral ✨</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- CARD 3: ÍCONE DO CONTROLADOR (ESTILO FOTO 3 DO ADOPT) -->
+        <div class="adopt-card">
+          <div class="adopt-card-title">Ícone do Controlador</div>
+          <div class="adopt-card-sub">Escolha o ícone oficial exibido no botão flutuante de acessibilidade:</div>
+          <div class="adopt-icons-row">
+            <button type="button" class="adopt-icon-circle-btn active" data-icon="allyada" title="Símbolo Allyada">
+              <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
+            </button>
+            <button type="button" class="adopt-icon-circle-btn" data-icon="universal" title="Acessibilidade Universal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7" r="1.5" fill="currentColor"/><path d="M7 10.5c3 .8 7 .8 10 0"/><path d="M12 11v4"/><path d="M9.5 18.5L12 15l2.5 3.5"/></svg>
+              <span class="icon-star-pro">✨</span>
+            </button>
+            <button type="button" class="adopt-icon-circle-btn" data-icon="hands" title="Mãos Libras">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+              <span class="icon-star-pro">✨</span>
+            </button>
+            <button type="button" class="adopt-icon-circle-btn" data-icon="heart" title="Cuidado & Inclusão">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              <span class="icon-star-pro">✨</span>
+            </button>
+            <button type="button" class="adopt-icon-circle-btn" data-icon="shield" title="Escudo de Conformidade">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              <span class="icon-star-pro">✨</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 4: VERIFICAÇÃO VISUAL DE CORES DO PLUGIN & BOTÕES (ESTILO FOTO 3 DO ADOPT) -->
+        <div class="adopt-card">
+          <div class="adopt-card-title">Pré-visualização de Cores e Ícone</div>
+          <div class="adopt-card-sub">Confira abaixo como ficam as cores escolhidas no cabeçalho do painel, no botão da Allyada e no botão do VLibras:</div>
+
+          <div class="color-preview-showcase">
+            <!-- Miniatura das Cores no Painel Allyada -->
+            <div class="preview-widget-card">
+              <div class="pw-header">
+                <div class="pw-brand">
+                  <div class="pw-logo-box" id="pw-logo-box"></div>
+                  <div>
+                    <strong style="font-size:15px; display:block;">Allyada</strong>
+                    <span style="font-size:11.5px; color:#64748b;">Acessibilidade para você</span>
+                  </div>
+                </div>
+                <span class="pw-sample-pill" id="pw-pill-tag">Combinações</span>
+              </div>
+              <div class="pw-body">
+                <div class="pw-sample-item" id="pw-active-card">
+                  <span>✓ Recurso Ativo no Painel</span>
+                  <span style="font-size:11px; font-weight:800;" id="pw-active-text">Ativado</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Miniatura dos 2 Botões Flutuantes (Allyada + VLibras Separado) -->
+            <div class="preview-Launchers-box">
+              <div class="launchers-pair">
+                <div class="launcher-preview-item">
+                  <div class="mock-allyada-fab" id="mock-allyada-fab"></div>
+                  <span>Botão Allyada</span>
+                </div>
+                <div class="launcher-preview-item">
+                  <div class="mock-vlibras-fab" id="mock-vlibras-fab">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+                  </div>
+                  <span>Botão VLibras</span>
+                </div>
+              </div>
+              <span style="font-size:12px; color:var(--text-muted);" id="preview-pos-summary">Posição: Direita • Fim da página</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           ABA 2: SELO & DOCUMENTOS DE CONFORMIDADE
+      =================================================================== -->
+      <div class="tab-pane" id="pane-selo">
+        <div class="section-intro">
+          <h2>Selo Oficial de Compromisso & Declaração LBI</h2>
+          <p>Adicione o selo de acessibilidade no rodapé do seu site para comprovar conformidade com a LBI (Lei 13.146/2015) e WCAG 2.2 AA</p>
+        </div>
+
+        <div class="adopt-card">
+          <div class="adopt-card-title">Visualização do Selo de Rodapé</div>
+          <div class="adopt-card-sub">O selo acompanha automaticamente a cor principal da sua marca configurada na aba Estilo:</div>
+          <div style="padding: 20px; background: var(--bg-body); border-radius: 10px; border: 1px solid var(--border); margin-bottom: 18px;">
+            <a href="#declaracao" style="display:inline-flex; align-items:center; gap:10px; padding:10px 18px; border-radius:999px; background:#0f172a; color:#ffffff; text-decoration:none; font-size:13px; font-weight:700; border:1px solid #334155;">
+              <span id="seal-preview-dot" style="width:10px; height:10px; border-radius:50%; background:#7956c2; display:inline-block;"></span>
+              <span>Site Acessível • Conformidade LBI & WCAG 2.2 AA por <strong>Allyada</strong></span>
+            </a>
+          </div>
+
+          <div class="adopt-card-title">Código HTML do Selo</div>
+          <pre class="code-pre" id="seal-code-box"></pre>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           ABA 3: INSTALAÇÃO (TAG <SCRIPT> EXCLUSIVA DO DOMÍNIO)
+      =================================================================== -->
+      <div class="tab-pane" id="pane-instalacao">
+        <div class="section-intro">
+          <h2>Instalação no Site</h2>
+          <p>Cole o script abaixo antes do fechamento da tag <code>&lt;/body&gt;</code> ou no cabeçalho do seu site</p>
+        </div>
+
+        <div class="adopt-card">
+          <div class="adopt-card-title">Tag &lt;script&gt; Licenciada para <span id="install-domain-label" style="color:#fff;"></span></div>
+          <div class="adopt-card-sub">Este código já contém as cores, degradê, cor do VLibras, ícone e posição configurados para este domínio:</div>
+          <pre class="code-pre" id="install-code-box"></pre>
+          <div style="margin-top: 14px;">
+            <button type="button" class="btn-copy-id" id="btn-copy-install-script">📋 Copiar tag &lt;script&gt; de instalação</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           ABA 4: CONFIGURAÇÃO (ESTILO FOTO 1 DO ADOPT — DOMÍNIO TRAVADO + RESUMO)
+      =================================================================== -->
+      <div class="tab-pane" id="pane-configuracao">
+        <div class="section-intro">
+          <h2>Configuração da Licença</h2>
+          <p>Informações gerais da assinatura e domínio vinculado</p>
+        </div>
+
+        <div class="config-overview-grid">
+          <!-- Atalhos Rápidos Esquerda (Foto 1 do AdOpt) -->
+          <div class="adopt-card">
+            <div class="quick-nav-grid">
+              <button type="button" class="quick-nav-tile" data-goto-tab="estilo">
+                <span class="quick-tile-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                </span>
+                <span>Estilo</span>
+              </button>
+              <button type="button" class="quick-nav-tile" data-goto-tab="selo">
+                <span class="quick-tile-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </span>
+                <span>Selo & Documentos</span>
+              </button>
+              <button type="button" class="quick-nav-tile" data-goto-tab="instalacao">
+                <span class="quick-tile-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </span>
+                <span>Instalação</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dados do Domínio Travado Direita (Foto 1 do AdOpt) -->
+          <div class="adopt-card">
+            <div class="domain-meta-grid">
+              <div class="meta-row-top">
+                <div>
+                  <span class="meta-label">IDENTIFICADOR DA ASSINATURA</span>
+                  <strong id="meta-slug" style="font-size: 14px;">sc-criciuma-1ricriciuma</strong>
+                </div>
+                <button type="button" class="btn-copy-id" id="btn-copy-license-id">Copiar ID da licença</button>
+              </div>
+
+              <div>
+                <span class="meta-label">DOMÍNIO VINCULADO (NÃO EDITÁVEL)</span>
+                <div class="locked-domain-box" title="O domínio é vinculado à assinatura e não pode ser alterado livremente">
+                  <span>🔒</span>
+                  <span id="meta-domain-url">https://www.ricriciuma.com.br</span>
+                </div>
+                <div>
+                  <button type="button" class="btn-support-url" id="btn-open-support-modal">
+                    O mesmo site mudou de endereço (URL)? Solicitar atualização ao suporte
+                  </button>
+                </div>
+              </div>
+
+              <div class="meta-row-top" style="margin-top: 4px;">
+                <div>
+                  <span class="meta-label">CRIADO EM</span>
+                  <span id="meta-created-at" style="font-size: 13.5px;">06/08/2025</span>
+                </div>
+                <div>
+                  <span class="meta-label">STATUS</span>
+                  <span class="status-online">Completo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
   </main>
 
-  <!-- Carrega o Plugin Allyada Real -->
-  <script src="./src/allyada.js"></script>
+  <!-- BARRA FIXA INFERIOR (CANCELAR / SALVAR E PUBLICAR — FOTO 4 DO ADOPT) -->
+  <footer class="adopt-bottom-bar">
+    <div class="bottom-bar-inner">
+      <span id="save-feedback-msg" style="font-size: 13px; color: var(--accent-green); font-weight: 600;"></span>
+      <div class="bottom-bar-actions">
+        <button type="button" class="btn-cancel" id="btn-reset-domain-changes">Cancelar</button>
+        <button type="button" class="btn-save-publish" id="btn-save-publish">Salvar e publicar</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL: SOLICITAR TROCA DE URL DO MESMO SITE AO SUPORTE -->
+  <div class="modal-backdrop" id="support-url-modal">
+    <div class="modal-box">
+      <h3 style="font-size: 16px; margin-bottom: 8px;">Solicitar Atualização de URL do Mesmo Site</h3>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+        Por segurança de licenciamento, cada assinatura PRO é exclusiva para 1 site. Caso o <strong>mesmo site/empresa</strong> tenha apenas mudado de domínio oficial, informe a nova URL abaixo para nossa equipe validar e atualizar sua licença:
+      </p>
+      <div style="margin-bottom: 12px;">
+        <span class="meta-label">DOMÍNIO ATUAL</span>
+        <div class="locked-domain-box" id="modal-current-domain" style="width:100%;"></div>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label class="meta-label" for="modal-new-domain">NOVA URL OFICIAL DO MESMO SITE</label>
+        <input type="url" id="modal-new-domain" placeholder="https://www.novodominio.com.br" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); color:#fff; outline:none;">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn-cancel" id="btn-close-modal">Fechar</button>
+        <button type="button" class="btn-save-publish" id="btn-send-support-request">Enviar solicitação ao Suporte</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function() {
-      const state = {
-        domain: 'empresaexemplo.com.br',
-        icon: 'allyada',
-        color: '#7956c2',
-        hpos: 'right',
-        vpos: 'bottom',
-        shirt: '#7956c2',
-        pants: '#201E62',
-        logo: ''
+      const ICONS_SVG = {
+        allyada: '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>',
+        universal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7" r="1.5" fill="currentColor"/><path d="M7 10.5c3 .8 7 .8 10 0"/><path d="M12 11v4"/><path d="M9.5 18.5L12 15l2.5 3.5"/></svg>',
+        hands: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
+        heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+        shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>'
       };
 
-      const domainInput = document.getElementById('cfg-domain');
-      const urlBar = document.getElementById('preview-url-bar');
-      const hexBadge = document.getElementById('hex-badge');
-      const customColorInput = document.getElementById('cfg-custom-color');
-      const shirtInput = document.getElementById('cfg-shirt-color');
-      const pantsInput = document.getElementById('cfg-pants-color');
-      const logoInput = document.getElementById('cfg-vlibras-logo');
-      const codeBox = document.getElementById('generated-script-box');
-      const copyBtn = document.getElementById('btn-copy-script');
-      const sealDot = document.getElementById('seal-dot');
-
-      function updateGeneratedCodeAndPreview() {
-        const cleanDomain = (state.domain || 'seudominio.com.br').replace(/^https?:\/\//i, '').replace(/\/.*$/, '').trim();
-        urlBar.textContent = 'https://' + cleanDomain;
-        hexBadge.textContent = state.color.toUpperCase();
-        if (sealDot) sealDot.style.background = state.color;
-
-        const logoAttr = state.logo ? `\n  data-vlibras-logo="${state.logo}"` : '';
-        const code = `<script src="https://cdn.allyada.com.br/allyada.min.js"\n  data-domain="${cleanDomain}"\n  data-color="${state.color}"\n  data-icon="${state.icon}"\n  data-position="${state.hpos}"\n  data-vpos="${state.vpos}"\n  data-vlibras-shirt="${state.shirt}"\n  data-vlibras-pants="${state.pants}"${logoAttr}\n  defer><\/script>`;
-        codeBox.textContent = code;
-
-        if (window.Allyada) {
-          window.Allyada.setFabIcon(state.icon);
-          window.Allyada.setBrandColor(state.color);
-          window.Allyada.setDockPosition(state.hpos);
-          window.Allyada.setVerticalPosition(state.vpos);
-          window.Allyada.setVLibrasUniform({
-            shirt: state.shirt,
-            pants: state.pants,
-            logo: state.logo
-          });
+      // Lista de Domínios Assinados pelo Cliente Logado (Simulação Multi-Assinatura)
+      const clientDomains = [
+        {
+          id: 'ALLY-PRO-9841',
+          slug: 'sc-criciuma-1ricriciuma',
+          name: '1º Registro de Imóveis de Criciúma',
+          domain: 'ricriciuma.com.br',
+          url: 'https://www.ricriciuma.com.br',
+          createdAt: '06/08/2025',
+          colorMode: 'solid',
+          primaryColor: '#7956c2',
+          gradient: '',
+          vlibrasSameColor: true,
+          vlibrasColor: '#2563eb',
+          hpos: 'right',
+          vpos: 'bottom',
+          icon: 'allyada'
+        },
+        {
+          id: 'ALLY-PRO-9842',
+          slug: 'sc-tubarao-cartorio',
+          name: 'Tabelionato de Notas & Protesto Tubarão',
+          domain: 'cartoriotubarao.com.br',
+          url: 'https://www.cartoriotubarao.com.br',
+          createdAt: '14/08/2025',
+          colorMode: 'solid',
+          primaryColor: '#b45309',
+          gradient: '',
+          vlibrasSameColor: false,
+          vlibrasColor: '#1e293b',
+          hpos: 'right',
+          vpos: 'middle',
+          icon: 'shield'
+        },
+        {
+          id: 'ALLY-PRO-9843',
+          slug: 'portal-inova-cartorios',
+          name: 'Portal Institucional Inova Cartórios',
+          domain: 'inovacartorios.com.br',
+          url: 'https://www.inovacartorios.com.br',
+          createdAt: '20/09/2025',
+          colorMode: 'gradient',
+          primaryColor: '#2563eb',
+          gradient: 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
+          vlibrasSameColor: true,
+          vlibrasColor: '#2563eb',
+          hpos: 'left',
+          vpos: 'middle',
+          icon: 'universal'
         }
+      ];
+
+      let currentDomainIdx = 0;
+
+      const selectEl = document.getElementById('select-client-domain');
+      const cardsContainer = document.getElementById('domains-cards-container');
+      const viewList = document.getElementById('view-domains-list');
+      const viewEditor = document.getElementById('view-domain-editor');
+      const btnShowAll = document.getElementById('btn-show-all-domains');
+
+      function renderDomainsSelectorAndCards() {
+        selectEl.innerHTML = '';
+        cardsContainer.innerHTML = '';
+
+        clientDomains.forEach((d, idx) => {
+          const opt = document.createElement('option');
+          opt.value = idx;
+          opt.textContent = `${d.slug} (${d.domain})`;
+          if (idx === currentDomainIdx) opt.selected = true;
+          selectEl.appendChild(opt);
+
+          const bgVisual = d.colorMode === 'gradient' && d.gradient ? d.gradient : d.primaryColor;
+          const card = document.createElement('div');
+          card.className = 'domain-item-card' + (idx === currentDomainIdx ? ' selected' : '');
+          card.innerHTML = `
+            <div class="domain-card-top">
+              <div class="domain-color-dot" style="background: ${bgVisual};">
+                <div style="width:20px;height:20px;">${ICONS_SVG[d.icon] || ICONS_SVG.allyada}</div>
+              </div>
+              <span class="status-online">Completo</span>
+            </div>
+            <div>
+              <strong style="font-size:15px; display:block; margin-bottom:4px;">${d.name}</strong>
+              <span style="font-size:12px; color:var(--text-muted);">ID: ${d.id} • Criado em ${d.createdAt}</span>
+            </div>
+            <div class="domain-url-pill">🔒 ${d.url}</div>
+          `;
+          card.addEventListener('click', () => {
+            currentDomainIdx = idx;
+            viewList.classList.remove('active');
+            viewEditor.classList.remove('hidden');
+            loadDomainIntoEditor();
+            renderDomainsSelectorAndCards();
+          });
+          cardsContainer.appendChild(card);
+        });
       }
 
-      domainInput.addEventListener('input', (e) => {
-        state.domain = e.target.value;
-        updateGeneratedCodeAndPreview();
-      });
-
-      document.querySelectorAll('.icon-option-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.icon-option-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.icon = btn.getAttribute('data-icon');
-          updateGeneratedCodeAndPreview();
-        });
-      });
-
-      document.querySelectorAll('.swatch-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.color = btn.getAttribute('data-color');
-          customColorInput.value = state.color;
-          state.shirt = state.color;
-          shirtInput.value = state.color;
-          updateGeneratedCodeAndPreview();
-        });
-      });
-
-      customColorInput.addEventListener('input', (e) => {
-        document.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active'));
-        state.color = e.target.value;
-        state.shirt = state.color;
-        shirtInput.value = state.color;
-        updateGeneratedCodeAndPreview();
-      });
-
-      document.querySelectorAll('[data-hpos]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('[data-hpos]').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.hpos = btn.getAttribute('data-hpos');
-          updateGeneratedCodeAndPreview();
-        });
-      });
-
-      document.querySelectorAll('[data-vpos]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('[data-vpos]').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.vpos = btn.getAttribute('data-vpos');
-          updateGeneratedCodeAndPreview();
-        });
-      });
-
-      shirtInput.addEventListener('input', (e) => {
-        state.shirt = e.target.value;
-        updateGeneratedCodeAndPreview();
-      });
-
-      pantsInput.addEventListener('input', (e) => {
-        state.pants = e.target.value;
-        updateGeneratedCodeAndPreview();
-      });
-
-      logoInput.addEventListener('input', (e) => {
-        state.logo = e.target.value.trim();
-        updateGeneratedCodeAndPreview();
-      });
-
-      copyBtn.addEventListener('click', () => {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(codeBox.textContent);
+      btnShowAll.addEventListener('click', () => {
+        const isShowingList = viewList.classList.contains('active');
+        if (isShowingList) {
+          viewList.classList.remove('active');
+          viewEditor.classList.remove('hidden');
+        } else {
+          renderDomainsSelectorAndCards();
+          viewList.classList.add('active');
+          viewEditor.classList.add('hidden');
         }
-        const orig = copyBtn.textContent;
-        copyBtn.textContent = '✅ Código <script> PRO Copiado!';
-        setTimeout(() => { copyBtn.textContent = orig; }, 2500);
       });
 
-      setTimeout(updateGeneratedCodeAndPreview, 150);
+      selectEl.addEventListener('change', (e) => {
+        currentDomainIdx = parseInt(e.target.value, 10) || 0;
+        viewList.classList.remove('active');
+        viewEditor.classList.remove('hidden');
+        loadDomainIntoEditor();
+        renderDomainsSelectorAndCards();
+      });
+
+      // Abas Horizontais
+      function switchTab(tabId) {
+        document.querySelectorAll('.adopt-tab-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-tab') === tabId);
+        });
+        document.querySelectorAll('.tab-pane').forEach(p => {
+          p.classList.toggle('active', p.id === 'pane-' + tabId);
+        });
+      }
+      document.querySelectorAll('.adopt-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+      });
+      document.querySelectorAll('[data-goto-tab]').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.getAttribute('data-goto-tab')));
+      });
+
+      // Carregar dados do domínio selecionado no Editor
+      function loadDomainIntoEditor() {
+        const d = clientDomains[currentDomainIdx];
+        document.getElementById('breadcrumb-slug').textContent = d.slug;
+        document.getElementById('meta-slug').textContent = `${d.slug} (${d.id})`;
+        document.getElementById('meta-domain-url').textContent = d.url;
+        document.getElementById('meta-created-at').textContent = d.createdAt;
+        document.getElementById('install-domain-label').textContent = d.domain;
+
+        // Modo Sólido vs Degradê
+        setColorModeUI(d.colorMode || 'solid');
+
+        // Inputs de Cor
+        document.getElementById('allyada-color-wheel').value = d.primaryColor;
+        document.getElementById('allyada-hex-input').value = d.primaryColor.toUpperCase();
+        document.getElementById('allyada-hex-box').style.background = d.primaryColor;
+
+        // Radio VLibras
+        document.querySelectorAll('input[name="vlibras_same_color"]').forEach(r => {
+          r.checked = (d.vlibrasSameColor ? r.value === 'sim' : r.value === 'nao');
+        });
+        document.getElementById('vlibras-separate-color-box').style.display = d.vlibrasSameColor ? 'none' : 'block';
+        document.getElementById('vlibras-color-wheel').value = d.vlibrasColor;
+        document.getElementById('vlibras-hex-input').value = d.vlibrasColor.toUpperCase();
+        document.getElementById('vlibras-hex-box').style.background = d.vlibrasColor;
+
+        // Posição
+        document.querySelectorAll('input[name="allyada_hpos"]').forEach(r => { r.checked = (r.value === d.hpos); });
+        document.querySelectorAll('input[name="allyada_vpos"]').forEach(r => { r.checked = (r.value === d.vpos); });
+
+        // Ícones
+        document.querySelectorAll('.adopt-icon-circle-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-icon') === d.icon);
+        });
+
+        updateVisualMocksAndCodes();
+      }
+
+      function setColorModeUI(mode) {
+        const d = clientDomains[currentDomainIdx];
+        d.colorMode = mode;
+        document.getElementById('mode-btn-solid').classList.toggle('active', mode === 'solid');
+        document.getElementById('mode-btn-gradient').classList.toggle('active', mode === 'gradient');
+        document.getElementById('solid-color-section').style.display = mode === 'solid' ? 'block' : 'none';
+        document.getElementById('gradient-color-section').classList.toggle('active', mode === 'gradient');
+        updateVisualMocksAndCodes();
+      }
+
+      document.getElementById('mode-btn-solid').addEventListener('click', () => setColorModeUI('solid'));
+      document.getElementById('mode-btn-gradient').addEventListener('click', () => {
+        const d = clientDomains[currentDomainIdx];
+        if (!d.gradient) {
+          const c1 = document.getElementById('grad-color-1').value;
+          const c2 = document.getElementById('grad-color-2').value;
+          d.gradient = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+        }
+        setColorModeUI('gradient');
+      });
+
+      // Eventos de Cor Sólida Allyada
+      function bindSolidSwatches() {
+        document.querySelectorAll('#allyada-solid-palette .swatch-circle').forEach(btn => {
+          btn.onclick = () => {
+            const d = clientDomains[currentDomainIdx];
+            d.primaryColor = btn.getAttribute('data-color');
+            d.colorMode = 'solid';
+            document.querySelectorAll('#allyada-solid-palette .swatch-circle').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('allyada-color-wheel').value = d.primaryColor;
+            document.getElementById('allyada-hex-input').value = d.primaryColor.toUpperCase();
+            document.getElementById('allyada-hex-box').style.background = d.primaryColor;
+            updateVisualMocksAndCodes();
+          };
+        });
+      }
+      bindSolidSwatches();
+
+      document.getElementById('allyada-color-wheel').addEventListener('input', (e) => {
+        const d = clientDomains[currentDomainIdx];
+        d.primaryColor = e.target.value;
+        d.colorMode = 'solid';
+        document.getElementById('allyada-hex-input').value = d.primaryColor.toUpperCase();
+        document.getElementById('allyada-hex-box').style.background = d.primaryColor;
+        updateVisualMocksAndCodes();
+      });
+
+      document.getElementById('allyada-hex-input').addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+          const d = clientDomains[currentDomainIdx];
+          d.primaryColor = val.toLowerCase();
+          document.getElementById('allyada-color-wheel').value = d.primaryColor;
+          document.getElementById('allyada-hex-box').style.background = d.primaryColor;
+          updateVisualMocksAndCodes();
+        }
+      });
+
+      document.getElementById('btn-save-custom-solid').addEventListener('click', () => {
+        const d = clientDomains[currentDomainIdx];
+        const palette = document.getElementById('allyada-solid-palette');
+        const wheel = palette.querySelector('.color-ring-picker');
+        const newBtn = document.createElement('button');
+        newBtn.type = 'button';
+        newBtn.className = 'swatch-circle active';
+        newBtn.setAttribute('data-color', d.primaryColor);
+        newBtn.style.background = d.primaryColor;
+        newBtn.title = `Personalizada (${d.primaryColor.toUpperCase()})`;
+        palette.querySelectorAll('.swatch-circle').forEach(b => b.classList.remove('active'));
+        palette.insertBefore(newBtn, wheel);
+        bindSolidSwatches();
+      });
+
+      // Eventos de Degradê Allyada
+      function bindGradSwatches() {
+        document.querySelectorAll('#allyada-gradient-palette .swatch-circle').forEach(btn => {
+          btn.onclick = () => {
+            const d = clientDomains[currentDomainIdx];
+            d.gradient = btn.getAttribute('data-grad');
+            d.primaryColor = btn.getAttribute('data-primary') || '#7956c2';
+            d.colorMode = 'gradient';
+            document.querySelectorAll('#allyada-gradient-palette .swatch-circle').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateVisualMocksAndCodes();
+          };
+        });
+      }
+      bindGradSwatches();
+
+      function updateCustomGradientFromPickers() {
+        const c1 = document.getElementById('grad-color-1').value;
+        const c2 = document.getElementById('grad-color-2').value;
+        document.getElementById('grad-c1-label').textContent = c1.toUpperCase();
+        document.getElementById('grad-c2-label').textContent = c2.toUpperCase();
+        const d = clientDomains[currentDomainIdx];
+        d.primaryColor = c1;
+        d.gradient = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+        d.colorMode = 'gradient';
+        updateVisualMocksAndCodes();
+      }
+      document.getElementById('grad-color-1').addEventListener('input', updateCustomGradientFromPickers);
+      document.getElementById('grad-color-2').addEventListener('input', updateCustomGradientFromPickers);
+
+      document.getElementById('btn-save-custom-grad').addEventListener('click', () => {
+        const d = clientDomains[currentDomainIdx];
+        const palette = document.getElementById('allyada-gradient-palette');
+        const newBtn = document.createElement('button');
+        newBtn.type = 'button';
+        newBtn.className = 'swatch-circle active';
+        newBtn.setAttribute('data-grad', d.gradient);
+        newBtn.setAttribute('data-primary', d.primaryColor);
+        newBtn.style.background = d.gradient;
+        palette.querySelectorAll('.swatch-circle').forEach(b => b.classList.remove('active'));
+        palette.appendChild(newBtn);
+        bindGradSwatches();
+      });
+
+      // Eventos de Cor Separada do VLibras
+      document.querySelectorAll('input[name="vlibras_same_color"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          const d = clientDomains[currentDomainIdx];
+          d.vlibrasSameColor = (e.target.value === 'sim');
+          document.getElementById('vlibras-separate-color-box').style.display = d.vlibrasSameColor ? 'none' : 'block';
+          updateVisualMocksAndCodes();
+        });
+      });
+
+      document.querySelectorAll('#vlibras-palette .swatch-circle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const d = clientDomains[currentDomainIdx];
+          d.vlibrasColor = btn.getAttribute('data-vlcolor');
+          document.querySelectorAll('#vlibras-palette .swatch-circle').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById('vlibras-color-wheel').value = d.vlibrasColor;
+          document.getElementById('vlibras-hex-input').value = d.vlibrasColor.toUpperCase();
+          document.getElementById('vlibras-hex-box').style.background = d.vlibrasColor;
+          updateVisualMocksAndCodes();
+        });
+      });
+
+      document.getElementById('vlibras-color-wheel').addEventListener('input', (e) => {
+        const d = clientDomains[currentDomainIdx];
+        d.vlibrasColor = e.target.value;
+        document.getElementById('vlibras-hex-input').value = d.vlibrasColor.toUpperCase();
+        document.getElementById('vlibras-hex-box').style.background = d.vlibrasColor;
+        updateVisualMocksAndCodes();
+      });
+
+      // Posição e Ícone
+      document.querySelectorAll('input[name="allyada_hpos"]').forEach(r => {
+        r.addEventListener('change', (e) => {
+          clientDomains[currentDomainIdx].hpos = e.target.value;
+          updateVisualMocksAndCodes();
+        });
+      });
+      document.querySelectorAll('input[name="allyada_vpos"]').forEach(r => {
+        r.addEventListener('change', (e) => {
+          clientDomains[currentDomainIdx].vpos = e.target.value;
+          updateVisualMocksAndCodes();
+        });
+      });
+      document.querySelectorAll('.adopt-icon-circle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.adopt-icon-circle-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          clientDomains[currentDomainIdx].icon = btn.getAttribute('data-icon');
+          updateVisualMocksAndCodes();
+        });
+      });
+
+      // Atualiza apenas a Pré-visualização de Cores do Componente e os Códigos Gerados
+      function updateVisualMocksAndCodes() {
+        const d = clientDomains[currentDomainIdx];
+        const fabBg = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
+        const effectiveVlibrasColor = d.vlibrasSameColor ? d.primaryColor : d.vlibrasColor;
+        const iconSvg = ICONS_SVG[d.icon] || ICONS_SVG.allyada;
+
+        // 1. Atualiza Mockup Visual das Cores
+        const pwLogoBox = document.getElementById('pw-logo-box');
+        pwLogoBox.style.background = fabBg;
+        pwLogoBox.innerHTML = iconSvg;
+
+        const pwPill = document.getElementById('pw-pill-tag');
+        pwPill.style.background = d.primaryColor;
+
+        const pwCard = document.getElementById('pw-active-card');
+        pwCard.style.borderColor = d.primaryColor;
+        document.getElementById('pw-active-text').style.color = d.primaryColor;
+
+        const mockFab = document.getElementById('mock-allyada-fab');
+        mockFab.style.background = fabBg;
+        mockFab.innerHTML = iconSvg;
+
+        const mockVlibras = document.getElementById('mock-vlibras-fab');
+        mockVlibras.style.background = effectiveVlibrasColor;
+
+        const hLabel = d.hpos === 'left' ? 'Esquerda' : 'Direita';
+        const vLabels = { bottom: 'Fim da página', middle: 'Centro lateral ✨', top: 'Topo lateral ✨' };
+        document.getElementById('preview-pos-summary').textContent = `Posição Allyada: ${hLabel} • ${vLabels[d.vpos]} (VLibras no lado oposto)`;
+
+        // 2. Atualiza Selo e Script de Instalação
+        document.getElementById('seal-preview-dot').style.background = d.primaryColor;
+        document.getElementById('seal-code-box').textContent =
+`<!-- Selo Oficial de Compromisso com a Acessibilidade Allyada (${d.domain}) -->
+<a href="https://allyada.com.br/certificado/${d.slug}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#0f172a;color:#fff;text-decoration:none;font-size:12px;font-weight:700;">
+  <span style="width:10px;height:10px;border-radius:50%;background:${d.primaryColor};display:inline-block;"></span>
+  <span>Site Acessível • Conformidade LBI & WCAG 2.2 AA por <strong>Allyada</strong></span>
+</a>`;
+
+        const gradAttr = (d.colorMode === 'gradient' && d.gradient) ? `\n  data-gradient="${d.gradient}"` : '';
+        const vlColorAttr = !d.vlibrasSameColor ? `\n  data-vlibras-color="${d.vlibrasColor}"` : '';
+        document.getElementById('install-code-box').textContent =
+`<!-- Plugin de Acessibilidade Digital Allyada PRO — Licença: ${d.id} (${d.domain}) -->
+<script src="https://cdn.allyada.com.br/allyada.min.js"
+  data-domain="${d.domain}"
+  data-color="${d.primaryColor}"${gradAttr}${vlColorAttr}
+  data-icon="${d.icon}"
+  data-position="${d.hpos}"
+  data-vpos="${d.vpos}"
+  defer><\/script>`;
+      }
+
+      // Botões de Copiar e Salvar
+      document.getElementById('btn-copy-install-script').addEventListener('click', (e) => {
+        navigator.clipboard.writeText(document.getElementById('install-code-box').textContent);
+        const orig = e.target.textContent;
+        e.target.textContent = '✅ Script copiado!';
+        setTimeout(() => { e.target.textContent = orig; }, 2200);
+      });
+
+      document.getElementById('btn-copy-license-id').addEventListener('click', (e) => {
+        const d = clientDomains[currentDomainIdx];
+        navigator.clipboard.writeText(d.id);
+        const orig = e.target.textContent;
+        e.target.textContent = '✅ ID Copiado!';
+        setTimeout(() => { e.target.textContent = orig; }, 2000);
+      });
+
+      document.getElementById('btn-save-publish').addEventListener('click', () => {
+        const d = clientDomains[currentDomainIdx];
+        const msg = document.getElementById('save-feedback-msg');
+        msg.textContent = `✓ Configurações de "${d.domain}" salvas e publicadas com sucesso!`;
+        setTimeout(() => { msg.textContent = ''; }, 4000);
+      });
+
+      // Modal de Suporte para Troca de URL do Mesmo Site
+      const supportModal = document.getElementById('support-url-modal');
+      document.getElementById('btn-open-support-modal').addEventListener('click', () => {
+        document.getElementById('modal-current-domain').textContent = clientDomains[currentDomainIdx].url;
+        supportModal.classList.add('open');
+      });
+      document.getElementById('btn-close-modal').addEventListener('click', () => {
+        supportModal.classList.remove('open');
+      });
+      document.getElementById('btn-send-support-request').addEventListener('click', () => {
+        supportModal.classList.remove('open');
+        const msg = document.getElementById('save-feedback-msg');
+        msg.textContent = '✓ Solicitação de atualização de URL enviada para análise do suporte Allyada!';
+        setTimeout(() => { msg.textContent = ''; }, 4500);
+      });
+
+      renderDomainsSelectorAndCards();
+      loadDomainIntoEditor();
     })();
   </script>
 </body>

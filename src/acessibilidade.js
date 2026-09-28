@@ -170,6 +170,8 @@
       const scriptOpts = {};
       if (scriptEl && scriptEl.getAttribute) {
         if (scriptEl.getAttribute('data-color')) scriptOpts.primaryColor = scriptEl.getAttribute('data-color');
+        if (scriptEl.getAttribute('data-gradient')) scriptOpts.fabGradient = scriptEl.getAttribute('data-gradient');
+        if (scriptEl.getAttribute('data-vlibras-color')) scriptOpts.vlibrasColor = scriptEl.getAttribute('data-vlibras-color');
         if (scriptEl.getAttribute('data-icon')) scriptOpts.fabIcon = scriptEl.getAttribute('data-icon');
         if (scriptEl.getAttribute('data-vpos')) scriptOpts.verticalPosition = scriptEl.getAttribute('data-vpos');
         if (scriptEl.getAttribute('data-position')) scriptOpts.position = scriptEl.getAttribute('data-position');
@@ -195,6 +197,8 @@
         if (!isAllowed) {
           console.warn(`[Allyada PRO] Licença vinculada ao domínio "${normalizedOptions.allowedDomain}". Revertendo para visual padrão gratuito.`);
           normalizedOptions.primaryColor = '#7956c2';
+          normalizedOptions.fabGradient = '';
+          normalizedOptions.vlibrasColor = '#7956c2';
           normalizedOptions.fabIcon = 'allyada';
           normalizedOptions.verticalPosition = 'bottom';
           normalizedOptions.vlibrasShirtColor = '';
@@ -204,7 +208,7 @@
       }
 
       this.config = { ...this.config, ...normalizedOptions };
-      if (this.config.primaryColor) {
+      if (!normalizedOptions.vlibrasColor && this.config.primaryColor) {
         this.config.vlibrasColor = this.config.primaryColor;
       }
 
@@ -4675,21 +4679,29 @@
       this.announce(`Ícone do botão flutuante alterado para ${chosen}`);
     }
 
-    setBrandColor(hexColor) {
-      if (!hexColor || typeof hexColor !== 'string') return;
-      const cleanHex = hexColor.trim();
-      this.config.primaryColor = cleanHex;
-      this.config.vlibrasColor = cleanHex;
-      if (!this._customShirtEdited) {
-        this.config.vlibrasShirtColor = cleanHex;
-      }
+    setBrandColor(colorOrGradient, optionalGradient = '') {
+      if (!colorOrGradient || typeof colorOrGradient !== 'string') return;
+      const val = colorOrGradient.trim();
+      const isGrad = val.startsWith('linear-gradient') || val.startsWith('radial-gradient');
+      const hexMatch = val.match(/#[0-9a-fA-F]{6}/);
+      const primaryHex = isGrad ? (hexMatch ? hexMatch[0] : '#7956c2') : val;
+      const fabBg = isGrad ? val : (optionalGradient || val);
+
+      this.config.primaryColor = primaryHex;
+      this.config.fabGradient = isGrad ? val : optionalGradient;
+
       if (this.shadowRoot && this.shadowRoot.host) {
-        this.shadowRoot.host.style.setProperty('--primary', cleanHex);
-        this.shadowRoot.host.style.setProperty('--primary-hover', cleanHex);
+        this.shadowRoot.host.style.setProperty('--primary', primaryHex);
+        this.shadowRoot.host.style.setProperty('--primary-hover', primaryHex);
+        this.shadowRoot.host.style.setProperty('--fab-bg', fabBg);
       }
-      this.applyVLibrasCustomTheme();
-      this.syncVLibrasAvatar(this.state.vlibrasAvatar || 'hosana');
       this.updatePanelUI();
+    }
+
+    setVLibrasColor(colorOrGradient) {
+      if (!colorOrGradient || typeof colorOrGradient !== 'string') return;
+      this.config.vlibrasColor = colorOrGradient.trim();
+      this.applyVLibrasCustomTheme();
     }
 
     setVLibrasUniform(opts = {}) {
@@ -5847,6 +5859,7 @@
           all: initial !important;
           --primary: ${this.config.primaryColor};
           --primary-hover: #6340ac;
+          --fab-bg: ${this.config.fabGradient || 'linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%)'};
           --accent: ${this.config.accentColor};
           --bg-panel: rgba(255, 255, 255, 0.95);
           --bg-card: #f8fafc;
@@ -5960,7 +5973,7 @@
           width: 64px;
           height: 64px;
           border-radius: 50%;
-          background: linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%);
+          background: var(--fab-bg, linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%));
           color: #ffffff;
           border: none;
           box-shadow: 0 10px 30px -4px rgba(121, 86, 194, 0.48), inset 0 2px 4px rgba(255, 255, 255, 0.3);
