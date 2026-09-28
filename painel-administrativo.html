@@ -1184,39 +1184,49 @@
     .auth-gate-wrapper {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 1.22fr 1fr;
+      grid-template-columns: 1.15fr 1fr;
       background: var(--bg-surface);
     }
     .auth-gate-wrapper.hidden {
       display: none;
     }
 
-    /* Coluna Esquerda: Background Visual Moderno */
+    /* Coluna Esquerda: Background Visual Moderno (Sem Card de Domínio) */
     .auth-visual-side {
       position: relative;
       overflow: hidden;
-      padding: 44px 56px;
+      padding: 48px 64px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       color: #ffffff;
-      background-color: #110b22;
+      background-color: #0e091d;
       background-image:
-        radial-gradient(circle at 14% 18%, rgba(139, 92, 246, 0.42) 0%, transparent 46%),
-        radial-gradient(circle at 86% 82%, rgba(37, 99, 235, 0.38) 0%, transparent 50%),
-        radial-gradient(circle at 52% 48%, rgba(109, 72, 184, 0.25) 0%, transparent 60%),
-        linear-gradient(145deg, #0f0a1e 0%, #1d1238 52%, #131c38 100%);
+        radial-gradient(circle at 12% 16%, rgba(139, 92, 246, 0.45) 0%, transparent 48%),
+        radial-gradient(circle at 88% 84%, rgba(37, 99, 235, 0.40) 0%, transparent 52%),
+        radial-gradient(circle at 50% 45%, rgba(109, 72, 184, 0.22) 0%, transparent 62%),
+        linear-gradient(145deg, #0c071a 0%, #1b1035 52%, #101935 100%);
     }
     .auth-visual-side::before {
       content: '';
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-      background-size: 42px 42px;
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 44px 44px;
       mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 20%, transparent 80%);
       pointer-events: none;
+    }
+    .auth-bg-watermark {
+      position: absolute;
+      right: -90px;
+      bottom: -90px;
+      width: 420px;
+      height: 420px;
+      color: rgba(255, 255, 255, 0.035);
+      pointer-events: none;
+      z-index: 1;
     }
     .auth-visual-top {
       position: relative;
@@ -1231,10 +1241,10 @@
       gap: 12px;
     }
     .auth-brand-emblem {
-      width: 40px;
-      height: 40px;
-      border-radius: 11px;
-      background: rgba(255, 255, 255, 0.12);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.22);
       backdrop-filter: blur(10px);
       display: flex;
@@ -1247,16 +1257,16 @@
       height: 24px;
     }
     .auth-brand-cluster strong {
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 700;
       letter-spacing: -0.02em;
       color: #ffffff;
     }
     .btn-back-site-glass {
-      padding: 8px 14px;
+      padding: 8px 15px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(10px);
       color: rgba(255, 255, 255, 0.9);
       font-size: 12.5px;
@@ -1268,7 +1278,7 @@
       transition: all 0.18s ease;
     }
     .btn-back-site-glass:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.14);
       border-color: rgba(255, 255, 255, 0.32);
       color: #ffffff;
     }
@@ -1276,14 +1286,14 @@
     .auth-visual-center {
       position: relative;
       z-index: 2;
-      max-width: 540px;
+      max-width: 520px;
       margin: auto 0;
     }
     .auth-kicker-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 12px;
+      padding: 6px 13px;
       border-radius: 999px;
       background: rgba(167, 139, 250, 0.14);
       border: 1px solid rgba(167, 139, 250, 0.3);
@@ -1292,7 +1302,7 @@
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
     .auth-kicker-dot {
       width: 6px;
@@ -1302,105 +1312,60 @@
       box-shadow: 0 0 8px #a78bfa;
     }
     .auth-visual-center h2 {
-      font-size: 34px;
+      font-size: 36px;
       font-weight: 700;
-      line-height: 1.18;
+      line-height: 1.16;
       letter-spacing: -0.03em;
       color: #ffffff;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
     .auth-visual-center p {
       font-size: 15px;
-      line-height: 1.6;
+      line-height: 1.65;
       color: rgba(226, 232, 240, 0.78);
-      margin-bottom: 32px;
+      margin-bottom: 34px;
     }
 
-    /* Card Glassmorphism Demonstrativo no Background */
-    .auth-glass-showcase {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      backdrop-filter: blur(16px);
-      border-radius: 16px;
-      padding: 20px 22px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-    }
-    .glass-showcase-top {
+    /* Pilares Visuais Limpos na Coluna Esquerda */
+    .auth-feature-pillars {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 14px;
-      margin-bottom: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .glass-domain-tag {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: monospace;
-      font-size: 13px;
-      font-weight: 600;
-      color: #f8fafc;
-    }
-    .glass-status-badge {
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: rgba(16, 185, 129, 0.18);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #6ee7b7;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .glass-showcase-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
       gap: 16px;
     }
-    .glass-swatches-demo {
+    .auth-pillar-item {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      align-items: flex-start;
+      gap: 14px;
     }
-    .glass-swatch-dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.25);
-    }
-    .glass-swatch-dot.active {
-      border-color: #ffffff;
-      transform: scale(1.12);
-    }
-    .glass-fabs-demo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .glass-fab-circle {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    }
-    .glass-fab-circle svg { width: 23px; height: 23px; }
-    .glass-fab-vlibras {
-      width: 38px;
-      height: 38px;
+    .auth-pillar-icon {
+      width: 34px;
+      height: 34px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-      color: #ffffff;
+      background: rgba(167, 139, 250, 0.14);
+      border: 1px solid rgba(167, 139, 250, 0.28);
+      color: #c4b5fd;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+      margin-top: 2px;
     }
-    .glass-fab-vlibras svg { width: 20px; height: 20px; }
+    .auth-pillar-icon svg {
+      width: 17px;
+      height: 17px;
+    }
+    .auth-pillar-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 2px;
+    }
+    .auth-pillar-text span {
+      font-size: 13px;
+      color: rgba(226, 232, 240, 0.68);
+      line-height: 1.45;
+    }
 
     .auth-visual-foot {
       position: relative;
@@ -1409,10 +1374,10 @@
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
-      color: rgba(226, 232, 240, 0.55);
+      color: rgba(226, 232, 240, 0.52);
     }
 
-    /* Coluna Direita: Painel de Login Limpo */
+    /* Coluna Direita: Painel de Login / Cadastro / Teste Grátis */
     .auth-form-side {
       position: relative;
       display: flex;
@@ -1424,18 +1389,18 @@
     }
     .auth-floating-theme {
       position: absolute;
-      top: 28px;
+      top: 26px;
       right: 32px;
     }
     .auth-form-box {
       width: 100%;
-      max-width: 390px;
+      max-width: 420px;
     }
     .auth-card-head {
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
     .auth-card-head h1 {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 700;
       letter-spacing: -0.025em;
       color: var(--text-primary);
@@ -1448,16 +1413,16 @@
     }
     .auth-mode-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.15fr;
       padding: 4px;
-      border-radius: 10px;
+      border-radius: 11px;
       background: var(--bg-subtle);
       border: 1px solid var(--border);
       margin-bottom: 22px;
     }
     .auth-tab-btn {
       padding: 9px 12px;
-      border-radius: 7px;
+      border-radius: 8px;
       border: none;
       background: transparent;
       color: var(--text-muted);
@@ -1465,11 +1430,24 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
     .auth-tab-btn.active {
       background: var(--bg-surface);
       color: var(--brand);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+    .trial-mini-pill {
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
     }
     .auth-pane {
       display: none;
@@ -1477,8 +1455,44 @@
     .auth-pane.active {
       display: block;
     }
+    .trial-highlight-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 13px;
+      border-radius: 10px;
+      background: var(--brand-soft);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+    .trial-highlight-banner svg {
+      width: 18px;
+      height: 18px;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+    .input-icon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-leading-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+    .input-leading-icon svg {
+      width: 16px;
+      height: 16px;
+    }
     .auth-pane .form-input {
-      padding: 11px 13px;
+      padding: 11px 13px 11px 38px;
       border-radius: 9px;
       font-size: 13.5px;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -1487,13 +1501,18 @@
       border-color: var(--brand);
       box-shadow: 0 0 0 3px var(--brand-soft);
     }
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
     .pass-field-wrap {
       position: relative;
       display: flex;
       align-items: center;
     }
     .pass-field-wrap .form-input {
-      padding-right: 40px;
+      padding-right: 38px;
     }
     .btn-eye-pass {
       position: absolute;
@@ -1549,12 +1568,22 @@
       transform: translateY(-1px);
       box-shadow: 0 8px 22px rgba(109, 72, 184, 0.34);
     }
+    .auth-error-msg {
+      display: none;
+      margin: -4px 0 12px;
+      padding: 8px 11px;
+      border-radius: 8px;
+      background: var(--status-err-bg);
+      color: var(--status-err);
+      font-size: 12px;
+      font-weight: 600;
+    }
     .auth-foot-note {
-      margin-top: 22px;
+      margin-top: 20px;
       padding-top: 16px;
       border-top: 1px solid var(--border);
       text-align: center;
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--text-muted);
       line-height: 1.5;
     }
@@ -1562,6 +1591,7 @@
     @media (max-width: 980px) {
       .auth-gate-wrapper { grid-template-columns: 1fr; }
       .auth-visual-side { padding: 32px 24px; }
+      .form-row-2 { grid-template-columns: 1fr; }
       .editor-two-columns, .profile-grid { grid-template-columns: 1fr; }
       .preview-sticky-column { position: static; }
     }
@@ -1574,8 +1604,10 @@
   ========================================================================= -->
   <div class="auth-gate-wrapper" id="auth-gate-screen">
 
-    <!-- Lado Esquerdo: Background Visual Corporativo -->
+    <!-- Lado Esquerdo: Background Visual Corporativo (Sem Card de Exemplo) -->
     <div class="auth-visual-side">
+      <svg class="auth-bg-watermark" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2"/><circle cx="11.5" cy="38.5" r="5.5"/><circle cx="88.5" cy="38.5" r="5.5"/><circle cx="28" cy="83.5" r="5.5"/><circle cx="72" cy="83.5" r="5.5"/></svg>
+
       <div class="auth-visual-top">
         <div class="auth-brand-cluster">
           <div class="auth-brand-emblem">
@@ -1597,37 +1629,37 @@
         </div>
         <h2>Acessibilidade digital com a identidade da sua marca.</h2>
         <p>
-          Gerencie seus domínios licenciados, aplique cores sólidas ou degradês personalizados no plugin e no VLibras, escolha o símbolo ideal e posicione os botões sem cobrir elementos do seu site.
+          Centralize a gestão dos seus domínios e personalize a aparência do assistente de acessibilidade e do VLibras para integrar perfeitamente ao design do seu site.
         </p>
 
-        <div class="auth-glass-showcase">
-          <div class="glass-showcase-top">
-            <div class="glass-domain-tag">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-              <span>ricriciuma.com.br</span>
+        <div class="auth-feature-pillars">
+          <div class="auth-pillar-item">
+            <div class="auth-pillar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
             </div>
-            <span class="glass-status-badge">Licença Pro Ativa</span>
+            <div class="auth-pillar-text">
+              <strong>Cores Sólidas, Degradês e Símbolos</strong>
+              <span>Adapte o botão flutuante e a janela do VLibras exatamente à paleta da sua instituição.</span>
+            </div>
           </div>
 
-          <div class="glass-showcase-row">
-            <div>
-              <span style="font-size:11px; color:rgba(226,232,240,0.65); display:block; margin-bottom:7px; font-weight:600;">PALETA & DEGRADÊS DA MARCA</span>
-              <div class="glass-swatches-demo">
-                <span class="glass-swatch-dot active" style="background:linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);"></span>
-                <span class="glass-swatch-dot" style="background:#6d48b8;"></span>
-                <span class="glass-swatch-dot" style="background:#0d9488;"></span>
-                <span class="glass-swatch-dot" style="background:#b45309;"></span>
-                <span class="glass-swatch-dot" style="background:linear-gradient(135deg, #db2777 0%, #9333ea 100%);"></span>
-              </div>
+          <div class="auth-pillar-item">
+            <div class="auth-pillar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             </div>
+            <div class="auth-pillar-text">
+              <strong>Múltiplos Domínios em uma Conta</strong>
+              <span>Gerencie todas as suas assinaturas, códigos de instalação e vigências em um único lugar.</span>
+            </div>
+          </div>
 
-            <div class="glass-fabs-demo">
-              <div class="glass-fab-circle" title="Botão Allyada Personalizado">
-                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
-              </div>
-              <div class="glass-fab-vlibras" title="Botão VLibras Sincronizado">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7.34 1.23L7.74 1.39L7.92 1.66L8.79 6.93L8.92 7.29L9.19 7.50L9.42 7.42L9.56 7.12L10.56 2.03L10.75 1.82L11.12 1.80L11.57 2.15L11.25 8.46L9.41 9.11L8.04 9.38L7.51 9.90L7.34 10.48L7.41 11.01L7.66 11.46L8.50 12.11L9.64 12.42L11.35 12.46L10.51 13.95L8.76 16.29L6.86 16.34L5.93 15.63L5.22 14.14L4.41 10.71L1.87 6.67L1.61 6.04L1.80 5.69L2.29 5.70L4.83 8.64L5.15 8.83L5.50 8.74L5.42 8.00L3.46 3.42L3.57 2.97L4.07 2.82L4.44 3.15L6.51 7.17L6.80 7.57L7.07 7.62L7.18 6.89L6.79 1.75L6.95 1.41ZM15.84 7.75L16.81 7.74L17.35 7.90L18.50 8.94L19.84 9.74L20.24 10.59L20.30 11.32L20.05 12.56L18.82 15.93L18.64 21.18L18.22 21.47L17.95 21.41L17.80 21.17L17.35 17.42L17.14 16.99L16.91 16.87L16.68 17.03L16.52 17.42L15.71 21.94L15.43 22.66L14.89 22.73L14.62 22.40L15.12 17.51L14.95 16.98L14.59 17.18L12.21 21.39L11.83 22.06L11.47 22.20L11.03 22.05L10.88 21.46L13.10 16.49L13.17 16.12L13.02 15.87L12.56 16.00L8.96 19.64L8.47 19.72L8.11 19.16L8.27 18.75L11.86 13.95L12.53 12.53L12.62 11.68L12.38 11.37L12.02 11.23L9.29 11.22L8.77 10.99L8.46 10.55L8.64 10.34L9.62 10.22L11.61 9.56L14.50 8.17ZM20.69 9.56L20.88 9.56L21.03 9.75L21.35 10.83L21.34 11.61L21.08 12.50L20.83 12.37L21.00 10.88ZM21.93 9.76L22.18 9.95L22.40 10.98L22.24 12.12L21.97 12.74L21.76 12.62L22.05 11.27L21.82 9.92ZM4.37 15.25L4.55 15.31L5.41 16.70L6.33 17.37L6.26 17.58L5.61 17.29L4.98 16.72L4.33 15.63L4.26 15.38ZM3.51 15.60L3.70 15.71L4.43 17.17L5.24 17.86L5.17 18.13L4.58 17.77L3.81 16.84L3.42 15.90Z"/></svg>
-              </div>
+          <div class="auth-pillar-item">
+            <div class="auth-pillar-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <div class="auth-pillar-text">
+              <strong>Teste Grátis por 7 Dias</strong>
+              <span>Cadastre seu domínio agora e experimente todos os recursos do Plano Pro sem compromisso.</span>
             </div>
           </div>
         </div>
@@ -1639,7 +1671,7 @@
       </div>
     </div>
 
-    <!-- Lado Direito: Formulário de Login e Teste Grátis -->
+    <!-- Lado Direito: Formulário de Login, Cadastro e Teste Grátis -->
     <div class="auth-form-side">
       <div class="auth-floating-theme">
         <button type="button" class="theme-toggle-btn" id="btn-auth-toggle-theme" title="Alternar tema">
@@ -1650,24 +1682,36 @@
 
       <div class="auth-form-box">
         <div class="auth-card-head">
-          <h1 id="auth-main-title">Bem-vindo de volta</h1>
-          <p id="auth-main-subtitle">Acesse sua conta Pro para gerenciar seus domínios e personalizações.</p>
+          <h1 id="auth-main-title">Acessar minha conta</h1>
+          <p id="auth-main-subtitle">Entre com suas credenciais Pro ou crie sua conta para testar grátis por 7 dias.</p>
         </div>
 
         <div class="auth-mode-tabs" id="auth-tabs-bar">
           <button type="button" class="auth-tab-btn active" id="tab-auth-login">Entrar na Conta</button>
-          <button type="button" class="auth-tab-btn" id="tab-auth-trial">Teste Grátis (7 Dias)</button>
+          <button type="button" class="auth-tab-btn" id="tab-auth-trial">
+            <span>Cadastre-se</span>
+            <span class="trial-mini-pill">7 Dias Grátis</span>
+          </button>
         </div>
 
-        <!-- ABA 1: LOGIN -->
+        <!-- ABA 1: LOGIN (ENTRAR NA CONTA) -->
         <form class="auth-pane active" id="auth-pane-login">
           <div class="form-group">
             <label for="login-email">E-mail Corporativo</label>
-            <input type="email" id="login-email" class="form-input" value="contato@inovacartorios.com.br" required>
+            <div class="input-icon-wrap">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <input type="email" id="login-email" class="form-input" value="contato@inovacartorios.com.br" required>
+            </div>
           </div>
+
           <div class="form-group">
-            <label for="login-password">Senha</label>
-            <div class="pass-field-wrap">
+            <label for="login-password">Senha de Acesso</label>
+            <div class="pass-field-wrap input-icon-wrap">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
               <input type="password" id="login-password" class="form-input" value="12345678" required>
               <button type="button" class="btn-eye-pass" id="btn-toggle-pass" title="Mostrar ou ocultar senha">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -1689,35 +1733,82 @@
           </button>
 
           <div class="auth-foot-note">
-            No Plano Gratuito não é necessário login — basta copiar o script padrão diretamente no site.
+            Ainda não possui uma conta Pro?
+            <button type="button" class="link-inline-btn" id="btn-switch-to-signup">Cadastre-se e teste grátis por 7 dias</button>
           </div>
         </form>
 
-        <!-- ABA 2: TESTE GRÁTIS DE 7 DIAS DO PLANO PRO -->
+        <!-- ABA 2: CADASTRE-SE & TESTE GRÁTIS DE 7 DIAS -->
         <form class="auth-pane" id="auth-pane-trial">
-          <div class="form-group">
-            <label for="trial-name">Nome do Responsável ou Empresa</label>
-            <input type="text" id="trial-name" class="form-input" placeholder="Ex: 1º Tabelionato / Sua Empresa" required>
-          </div>
-          <div class="form-group">
-            <label for="trial-domain">Domínio do Site a Personalizar</label>
-            <input type="text" id="trial-domain" class="form-input" placeholder="Ex: meusite.com.br" required>
-          </div>
-          <div class="form-group">
-            <label for="trial-email">E-mail de Acesso</label>
-            <input type="email" id="trial-email" class="form-input" placeholder="voce@suaempresa.com.br" required>
-          </div>
-          <div class="form-group">
-            <label for="trial-password">Criar Senha</label>
-            <input type="password" id="trial-password" class="form-input" placeholder="Mínimo de 8 caracteres" required>
+          <div class="trial-highlight-banner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Crie sua conta e ganhe <strong>7 dias de teste gratuito</strong> do Plano Pro no seu domínio.</span>
           </div>
 
-          <button type="submit" class="btn-auth-submit" style="margin-top: 8px;">
-            <span>Liberar 7 Dias Grátis e Acessar Painel</span>
+          <div class="form-group">
+            <label for="trial-name">Nome do Responsável ou Empresa</label>
+            <div class="input-icon-wrap">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" id="trial-name" class="form-input" placeholder="Ex: 1º Tabelionato / Sua Empresa" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="trial-email">E-mail Corporativo</label>
+            <div class="input-icon-wrap">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <input type="email" id="trial-email" class="form-input" placeholder="voce@suaempresa.com.br" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="trial-domain">Domínio do Site para Personalizar</label>
+            <div class="input-icon-wrap">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </span>
+              <input type="text" id="trial-domain" class="form-input" placeholder="Ex: meusite.com.br" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="trial-password">Criar Senha</label>
+              <div class="pass-field-wrap input-icon-wrap">
+                <span class="input-leading-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" id="trial-password" class="form-input" placeholder="Mín. 8 caracteres" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="trial-password-confirm">Confirmar Senha</label>
+              <div class="pass-field-wrap input-icon-wrap">
+                <span class="input-leading-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                </span>
+                <input type="password" id="trial-password-confirm" class="form-input" placeholder="Repita a senha" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-error-msg" id="trial-pass-error">
+            As senhas informadas não coincidem. Verifique e tente novamente.
+          </div>
+
+          <button type="submit" class="btn-auth-submit" style="margin-top: 6px;">
+            <span>Criar Conta e Iniciar 7 Dias Grátis</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
 
           <div class="auth-foot-note">
-            Durante os 7 dias você terá acesso total às cores, degradês, VLibras e ícones do Plano Pro.
+            Já possui uma conta cadastrada?
+            <button type="button" class="link-inline-btn" id="btn-switch-to-login">Entrar na minha conta</button>
           </div>
         </form>
 
@@ -1725,7 +1816,12 @@
         <form class="auth-pane" id="auth-pane-recover">
           <div class="form-group">
             <label for="recover-email">E-mail Cadastrado na Conta Pro</label>
-            <input type="email" id="recover-email" class="form-input" placeholder="contato@suaempresa.com.br" required>
+            <div class="input-icon-wrap">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <input type="email" id="recover-email" class="form-input" placeholder="contato@suaempresa.com.br" required>
+            </div>
           </div>
           <button type="submit" class="btn-auth-submit">
             <span>Enviar Link de Redefinição</span>
@@ -2460,14 +2556,14 @@
         const titleEl = document.getElementById('auth-main-title');
         const subEl = document.getElementById('auth-main-subtitle');
         if (mode === 'trial') {
-          titleEl.textContent = 'Teste Grátis por 7 Dias';
-          subEl.textContent = 'Experimente toda a personalização do Plano Pro no seu domínio.';
+          titleEl.textContent = 'Crie sua conta no Painel Pro';
+          subEl.textContent = 'Cadastre-se agora e libere 7 dias de teste grátis no seu domínio.';
         } else if (mode === 'recover') {
           titleEl.textContent = 'Recuperação de Senha';
           subEl.textContent = 'Informe seu e-mail corporativo para redefinir sua credencial.';
         } else {
-          titleEl.textContent = 'Bem-vindo de volta';
-          subEl.textContent = 'Acesse sua conta Pro para gerenciar seus domínios e personalizações.';
+          titleEl.textContent = 'Entrar na sua conta';
+          subEl.textContent = 'Acesse o Painel Administrativo para gerenciar seus domínios e personalizações.';
         }
       }
 
@@ -2475,6 +2571,8 @@
       tabTrialBtn.addEventListener('click', () => switchAuthMode('trial'));
       document.getElementById('btn-goto-recover').addEventListener('click', () => switchAuthMode('recover'));
       document.getElementById('btn-back-to-login').addEventListener('click', () => switchAuthMode('login'));
+      document.getElementById('btn-switch-to-signup').addEventListener('click', () => switchAuthMode('trial'));
+      document.getElementById('btn-switch-to-login').addEventListener('click', () => switchAuthMode('login'));
 
       // Mostrar / Ocultar Senha no Login
       const passInput = document.getElementById('login-password');
@@ -2493,9 +2591,32 @@
         enterAuthenticatedPanel();
       });
 
-      // Submissão do Teste Grátis de 7 Dias
+      // Validação de Senha e Confirmação no Cadastro + Teste Grátis
+      const trialPassInput = document.getElementById('trial-password');
+      const trialPassConfirmInput = document.getElementById('trial-password-confirm');
+      const trialPassError = document.getElementById('trial-pass-error');
+
+      [trialPassInput, trialPassConfirmInput].forEach((inp) => {
+        inp.addEventListener('input', () => {
+          if (trialPassError.style.display !== 'none') {
+            trialPassError.style.display = 'none';
+            trialPassConfirmInput.style.borderColor = '';
+          }
+        });
+      });
+
+      // Submissão do Cadastro + Teste Grátis de 7 Dias
       paneTrial.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (trialPassInput.value !== trialPassConfirmInput.value) {
+          trialPassError.style.display = 'block';
+          trialPassConfirmInput.style.borderColor = '#dc2626';
+          trialPassConfirmInput.focus();
+          return;
+        }
+        trialPassError.style.display = 'none';
+        trialPassConfirmInput.style.borderColor = '';
+
         const nameVal = document.getElementById('trial-name').value.trim() || 'Cliente Teste Pro';
         const rawDomain = document.getElementById('trial-domain').value.trim()
           .replace(/^https?:\/\//i, '')
@@ -3089,5 +3210,13 @@
       renderDomainsTable();
     })();
   </script>
+
+  <!-- Plugin de Acessibilidade Allyada + VLibras ativo no Painel Administrativo e Login -->
+  <script src="src/allyada.js"
+    data-color="#6d48b8"
+    data-icon="universal"
+    data-position="right"
+    data-vpos="bottom"
+    defer></script>
 </body>
 </html>
