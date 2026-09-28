@@ -23,14 +23,18 @@
       --brand: #6d48b8;
       --brand-hover: #5a389e;
       --brand-soft: rgba(109, 72, 184, 0.09);
+      --brand-border: rgba(109, 72, 184, 0.25);
       --status-ok: #15803d;
       --status-ok-bg: #dcfce7;
       --status-warn: #b45309;
       --status-warn-bg: #fef3c7;
       --status-danger: #b91c1c;
       --status-danger-bg: #fee2e2;
+      --status-err: #b91c1c;
+      --status-err-bg: #fee2e2;
       --shadow-sm: 0 1px 3px rgba(20, 17, 31, 0.04);
       --shadow-card: 0 4px 20px rgba(20, 17, 31, 0.05);
+      --shadow-md: 0 12px 32px rgba(20, 17, 31, 0.08);
       --shadow-dropdown: 0 14px 34px rgba(20, 17, 31, 0.12);
     }
 
@@ -48,14 +52,18 @@
       --brand: #9472de;
       --brand-hover: #a78bfa;
       --brand-soft: rgba(148, 114, 222, 0.15);
+      --brand-border: rgba(148, 114, 222, 0.32);
       --status-ok: #4ade80;
       --status-ok-bg: rgba(74, 222, 128, 0.12);
       --status-warn: #fbbf24;
       --status-warn-bg: rgba(251, 191, 36, 0.12);
       --status-danger: #f87171;
       --status-danger-bg: rgba(248, 113, 113, 0.12);
+      --status-err: #f87171;
+      --status-err-bg: rgba(248, 113, 113, 0.12);
       --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
       --shadow-card: 0 8px 26px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.45);
       --shadow-dropdown: 0 18px 40px rgba(0, 0, 0, 0.55);
     }
 
@@ -412,38 +420,49 @@
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 13px;
-      padding: 16px 18px;
+      padding: 18px 20px;
       box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .kpi-metric-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      width: 100%;
     }
+    .kpi-metric-label,
     .kpi-metric-info span {
       display: block;
       font-size: 11.5px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      margin-bottom: 4px;
     }
+    .kpi-metric-val,
     .kpi-metric-info strong {
       display: block;
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 26px;
+      font-weight: 800;
       color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-    .kpi-metric-info small {
-      display: block;
-      font-size: 11.5px;
-      color: var(--text-muted);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
       margin-top: 2px;
     }
+    .kpi-metric-sub,
+    .kpi-metric-info small {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
     .kpi-metric-icon {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
       background: var(--brand-soft);
       color: var(--brand);
@@ -453,8 +472,8 @@
       flex-shrink: 0;
     }
     .kpi-metric-icon svg {
-      width: 20px;
-      height: 20px;
+      width: 19px;
+      height: 19px;
     }
 
     .table-surface {
@@ -590,13 +609,23 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 3px 9px;
+      padding: 4px 10px;
       border-radius: 6px;
       background: var(--bg-subtle);
       border: 1px solid var(--border);
       color: var(--text-secondary);
       font-size: 11.5px;
       font-weight: 600;
+    }
+    .plan-tier-badge.annual {
+      background: var(--brand-soft);
+      border-color: var(--brand-border);
+      color: var(--brand);
+    }
+    .plan-tier-badge.trial {
+      background: var(--status-warn-bg);
+      border-color: rgba(180, 83, 9, 0.25);
+      color: var(--status-warn);
     }
 
     .visual-badge-cell {
@@ -656,14 +685,12 @@
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 20px 24px;
+      padding: 20px 24px 16px;
       margin-bottom: 20px;
       box-shadow: var(--shadow-card);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 18px;
+      flex-direction: column;
+      gap: 16px;
       overflow: hidden;
     }
     .domain-workspace-hero::before {
@@ -675,10 +702,19 @@
       height: 3px;
       background: linear-gradient(90deg, var(--brand) 0%, #2563eb 60%, #10b981 100%);
     }
+    .workspace-hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      width: 100%;
+    }
+    .workspace-hero-identity,
     .workspace-hero-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
     }
     .btn-back {
@@ -717,31 +753,39 @@
       width: 24px;
       height: 24px;
     }
+    .workspace-title-block,
     .domain-active-title {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
+    .workspace-title-row,
     .domain-title-row {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
     }
+    .workspace-title-block h2,
     .domain-active-title h2 {
       font-size: 19px;
       font-weight: 700;
       letter-spacing: -0.015em;
       color: var(--text-primary);
     }
+    .workspace-meta-row,
     .domain-meta-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       font-size: 12.5px;
       color: var(--text-muted);
     }
+    .workspace-meta-item strong {
+      color: var(--text-secondary);
+    }
+    .workspace-hero-actions,
     .workspace-hero-right {
       display: flex;
       align-items: center;
@@ -761,8 +805,10 @@
       font-weight: 600;
     }
     .domain-quick-select {
-      border: none;
-      background: transparent;
+      padding: 7px 11px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
       color: var(--text-primary);
       font-size: 12.5px;
       font-weight: 700;
@@ -777,24 +823,25 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 14px;
-      margin-bottom: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      width: 100%;
     }
     .editor-tabs {
       display: inline-flex;
-      background: var(--bg-surface);
+      background: var(--bg-subtle);
       border: 1px solid var(--border);
       border-radius: 11px;
       padding: 4px;
       gap: 4px;
-      box-shadow: var(--shadow-sm);
     }
     .editor-tab-btn {
-      padding: 9px 16px;
+      padding: 8px 15px;
       border-radius: 8px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
-      font-size: 13px;
+      font-size: 12.8px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -809,6 +856,7 @@
       color: #ffffff;
       box-shadow: 0 2px 8px rgba(109, 72, 184, 0.28);
     }
+    .workspace-sync-hint,
     .workspace-live-hint {
       display: inline-flex;
       align-items: center;
@@ -818,9 +866,10 @@
       color: var(--text-muted);
       padding: 6px 12px;
       border-radius: 999px;
-      background: var(--bg-surface);
+      background: var(--bg-subtle);
       border: 1px solid var(--border);
     }
+    .sync-pulse-dot,
     .live-sync-dot {
       width: 7px;
       height: 7px;
@@ -1487,51 +1536,95 @@
       position: absolute;
       top: -11px;
       right: 18px;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: 999px;
-      background: var(--brand);
+      background: linear-gradient(135deg, var(--brand) 0%, #5835A0 100%);
       color: #ffffff;
       font-size: 10.5px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      box-shadow: 0 4px 12px rgba(109, 72, 184, 0.28);
     }
-    .plan-price-row {
-      margin: 14px 0 16px;
+    .plan-tier-head {
+      margin-bottom: 14px;
+    }
+    .plan-tier-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.015em;
+    }
+    .plan-tier-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+    .plan-price-row,
+    .plan-tier-price {
+      margin: 10px 0 8px;
       display: flex;
       align-items: baseline;
       gap: 4px;
     }
-    .plan-price-row strong {
-      font-size: 28px;
+    .plan-tier-price .currency {
+      font-size: 14px;
       font-weight: 700;
+      color: var(--text-secondary);
+    }
+    .plan-price-row strong,
+    .plan-tier-price .amount {
+      font-size: 30px;
+      font-weight: 800;
       color: var(--text-primary);
       letter-spacing: -0.03em;
+      line-height: 1;
     }
-    .plan-price-row span {
+    .plan-price-row span,
+    .plan-tier-price .period {
       font-size: 12.5px;
       color: var(--text-muted);
       font-weight: 500;
     }
-    .plan-features-ul {
+    .plan-tier-saving {
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .plan-tier-card.featured .plan-tier-saving {
+      background: var(--brand-soft);
+      border-color: var(--brand-border);
+      color: var(--brand);
+    }
+    .plan-features-ul,
+    .plan-feature-list {
       list-style: none;
       padding: 0;
       margin: 0 0 20px;
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 10px;
+      flex: 1;
     }
-    .plan-features-ul li {
+    .plan-features-ul li,
+    .plan-feature-list li {
       display: flex;
       align-items: flex-start;
-      gap: 8px;
+      gap: 9px;
       font-size: 12.8px;
       color: var(--text-secondary);
-      line-height: 1.4;
+      line-height: 1.45;
     }
-    .plan-features-ul li svg {
-      width: 15px;
-      height: 15px;
+    .plan-features-ul li svg,
+    .plan-feature-list li svg {
+      width: 16px;
+      height: 16px;
       color: var(--status-ok);
       flex-shrink: 0;
       margin-top: 2px;
@@ -1540,36 +1633,52 @@
     .sub-action-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 16px;
       margin-top: 16px;
     }
     .sub-option-box {
-      padding: 16px;
+      padding: 18px 20px;
       border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--bg-subtle);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
+    }
+    .sub-option-box h4 {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .sub-option-box p {
+      font-size: 12.8px;
+      color: var(--text-secondary);
+      line-height: 1.55;
     }
     .sub-option-box.upgrade-highlight {
-      border-color: var(--brand);
+      border-color: var(--brand-border);
       background: var(--brand-soft);
     }
     .sub-option-box.danger-zone {
-      border-color: rgba(185, 28, 28, 0.28);
+      border-color: rgba(185, 28, 28, 0.25);
       background: var(--status-danger-bg);
     }
     .btn-danger-outline {
-      padding: 8px 14px;
-      border-radius: 8px;
+      padding: 9px 14px;
+      border-radius: 9px;
       border: 1px solid var(--status-danger);
-      background: transparent;
+      background: var(--bg-surface);
       color: var(--status-danger);
       font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      align-self: flex-start;
       transition: all 0.15s ease;
     }
     .btn-danger-outline:hover {
@@ -1580,6 +1689,26 @@
     /* =========================================================================
        TELA 3: MEU PERFIL & CONFIGURAÇÕES DA CONTA DO CLIENTE
     ========================================================================= */
+    .editor-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .editor-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+    }
+    .editor-breadcrumb strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
     .profile-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1698,10 +1827,26 @@
     }
 
     @media (max-width: 1040px) {
+      .admin-header {
+        height: auto;
+        padding: 12px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .header-center-nav {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+      .header-nav-btn {
+        white-space: nowrap;
+        flex: 1;
+        justify-content: center;
+      }
       .kpi-strip-grid { grid-template-columns: repeat(2, 1fr); }
       .plans-pricing-grid { grid-template-columns: 1fr; }
       .sub-action-grid { grid-template-columns: 1fr; }
-      .header-center-nav { display: none; }
     }
 
     /* =========================================================================
@@ -2328,6 +2473,46 @@
       line-height: 1.5;
     }
 
+    /* Card de Ilustração SVG Animada na Tela de Login */
+    .auth-svg-preview-card {
+      margin: 0 0 22px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      backdrop-filter: blur(10px);
+      animation: authRevealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+    .auth-svg-preview-card svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    @keyframes authDashFlow {
+      to { stroke-dashoffset: -28; }
+    }
+    @keyframes authNodeFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .auth-flow-line {
+      stroke-dasharray: 5 5;
+      animation: authDashFlow 1.8s linear infinite;
+    }
+    .auth-float-badge {
+      animation: authNodeFloat 4.5s ease-in-out infinite;
+    }
+
+    /* Melhorias de Movimento e Hover nos Cards de KPI e Domínios */
+    .kpi-metric-card {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .kpi-metric-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--brand-border);
+      box-shadow: var(--shadow-card);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .auth-ambient-orb,
       .auth-bg-watermark,
@@ -2336,6 +2521,9 @@
       .auth-kicker-pill,
       .auth-visual-center h2,
       .auth-visual-center > p,
+      .auth-svg-preview-card,
+      .auth-flow-line,
+      .auth-float-badge,
       .auth-pillar-li,
       .auth-visual-foot,
       .auth-form-box,
@@ -2352,6 +2540,30 @@
       .form-row-2 { grid-template-columns: 1fr; }
       .editor-two-columns, .profile-grid { grid-template-columns: 1fr; }
       .preview-sticky-column { position: static; }
+      .table-surface { overflow-x: auto; }
+      .domains-table { min-width: 720px; }
+    }
+
+    @media (max-width: 640px) {
+      .main-wrap { padding: 20px 14px 120px; }
+      .admin-header { padding: 10px 14px; }
+      .brand-titles span, .brand-divider { display: none; }
+      .profile-meta { display: none; }
+      .theme-toggle-btn span { display: none; }
+      .header-nav-btn { padding: 7px 10px; font-size: 12px; }
+      .kpi-strip-grid { grid-template-columns: 1fr; gap: 10px; }
+      .page-heading { flex-direction: column; align-items: stretch; }
+      .btn-cta-new-sub { width: 100%; justify-content: center; }
+      .domain-workspace-hero { padding: 16px; }
+      .workspace-subnav-bar { flex-direction: column; align-items: stretch; }
+      .editor-tabs { width: 100%; overflow-x: auto; display: flex; }
+      .editor-tab-btn { flex: 1; justify-content: center; white-space: nowrap; font-size: 12px; padding: 8px 10px; }
+      .icons-grid-5 { grid-template-columns: repeat(2, 1fr); }
+      .bottom-save-bar { padding: 12px 14px; }
+      .save-bar-inner { flex-direction: column; align-items: stretch; gap: 10px; }
+      .save-bar-inner > div { display: flex; width: 100%; gap: 8px; }
+      .save-bar-inner .btn-secondary,
+      .save-bar-inner .btn-primary-save { flex: 1; text-align: center; justify-content: center; }
     }
   </style>
 </head>
@@ -2371,8 +2583,8 @@
       <!-- Cabeçalho Institucional (Landmark: Topo / Banner) -->
       <header class="auth-visual-top" role="banner" aria-label="Cabeçalho da Marca Allyada">
         <a href="site/index.html" class="auth-brand-cluster" aria-label="Allyada Acessibilidade Digital — Página Inicial">
-          <figure class="auth-brand-emblem" role="img" aria-label="Logotipo Símbolo Universal de Acessibilidade da Allyada">
-            <svg role="img" aria-label="Símbolo Universal de Acessibilidade da Allyada" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
+          <figure class="auth-brand-emblem" aria-hidden="true">
+            <svg aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
           </figure>
           <strong>Allyada</strong>
         </a>
@@ -2396,11 +2608,56 @@
           Centralize a gestão dos seus domínios e personalize a aparência do assistente de acessibilidade e do VLibras para integrar perfeitamente ao design do seu site.
         </p>
 
+        <!-- Ilustração Vetorial Criativa: Simulador de Identidade Visual & Multi-Domínios -->
+        <div class="auth-svg-preview-card" aria-hidden="true">
+          <svg viewBox="0 0 460 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="authGradBrand" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#2563EB"/>
+              </linearGradient>
+            </defs>
+            <!-- Painel Esquerdo: Paleta & Degradê -->
+            <rect x="6" y="10" width="188" height="92" rx="12" fill="#130D26" stroke="rgba(167,139,250,0.3)" stroke-width="1.2"/>
+            <text x="20" y="30" fill="#DDD6FE" font-size="10" font-family="Inter, sans-serif" font-weight="700">STUDIO DE CORES &amp; DEGRADÊ</text>
+            <circle cx="28" cy="52" r="10" fill="#6D48B8" stroke="#FFFFFF" stroke-width="1.8"/>
+            <circle cx="56" cy="52" r="10" fill="#2563EB"/>
+            <circle cx="84" cy="52" r="10" fill="#0D9488"/>
+            <circle cx="112" cy="52" r="10" fill="#D97706"/>
+            <circle cx="140" cy="52" r="10" fill="url(#authGradBrand)" stroke="#A78BFA" stroke-width="1.5"/>
+            <rect x="20" y="74" width="160" height="12" rx="6" fill="url(#authGradBrand)"/>
+            <circle cx="132" cy="80" r="7" fill="#FFFFFF" stroke="#6D48B8" stroke-width="2"/>
+
+            <!-- Linha Conectora Animada -->
+            <path class="auth-flow-line" d="M196 56 H248" stroke="#A78BFA" stroke-width="2" stroke-linecap="round"/>
+
+            <!-- Painel Direito: Botões Flutuantes Sincronizados -->
+            <rect x="250" y="10" width="204" height="92" rx="12" fill="#130D26" stroke="rgba(96,165,250,0.3)" stroke-width="1.2"/>
+            <text x="266" y="30" fill="#BFDBFE" font-size="10" font-family="Inter, sans-serif" font-weight="700">PREVIEW EM TEMPO REAL</text>
+            <!-- Botão Allyada -->
+            <g class="auth-float-badge">
+              <circle cx="296" cy="64" r="22" fill="url(#authGradBrand)"/>
+              <circle cx="296" cy="55" r="4" fill="#FFFFFF"/>
+              <path d="M283 61Q296 67 309 61" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M289 75L295 64H297L303 75" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
+            </g>
+            <!-- Botão VLibras -->
+            <g class="auth-float-badge" style="animation-delay: -2s;">
+              <rect x="334" y="44" width="40" height="40" rx="11" fill="#2563EB" stroke="#93C5FD" stroke-width="1.2"/>
+              <path d="M347 71V56a2 2 0 0 1 4 0v8M351 61V53a2 2 0 0 1 4 0v11M355 62V55a2 2 0 0 1 4 0v10" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <!-- Selo Sincronizado -->
+            <rect x="386" y="52" width="54" height="24" rx="12" fill="rgba(16,185,129,0.16)" stroke="rgba(52,211,153,0.4)"/>
+            <circle cx="398" cy="64" r="3.5" fill="#34D399"/>
+            <text x="406" y="67.5" fill="#6EE7B7" font-size="9.5" font-family="Inter, sans-serif" font-weight="700">LIVE</text>
+          </svg>
+        </div>
+
         <ul class="auth-feature-pillars" aria-label="Principais recursos do Painel Administrativo Pro">
           <li class="auth-pillar-li">
             <article class="auth-pillar-item" aria-label="Recurso: Cores Sólidas, Degradês e Símbolos">
-              <figure class="auth-pillar-icon" role="img" aria-label="Ícone de paleta de cores e degradês personalizados">
-                <svg role="img" aria-label="Paleta de cores personalizadas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+              <figure class="auth-pillar-icon" aria-hidden="true">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
               </figure>
               <div class="auth-pillar-text">
                 <h3>Cores Sólidas, Degradês e Símbolos</h3>
@@ -2411,8 +2668,8 @@
 
           <li class="auth-pillar-li">
             <article class="auth-pillar-item" aria-label="Recurso: Múltiplos Domínios em uma Conta">
-              <figure class="auth-pillar-icon" role="img" aria-label="Ícone de globo representando múltiplos domínios web">
-                <svg role="img" aria-label="Gestão de múltiplos domínios" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <figure class="auth-pillar-icon" aria-hidden="true">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </figure>
               <div class="auth-pillar-text">
                 <h3>Múltiplos Domínios em uma Conta</h3>
@@ -2423,8 +2680,8 @@
 
           <li class="auth-pillar-li">
             <article class="auth-pillar-item" aria-label="Recurso: Degustação Livre no Simulador do Painel">
-              <figure class="auth-pillar-icon" role="img" aria-label="Ícone de simulador visual interativo do Painel Pro">
-                <svg role="img" aria-label="Simulador visual gratuito no painel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              <figure class="auth-pillar-icon" aria-hidden="true">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
               </figure>
               <div class="auth-pillar-text">
                 <h3>Degustação Livre no Simulador</h3>
@@ -2439,9 +2696,9 @@
       <footer class="auth-visual-foot" role="contentinfo" aria-label="Rodapé Institucional e Conformidade Legal">
         <span>Allyada Tecnologia Assistiva</span>
         <div class="auth-foot-links">
-          <a href="site/index.html#planos" class="auth-foot-link">Planos Empresariais</a>
+          <a href="site/planos.html" class="auth-foot-link">Planos Empresariais</a>
           <span aria-hidden="true">•</span>
-          <a href="site/index.html#recursos" class="auth-foot-link">Conformidade LBI &amp; WCAG 2.1 AA</a>
+          <a href="site/conformidade.html" class="auth-foot-link">Conformidade LBI &amp; WCAG 2.1 AA</a>
         </div>
       </footer>
     </aside>
@@ -3090,32 +3347,48 @@
                 <div class="panel-card-header">
                   <div class="card-step-heading">
                     <span class="step-num-badge">01</span>
-                    <span class="panel-card-title">Snippet &lt;script&gt; Personalizado do Domínio</span>
+                    <span class="panel-card-title">Código Instalador &lt;script&gt; Personalizado e Funcional</span>
                   </div>
                   <span id="code-domain-badge" class="card-active-summary"></span>
                 </div>
 
-                <!-- Aviso de Desbloqueio quando o domínio está em Degustação no Simulador ou Expirado -->
-                <div id="script-lock-banner" style="display:none; padding:16px 18px; border-radius:12px; background:var(--brand-soft); border:1px solid var(--brand-border); margin-bottom:16px;">
-                  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;">
-                    <div style="max-width:480px;">
-                      <strong style="font-size:13.5px; color:var(--brand); display:block; margin-bottom:4px;">Personalização Pronta no Simulador • Ative o Plano para Liberar o &lt;script&gt;</strong>
-                      <p style="font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
-                        Como todos os módulos assistivos já existem na versão gratuita, o código <code>&lt;script&gt;</code> com as cores, degradês, ícone e posição personalizados da sua marca é liberado imediatamente após a ativação da assinatura Pro deste domínio.
+                <!-- Aviso informativo opcional quando o domínio está como Simulador/Expirado (sem bloquear o código!) -->
+                <div id="script-lock-banner" style="display:none; padding:14px 16px; border-radius:12px; background:var(--brand-soft); border:1px solid var(--brand-border); margin-bottom:16px;">
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+                    <div style="max-width:500px;">
+                      <strong style="font-size:13px; color:var(--brand); display:block; margin-bottom:2px;">Código Instalador Liberado para Teste &amp; Implantação</strong>
+                      <p style="font-size:12px; color:var(--text-secondary); line-height:1.45; margin:0;">
+                        O código <code>&lt;script&gt;</code> abaixo já contém toda a personalização salva deste domínio e está 100% funcional. Você também pode vincular um plano Pro definitivo a qualquer momento.
                       </p>
                     </div>
-                    <button type="button" class="btn-primary-save" id="btn-unlock-script-plan" style="align-self:center; white-space:nowrap;">
-                      Ativar Plano Pro e Liberar Código
+                    <button type="button" class="btn-secondary" id="btn-unlock-script-plan" style="align-self:center; white-space:nowrap; padding:7px 12px; font-size:12px;">
+                      Vincular Plano Pro
                     </button>
                   </div>
                 </div>
 
-                <p class="panel-card-desc">Copie e cole o código abaixo imediatamente antes do fechamento da tag <code>&lt;/body&gt;</code> no código-fonte principal do seu site:</p>
-                <pre class="code-block-dark" id="output-script-code"></pre>
-                <div style="margin-top: 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                  <button type="button" class="btn-primary-save" id="btn-copy-script">Copiar Código de Instalação</button>
-                  <span style="font-size:12px; color:var(--text-muted);">Carregamento assíncrono (<code>defer</code>) com impacto zero na velocidade da página.</span>
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                  <p class="panel-card-desc" style="margin:0;">Copie e cole antes do fechamento da tag <code>&lt;/body&gt;</code> no HTML do seu site (ou escolha o modo Console F12):</p>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <label for="select-script-mode" style="font-size:11.5px; font-weight:700; color:var(--text-secondary);">Formato do Instalador:</label>
+                    <select id="select-script-mode" class="domain-quick-select" style="font-size:12px; padding:5px 10px;">
+                      <option value="direct" selected>Tag &lt;script&gt; Direta (src/allyada.js)</option>
+                      <option value="console">Comando JS para Console (F12 / DevTools)</option>
+                      <option value="universal">Instalador Universal Auto-Detect (Qualquer Pasta)</option>
+                      <option value="subfolder">Tag &lt;script&gt; Subpasta (../src/allyada.js)</option>
+                    </select>
+                  </div>
                 </div>
+
+                <pre class="code-block-dark" id="output-script-code"></pre>
+
+                <div style="margin-top: 16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                  <button type="button" class="btn-primary-save" id="btn-copy-script">Copiar Código &lt;script&gt;</button>
+                  <button type="button" class="btn-secondary" id="btn-copy-console-cmd">Copiar Comando para Console (F12)</button>
+                  <button type="button" class="btn-secondary" id="btn-test-live-script">Testar em Página Real (Nova Aba)</button>
+                  <button type="button" class="btn-secondary" id="btn-download-test-html">Baixar HTML Instalado</button>
+                </div>
+                <span style="display:block; margin-top:10px; font-size:12px; color:var(--text-muted);">Dica: Para testar no <strong>Console (F12)</strong> do navegador, use o botão <em>"Copiar Comando para Console (F12)"</em> (pois o Console aceita JavaScript puro, sem a tag HTML <code>&lt;script&gt;</code>).</span>
               </div>
 
               <div class="panel-card">
@@ -3581,8 +3854,9 @@
   <footer class="bottom-save-bar hidden" id="bottom-save-bar">
     <div class="save-bar-inner">
       <span id="save-toast" style="font-size: 13px; font-weight: 600; color: var(--status-ok);"></span>
-      <div style="display: flex; gap: 10px; margin-left: auto;">
+      <div style="display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap;">
         <button type="button" class="btn-secondary" id="btn-cancel-edit">Voltar aos Domínios</button>
+        <button type="button" class="btn-secondary" id="btn-bottom-copy-script">Copiar Código &lt;script&gt;</button>
         <button type="button" class="btn-primary-save" id="btn-save-domain">Salvar e Publicar</button>
       </div>
     </div>
@@ -3811,6 +4085,79 @@
       ];
 
       let activeIdx = 0;
+      const STORAGE_KEY_DOMAINS = 'allyada_admin_domains_v1';
+      const STORAGE_KEY_ACTIVE_IDX = 'allyada_admin_active_idx_v1';
+      const STORAGE_KEY_PUBLISHED = 'allyada_published_brand_config';
+
+      function loadDomainsFromStorage() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY_DOMAINS);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              domains.splice(0, domains.length, ...parsed);
+            }
+          }
+          const savedIdx = parseInt(localStorage.getItem(STORAGE_KEY_ACTIVE_IDX) || '0', 10);
+          if (!isNaN(savedIdx) && savedIdx >= 0 && savedIdx < domains.length) {
+            activeIdx = savedIdx;
+          }
+        } catch (e) {}
+      }
+
+      function saveDomainsToStorage() {
+        try {
+          localStorage.setItem(STORAGE_KEY_DOMAINS, JSON.stringify(domains));
+          localStorage.setItem(STORAGE_KEY_ACTIVE_IDX, String(activeIdx));
+          const d = domains[activeIdx];
+          if (d) {
+            const bgMain = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
+            const vlBg = d.vlibrasSame
+              ? bgMain
+              : ((d.vlibrasMode === 'gradient' && d.vlibrasGrad) ? d.vlibrasGrad : d.vlibrasColor);
+            localStorage.setItem(STORAGE_KEY_PUBLISHED, JSON.stringify({
+              domain: d.domain,
+              colorMode: d.colorMode,
+              primaryColor: d.primaryColor,
+              gradient: d.gradient || '',
+              vlibrasColor: vlBg,
+              icon: d.icon,
+              hpos: d.hpos,
+              vpos: d.vpos,
+              updatedAt: new Date().toISOString()
+            }));
+          }
+        } catch (e) {}
+      }
+
+      function syncLiveAllyadaPlugin(domainObj) {
+        const d = domainObj || domains[activeIdx];
+        if (!d) return;
+        const bgMain = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
+        const vlBg = d.vlibrasSame
+          ? bgMain
+          : ((d.vlibrasMode === 'gradient' && d.vlibrasGrad) ? d.vlibrasGrad : d.vlibrasColor);
+        const applyFn = () => {
+          if (window.Allyada && typeof window.Allyada.applyClientConfig === 'function') {
+            window.Allyada.applyClientConfig({
+              primaryColor: d.primaryColor,
+              colorMode: d.colorMode,
+              gradient: d.gradient || '',
+              vlibrasColor: vlBg,
+              icon: d.icon,
+              hpos: d.hpos,
+              vpos: d.vpos
+            });
+          }
+        };
+        if (window.Allyada) {
+          applyFn();
+        } else {
+          setTimeout(applyFn, 350);
+        }
+      }
+
+      loadDomainsFromStorage();
 
       // Navegação entre Seções (Domínios | Editor | Assinaturas | Perfil)
       const views = {
@@ -4153,9 +4500,14 @@
           const bgStyle = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
           const planInfo = PLAN_CATALOG[d.planCode] || PLAN_CATALOG.monthly;
           const isFrozen = d.status === 'expired' || d.status === 'canceled';
-          const actionBtnHtml = isFrozen
-            ? `<button type="button" class="btn-row-pay" data-row-upgrade="${i}">Reativar / Plano</button>`
-            : `<button type="button" class="btn-row-edit">Personalizar</button>`;
+          const actionBtnHtml = `
+            <div style="display:inline-flex; align-items:center; gap:6px; justify-content:flex-end;">
+              <button type="button" class="btn-row-edit" data-row-copy="${i}" title="Copiar código <script> personalizado deste domínio">Copiar &lt;script&gt;</button>
+              ${isFrozen
+                ? `<button type="button" class="btn-row-pay" data-row-upgrade="${i}">Reativar / Plano</button>`
+                : `<button type="button" class="btn-row-edit">Personalizar</button>`}
+            </div>
+          `;
 
           tr.innerHTML = `
             <td>
@@ -4183,6 +4535,21 @@
             <td style="text-align: right;">${actionBtnHtml}</td>
           `;
           tr.addEventListener('click', (e) => {
+            const copyBtn = e.target.closest('[data-row-copy]');
+            if (copyBtn) {
+              e.stopPropagation();
+              activeIdx = i;
+              saveDomainsToStorage();
+              syncLiveAllyadaPlugin(domains[i]);
+              const snippet = buildInstallerSnippet(domains[i], 'direct');
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(snippet).catch(() => {});
+              }
+              const origTxt = copyBtn.textContent;
+              copyBtn.textContent = 'Copiado!';
+              setTimeout(() => { copyBtn.textContent = origTxt; }, 2000);
+              return;
+            }
             const upBtn = e.target.closest('[data-row-upgrade]');
             if (upBtn) {
               e.stopPropagation();
@@ -4697,74 +5064,305 @@
         document.getElementById('prev-position-label').textContent =
           `Allyada: ${hTxt} (${vMap[d.vpos]}) • VLibras: ${vlTxt} (Fim da Página)`;
 
-        const isScriptLocked = d.planCode === 'trial' || d.status === 'expired' || d.status === 'canceled';
+        const isNoticeVisible = d.planCode === 'trial' || d.status === 'expired' || d.status === 'canceled';
         const lockBanner = document.getElementById('script-lock-banner');
         if (lockBanner) {
-          lockBanner.style.display = isScriptLocked ? 'flex' : 'none';
+          lockBanner.style.display = isNoticeVisible ? 'flex' : 'none';
         }
         const btnCopyMain = document.getElementById('btn-copy-script');
         const btnCopySidebar = document.getElementById('btn-sidebar-copy-code');
         if (btnCopyMain) {
-          btnCopyMain.textContent = isScriptLocked
-            ? 'Ativar Plano para Liberar <script>'
-            : 'Copiar Código <script>';
+          btnCopyMain.textContent = 'Copiar Código <script>';
         }
         if (btnCopySidebar) {
-          btnCopySidebar.textContent = isScriptLocked
-            ? 'Ativar Plano para Liberar <script> Personalizado'
-            : 'Copiar Código <script> para o Site';
+          btnCopySidebar.textContent = 'Copiar <script>';
         }
 
+        const modeSelect = document.getElementById('select-script-mode');
+        const modeVal = modeSelect ? modeSelect.value : 'direct';
+        document.getElementById('output-script-code').textContent = buildInstallerSnippet(d, modeVal);
+
+        saveDomainsToStorage();
+        syncLiveAllyadaPlugin(d);
+      }
+
+      function buildInstallerSnippet(d, mode = 'direct', explicitScriptUrl = '') {
+        const bgMain = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
+        const vlBg = d.vlibrasSame
+          ? bgMain
+          : ((d.vlibrasMode === 'gradient' && d.vlibrasGrad) ? d.vlibrasGrad : d.vlibrasColor);
         const gradAttr = (d.colorMode === 'gradient' && d.gradient) ? `\n  data-gradient="${d.gradient}"` : '';
         const vlAttr = !d.vlibrasSame ? `\n  data-vlibras-color="${vlBg}"` : '';
 
-        if (isScriptLocked) {
-          document.getElementById('output-script-code').textContent =
-`<!-- [SIMULADOR EM DEGUSTAÇÃO LIVRE — Domínio: ${d.domain.toLowerCase()}]
-     Sua identidade visual (${d.colorMode === 'gradient' ? 'Degradê' : d.primaryColor.toUpperCase()}, ícone "${d.icon}", posição ${d.hpos}/${d.vpos}) já está salva no painel!
-     Ative o Plano Pro deste domínio para destravar o código <script> personalizado para instalação no site. -->`;
-        } else {
-          document.getElementById('output-script-code').textContent =
-`<!-- Allyada Acessibilidade PRO — Domínio Licenciado: ${d.domain.toLowerCase()} -->
-<script src="https://cdn.allyada.com.br/allyada.min.js"
+        if (mode === 'console') {
+          const absScriptUrl = new URL('src/allyada.js', window.location.href).href;
+          return `// Cole este código direto no Console do Navegador (F12 > Console) e aperte Enter:
+(function() {
+  var cfg = {
+    allowedDomain: "${d.domain.toLowerCase()}",
+    colorMode: "${d.colorMode}",
+    primaryColor: "${d.primaryColor}",
+    gradient: "${(d.colorMode === 'gradient' && d.gradient) ? d.gradient : ''}",
+    fabGradient: "${(d.colorMode === 'gradient' && d.gradient) ? d.gradient : ''}",
+    vlibrasColor: "${vlBg}",
+    icon: "${d.icon}",
+    fabIcon: "${d.icon}",
+    hpos: "${d.hpos}",
+    position: "${d.hpos}",
+    vpos: "${d.vpos}",
+    verticalPosition: "${d.vpos}"
+  };
+  var ICONS_MAP = {
+    universal: '${ICONS.universal}',
+    allyada: '${ICONS.allyada}',
+    wheelchair: '${ICONS.wheelchair}',
+    heart: '${ICONS.heart}',
+    shield: '${ICONS.shield}'
+  };
+  window.ALLYADA_CONFIG = cfg;
+
+  function applyDirectToDOM() {
+    if (window.Allyada && typeof window.Allyada.applyClientConfig === "function") {
+      window.Allyada.applyClientConfig(cfg);
+    }
+    var root = document.getElementById("allyada-root");
+    if (root && root.shadowRoot) {
+      var bg = (cfg.colorMode === "gradient" && cfg.gradient) ? cfg.gradient : cfg.primaryColor;
+      root.style.setProperty("--primary", cfg.primaryColor);
+      root.style.setProperty("--primary-hover", cfg.primaryColor);
+      root.style.setProperty("--fab-bg", bg);
+      var fab = root.shadowRoot.getElementById("allyada-trigger-btn");
+      if (fab) fab.style.background = bg;
+      var badge = root.shadowRoot.getElementById("allyada-header-icon-box");
+      if (badge) {
+        badge.style.background = bg;
+        if (ICONS_MAP[cfg.icon]) badge.innerHTML = ICONS_MAP[cfg.icon];
+      }
+      var fabIcon = root.shadowRoot.getElementById("allyada-fab-icon-span");
+      if (fabIcon && ICONS_MAP[cfg.icon]) fabIcon.innerHTML = ICONS_MAP[cfg.icon];
+      var wrap = root.shadowRoot.querySelector(".allyada-wrapper");
+      if (wrap) {
+        wrap.className = "allyada-wrapper pos-" + cfg.hpos + " vpos-" + cfg.vpos;
+      }
+    }
+    var vlSide = cfg.hpos === "left" ? "right: 24px !important; left: auto !important;" : "left: 24px !important; right: auto !important;";
+    var vlStyle = document.getElementById("allyada-vlibras-console-override") || document.createElement("style");
+    vlStyle.id = "allyada-vlibras-console-override";
+    vlStyle.textContent = "div[vw] { " + vlSide + " bottom: 24px !important; top: auto !important; } div[vw] [vw-access-button] .access-button { background: " + cfg.vlibrasColor + " !important; }";
+    document.head.appendChild(vlStyle);
+    console.log("✅ [Allyada PRO] Personalização de ${d.domain} aplicada com sucesso no Console!", cfg);
+  }
+
+  if (document.getElementById("allyada-root") || window.Allyada) {
+    applyDirectToDOM();
+    return;
+  }
+  var paths = ["src/allyada.js", "../src/allyada.js", "${absScriptUrl}"];
+  function loadNext(i) {
+    if (i >= paths.length) return;
+    var s = document.createElement("script");
+    s.src = paths[i];
+    s.onload = function() { setTimeout(applyDirectToDOM, 150); };
+    s.onerror = function() { s.remove(); loadNext(i + 1); };
+    document.head.appendChild(s);
+  }
+  loadNext(0);
+})();`;
+        }
+
+        if (mode === 'universal') {
+          const gradLine = (d.colorMode === 'gradient' && d.gradient) ? `\n  fabGradient: "${d.gradient}",` : '';
+          const vlLine = !d.vlibrasSame ? `\n  vlibrasColor: "${vlBg}",` : '';
+          return `<!-- Allyada Acessibilidade PRO — Instalador Universal (${d.domain.toLowerCase()}) -->
+<script>
+window.ALLYADA_CONFIG = {
+  allowedDomain: "${d.domain.toLowerCase()}",
+  primaryColor: "${d.primaryColor}",${gradLine}${vlLine}
+  fabIcon: "${d.icon}",
+  position: "${d.hpos}",
+  verticalPosition: "${d.vpos}"
+};
+(function() {
+  var paths = ["src/allyada.js", "../src/allyada.js", "/src/allyada.js"];
+  function loadNext(i) {
+    if (i >= paths.length) return;
+    var s = document.createElement("script");
+    s.src = paths[i];
+    s.defer = true;
+    s.onerror = function() { s.remove(); loadNext(i + 1); };
+    document.head.appendChild(s);
+  }
+  loadNext(0);
+})();
+<\/script>`;
+        }
+
+        const srcPath = explicitScriptUrl || (mode === 'subfolder' ? '../src/allyada.js' : 'src/allyada.js');
+        return `<!-- Allyada Acessibilidade PRO — Domínio: ${d.domain.toLowerCase()} -->
+<script src="${srcPath}"
   data-domain="${d.domain.toLowerCase()}"
   data-color="${d.primaryColor}"${gradAttr}${vlAttr}
   data-icon="${d.icon}"
   data-position="${d.hpos}"
   data-vpos="${d.vpos}"
   defer><\/script>`;
-        }
+      }
+
+      const selectScriptMode = document.getElementById('select-script-mode');
+      if (selectScriptMode) {
+        selectScriptMode.addEventListener('change', () => updateRightPreviewAndCode());
       }
 
       function copyCurrentScript(btnEl) {
         const d = domains[activeIdx];
-        const isScriptLocked = d.planCode === 'trial' || d.status === 'expired' || d.status === 'canceled';
-        if (isScriptLocked) {
-          openUpgradeModalForDomain(activeIdx);
-          return;
+        saveDomainsToStorage();
+        syncLiveAllyadaPlugin(d);
+        const codeTxt = document.getElementById('output-script-code').textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(codeTxt).catch(() => {});
         }
-        navigator.clipboard.writeText(document.getElementById('output-script-code').textContent);
-        const orig = btnEl.textContent;
-        btnEl.textContent = 'Código <script> copiado!';
-        setTimeout(() => { btnEl.textContent = orig; }, 2200);
+        if (btnEl) {
+          const orig = btnEl.textContent;
+          btnEl.textContent = 'Código copiado!';
+          setTimeout(() => { btnEl.textContent = orig; }, 2200);
+        }
+        triggerSaveToast(`Código personalizado de ${d.domain} salvo e copiado para a área de transferência!`);
       }
 
       document.getElementById('btn-copy-script').addEventListener('click', (e) => copyCurrentScript(e.currentTarget));
       document.getElementById('btn-sidebar-copy-code').addEventListener('click', (e) => copyCurrentScript(e.currentTarget));
+      const btnBottomCopy = document.getElementById('btn-bottom-copy-script');
+      if (btnBottomCopy) {
+        btnBottomCopy.addEventListener('click', (e) => copyCurrentScript(e.currentTarget));
+      }
+      const btnCopyConsoleCmd = document.getElementById('btn-copy-console-cmd');
+      if (btnCopyConsoleCmd) {
+        btnCopyConsoleCmd.addEventListener('click', (e) => {
+          const d = domains[activeIdx];
+          if (selectScriptMode) {
+            selectScriptMode.value = 'console';
+          }
+          updateRightPreviewAndCode();
+          const consoleCode = buildInstallerSnippet(d, 'console');
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(consoleCode).catch(() => {});
+          }
+          const btn = e.currentTarget;
+          const orig = btn.textContent;
+          btn.textContent = 'Comando F12 Copiado!';
+          setTimeout(() => { btn.textContent = orig; }, 2200);
+          triggerSaveToast(`Comando JS para Console (F12) de ${d.domain} copiado! Abra o F12 > Console e cole.`);
+        });
+      }
       const btnUnlockScript = document.getElementById('btn-unlock-script-plan');
       if (btnUnlockScript) {
         btnUnlockScript.addEventListener('click', () => openUpgradeModalForDomain(activeIdx));
       }
 
-      function triggerSaveToast(customMsg) {
-        const d = domains[activeIdx];
-        const toast = document.getElementById('save-toast');
-        toast.textContent = customMsg || `Configurações visuais de ${d.domain} salvas e publicadas.`;
-        setTimeout(() => { toast.textContent = ''; }, 3800);
+      function buildTestPageHtml(d, scriptSrcForPage) {
+        const snippet = buildInstallerSnippet(d, 'direct', scriptSrcForPage);
+        const bgMain = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
+        const vlBg = d.vlibrasSame
+          ? bgMain
+          : ((d.vlibrasMode === 'gradient' && d.vlibrasGrad) ? d.vlibrasGrad : d.vlibrasColor);
+        return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste ao Vivo do Instalador Allyada — ${d.domain}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background: #f8fafc; color: #0f172a; line-height: 1.6; padding: 40px 24px 120px; }
+    .container { max-width: 920px; margin: 0 auto; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: #ede9fe; color: #5b21b6; font-size: 12px; font-weight: 700; margin-bottom: 16px; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 32px; box-shadow: 0 12px 32px rgba(15,23,42,0.05); margin-bottom: 24px; }
+    h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+    p { color: #475569; font-size: 15px; margin-bottom: 16px; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 18px; border-radius: 12px; font-family: monospace; font-size: 13px; overflow-x: auto; line-height: 1.65; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 18px; }
+    .meta-box { padding: 12px 14px; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 13px; }
+    .meta-box strong { display: block; font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <span class="badge">Página de Teste Real • Script Personalizado Ativo</span>
+      <h1>${d.title} (${d.domain})</h1>
+      <p>Esta página está executando exatamente o código <code>&lt;script&gt;</code> personalizado gerado no seu Painel Administrativo. Observe os botões flutuantes do <strong>Allyada</strong> e do <strong>VLibras</strong> nos cantos configurados da tela e clique neles para testar todos os módulos assistivos.</p>
+      <div class="meta-grid">
+        <div class="meta-box"><strong>Cor / Degradê Allyada</strong><span>${d.colorMode === 'gradient' ? 'Degradê Personalizado' : d.primaryColor.toUpperCase()}</span></div>
+        <div class="meta-box"><strong>Tema VLibras</strong><span>${d.vlibrasSame ? 'Sincronizado com Allyada' : (d.vlibrasMode === 'gradient' ? 'Degradê VLibras' : vlBg)}</span></div>
+        <div class="meta-box"><strong>Símbolo Escolhido</strong><span>${ICON_LABELS[d.icon] || d.icon}</span></div>
+        <div class="meta-box"><strong>Posição na Tela</strong><span>${d.hpos === 'left' ? 'Esquerda' : 'Direita'} • ${d.vpos}</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 style="font-size:18px; margin-bottom:10px;">Código &lt;script&gt; instalado nesta página:</h2>
+      <pre>${snippet.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+    </div>
+  </div>
+  ${snippet}
+</body>
+</html>`;
       }
 
-      document.getElementById('btn-save-domain').addEventListener('click', () => triggerSaveToast());
-      document.getElementById('btn-hero-quick-save').addEventListener('click', () => triggerSaveToast());
+      const btnTestLiveScript = document.getElementById('btn-test-live-script');
+      if (btnTestLiveScript) {
+        btnTestLiveScript.addEventListener('click', () => {
+          const d = domains[activeIdx];
+          saveDomainsToStorage();
+          const absScriptUrl = new URL('src/allyada.js', window.location.href).href;
+          const htmlContent = buildTestPageHtml(d, absScriptUrl);
+          const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+          const blobUrl = URL.createObjectURL(blob);
+          window.open(blobUrl, '_blank');
+        });
+      }
+
+      const btnDownloadTestHtml = document.getElementById('btn-download-test-html');
+      if (btnDownloadTestHtml) {
+        btnDownloadTestHtml.addEventListener('click', () => {
+          const d = domains[activeIdx];
+          saveDomainsToStorage();
+          const htmlContent = buildTestPageHtml(d, 'src/allyada.js');
+          const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `allyada-instalado-${d.domain.toLowerCase().replace(/[^a-z0-9.-]/g, '-')}.html`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          triggerSaveToast(`Arquivo HTML de teste para ${d.domain} baixado com o código <script> instalado!`);
+        });
+      }
+
+      function triggerSaveToast(customMsg) {
+        const d = domains[activeIdx];
+        saveDomainsToStorage();
+        syncLiveAllyadaPlugin(d);
+        renderDomainsTable();
+        renderSubscriptionsManagementList();
+        const toast = document.getElementById('save-toast');
+        if (toast) {
+          toast.textContent = customMsg || `Configurações visuais de ${d.domain} salvas, aplicadas ao vivo e código <script> pronto!`;
+          setTimeout(() => { toast.textContent = ''; }, 4200);
+        }
+      }
+
+      function saveAndPublishCurrentDomain() {
+        const d = domains[activeIdx];
+        updateRightPreviewAndCode();
+        const codeTxt = document.getElementById('output-script-code').textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(codeTxt).catch(() => {});
+        }
+        triggerSaveToast(`Salvo e publicado! Código <script> personalizado de ${d.domain} atualizado e copiado.`);
+      }
+
+      document.getElementById('btn-save-domain').addEventListener('click', () => saveAndPublishCurrentDomain());
+      document.getElementById('btn-hero-quick-save').addEventListener('click', () => saveAndPublishCurrentDomain());
 
       // =========================================================================
       // GESTÃO DE ASSINATURAS, GERAÇÃO DE NOVOS PLANOS, UPGRADE E CANCELAMENTO
@@ -4982,6 +5580,7 @@
       updateKpiMetrics();
       renderDomainsTable();
       renderSubscriptionsManagementList();
+      syncLiveAllyadaPlugin(domains[activeIdx]);
     })();
   </script>
 

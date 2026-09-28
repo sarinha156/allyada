@@ -1,842 +1,995 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-palette="iris">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Allyada — Suíte Brasileira de Acessibilidade Web, IA Assistiva & Conformidade LBI / WCAG 2.2</title>
-  <meta name="description" content="Acessibilidade completa em 1 linha de código, 100% pensada para o Brasil (LBI + e-MAG + VLibras 3D + Voz Neural + IA Visual de Imagens com OCR), com isolamento total em Shadow DOM.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%237956C2' stroke-width='6'%3E%3Crect width='100' height='100' rx='22' fill='%23130D26' stroke='none'/%3E%3Cpath d='M13.8 30.2A40 40 0 0 1 86.2 30.2' stroke='%23FFFFFF'/%3E%3Cpath d='M15.8 40.5Q50 58 84.2 40.5' stroke='%23F59E0B'/%3E%3Cpath d='M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2' stroke='%23FFFFFF'/%3E%3Ccircle cx='50' cy='29.5' r='10.2' fill='%23F59E0B' stroke='none'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Allyada. — Infraestrutura de Acessibilidade Digital, IA &amp; Conformidade LBI</title>
+  <meta name="description" content="Adeque o site da sua empresa, e-commerce, clínica ou portal institucional à LBI (Lei 13.146/15) e WCAG 2.2 AAA em 2 minutos. Todos os módulos inclusos em todos os planos, VLibras 3D, IA e Painel Administrativo Pro." />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- BARRA DE EXPERIMENTAÇÃO DE IDENTIDADE VISUAL (4 PROPOSTAS DE PALETA AO VIVO) -->
-  <div class="palette-switcher-bar" role="region" aria-label="Seletor de Propostas de Identidade Visual">
-    <div class="palette-switcher-inner">
-      <div class="palette-switcher-label">
-        <span class="badge-try">🎨 Estúdio de Marca</span>
-        <span>Teste as 4 propostas de paleta no site e no plugin ao vivo:</span>
+  <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
+
+  <!-- ========================================================================
+       1. TOPBAR CORPORATIVA
+       ======================================================================== -->
+  <div class="site-topbar">
+    <div class="container site-topbar-inner">
+      <div class="topbar-left">
+        <span class="topbar-item">
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          <span>Conformidade Regulatória: <strong>Lei 13.146/15 (LBI Art. 63), ABNT NBR 17225 &amp; WCAG 2.2</strong></span>
+        </span>
+        <span class="topbar-pill">WCAG 2.2 AAA</span>
       </div>
-      <div class="palette-pills">
-        <button type="button" class="palette-pill-btn active" data-set-palette="iris" onclick="applySitePalette('iris')">
-          <span class="swatch-dot-pair">
-            <span class="swatch-dot" style="background:#7956C2"></span>
-            <span class="swatch-dot" style="background:#F59E0B"></span>
-          </span>
-          1. Íris & Âmbar (Roxo Allyada)
-        </button>
-        <button type="button" class="palette-pill-btn" data-set-palette="neural" onclick="applySitePalette('neural')">
-          <span class="swatch-dot-pair">
-            <span class="swatch-dot" style="background:#4F46E5"></span>
-            <span class="swatch-dot" style="background:#14B8A6"></span>
-          </span>
-          2. Neural & Turquesa (Tech IA)
-        </button>
-        <button type="button" class="palette-pill-btn" data-set-palette="safira" onclick="applySitePalette('safira')">
-          <span class="swatch-dot-pair">
-            <span class="swatch-dot" style="background:#0052CC"></span>
-            <span class="swatch-dot" style="background:#10B981"></span>
-          </span>
-          3. Safira & Esmeralda (Confiança LBI)
-        </button>
-        <button type="button" class="palette-pill-btn" data-set-palette="ametista" onclick="applySitePalette('ametista')">
-          <span class="swatch-dot-pair">
-            <span class="swatch-dot" style="background:#7C3AED"></span>
-            <span class="swatch-dot" style="background:#F43F5E"></span>
-          </span>
-          4. Ametista & Coral (Empatia)
-        </button>
-        <a href="identidade-visual.html" style="color: #FCD34D; font-weight: 700; text-decoration: none; font-size: 0.78rem; margin-left: 6px;">
-          Abrir Brandbook Completo &rarr;
+      <div class="topbar-right">
+        <a href="identidade-visual.html" class="topbar-item">
+          <i class="fa-solid fa-swatchbook" aria-hidden="true"></i>
+          <span>Brandbook Oficial</span>
+        </a>
+        <a href="../painel-administrativo.html" class="topbar-item" style="color: #C4B5FD; font-weight: 600;">
+          <i class="fa-solid fa-user-lock" aria-hidden="true"></i>
+          <span>Área do Cliente • Painel Pro</span>
+          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem;" aria-hidden="true"></i>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- CABEÇALHO PRINCIPAL DO SITE OFICIAL -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="index.html" class="allyada-logo" aria-label="Allyada — Página Inicial">
-        <div class="allyada-logo-mark" aria-hidden="true">
-          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/>
-            <path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/>
-            <path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/>
-            <path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/>
-            <path d="M15.8 40.5Q50 58 84.2 40.5"/>
-            <path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/>
-            <circle cx="50" cy="29.5" r="10.2" fill="rgba(255,255,255,0.4)"/>
+  <!-- ========================================================================
+       2. STICKY HEADER (CLEAN B2B SAAS NAVBAR + MOBILE DRAWER)
+       ======================================================================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container site-header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Allyada - Página Inicial">
+        <div class="brand-logo-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="12" r="5.5" fill="#F8C62F"/>
+            <path d="M16 52L29.5 23C30.5 21 33.5 21 34.5 23L48 52" stroke="#FFFFFF" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 31C21 41 43 41 52 31" stroke="#F8C62F" stroke-width="5" stroke-linecap="round"/>
           </svg>
         </div>
-        <div class="allyada-logo-text">
-          <span class="allyada-wordmark">allyada<span class="dot">.</span></span>
-          <span class="allyada-tagline-mini">Acessibilidade & IA Assistiva</span>
-        </div>
+        <span class="brand-logo-text">Allyada<span class="dot">.</span></span>
       </a>
 
-      <nav aria-label="Navegação Principal">
-        <ul class="nav-links">
-          <li><a href="#funcionalidades">Funcionalidades</a></li>
-          <li><a href="#perfis">Perfis Clínicos</a></li>
-          <li><a href="#instalacao">Instalação (1 Linha)</a></li>
-          <li><a href="#conformidade">Conformidade LBI</a></li>
-          <li><a href="#planos">Planos & Preços</a></li>
-          <li><a href="identidade-visual.html">Identidade Visual</a></li>
-        </ul>
+      <nav class="site-nav" id="mainSiteNav" aria-label="Menu principal">
+        <a href="index.html" class="site-nav-link active" aria-current="page">Início</a>
+        <a href="recursos.html" class="site-nav-link">Módulos &amp; IA</a>
+        <a href="planos.html" class="site-nav-link">Planos &amp; Preços</a>
+        <a href="conformidade.html" class="site-nav-link">Conformidade LBI</a>
+        <a href="sobre.html" class="site-nav-link">Quem Somos</a>
       </nav>
 
-      <div class="header-actions">
-        <button type="button" class="btn btn-outline" onclick="if(window.Allyada) Allyada.openPanel();">
-          ♿ Testar Plugin (Alt + A)
-        </button>
-        <a href="#planos" class="btn btn-primary">
-          ✨ Testar PRO 7 Dias Grátis
+      <div class="site-header-actions">
+        <a href="../painel-administrativo.html" class="btn btn-outline">
+          <i class="fa-solid fa-lock" aria-hidden="true"></i>
+          <span>Entrar no Painel</span>
         </a>
+        <a href="../painel-administrativo.html#cadastro-teste-gratis" class="btn btn-primary">
+          <span>Simulador Grátis</span>
+          <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="mobile-menu-toggle" id="btnMobileMenu" aria-label="Abrir menu de navegação" aria-expanded="false">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- HERO SECTION -->
-  <section class="hero-section">
-    <div class="container">
-      <div class="hero-grid">
-        <div>
-          <div class="hero-eyebrow">
-            <span class="pulse-dot" aria-hidden="true"></span>
-            <span>Suíte Brasileira de Acessibilidade Web &bull; LBI, e-MAG & WCAG 2.2 AAA</span>
-          </div>
-          <h1 class="hero-title">
-            Acessibilidade humana e <span class="highlight">IA assistiva</span> em 1 linha de código.
-          </h1>
-          <p class="hero-subtitle">
-            Torne seu site, clínica, cartório, e-commerce ou sistema em <code>&lt;iframe&gt;</code> imediatamente acessível.
-            Com <strong>Descritor Visual de Imagens (IA + OCR)</strong>, <strong>Voz Neural Contínua</strong>,
-            <strong>VLibras 3D Sincronizado</strong> e <strong>Shadow DOM</strong> que nunca quebra o seu layout.
-          </p>
+  <main id="conteudo-principal">
 
-          <div class="hero-cta-group">
-            <a href="#planos" class="btn btn-accent">
-              🚀 Começar Teste Grátis de 7 Dias (PRO)
-            </a>
-            <button type="button" class="btn btn-ghost-light" onclick="if(window.Allyada) Allyada.openPanel();">
-              ✨ Abrir Painel Allyada Ao Vivo
-            </button>
-            <a href="identidade-visual.html" class="btn btn-ghost-light">
-              🎨 Ver Manual da Marca
-            </a>
-          </div>
-
-          <div class="hero-trust-badges">
-            <span class="trust-pill">🛡️ Isolamento 100% Shadow DOM</span>
-            <span class="trust-pill">🧠 Visão Computacional + OCR no Navegador</span>
-            <span class="trust-pill">🤟 VLibras 3D Lado Oposto Automático</span>
-            <span class="trust-pill">📐 Posição Centro Lateral (Não cobre WhatsApp)</span>
-            <span class="trust-pill">♾️ Pageviews Ilimitados em Todos os Planos</span>
-          </div>
-        </div>
-
-        <!-- Card de Demonstração Visual da Tecnologia Assistiva -->
-        <div class="hero-visual-card" aria-label="Demonstração visual da Inteligência Assistiva Allyada">
-          <div class="showcase-window-bar">
-            <div class="window-dots" aria-hidden="true">
-              <span style="background:#EF4444"></span>
-              <span style="background:#F59E0B"></span>
-              <span style="background:#10B981"></span>
-            </div>
-            <span style="font-size: 0.76rem; font-family: 'JetBrains Mono', monospace; color: #CBD5E1;">
-              &lt;script src="cdn.allyada.com.br/allyada.js" defer&gt;&lt;/script&gt;
-            </span>
-          </div>
-
-          <div class="ai-vision-demo-box">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-              <span style="font-size:0.75rem; font-weight:700; color:var(--brand-accent); text-transform:uppercase; letter-spacing:0.04em;">
-                🧠 Descritor Visual de Imagens com IA + OCR (✨ PRO)
-              </span>
-              <span style="font-size:0.7rem; background:rgba(16,185,129,0.2); color:#6EE7B7; padding:2px 8px; border-radius:999px; font-weight:600;">
-                TensorFlow + Tesseract OCR
-              </span>
+    <!-- ======================================================================
+         3. ENTERPRISE TECH HERO WITH ANIMATED SVG ILLUSTRATION
+         ====================================================================== -->
+    <section id="inicio" class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <!-- Left Column -->
+          <div class="reveal-up is-visible">
+            <div class="tech-badge tech-badge-dark">
+              <span class="dot"></span>
+              <span>Tecnologia Assistiva • Shadow DOM • Painel Multi-Domínios</span>
             </div>
 
-            <div style="display:grid; grid-template-columns: 96px 1fr; gap:12px; align-items:center;">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80"
-                   alt="Mulher sorrindo utilizando um notebook em ambiente de trabalho moderno"
-                   style="width:96px; height:76px; object-fit:cover; border-radius:10px; border:2px solid var(--brand-accent);">
+            <h1 class="hero-title">
+              Infraestrutura de <span class="highlight">Acessibilidade Digital</span> para Empresas.
+            </h1>
+
+            <p class="hero-lead">
+              Adeque o portal da sua empresa, e-commerce, clínica ou instituição à <strong>Lei Brasileira de Inclusão (Lei 13.146/15)</strong> e à <strong>WCAG 2.2 AAA</strong> em 2 minutos. Personalize cores sólidas, degradês, ícones e posição lateral pelo <strong>Painel Administrativo Pro</strong>.
+            </p>
+
+            <div class="hero-callout">
+              <strong>Política de Igualdade Assistiva:</strong> Todos os +30 módulos de acessibilidade e pageviews ilimitados estão inclusos em todos os planos — inclusive no <strong>Plano Gratuito (R$ 0)</strong>.
+            </div>
+
+            <div class="hero-actions">
+              <a href="../painel-administrativo.html#cadastro-teste-gratis" class="btn btn-primary btn-lg">
+                <span>Criar Conta • Simulador Grátis</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+              <a href="planos.html" class="btn btn-dark-ghost btn-lg">
+                <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                <span>Comparar Planos (Gratuito e PRO)</span>
+              </a>
+            </div>
+
+            <div class="hero-metrics">
               <div>
-                <div style="font-size:0.76rem; color:#94A3B8; margin-bottom:4px;">Leitura de Pixels Reais + Texto na Foto:</div>
-                <div class="ai-speech-bubble" style="margin-top:0;">
-                  🔊 <em>"Mulher utilizando um notebook em ambiente interno com o título na imagem 'Inovação Digital'."</em>
+                <div class="hero-metric-val">+30<span> módulos</span></div>
+                <div class="hero-metric-label">Inclusos em todos os planos</div>
+              </div>
+              <div>
+                <div class="hero-metric-val">100<span>%</span></div>
+                <div class="hero-metric-label">Pageviews ilimitados por site</div>
+              </div>
+              <div>
+                <div class="hero-metric-val">&lt; 45<span>KB</span></div>
+                <div class="hero-metric-label">Script assíncrono via Shadow DOM</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Animated Creative SVG Illustration + Ecosystem Panel -->
+          <div class="hero-panel reveal-up reveal-delay-1 is-visible">
+            <div class="hero-panel-header">
+              <div class="hero-panel-brand">
+                <div class="hero-panel-icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+                    <circle cx="32" cy="12" r="6" fill="#F8C62F"/>
+                    <path d="M16 52L29.5 23C30.5 21 33.5 21 34.5 23L48 52" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M12 31C21 41 43 41 52 31" stroke="#F8C62F" stroke-width="5.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="hero-panel-title">Allyada Enterprise Engine v3.5</div>
+                  <div class="hero-panel-sub">Isolamento Shadow DOM • IA Client-Side • Multi-Domain</div>
                 </div>
               </div>
+              <a href="../painel-administrativo.html" class="status-badge-online">
+                <span class="dot"></span>
+                <span>Simulador Ao Vivo</span>
+              </a>
             </div>
-          </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.78rem; color:#CBD5E1; margin-top:14px; margin-bottom:6px;">
-            <span><strong>Perfis Clínicos em 1 Clique</strong> (Zero Duplicação UX AAA)</span>
-            <span style="color:var(--brand-accent); font-weight:700;">Atalho: Alt + A</span>
-          </div>
-          <div class="mini-profiles-row">
-            <div class="mini-profile-chip">🔍 Baixa Visão (130%)</div>
-            <div class="mini-profile-chip">📖 Dislexia (Lexend)</div>
-            <div class="mini-profile-chip">🎯 Foco (TDAH)</div>
-            <div class="mini-profile-chip">🧘 Sem Movimento</div>
-            <div class="mini-profile-chip">🎨 Daltonismo SVG</div>
-            <div class="mini-profile-chip">🤟 VLibras 3D</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+            <!-- Creative Animated SVG Illustration of Assistive Architecture -->
+            <div class="hero-illustration-stage" aria-hidden="true">
+              <svg viewBox="0 0 520 215" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="heroGradBg" x1="0" y1="0" x2="520" y2="215" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#1A1333"/>
+                    <stop offset="100%" stop-color="#0E0A1C"/>
+                  </linearGradient>
+                  <linearGradient id="heroPurpleGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#8B5CF6"/>
+                    <stop offset="100%" stop-color="#6D48B8"/>
+                  </linearGradient>
+                  <linearGradient id="heroScanGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#F8C62F" stop-opacity="0"/>
+                    <stop offset="50%" stop-color="#F8C62F" stop-opacity="0.95"/>
+                    <stop offset="100%" stop-color="#F8C62F" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
 
-  <!-- SEÇÃO 1: FUNCIONALIDADES EM DESTAQUE -->
-  <section class="section" id="funcionalidades">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Tecnologia Assistiva Sênior</span>
-        <h2 class="section-title">Projetada para autonomia real, não apenas para cumprir tabela</h2>
-        <p class="section-desc">
-          Arquitetura de Ergonomia Cognitiva com <strong>Zero Duplicação de Botões</strong>, busca instantânea no topo
-          e proteção cirúrgica de cabeçalhos e menus do seu site.
-        </p>
-      </div>
+                <!-- Background Grid -->
+                <rect width="520" height="215" rx="12" fill="url(#heroGradBg)"/>
+                <path d="M0 45H520M0 95H520M0 145H520M0 195H520M90 0V215M190 0V215M290 0V215M390 0V215" stroke="rgba(167,139,250,0.07)" stroke-width="1"/>
 
-      <div class="features-grid">
-        <!-- Card 1: IA Visual + OCR (Destaque Largo) -->
-        <div class="feature-card featured-wide">
-          <div>
-            <div class="feature-icon-box">🧠</div>
-            <h3>
-              Descritor Visual de Imagens com IA + OCR em Tempo Real
-              <span class="badge-pro">✨ Inclusivo & PRO</span>
-            </h3>
-            <p>
-              Mais de 80% das imagens na web não possuem atributo <code>alt</code> adequado. A Allyada combina
-              <strong>Visão Computacional Neural no navegador (TensorFlow.js + COCO-SSD)</strong> com
-              <strong>Reconhecimento Óptico de Caracteres (Tesseract.js OCR em 2 passadas)</strong> e inspeção de camadas DOM
-              para descrever pessoas, objetos, ações e textos embutidos dentro de banners e fotos.
-            </p>
-          </div>
-          <ul class="feature-bullets">
-            <li>Detecta pessoas (Homem, Mulher, Pessoa), celulares, notebooks, livros e contexto visual nos pixels reais</li>
-            <li>Lê títulos e frases desenhadas dentro da imagem com OCR de dupla passada + suporte opcional a Gemini Vision</li>
-            <li>Custo de servidor zero: processamento neural executado 100% no navegador do usuário</li>
-          </ul>
-        </div>
+                <!-- Left Mock Browser Window -->
+                <g transform="translate(18, 16)">
+                  <rect width="305" height="182" rx="10" fill="#141026" stroke="rgba(167,139,250,0.28)" stroke-width="1.2"/>
+                  <rect width="305" height="26" rx="10" fill="#1E1836"/>
+                  <circle cx="14" cy="13" r="4" fill="#EF4444"/>
+                  <circle cx="26" cy="13" r="4" fill="#F59E0B"/>
+                  <circle cx="38" cy="13" r="4" fill="#22C55E"/>
+                  <rect x="54" y="7" width="160" height="12" rx="6" fill="#120E21"/>
+                  <text x="64" y="16" fill="#A78BFA" font-family="monospace" font-size="7.5">https://www.suaempresa.com.br</text>
 
-        <!-- Card 2: Posicionamento Centro Lateral & Shadow DOM -->
-        <div class="feature-card">
-          <div>
-            <div class="feature-icon-box">📐</div>
-            <h3>
-              Centro Lateral & Blindagem Shadow DOM
-              <span class="badge-pro">✨ PRO</span>
-            </h3>
-            <p>
-              Chega de plugins que ficam em cima do botão de WhatsApp ou quebram o menu do site. Posicione o botão
-              no <strong>Centro Lateral</strong> ou <strong>Topo Lateral</strong> com isolamento absoluto.
-            </p>
-          </div>
-          <ul class="feature-bullets">
-            <li>3 alturas: Fim da Página, Centro Lateral e Topo Lateral</li>
-            <li>Header Shield: protege <code>header</code>, <code>nav</code> e <code>topbar</code> ao ampliar fontes até 200%</li>
-            <li>Ponte nativa para sistemas em <code>&lt;iframe&gt;</code></li>
-          </ul>
-        </div>
+                  <!-- AI Computer Vision Image Scanner Box -->
+                  <g transform="translate(14, 38)">
+                    <rect width="126" height="82" rx="8" fill="#1D1635" stroke="#8B5CF6" stroke-width="1.2" stroke-dasharray="4 3"/>
+                    <!-- Stylized Mountain & Sun Drawing inside scanned image -->
+                    <circle cx="96" cy="24" r="9" fill="#F8C62F" fill-opacity="0.85"/>
+                    <path d="M12 72L44 38L72 64L94 46L116 72H12Z" fill="rgba(139,92,246,0.35)" stroke="#C4B5FD" stroke-width="1.4" stroke-linejoin="round"/>
+                    <!-- Animated AI Laser Scan Line -->
+                    <g class="svg-scan-line">
+                      <line x1="6" y1="14" x2="120" y2="14" stroke="url(#heroScanGrad)" stroke-width="2.5"/>
+                    </g>
+                    <!-- AI Tag Badge -->
+                    <rect x="8" y="8" width="68" height="15" rx="4" fill="#6D48B8"/>
+                    <text x="14" y="18" fill="#FFFFFF" font-family="monospace" font-size="7.5" font-weight="bold">IA ALT • 99%</text>
+                  </g>
 
-        <!-- Card 3: Leitor de Voz Neural -->
-        <div class="feature-card">
-          <div>
-            <div class="feature-icon-box">🗣️</div>
-            <h3>
-              Leitor de Voz Neural (TTS) com Retomada Exata
-              <span class="badge-pro">✨ PRO</span>
-            </h3>
-            <p>
-              Prioriza automaticamente as vozes neurais e naturais em Português (<code>pt-BR</code>). Ao alterar a velocidade
-              entre <code>0.75x</code> e <code>2.0x</code>, a leitura continua exatamente da palavra onde parou.
-            </p>
-          </div>
-          <ul class="feature-bullets">
-            <li>Seletor de Vozes Mais Humanas / Naturais</li>
-            <li>Modo Apontar e Ler com realce sincronizado</li>
-            <li>Leitura imediata de trechos selecionados</li>
-          </ul>
-        </div>
+                  <!-- Typography & Reading Mask Simulation -->
+                  <g transform="translate(152, 38)">
+                    <rect width="138" height="10" rx="5" fill="#EDE9FE" fill-opacity="0.9"/>
+                    <rect y="16" width="112" height="8" rx="4" fill="#94A3B8" fill-opacity="0.5"/>
+                    <!-- Highlighted Reading Guide Bar -->
+                    <rect x="-4" y="31" width="144" height="20" rx="5" fill="rgba(248,198,47,0.16)" stroke="#F8C62F" stroke-width="1"/>
+                    <rect x="2" y="37" width="124" height="8" rx="4" fill="#F8C62F"/>
+                    <rect y="58" width="128" height="8" rx="4" fill="#94A3B8" fill-opacity="0.4"/>
 
-        <!-- Card 4: VLibras 3D Sincronizado -->
-        <div class="feature-card">
-          <div>
-            <div class="feature-icon-box">🤟</div>
-            <h3>
-              Tradutor VLibras 3D Sincronizado & Customizável
-              <span class="badge-pro">✨ PRO</span>
-            </h3>
-            <p>
-              Integração inteligente com o VLibras Oficial: o avatar 3D posiciona-se automaticamente no <strong>lado oposto</strong>
-              ao painel da Allyada e sincroniza cores e abertura.
-            </p>
-          </div>
-          <ul class="feature-bullets">
-            <li>Escolha entre os intérpretes Hosana, Ícaro e Guga</li>
-            <li>Cor do player VLibras sincronizada com a marca</li>
-            <li>Opção corporativa de uniforme/logo customizado</li>
-          </ul>
-        </div>
+                    <!-- Animated Neural Voice Equalizer Bars -->
+                    <g transform="translate(0, 76)">
+                      <rect width="138" height="28" rx="6" fill="#1B1530" stroke="rgba(167,139,250,0.22)"/>
+                      <circle cx="15" cy="14" r="7" fill="#6D48B8"/>
+                      <polygon points="13,10 13,18 19,14" fill="#FFFFFF"/>
+                      <g transform="translate(30, 6)">
+                        <rect class="svg-eq-bar" x="0" y="2" width="4" height="14" rx="2" fill="#A78BFA"/>
+                        <rect class="svg-eq-bar" x="8" y="0" width="4" height="16" rx="2" fill="#F8C62F"/>
+                        <rect class="svg-eq-bar" x="16" y="3" width="4" height="13" rx="2" fill="#A78BFA"/>
+                        <rect class="svg-eq-bar" x="24" y="1" width="4" height="15" rx="2" fill="#C4B5FD"/>
+                        <rect class="svg-eq-bar" x="32" y="4" width="4" height="12" rx="2" fill="#F8C62F"/>
+                        <rect class="svg-eq-bar" x="40" y="2" width="4" height="14" rx="2" fill="#A78BFA"/>
+                      </g>
+                      <text x="82" y="17" fill="#DDD6FE" font-family="monospace" font-size="7.5">VOZ PT-BR</text>
+                    </g>
+                  </g>
 
-        <!-- Card 5: Guia de Foco, Teclado & Cursor Adaptativo -->
-        <div class="feature-card">
-          <div>
-            <div class="feature-icon-box">🎯</div>
-            <h3>
-              Guia de Foco, Teclado Virtual & Cursor Inteligente
-            </h3>
-            <p>
-              Ferramentas completas de auxílio motor e rastreamento visual: Régua Guia, Máscara de Foco, Teclado Virtual na tela
-              e Cursores de <code>44px</code> e <code>60px</code>.
-            </p>
-          </div>
-          <ul class="feature-bullets">
-            <li>Cursor adapta-se automaticamente para branco no modo escuro</li>
-            <li>Foco de teclado duplo de alta visibilidade (WCAG 2.4.13 AAA)</li>
-            <li>Explorador flutuante de Títulos (H1–H6), Regiões e Links</li>
-          </ul>
-        </div>
-      </div>
+                  <!-- Bottom Status Strip inside Mock Browser -->
+                  <rect x="14" y="152" width="210" height="18" rx="5" fill="rgba(34,197,94,0.12)" stroke="rgba(34,197,94,0.3)"/>
+                  <circle cx="24" cy="161" r="3.5" fill="#4ADE80"/>
+                  <text x="34" y="164" fill="#86EFAC" font-family="monospace" font-size="7.8" font-weight="bold">WCAG 2.2 AAA &amp; LBI ART. 63 ATIVOS</text>
+                </g>
 
-      <!-- Subseção: 5 Perfis Clínicos em 1 Clique -->
-      <div id="perfis" style="margin-top: 48px; background: var(--brand-surface); border: 1px solid var(--brand-border); border-radius: 18px; padding: 32px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
-          <div>
-            <span class="section-tag" style="margin-bottom:6px;">Ergonomia Cognitiva em 1 Clique</span>
-            <h3 style="font-size:1.45rem; font-weight:800;">5 Perfis Clínicos Prontos na Aba Início</h3>
-          </div>
-          <button type="button" class="btn btn-primary" onclick="if(window.Allyada) Allyada.openPanel();">
-            Experimentar Perfis no Painel &rarr;
-          </button>
-        </div>
+                <!-- Animated Neural Connection Lines to Right Floating Nodes -->
+                <path class="svg-dash-flow" d="M324 72 C355 72, 360 54, 386 54" stroke="#A78BFA" stroke-width="1.8"/>
+                <path class="svg-dash-flow" d="M324 136 C355 136, 360 154, 386 154" stroke="#F8C62F" stroke-width="1.8"/>
 
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:16px;">
-          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
-            <div style="font-size:1.3rem; margin-bottom:6px;">🔍</div>
-            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">1. Modo Ampliação (Baixa Visão)</h4>
-            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Texto em 130%, contraste escuro confortável, links realçados e Cursor Grande (44px) branco de alto contraste.</p>
-          </div>
-          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
-            <div style="font-size:1.3rem; margin-bottom:6px;">📖</div>
-            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">2. Leitura Fácil (Dislexia)</h4>
-            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Aplica a fonte especializada <strong>Lexend</strong>, entrelinhas de 1.9x, espaçamento ampliado e alinhamento à esquerda.</p>
-          </div>
-          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
-            <div style="font-size:1.3rem; margin-bottom:6px;">🎯</div>
-            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">3. Modo Foco (TDAH)</h4>
-            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Ativa a Régua Guia luminosa, pausa animações/carrosséis que causam distração e otimiza o espaçamento textual.</p>
-          </div>
-          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
-            <div style="font-size:1.3rem; margin-bottom:6px;">🧘</div>
-            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">4. Sem Movimento (Calma)</h4>
-            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Bloqueia instantaneamente animações CSS, transições bruscas e vídeos automáticos (Epilepsia Fotossensível / WCAG 2.2.2).</p>
-          </div>
-          <div style="background:var(--brand-bg-light); border:1px solid var(--brand-border); border-radius:14px; padding:18px;">
-            <div style="font-size:1.3rem; margin-bottom:6px;">🎨</div>
-            <h4 style="font-size:0.98rem; font-weight:700; margin-bottom:6px;">5. Modo Cores (Daltonismo)</h4>
-            <p style="font-size:0.82rem; color:var(--brand-text-muted);">Destaca links interativos e ativa matrizes de filtros cromáticos SVG clínicos para Deuteranopia, Protanopia e Tritanopia.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+                <!-- Right Floating Card 1: Allyada Universal Customizer Node -->
+                <g class="svg-float-slow" transform="translate(384, 22)">
+                  <rect width="118" height="72" rx="12" fill="#1E1738" stroke="#A78BFA" stroke-width="1.4"/>
+                  <circle cx="30" cy="36" r="18" fill="url(#heroPurpleGrad)"/>
+                  <!-- Universal 5-Circle Icon -->
+                  <g transform="translate(16, 22) scale(0.28)" stroke="#FFFFFF" stroke-width="6" fill="none">
+                    <circle cx="50" cy="50" r="38"/>
+                    <path d="M18 42Q50 58 82 42"/>
+                    <path d="M32 78L50 50L68 78"/>
+                    <circle cx="50" cy="29" r="9" fill="#F8C62F" stroke="none"/>
+                  </g>
+                  <text x="54" y="31" fill="#FFFFFF" font-family="sans-serif" font-size="9.5" font-weight="bold">Marca PRO</text>
+                  <text x="54" y="43" fill="#C4B5FD" font-family="monospace" font-size="7.5">#6D48B8 • 6 Pos</text>
+                  <!-- Mini Color Dots -->
+                  <circle cx="58" cy="54" r="4" fill="#6D48B8"/>
+                  <circle cx="69" cy="54" r="4" fill="#2563EB"/>
+                  <circle cx="80" cy="54" r="4" fill="#10B981"/>
+                  <circle cx="91" cy="54" r="4" fill="#F59E0B"/>
+                </g>
 
-  <!-- SEÇÃO 2: INSTALAÇÃO EM 1 LINHA DE CÓDIGO -->
-  <section class="section section-alt" id="instalacao">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Integração Universal em 30 Segundos</span>
-        <h2 class="section-title">Instale em qualquer site com 1 linha de código</h2>
-        <p class="section-desc">
-          Compatível com HTML puro, WordPress, Elementor, Shopify, Nuvemshop, React, Next.js, Vue e portais governamentais ou cartorários.
-        </p>
-      </div>
-
-      <div class="code-showcase-box">
-        <div class="code-tabs-header">
-          <div class="code-tab-buttons">
-            <button type="button" class="code-tab-btn active" id="tab-code-pro" onclick="switchCodeTab('pro')">
-              ✨ Script PRO Personalizado (Data Attributes)
-            </button>
-            <button type="button" class="code-tab-btn" id="tab-code-free" onclick="switchCodeTab('free')">
-              🟢 1 Linha (Padrão Automático)
-            </button>
-            <button type="button" class="code-tab-btn" id="tab-code-js" onclick="switchCodeTab('js')">
-              ⚙️ Inicialização via API JS
-            </button>
-          </div>
-          <button type="button" class="btn btn-primary" id="btn-copy-snippet" onclick="copyCurrentSnippet()" style="padding: 6px 14px; font-size: 0.8rem;">
-            📋 Copiar Código
-          </button>
-        </div>
-        <div class="code-pre-wrapper">
-          <pre id="code-snippet-display" class="font-mono" style="color: #E2E8F0; white-space: pre-wrap;"></pre>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEÇÃO 3: CONFORMIDADE LEGAL (LBI / WCAG 2.2 / SELO OFICIAL) -->
-  <section class="section" id="conformidade">
-    <div class="container">
-      <div class="compliance-grid">
-        <div>
-          <span class="section-tag">Segurança Jurídica & Inclusão</span>
-          <h2 class="section-title" style="text-align:left;">
-            Conformidade com a LBI (Lei 13.146/15), WCAG 2.2 AAA e Prêmio PQTA / CNJ
-          </h2>
-          <p class="section-desc" style="text-align:left; margin-bottom:28px;">
-            No Brasil, o <strong>Artigo 63 da Lei Brasileira de Inclusão (Estatuto da Pessoa com Deficiência)</strong>
-            torna obrigatória a acessibilidade nos sítios da internet mantidos por empresas com sede ou representação comercial no país
-            ou por órgãos de governo.
-          </p>
-
-          <div class="law-cards-stack">
-            <div class="law-card">
-              <h4>⚖️ Lei Federal nº 13.146/2015 (LBI — Art. 63)</h4>
-              <p>Atende aos requisitos de tecnologia assistiva, síntese de voz, tradução para Libras (VLibras) e autonomia de navegação para pessoas com deficiência.</p>
-            </div>
-            <div class="law-card">
-              <h4>🏛️ Cartórios Extrajudiciais (Prêmio PQTA / CNJ & Provimentos)</h4>
-              <p>Ideal para serventias que buscam pontuação máxima em acessibilidade digital, atendimento inclusivo em Libras 3D e Declaração Oficial de Acessibilidade no rodapé.</p>
-            </div>
-            <div class="law-card">
-              <h4>🌐 Diretrizes Internacionais W3C WCAG 2.2 (Níveis AA e AAA) & e-MAG</h4>
-              <p>Cumpre critérios rigorosos como Redimensionamento até 200% (1.4.4), Espaçamento de Texto (1.4.12), Foco Visível Duplo AAA (2.4.13) e Pausa de Movimento (2.2.2).</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Vitrine do Selo Oficial de Compromisso PRO -->
-        <div class="seal-showcase-card">
-          <span style="background:rgba(245,158,11,0.2); color:#FCD34D; padding:4px 12px; border-radius:999px; font-size:0.75rem; font-weight:700;">
-            🏅 Exclusivo Plano PRO
-          </span>
-          <h3 style="font-size:1.5rem; font-weight:800; color:#FFFFFF; margin-top:12px; margin-bottom:8px;">
-            Selo Oficial de Compromisso com a Acessibilidade
-          </h3>
-          <p style="font-size:0.9rem; color:#CBD5E1; margin-bottom:16px;">
-            Clientes do Plano PRO recebem o Selo Oficial interativo para o rodapé do site, acompanhado da Declaração Jurídica de Conformidade LBI & WCAG 2.2:
-          </p>
-
-          <!-- O Selo Oficial Renderizado -->
-          <div class="official-seal-badge">
-            <div class="official-seal-icon" aria-hidden="true">
-              <svg viewBox="0 0 100 100" width="28" height="28" fill="none" stroke="currentColor" stroke-width="6">
-                <path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/>
-                <path d="M15.8 40.5Q50 58 84.2 40.5"/>
-                <path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/>
-                <circle cx="50" cy="29.5" r="10.2" fill="currentColor"/>
+                <!-- Right Floating Card 2: VLibras 3D Synced Node -->
+                <g class="svg-float-reverse" transform="translate(384, 114)">
+                  <rect width="118" height="74" rx="12" fill="#1E1738" stroke="#F8C62F" stroke-width="1.4"/>
+                  <rect x="12" y="18" width="36" height="36" rx="10" fill="#2563EB"/>
+                  <!-- Stylized 3D Sign Language Hands SVG -->
+                  <path d="M24 41V29C24 27.5 26 27.5 26 29V35M26 34V26C26 24.5 28.5 24.5 28.5 26V34M28.5 34V27C28.5 25.5 31 25.5 31 27V35M31 35V30C31 28.5 33 28.5 33 30V39C33 43 29 45 26 45C22 45 20 41 20 37V33C20 31.5 22 31.5 22 33V37" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="54" y="32" fill="#FFFFFF" font-family="sans-serif" font-size="9.5" font-weight="bold">VLibras 3D</text>
+                  <text x="54" y="44" fill="#FDE68A" font-family="monospace" font-size="7.5">Sincronizado</text>
+                  <rect x="54" y="50" width="52" height="12" rx="4" fill="rgba(248,198,47,0.18)"/>
+                  <text x="60" y="58.5" fill="#F8C62F" font-family="monospace" font-size="6.8" font-weight="bold">GOV.BR 3D</text>
+                </g>
               </svg>
             </div>
-            <div>
-              <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--brand-accent);">
-                ✓ Site Acessível &bull; Conformidade Verificada
+
+            <div class="hero-panel-grid">
+              <a href="recursos.html#libras" class="hero-module-tile">
+                <i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i>
+                <div>
+                  <strong>VLibras 3D Sincronizado</strong>
+                  <span>Avatares 3D e cor sincronizada no PRO</span>
+                </div>
+              </a>
+              <a href="recursos.html#ia-voz" class="hero-module-tile">
+                <i class="fa-solid fa-microchip" aria-hidden="true"></i>
+                <div>
+                  <strong>Visão IA &amp; Voz Neural</strong>
+                  <span>COCO-SSD + OCR 2-Pass e leitura TTS</span>
+                </div>
+              </a>
+              <a href="recursos.html" class="hero-module-tile">
+                <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                <div>
+                  <strong>5 Perfis em 1 Clique</strong>
+                  <span>Baixa Visão, Dislexia, TDAH, Cores e TEA</span>
+                </div>
+              </a>
+              <a href="planos.html" class="hero-module-tile">
+                <i class="fa-solid fa-network-wired" aria-hidden="true"></i>
+                <div>
+                  <strong>Gestão Multi-Domínios</strong>
+                  <span>Cores, 5 ícones e 6 posições por site</span>
+                </div>
+              </a>
+            </div>
+
+            <div class="hero-panel-footer">
+              <span class="hero-panel-footer-text">
+                <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                <span>Teste cores, degradês e ícones ao vivo no simulador</span>
+              </span>
+              <a href="../painel-administrativo.html" class="btn btn-primary" style="padding: 7px 14px; font-size: 0.8rem;">
+                <span>Abrir Painel Administrativo</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. SEGMENTOS EMPRESARIAIS ATENDIDOS
+         ====================================================================== -->
+    <div class="sectors-bar" aria-label="Segmentos atendidos">
+      <div class="container sectors-bar-inner">
+        <span class="sectors-label">Homologado para:</span>
+        <div class="sectors-list">
+          <span class="sector-chip"><i class="fa-solid fa-building" aria-hidden="true"></i> Empresas &amp; Portais Corporativos</span>
+          <span class="sector-chip"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> E-commerces &amp; Varejo</span>
+          <span class="sector-chip"><i class="fa-solid fa-hospital" aria-hidden="true"></i> Clínicas, Saúde &amp; Educação</span>
+          <span class="sector-chip"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Agências &amp; Grupos Multi-Domínios</span>
+          <span class="sector-chip"><i class="fa-solid fa-landmark" aria-hidden="true"></i> Órgãos Públicos &amp; Cartórios</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         5. ARQUITETURA ASSISTIVA (6 FRENTES COM ILUSTRAÇÕES VETORIAIS CRIATIVAS)
+         ====================================================================== -->
+    <section id="recursos" class="section">
+      <div class="container">
+        <div class="section-header reveal-up">
+          <div class="tech-badge">
+            <span class="dot"></span>
+            <span>Suíte Técnica Completa • Inclusa em Todos os Planos</span>
+          </div>
+          <h2 class="section-title">
+            Engenharia Assistiva em <span class="accent">6 Frentes de Autonomia</span>
+          </h2>
+          <p class="section-desc">
+            Todos os módulos abaixo funcionam de forma isolada via Shadow DOM (sem quebrar o CSS do seu site) e estão liberados integralmente tanto no <strong>Plano Gratuito</strong> quanto nos planos <strong>PRO e Multi-Domínios</strong>.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <!-- Card 1: VLibras 3D -->
+          <a href="recursos.html#libras" class="tech-card reveal-up">
+            <div class="card-svg-banner" aria-hidden="true">
+              <svg viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="160" cy="60" r="46" fill="#6D48B8" fill-opacity="0.1"/>
+                <circle cx="160" cy="60" r="34" stroke="#6D48B8" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <!-- 3D Avatar Frame & Hands Illustration -->
+                <rect x="126" y="22" width="68" height="76" rx="16" fill="#6D48B8"/>
+                <circle cx="160" cy="44" r="10" fill="#F8C62F"/>
+                <path d="M142 78C142 66 178 66 178 78" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+                <!-- Floating Hand Sign Badges -->
+                <g class="svg-float-slow">
+                  <rect x="44" y="36" width="64" height="28" rx="8" fill="#FFFFFF" stroke="#C4B5FD" stroke-width="1.5"/>
+                  <text x="54" y="54" fill="#6D48B8" font-family="monospace" font-size="9.5" font-weight="bold">LIBRAS 3D</text>
+                </g>
+                <g class="svg-float-reverse">
+                  <rect x="212" y="54" width="66" height="28" rx="8" fill="#1E1638"/>
+                  <text x="223" y="72" fill="#F8C62F" font-family="monospace" font-size="9" font-weight="bold">COR SYNC</text>
+                </g>
+              </svg>
+            </div>
+            <div class="tech-card-head">
+              <div class="tech-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
               </div>
-              <div style="font-size:1rem; font-weight:800; color:#FFFFFF; line-height:1.2; margin:2px 0;">
-                Tecnologia Assistiva Allyada PRO
+              <span class="tech-tag">VLibras 3D Nativo</span>
+            </div>
+            <h3>Surdez &amp; Tradução em Libras</h3>
+            <p>
+              Intérprete virtual 3D (Ícaro, Hozana e Guga) com posicionamento automático no lado oposto da tela e cor sincronizada com a marca da sua empresa nos planos PRO.
+            </p>
+            <span class="tech-card-link">Explorar módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </a>
+
+          <!-- Card 2: Visão Computacional IA -->
+          <a href="recursos.html#ia-voz" class="tech-card reveal-up reveal-delay-1">
+            <div class="card-svg-banner" aria-hidden="true">
+              <svg viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="78" y="18" width="164" height="84" rx="12" fill="#18122B" stroke="#8B5CF6" stroke-width="1.5"/>
+                <!-- Corner Target Brackets -->
+                <path d="M90 38V28H100M230 38V28H220M90 82V92H100M230 82V92H220" stroke="#F8C62F" stroke-width="2.2" stroke-linecap="round"/>
+                <!-- Neural Nodes & Connections -->
+                <line x1="118" y1="60" x2="156" y2="42" stroke="#A78BFA" stroke-width="1.5"/>
+                <line x1="118" y1="60" x2="156" y2="78" stroke="#A78BFA" stroke-width="1.5"/>
+                <line x1="156" y1="42" x2="198" y2="60" stroke="#F8C62F" stroke-width="1.5"/>
+                <line x1="156" y1="78" x2="198" y2="60" stroke="#F8C62F" stroke-width="1.5"/>
+                <circle cx="118" cy="60" r="6" fill="#C4B5FD"/>
+                <circle cx="156" cy="42" r="6" fill="#8B5CF6"/>
+                <circle cx="156" cy="78" r="6" fill="#8B5CF6"/>
+                <circle cx="198" cy="60" r="7" fill="#F8C62F"/>
+                <rect x="112" y="84" width="96" height="14" rx="4" fill="#6D48B8"/>
+                <text x="122" y="94" fill="#FFFFFF" font-family="monospace" font-size="8" font-weight="bold">COCO-SSD + OCR</text>
+              </svg>
+            </div>
+            <div class="tech-card-head">
+              <div class="tech-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
               </div>
-              <div style="font-size:0.74rem; color:#CBD5E1;">
-                Lei Brasileira de Inclusão (Lei 13.146/15) &bull; WCAG 2.2 AAA &bull; VLibras
+              <span class="tech-tag">COCO-SSD + OCR</span>
+            </div>
+            <h3>Visão Computacional por IA</h3>
+            <p>
+              Audiodescrição automática de imagens sem atributo <code>alt</code> via rede neural no navegador e extração de textos em banners promocionais com OCR de dupla passagem.
+            </p>
+            <span class="tech-card-link">Explorar módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </a>
+
+          <!-- Card 3: Leitura de Voz TTS -->
+          <a href="recursos.html#ia-voz" class="tech-card reveal-up reveal-delay-2">
+            <div class="card-svg-banner" aria-hidden="true">
+              <svg viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="64" y="22" width="192" height="76" rx="14" fill="#FFFFFF" stroke="#C4B5FD" stroke-width="1.5"/>
+                <circle cx="102" cy="60" r="20" fill="#6D48B8"/>
+                <polygon points="98,51 98,69 112,60" fill="#F8C62F"/>
+                <!-- Animated Soundwave Bars -->
+                <g transform="translate(136, 38)">
+                  <rect class="svg-eq-bar" x="0" y="6" width="6" height="32" rx="3" fill="#6D48B8"/>
+                  <rect class="svg-eq-bar" x="12" y="0" width="6" height="44" rx="3" fill="#F59E0B"/>
+                  <rect class="svg-eq-bar" x="24" y="10" width="6" height="24" rx="3" fill="#8B5CF6"/>
+                  <rect class="svg-eq-bar" x="36" y="4" width="6" height="36" rx="3" fill="#6D48B8"/>
+                  <rect class="svg-eq-bar" x="48" y="12" width="6" height="20" rx="3" fill="#F59E0B"/>
+                  <rect class="svg-eq-bar" x="60" y="2" width="6" height="40" rx="3" fill="#8B5CF6"/>
+                  <rect class="svg-eq-bar" x="72" y="8" width="6" height="28" rx="3" fill="#6D48B8"/>
+                  <rect class="svg-eq-bar" x="84" y="14" width="6" height="16" rx="3" fill="#C4B5FD"/>
+                </g>
+              </svg>
+            </div>
+            <div class="tech-card-head">
+              <div class="tech-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
               </div>
+              <span class="tech-tag">Síntese Neural PT-BR</span>
+            </div>
+            <h3>Leitura de Voz Instantânea (TTS)</h3>
+            <p>
+              Narração fluida de qualquer parágrafo ou trecho selecionado na página, com controle de velocidade e destaque sincronizado da palavra lida.
+            </p>
+            <span class="tech-card-link">Explorar módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </a>
+
+          <!-- Card 4: Baixa Visão & Daltonismo -->
+          <a href="recursos.html#visual" class="tech-card reveal-up">
+            <div class="card-svg-banner" aria-hidden="true">
+              <svg viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Document & Magnifying Lens Illustration -->
+                <rect x="66" y="24" width="124" height="72" rx="10" fill="#FFFFFF" stroke="#C4B5FD" stroke-width="1.5"/>
+                <rect x="80" y="38" width="60" height="8" rx="4" fill="#CBD5E1"/>
+                <rect x="80" y="54" width="92" height="12" rx="6" fill="#6D48B8"/>
+                <text x="90" y="63" fill="#FFFFFF" font-family="sans-serif" font-size="8.5" font-weight="bold">ZOOM 200%</text>
+                <rect x="80" y="74" width="72" height="8" rx="4" fill="#CBD5E1"/>
+                <!-- Floating Magnifier & Color Spectrum -->
+                <g class="svg-float-slow">
+                  <circle cx="212" cy="56" r="26" fill="#18122B" stroke="#F8C62F" stroke-width="3"/>
+                  <circle cx="204" cy="50" r="8" fill="#6D48B8"/>
+                  <circle cx="220" cy="50" r="8" fill="#F8C62F"/>
+                  <circle cx="212" cy="64" r="8" fill="#10B981"/>
+                  <line x1="231" y1="75" x2="248" y2="92" stroke="#6D48B8" stroke-width="5" stroke-linecap="round"/>
+                </g>
+              </svg>
+            </div>
+            <div class="tech-card-head">
+              <div class="tech-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <span class="tech-tag">10 Recursos Ópticos</span>
+            </div>
+            <h3>Baixa Visão, Contraste &amp; Daltonismo</h3>
+            <p>
+              4 modos de contraste, calibração de cores para Protanopia, Deuteranopia e Tritanopia, lupa circular flutuante e ampliação tipográfica até 200%.
+            </p>
+            <span class="tech-card-link">Explorar módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </a>
+
+          <!-- Card 5: Neurodivergência, Dislexia & TDAH -->
+          <a href="recursos.html#cognitivo" class="tech-card reveal-up reveal-delay-1">
+            <div class="card-svg-banner" aria-hidden="true">
+              <svg viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="58" y="18" width="204" height="84" rx="12" fill="#1E1738"/>
+                <!-- Dimmed top & bottom areas (TDAH Focus Mask) -->
+                <rect x="74" y="28" width="140" height="7" rx="3.5" fill="rgba(255,255,255,0.18)"/>
+                <rect x="74" y="84" width="150" height="7" rx="3.5" fill="rgba(255,255,255,0.18)"/>
+                <!-- Illuminated Focus Strip -->
+                <rect x="58" y="44" width="204" height="32" fill="#FFFFFF" stroke="#F8C62F" stroke-width="2"/>
+                <text x="76" y="64" fill="#141124" font-family="Lexend, sans-serif" font-size="12" font-weight="bold">Fonte Lexend • Foco TDAH</text>
+              </svg>
+            </div>
+            <div class="tech-card-head">
+              <div class="tech-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+              <span class="tech-tag">08 Recursos Cognitivos</span>
+            </div>
+            <h3>Neurodivergência, Dislexia &amp; TDAH</h3>
+            <p>
+              Substituição imediata para a fonte científica Lexend, máscara horizontal de foco, régua guia de leitura e bloqueio de animações para autismo (TEA).
+            </p>
+            <span class="tech-card-link">Explorar módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </a>
+
+          <!-- Card 6: Navegação Motora & Teclado -->
+          <a href="recursos.html#motora" class="tech-card reveal-up reveal-delay-2">
+            <div class="card-svg-banner" aria-hidden="true">
+              <svg viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Keyboard Keys + Super Cursor Illustration -->
+                <rect x="64" y="34" width="58" height="44" rx="9" fill="#FFFFFF" stroke="#6D48B8" stroke-width="2"/>
+                <text x="79" y="60" fill="#6D48B8" font-family="monospace" font-size="11" font-weight="bold">TAB</text>
+                <rect x="132" y="34" width="76" height="44" rx="9" fill="#6D48B8" stroke="#F8C62F" stroke-width="2.2"/>
+                <text x="148" y="60" fill="#FFFFFF" font-family="monospace" font-size="11" font-weight="bold">ENTER</text>
+                <!-- Oversized High-Contrast Cursor -->
+                <g class="svg-float-slow" transform="translate(216, 26)">
+                  <path d="M8 6L38 20L24 25L31 40L23 44L16 29L6 38V6Z" fill="#141124" stroke="#F8C62F" stroke-width="2.5" stroke-linejoin="round"/>
+                </g>
+              </svg>
+            </div>
+            <div class="tech-card-head">
+              <div class="tech-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.001"/><path d="M10 8h.001"/><path d="M14 8h.001"/><path d="M18 8h.001"/><path d="M8 12h.001"/><path d="M12 12h.001"/><path d="M16 12h.001"/><path d="M7 16h10"/></svg>
+              </div>
+              <span class="tech-tag">05 Recursos Motores</span>
+            </div>
+            <h3>Navegação Motora &amp; Teclado</h3>
+            <p>
+              Teclado virtual flutuante na tela, super cursor ampliado (44px/60px), sumário estrutural de títulos (H1–H6) e destaque de foco para navegação sem mouse.
+            </p>
+            <span class="tech-card-link">Explorar módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </a>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;" class="reveal-up">
+          <a href="recursos.html" class="btn btn-primary btn-lg">
+            <span>Ver Catálogo Técnico dos +30 Recursos e 5 Perfis</span>
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. PAINEL ADMINISTRATIVO PRO & GESTÃO MULTI-DOMÍNIOS
+         ====================================================================== -->
+    <section class="section-dark">
+      <div class="container">
+        <div class="admin-showcase-grid">
+          <div class="reveal-up">
+            <div class="tech-badge tech-badge-dark">
+              <span class="dot"></span>
+              <span>Exclusivo dos Planos PRO &amp; Empresarial Multi-Domínios</span>
+            </div>
+            <h2 class="section-title" style="color: #FFFFFF;">
+              Painel Administrativo Pro: Personalização da Marca &amp; Gestão de Domínios
+            </h2>
+            <p style="color: #CBD5E1; font-size: 0.96rem; line-height: 1.65;">
+              Enquanto o <strong>Plano Gratuito</strong> entrega todos os módulos de acessibilidade com o visual fixo da Allyada, o <strong>Painel Administrativo Pro</strong> permite que sua empresa, e-commerce, clínica ou agência personalize cada detalhe visual no simulador ao vivo e gerencie múltiplos sites em uma única conta:
+            </p>
+
+            <ul class="admin-feature-list">
+              <li>
+                <i class="fa-solid fa-palette" aria-hidden="true"></i>
+                <span><strong>Cores Sólidas &amp; Degradês da Marca:</strong> Aplique o código HEX oficial da sua empresa no widget e sincronize automaticamente a cor do botão VLibras.</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-up-down-left-right" aria-hidden="true"></i>
+                <span><strong>Posicionamento em 6 Cantos da Tela:</strong> Coloque o botão no <strong>Centro Lateral</strong> ou <strong>Topo Lateral</strong> para nunca colidir com o botão de WhatsApp.</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-icons" aria-hidden="true"></i>
+                <span><strong>5 Ícones Vetoriais Oficiais:</strong> Escolha entre Símbolo Universal, Allyada, Cadeirante, Saúde/Cuidado ou Escudo Institucional.</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                <span><strong>Degustação Livre no Simulador:</strong> Crie sua conta grátis, personalize o botão ao vivo no painel e só ative o plano quando quiser liberar o <code>&lt;script&gt;</code> personalizado.</span>
+              </li>
+            </ul>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+              <a href="../painel-administrativo.html#cadastro-teste-gratis" class="btn btn-primary btn-lg">
+                <span>Testar no Simulador Grátis</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+              <a href="../painel-administrativo.html" class="btn btn-dark-ghost btn-lg">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <span>Fazer Login no Painel</span>
+              </a>
             </div>
           </div>
 
-          <div style="background:rgba(0,0,0,0.28); border-radius:12px; padding:14px; text-align:left; font-size:0.8rem; color:#E2E8F0; margin-bottom:18px; border:1px solid rgba(255,255,255,0.1);">
-            <strong>📋 O que acompanha o Selo PRO:</strong>
-            <ul style="list-style:none; margin-top:8px; display:flex; flex-direction:column; gap:6px;">
-              <li>✅ Badge SVG em alta definição para rodapé escuro ou claro</li>
-              <li>✅ Declaração Técnica de Acessibilidade Digital (LBI Art. 63 + Lei 12.527/11)</li>
-              <li>✅ Validação vinculada ao domínio oficial da empresa ou cartório</li>
-            </ul>
-          </div>
+          <!-- Domain Management Table + Visual Customizer Illustration -->
+          <div class="domain-table-card reveal-up reveal-delay-1">
+            <div class="domain-table-head">
+              <span><i class="fa-solid fa-sliders" style="color: #F8C62F; margin-right: 6px;" aria-hidden="true"></i> Painel Administrativo Pro • Simulador &amp; Domínios</span>
+              <span style="color: #C4B5FD;">Tráfego Ilimitado</span>
+            </div>
 
-          <a href="identidade-visual.html#selo-oficial" class="btn btn-accent" style="width:100%;">
-            Ver Variações do Selo no Brandbook &rarr;
-          </a>
+            <!-- Interactive SVG Visual Customizer Preview Bar -->
+            <div style="padding: 16px 20px; background: rgba(15, 12, 27, 0.55); border-bottom: 1px solid rgba(255,255,255,0.08);" aria-hidden="true">
+              <svg viewBox="0 0 460 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="460" height="82" rx="10" fill="#141026" stroke="rgba(167,139,250,0.2)"/>
+                <text x="16" y="24" fill="#94A3B8" font-family="monospace" font-size="8.5">PALETA &amp; DEGRADÊ DA EMPRESA</text>
+                <!-- Color Swatches -->
+                <circle cx="26" cy="48" r="11" fill="#6D48B8" stroke="#FFFFFF" stroke-width="2"/>
+                <circle cx="54" cy="48" r="10" fill="#2563EB"/>
+                <circle cx="80" cy="48" r="10" fill="#0F766E"/>
+                <circle cx="106" cy="48" r="10" fill="#F59E0B"/>
+                <rect x="128" y="38" width="66" height="20" rx="10" fill="url(#heroPurpleGrad)"/>
+                <text x="141" y="51" fill="#FFFFFF" font-family="monospace" font-size="8" font-weight="bold">DEGRADÊ</text>
+                <!-- 6 Screen Positions Mini-Map -->
+                <rect x="220" y="14" width="116" height="54" rx="7" fill="#1D1736" stroke="rgba(167,139,250,0.3)"/>
+                <circle cx="230" cy="24" r="3.5" fill="#64748B"/>
+                <circle cx="230" cy="41" r="3.5" fill="#64748B"/>
+                <circle cx="230" cy="58" r="4.5" fill="#2563EB"/>
+                <circle cx="326" cy="24" r="3.5" fill="#64748B"/>
+                <circle cx="326" cy="41" r="5.5" fill="#F8C62F"/>
+                <circle cx="326" cy="58" r="3.5" fill="#64748B"/>
+                <text x="246" y="44" fill="#E2E8F0" font-family="monospace" font-size="8">6 POSIÇÕES</text>
+                <!-- Live Synced FABs -->
+                <rect x="354" y="20" width="42" height="42" rx="12" fill="#6D48B8" stroke="#F8C62F" stroke-width="1.5"/>
+                <circle cx="375" cy="34" r="4" fill="#F8C62F"/>
+                <path d="M366 49L375 38L384 49" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+                <rect x="404" y="20" width="42" height="42" rx="12" fill="#2563EB"/>
+                <text x="415" y="45" fill="#FFFFFF" font-family="sans-serif" font-size="10" font-weight="bold">VL</text>
+              </svg>
+            </div>
+
+            <div class="domain-row">
+              <div>
+                <span class="domain-name">GRUPOINOVA.COM.BR</span>
+                <span class="domain-meta">Portal Institucional • Cor #6D48B8 • Centro Direita</span>
+              </div>
+              <span class="domain-status active"><i class="fa-solid fa-check" aria-hidden="true"></i> Ativo</span>
+            </div>
+
+            <div class="domain-row">
+              <div>
+                <span class="domain-name">CLINICAVIDASAUDAVEL.COM.BR</span>
+                <span class="domain-meta">Rede de Clínicas • Cor #0F766E • Ícone Saúde • Centro Lateral</span>
+              </div>
+              <span class="domain-status active"><i class="fa-solid fa-check" aria-hidden="true"></i> Ativo</span>
+            </div>
+
+            <div class="domain-row">
+              <div>
+                <span class="domain-name">LOJAESTILOPRIME.COM.BR</span>
+                <span class="domain-meta">E-commerce • Degradê Customizado + 5 Ícones no Simulador</span>
+              </div>
+              <span class="domain-status trial"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Simulador Livre</span>
+            </div>
+
+            <div class="domain-table-foot">
+              <span>Gerencie 1 ou múltiplos domínios na mesma conta</span>
+              <a href="../painel-administrativo.html">Acessar Painel <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SEÇÃO 4: PLANOS E PREÇOS (FREE VS PRO) -->
-  <section class="section section-alt" id="planos">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Transparência & Modelo Justo</span>
-        <h2 class="section-title">Planos por domínio, com pageviews ilimitados</h2>
-        <p class="section-desc">
-          Sem surpresas na fatura e sem cobrança por número de visitas. Teste o <strong>Plano PRO grátis por 7 dias</strong> no seu domínio.
-        </p>
-      </div>
-
-      <!-- Banner de Filosofia da Marca -->
-      <div class="philosophy-banner">
-        <div style="font-size:2.2rem; flex-shrink:0;">💜</div>
-        <div>
-          <h3 style="font-size:1.08rem; font-weight:800; margin-bottom:4px; color:var(--brand-text-main);">
-            Filosofia Allyada: "Acessibilidade é um direito humano, não um privilégio."
-          </h3>
-          <p style="font-size:0.9rem; color:var(--brand-text-muted);">
-            Por isso, <strong>todos os módulos de acessibilidade estão inclusos em todos os planos</strong> (inclusive no Gratuito), sem limite de visualizações de página. O <strong>Plano PRO</strong> existe para empresas, clínicas, cartórios e agências que desejam personalizar o plugin com a cor e o ícone da sua marca, posicionar no centro lateral da tela, usar vozes neurais e exibir o Selo Oficial de Conformidade.
-          </p>
-        </div>
-      </div>
-
-      <!-- Cards de Preços -->
-      <div class="pricing-grid">
-        <!-- Plano 1: Gratuito -->
-        <div class="pricing-card">
-          <div>
-            <div class="plan-name">🟢 Comunidade</div>
-            <p class="plan-target">Blogs pessoais, ONGs, projetos sociais e sites comunitários</p>
-            <div class="plan-price">R$ 0 <span class="period">/ mês</span></div>
-            <div class="plan-setup">Instalação Gratuita (R$ 0)</div>
-
-            <ul class="plan-features">
-              <li><span>✅</span> <strong>Todos os módulos assistivos inclusos</strong></li>
-              <li><span>✅</span> <strong>Pageviews e páginas ilimitadas</strong></li>
-              <li><span>✅</span> IA Visual de Imagens + OCR e VLibras 3D</li>
-              <li><span>✅</span> 5 Perfis Clínicos em 1 Clique</li>
-              <li><span>⚪</span> Visual Roxo padrão Allyada</li>
-              <li><span>⚪</span> Fixo no canto inferior da tela</li>
-            </ul>
+    <!-- ======================================================================
+         7. SEÇÃO DE PLANOS (OS 4 PLANOS FOCADOS EM EMPRESAS E MULTI-DOMÍNIOS)
+         ====================================================================== -->
+    <section id="planos" class="section-slate">
+      <div class="container">
+        <div class="section-header reveal-up">
+          <div class="tech-badge">
+            <span class="dot"></span>
+            <span>Licenciamento Transparente • Sem Taxa de Setup</span>
           </div>
-          <a href="#instalacao" class="btn btn-outline" style="width:100%;">
-            Instalar Código Gratuito
-          </a>
-        </div>
-
-        <!-- Plano 2: PRO 1 Domínio (Mais Popular) -->
-        <div class="pricing-card popular">
-          <div class="popular-ribbon">✨ Mais Escolhido &bull; 7 Dias Grátis</div>
-          <div>
-            <div class="plan-name">✨ Plano PRO</div>
-            <p class="plan-target">Empresas, clínicas, e-commerces, escritórios e portais (1 domínio completo)</p>
-            <div class="plan-price">R$ 149 <span class="period">/ mês</span></div>
-            <div class="plan-setup">ou R$ 119/mês no anual &bull; Setup PRO: R$ 250</div>
-
-            <ul class="plan-features">
-              <li><span>✅</span> <strong>Tudo do Gratuito + Pageviews Ilimitados</strong></li>
-              <li><span>✅</span> <strong>Posição no Centro Lateral ou Topo</strong> (não cobre WhatsApp/Chat)</li>
-              <li><span>✅</span> <strong>Cor Oficial da Sua Marca</strong> no Allyada e no VLibras</li>
-              <li><span>✅</span> <strong>Escolha do Ícone Flutuante (FAB)</strong></li>
-              <li><span>✅</span> <strong>Vozes Neurais Mais Humanas</strong> + 5 velocidades contínuas</li>
-              <li><span>✅</span> <strong>Selo Oficial de Compromisso</strong> + Declaração LBI/WCAG</li>
-            </ul>
-          </div>
-          <a href="mailto:contato@allyada.com.br?subject=Teste%20Gratis%207%20Dias%20-%20Allyada%20PRO" class="btn btn-primary" style="width:100%;">
-            Testar 7 Dias Grátis
-          </a>
-        </div>
-
-        <!-- Plano 3: Corporativo & Cartórios -->
-        <div class="pricing-card">
-          <div>
-            <div class="plan-name">🏛️ Cartórios & Corp</div>
-            <p class="plan-target">Cartórios (Prêmio PQTA/CNJ), prefeituras, hospitais e grandes marcas</p>
-            <div class="plan-price">R$ 249 <span class="period">/ mês</span></div>
-            <div class="plan-setup">Setup + Avatar Customizado: R$ 490 a R$ 990</div>
-
-            <ul class="plan-features">
-              <li><span>✅</span> <strong>Todos os recursos do Plano PRO</strong></li>
-              <li><span>✅</span> <strong>Uniforme 3D do VLibras com as cores e logo da instituição</strong></li>
-              <li><span>✅</span> <strong>Suporte completo a sistemas em <code>&lt;iframe&gt;</code></strong></li>
-              <li><span>✅</span> <strong>Certificado & Declaração Jurídica LBI / LAI / PQTA</strong></li>
-              <li><span>✅</span> Configuração assistida pela nossa equipe</li>
-            </ul>
-          </div>
-          <a href="mailto:contato@allyada.com.br?subject=Plano%20Cartorios%20e%20Corporativo%20-%20Allyada" class="btn btn-outline" style="width:100%;">
-            Solicitar Proposta Corporativa
-          </a>
-        </div>
-
-        <!-- Plano 4: Pacote Agência / Multi-Domínios -->
-        <div class="pricing-card">
-          <div>
-            <div class="plan-name">🤝 Pacote Agência</div>
-            <p class="plan-target">Agências web, redes de clínicas ou grupos empresariais (até 5 domínios)</p>
-            <div class="plan-price">R$ 399 <span class="period">/ mês</span></div>
-            <div class="plan-setup">Sai apenas R$ 79/mês por site! &bull; Setup: R$ 390</div>
-
-            <ul class="plan-features">
-              <li><span>✅</span> <strong>Até 5 domínios completos com licença PRO</strong></li>
-              <li><span>✅</span> Cada site com sua própria cor, ícone e posição lateral</li>
-              <li><span>✅</span> Pageviews ilimitados em todos os 5 domínios</li>
-              <li><span>✅</span> Selo Oficial de Acessibilidade em todos os clientes</li>
-              <li><span>✅</span> Alta margem de revenda para agências parceiras</li>
-            </ul>
-          </div>
-          <a href="mailto:contato@allyada.com.br?subject=Parceria%20Agencia%20Multi-Dominios%20-%20Allyada" class="btn btn-outline" style="width:100%;">
-            Falar com Consultor
-          </a>
-        </div>
-      </div>
-
-      <!-- Tabela Comparativa Completa -->
-      <h3 style="font-size:1.45rem; font-weight:800; text-align:center; margin-bottom:24px;">
-        Comparativo Detalhado: Plano Gratuito vs. Plano PRO
-      </h3>
-      <div class="comparison-table-wrap">
-        <table class="comparison-table">
-          <thead>
-            <tr>
-              <th style="width:46%;">Funcionalidade / Recurso</th>
-              <th style="width:27%; text-align:center;">🟢 Plano Gratuito (Comunidade)</th>
-              <th style="width:27%; text-align:center; color:var(--brand-primary);">✨ Plano PRO (Teste 7 Dias Grátis)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Todos os Módulos de Acessibilidade</strong> (Perfis, Fonte 200%, Lexend, Contraste, Cursor, Régua, Máscara, Teclado Virtual, IA de Imagens e VLibras)</td>
-              <td style="text-align:center;">✅ <strong>Inclusos</strong></td>
-              <td style="text-align:center;">✅ <strong>Inclusos</strong></td>
-            </tr>
-            <tr>
-              <td><strong>Limite de Páginas e Pageviews Mensais</strong></td>
-              <td style="text-align:center;">✅ <strong>Ilimitado</strong></td>
-              <td style="text-align:center;">✅ <strong>Ilimitado</strong> (Zero cobrança extra)</td>
-            </tr>
-            <tr>
-              <td><strong>1. Posição nos Cantos da Tela (<code>verticalPosition</code>)</strong></td>
-              <td style="text-align:center; color:var(--brand-text-muted);">Fixo no fim da página</td>
-              <td style="text-align:center;">✅ <strong>Centro Lateral ou Topo Lateral</strong> (Não cobre WhatsApp)</td>
-            </tr>
-            <tr>
-              <td><strong>2. Cor do Allyada + Cor do VLibras Sincronizada</strong></td>
-              <td style="text-align:center; color:var(--brand-text-muted);">Cor padrão Allyada</td>
-              <td style="text-align:center;">✅ <strong>Cor Oficial da Marca do Cliente</strong> + Campanhas</td>
-            </tr>
-            <tr>
-              <td><strong>3. Escolha do Ícone do Botão Flutuante (FAB)</strong></td>
-              <td style="text-align:center; color:var(--brand-text-muted);">Ícone padrão Allyada</td>
-              <td style="text-align:center;">✅ <strong>5 Ícones Exclusivos</strong> (Allyada, Universal, Libras, Coração, Escudo)</td>
-            </tr>
-            <tr>
-              <td><strong>4. Leitura em Voz Alta (TTS Neural)</strong></td>
-              <td style="text-align:center; color:var(--brand-text-muted);">Voz padrão do navegador</td>
-              <td style="text-align:center;">✅ <strong>Seletor de Vozes Neurais (Mais Humanas) + 5 Velocidades</strong></td>
-            </tr>
-            <tr>
-              <td><strong>5. Personalização do VLibras 3D (Intérpretes + Uniforme)</strong></td>
-              <td style="text-align:center; color:var(--brand-text-muted);">Intérprete padrão</td>
-              <td style="text-align:center;">✅ <strong>Hosana, Ícaro e Guga</strong> + Uniforme Customizável</td>
-            </tr>
-            <tr>
-              <td><strong>6. Suporte Avançado a Sistemas em <code>&lt;iframe&gt;</code></strong></td>
-              <td style="text-align:center; color:var(--brand-text-muted);">Configuração padrão</td>
-              <td style="text-align:center;">✅ <strong>Ponte de Acessibilidade <code>&lt;iframe&gt;</code> Pré-Configurada</strong></td>
-            </tr>
-            <tr>
-              <td><strong>7. Selo Oficial de Compromisso + Declaração LBI / WCAG 2.2</strong></td>
-              <td style="text-align:center; color:var(--brand-text-muted);">—</td>
-              <td style="text-align:center;">✅ <strong>Selo Oficial p/ Rodapé + Declaração Jurídica</strong></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEÇÃO 5: CHAMADA PARA O MANUAL DE IDENTIDADE VISUAL (BRANDBOOK) -->
-  <section class="section">
-    <div class="container">
-      <div style="background: var(--brand-hero-gradient); color: #FFFFFF; border-radius: 24px; padding: 48px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
-        <div style="max-width: 680px;">
-          <span style="background: rgba(255,255,255,0.14); color: #FCD34D; padding: 5px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">
-            🎨 Brandbook Oficial Allyada
-          </span>
-          <h2 style="font-size: 2rem; font-weight: 800; margin: 14px 0 10px; color: #FFFFFF;">
-            Explore o Manual de Identidade Visual Completo
+          <h2 class="section-title">
+            Mesmos Módulos em Todos os Planos. <span class="accent">Escolha Sua Gestão.</span>
           </h2>
-          <p style="font-size: 1rem; color: rgba(255,255,255,0.85);">
-            Compare lado a lado as 4 propostas de paleta de cores com taxas de contraste WCAG AAA, anatomia do logotipo, variações de ícones do botão flutuante, tipografia oficial e especificações técnicas.
+          <p class="section-desc">
+            Nenhum recurso de acessibilidade é bloqueado no <strong>Plano Gratuito (R$ 0)</strong>. Nos planos pagos, sua empresa desbloqueia a <strong>personalização visual da marca</strong> e o <strong>Painel Administrativo Pro</strong>.
           </p>
         </div>
-        <div>
-          <a href="identidade-visual.html" class="btn btn-accent" style="padding: 14px 28px; font-size: 1rem;">
-            Abrir Manual de Identidade Visual &rarr;
+
+        <!-- Equality Highlight Banner -->
+        <div class="equality-banner reveal-up">
+          <div class="equality-col">
+            <div class="tech-icon"><i class="fa-solid fa-universal-access" aria-hidden="true"></i></div>
+            <div>
+              <h3>Igual em TODOS os 4 planos (inclusive no Gratuito):</h3>
+              <p>
+                Todos os <strong>+30 módulos visuais, cognitivos e motores</strong>, os <strong>5 perfis clínicos de 1 clique</strong>, <strong>Intérprete VLibras 3D</strong>, <strong>Leitor de Voz (TTS)</strong>, <strong>Visão Computacional IA + OCR</strong> e <strong>pageviews ilimitados</strong>.
+              </p>
+            </div>
+          </div>
+          <div class="equality-col">
+            <div class="tech-icon"><i class="fa-solid fa-sliders" aria-hidden="true"></i></div>
+            <div>
+              <h3>O que muda nos planos pagos (Pro Mensal, Pro Anual e Multi-Domínios):</h3>
+              <p>
+                Acesso ao <strong>Painel Administrativo Pro</strong>, liberação do <strong>código <code>&lt;script&gt;</code> personalizado</strong> com a cor sólida ou degradê da sua empresa, <strong>5 ícones oficiais</strong>, <strong>6 posições na tela</strong> (sem cobrir o WhatsApp) e suporte prioritário.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Pricing Cards Grid -->
+        <div class="pricing-grid">
+
+          <!-- Card 1: PLANO GRATUITO (R$ 0) -->
+          <div class="price-card reveal-up">
+            <div class="price-card-top">
+              <span class="tech-tag">Open Script • Grátis</span>
+            </div>
+            <h3>Plano Gratuito</h3>
+            <div class="price-amount">R$ 0<span>/mês</span></div>
+            <p class="price-sub">Grátis para sempre • Sem taxa de setup</p>
+            <ul class="price-features">
+              <li class="check">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span><strong>Todos os +30 Módulos de Acessibilidade</strong></span>
+              </li>
+              <li class="check">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span><strong>5 Perfis, VLibras 3D, Voz &amp; IA Visual</strong></span>
+              </li>
+              <li class="check">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span><strong>Pageviews e Acessos 100% Ilimitados</strong></span>
+              </li>
+              <li class="locked">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <span>Cor Fixa no Roxo Padrão (<code>#6D48B8</code>)</span>
+              </li>
+              <li class="locked">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <span>Ícone Padrão e Posição Fixa no Rodapé</span>
+              </li>
+              <li class="locked">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <span>Sem Acesso ao Painel Administrativo</span>
+              </li>
+            </ul>
+            <a href="planos.html#script-gratuito" class="btn btn-outline btn-full">
+              <i class="fa-solid fa-code" aria-hidden="true"></i>
+              <span>Obter Script Gratuito</span>
+            </a>
+          </div>
+
+          <!-- Card 2: PLANO PRO MENSAL (R$ 79,90) -->
+          <div class="price-card reveal-up reveal-delay-1">
+            <div class="price-card-top">
+              <span class="tech-tag">Sem Fidelidade • Mensal</span>
+            </div>
+            <h3>Plano Pro Mensal</h3>
+            <div class="price-amount">R$ 79,90<span>/mês</span></div>
+            <p class="price-sub">Por domínio • Sem taxa de setup • Cancele quando quiser</p>
+            <ul class="price-features">
+              <li class="check">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span><strong>Todos os +30 Módulos + Tráfego Ilimitado</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                <span><strong>Painel Administrativo Pro Liberado</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-palette" aria-hidden="true"></i>
+                <span><strong>Cores Sólidas, Degradês e VLibras Sincronizado</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-icons" aria-hidden="true"></i>
+                <span><strong>5 Ícones Oficiais &amp; 6 Posições na Tela</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-code" aria-hidden="true"></i>
+                <span><strong>Liberação Imediata do <code>&lt;script&gt;</code> Customizado</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                <span><strong>Suporte Técnico via WhatsApp e E-mail</strong></span>
+              </li>
+            </ul>
+            <a href="../painel-administrativo.html#cadastro-teste-gratis" class="btn btn-outline btn-full">
+              <span>Testar no Simulador Grátis</span>
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+          </div>
+
+          <!-- Card 3: PLANO PRO ANUAL (R$ 59,90 - FEATURED) -->
+          <div class="price-card featured reveal-up reveal-delay-2">
+            <div class="price-card-top">
+              <span class="topbar-pill">MAIS ESCOLHIDO • 25% OFF</span>
+            </div>
+            <h3>Plano Pro Anual</h3>
+            <div class="price-amount">R$ 59,90<span>/mês</span></div>
+            <p class="price-sub">Por domínio no ciclo anual • Economia de R$ 240,00/ano</p>
+            <ul class="price-features">
+              <li class="check">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span><strong>Todos os Recursos do Plano Pro Mensal</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                <span><strong>Painel Administrativo Pro + Simulador Ao Vivo</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-palette" aria-hidden="true"></i>
+                <span><strong>Cor HEX Livre, Degradê e VLibras Sincronizado</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-up-down-left-right" aria-hidden="true"></i>
+                <span><strong>6 Posições (Centro Lateral livre de WhatsApp)</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-code" aria-hidden="true"></i>
+                <span><strong>Código <code>&lt;script&gt;</code> Exclusivo da Sua Marca</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-headset" aria-hidden="true"></i>
+                <span><strong>Prioridade no Suporte Técnico via WhatsApp</strong></span>
+              </li>
+            </ul>
+            <a href="../painel-administrativo.html#cadastro-teste-gratis" class="btn btn-primary btn-full">
+              <span>Começar no Simulador Grátis</span>
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+          </div>
+
+          <!-- Card 4: EMPRESAS & MULTI-DOMÍNIOS (R$ 49,90) -->
+          <div class="price-card reveal-up reveal-delay-3">
+            <div class="price-card-top">
+              <span class="tech-tag">3+ Domínios • 37% OFF</span>
+            </div>
+            <h3>Empresas Multi-Domínios</h3>
+            <div class="price-amount">R$ 49,90<span>/mês</span></div>
+            <p class="price-sub">Por domínio (3 ou mais sites) • Empresas, Redes e Agências</p>
+            <ul class="price-features">
+              <li class="check">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span><strong>Todos os +30 Módulos em Todos os Domínios</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-network-wired" aria-hidden="true"></i>
+                <span><strong>Gestão Centralizada de Múltiplos Sites em 1 Conta</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-swatchbook" aria-hidden="true"></i>
+                <span><strong>Identidade Visual Independente por Domínio</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-key" aria-hidden="true"></i>
+                <span><strong>Códigos <code>&lt;script&gt;</code> Individuais por Site</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
+                <span><strong>Faturamento Corporativo Unificado (PIX, Boleto, Cartão)</strong></span>
+              </li>
+              <li class="pro-feature">
+                <i class="fa-solid fa-infinity" aria-hidden="true"></i>
+                <span><strong>Pageviews Ilimitados em Toda a Rede</strong></span>
+              </li>
+            </ul>
+            <a href="../painel-administrativo.html" class="btn btn-outline btn-full">
+              <span>Abrir Painel Multi-Domínios</span>
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+          </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 36px;" class="reveal-up">
+          <a href="planos.html" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-table-list" aria-hidden="true"></i>
+            <span>Ver Tabela Comparativa Completa (Gratuito vs. PRO)</span>
           </a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- RODAPÉ OFICIAL -->
+  </main>
+
+  <!-- ========================================================================
+       8. CORPORATE FOOTER
+       ======================================================================== -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
-        <div>
-          <a href="index.html" class="allyada-logo" style="margin-bottom: 14px;">
-            <div class="allyada-logo-mark">
-              <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/>
-                <path d="M15.8 40.5Q50 58 84.2 40.5"/>
-                <path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/>
-                <circle cx="50" cy="29.5" r="10.2" fill="rgba(255,255,255,0.4)"/>
-              </svg>
-            </div>
-            <div class="allyada-logo-text">
-              <span class="allyada-wordmark" style="color:#FFFFFF;">allyada<span class="dot">.</span></span>
-              <span class="allyada-tagline-mini" style="color:#94A3B8;">Acessibilidade para você</span>
-            </div>
-          </a>
-          <p style="font-size: 0.88rem; color: #94A3B8; max-width: 340px;">
-            Suíte brasileira de tecnologia assistiva, inteligência artificial visual e conformidade legal (LBI Lei 13.146/15, e-MAG e WCAG 2.2 AAA).
-          </p>
+      <div class="footer-cards">
+        <div class="footer-card">
+          <div class="footer-card-icon"><i class="fa-solid fa-user-lock" aria-hidden="true"></i></div>
+          <div>
+            <div class="footer-card-label">Área do Cliente &amp; Licenças</div>
+            <a href="../painel-administrativo.html" class="footer-card-link">
+              <span>Acessar Painel Administrativo</span>
+              <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.78rem;" aria-hidden="true"></i>
+            </a>
+          </div>
         </div>
-
-        <div class="footer-col">
-          <h5>Produto</h5>
-          <ul>
-            <li><a href="#funcionalidades">Funcionalidades</a></li>
-            <li><a href="#perfis">Perfis Clínicos 1-Clique</a></li>
-            <li><a href="#instalacao">Instalação em 1 Linha</a></li>
-            <li><a href="../demo/index.html">Laboratório de Testes (Demo)</a></li>
-          </ul>
+        <div class="footer-card">
+          <div class="footer-card-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
+          <div>
+            <div class="footer-card-label">Conformidade Legal &amp; Empresas</div>
+            <a href="conformidade.html" class="footer-card-link">
+              <span>LBI Art. 63, WCAG 2.2 &amp; ABNT</span>
+              <i class="fa-solid fa-arrow-right" style="font-size: 0.78rem;" aria-hidden="true"></i>
+            </a>
+          </div>
         </div>
-
-        <div class="footer-col">
-          <h5>Comercial & Legal</h5>
-          <ul>
-            <li><a href="#planos">Planos Gratuito vs. PRO</a></li>
-            <li><a href="#conformidade">Conformidade LBI & WCAG 2.2</a></li>
-            <li><a href="#conformidade">Selo Oficial de Acessibilidade</a></li>
-            <li><a href="#planos">Pacote para Cartórios (PQTA)</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h5>Marca & Design</h5>
-          <ul>
-            <li><a href="identidade-visual.html">Manual da Marca (Brandbook)</a></li>
-            <li><a href="identidade-visual.html#paletas">Propostas de Paleta de Cores</a></li>
-            <li><a href="identidade-visual.html#logotipo">Logotipo & Ícones FAB</a></li>
-            <li><a href="identidade-visual.html#tipografia">Tipografia Acessível</a></li>
-          </ul>
+        <div class="footer-card">
+          <div class="footer-card-icon"><i class="fa-solid fa-swatchbook" aria-hidden="true"></i></div>
+          <div>
+            <div class="footer-card-label">Documentação da Marca</div>
+            <a href="identidade-visual.html" class="footer-card-link">
+              <span>Acessar Brandbook Oficial</span>
+              <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.78rem;" aria-hidden="true"></i>
+            </a>
+          </div>
         </div>
       </div>
 
-      <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 0.82rem;">
-        <span>&copy; 2026 Allyada Tecnologia Assistiva. Todos os direitos reservados.</span>
-        <span>Pressione <kbd style="background:#1E293B; color:#FFF; padding:2px 6px; border-radius:4px;">Alt</kbd> + <kbd style="background:#1E293B; color:#FFF; padding:2px 6px; border-radius:4px;">A</kbd> a qualquer momento para abrir o assistente.</span>
+      <div class="footer-bottom">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="brand-logo-mark">
+            <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="12" r="5.5" fill="#F8C62F"/>
+              <path d="M16 52L29.5 23C30.5 21 33.5 21 34.5 23L48 52" stroke="#FFFFFF" stroke-width="5.5" stroke-linecap="round"/>
+              <path d="M12 31C21 41 43 41 52 31" stroke="#F8C62F" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="brand-logo-text" style="color: #FFFFFF; font-size: 1.25rem;">Allyada<span class="dot">.</span></span>
+            <p style="font-size: 0.8rem; color: #94A3B8;">Infraestrutura Assistiva, Inteligência Artificial &amp; Inclusão Digital.</p>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <a href="index.html">Início</a>
+          <a href="recursos.html">Módulos &amp; IA</a>
+          <a href="planos.html">Planos</a>
+          <a href="conformidade.html">Conformidade LBI</a>
+          <a href="sobre.html">Quem Somos</a>
+          <a href="../painel-administrativo.html" style="color: #C4B5FD; font-weight: 600;">Painel do Cliente</a>
+        </div>
       </div>
     </div>
   </footer>
 
-  <!-- INCLUSÃO DO PLUGIN ALLYADA AO VIVO -->
-  <script src="../src/allyada.js"></script>
+  <!-- Plugin PRO da Allyada ativo nativamente no site institucional -->
+  <script src="../src/allyada.js" data-color="#6d48b8" data-icon="allyada" data-position="right" data-vpos="middle" defer></script>
+
   <script>
-    const PALETTE_PRIMARY_HEX = {
-      iris: '#7956C2',
-      neural: '#4F46E5',
-      safira: '#0052CC',
-      ametista: '#7C3AED'
-    };
-
-    const CODE_SNIPPETS = {
-      pro: `<!-- Instalação PRO Personalizada (Cor da Marca + Centro Lateral + Domínio Licenciado) -->
-<script src="https://cdn.allyada.com.br/allyada.min.js"
-  data-domain="suaempresa.com.br"
-  data-color="#7956C2"
-  data-icon="allyada"
-  data-vpos="middle"
-  data-position="right"
-  defer><\/script>`,
-      free: `<!-- Instalação Gratuita em 1 Linha (Antes do fechamento da tag </body>) -->
-<script src="https://cdn.allyada.com.br/allyada.min.js" defer><\/script>`,
-      js: `<!-- Inicialização Avançada via API JavaScript -->
-<script src="https://cdn.allyada.com.br/allyada.min.js"><\/script>
-<script>
-  window.Allyada.init({
-    position: 'right',          // 'right' (Direita) ou 'left' (Esquerda)
-    verticalPosition: 'middle', // 'middle' (Centro Lateral ✨ PRO) | 'top' | 'bottom'
-    primaryColor: '#7956C2',    // Cor principal da sua marca
-    shortcutKey: 'a',           // Atalho Alt + A
-    speechLang: 'pt-BR'         // Voz Neural em Português
-  });
-<\/script>`
-    };
-
-    let currentCodeTab = 'pro';
-
-    function switchCodeTab(tab) {
-      currentCodeTab = tab;
-      ['pro', 'free', 'js'].forEach(t => {
-        const btn = document.getElementById('tab-code-' + t);
-        if (btn) btn.classList.toggle('active', t === tab);
-      });
-      const display = document.getElementById('code-snippet-display');
-      if (display) display.textContent = CODE_SNIPPETS[tab];
-    }
-
-    function copyCurrentSnippet() {
-      const text = CODE_SNIPPETS[currentCodeTab];
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).catch(() => {});
-      }
-      const btn = document.getElementById('btn-copy-snippet');
-      if (btn) {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '✅ Código Copiado!';
-        setTimeout(() => { btn.innerHTML = orig; }, 2200);
-      }
-    }
-
-    function applySitePalette(paletteKey) {
-      const hex = PALETTE_PRIMARY_HEX[paletteKey] || '#7956C2';
-      document.documentElement.setAttribute('data-palette', paletteKey);
-      try {
-        localStorage.setItem('allyada_site_palette', paletteKey);
-      } catch (e) {}
-
-      document.querySelectorAll('.palette-pill-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-set-palette') === paletteKey);
-      });
-
-      // Atualiza o snippet de código com a cor da paleta escolhida
-      CODE_SNIPPETS.pro = `<!-- Instalação PRO Personalizada (Cor da Marca + Centro Lateral + Domínio Licenciado) -->
-<script src="https://cdn.allyada.com.br/allyada.min.js"
-  data-domain="suaempresa.com.br"
-  data-color="${hex}"
-  data-icon="allyada"
-  data-vpos="middle"
-  data-position="right"
-  defer><\/script>`;
-      switchCodeTab(currentCodeTab);
-
-      // Sincroniza a cor do próprio plugin Allyada ao vivo na página!
-      if (window.Allyada && typeof window.Allyada.setBrandColor === 'function') {
-        window.Allyada.setBrandColor(hex);
-      }
-    }
-
-    // Inicializa o código e o plugin Allyada no Centro Lateral (PRO)
-    document.addEventListener('DOMContentLoaded', () => {
-      let savedPalette = 'iris';
-      try {
-        savedPalette = localStorage.getItem('allyada_site_palette') || 'iris';
-      } catch (e) {}
-
-      const initialHex = PALETTE_PRIMARY_HEX[savedPalette] || '#7956C2';
-
-      if (window.Allyada) {
-        window.Allyada.init({
-          position: 'right',
-          verticalPosition: 'middle',
-          primaryColor: initialHex,
-          shortcutKey: 'a',
-          speechLang: 'pt-BR'
+    (function() {
+      // Mobile Navigation Toggle
+      var btnMenu = document.getElementById('btnMobileMenu');
+      var nav = document.getElementById('mainSiteNav');
+      if (btnMenu && nav) {
+        btnMenu.addEventListener('click', function() {
+          var isOpen = nav.classList.toggle('open');
+          btnMenu.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          btnMenu.innerHTML = isOpen
+            ? '<i class="fa-solid fa-xmark" aria-hidden="true"></i>'
+            : '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
         });
       }
 
-      applySitePalette(savedPalette);
-    });
+      // Sticky Header Shadow on Scroll
+      var header = document.getElementById('siteHeader');
+      window.addEventListener('scroll', function() {
+        if (header) header.classList.toggle('scrolled', window.scrollY > 12);
+      }, { passive: true });
+
+      // Scroll Reveal Animations
+      var reveals = document.querySelectorAll('.reveal-up');
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        reveals.forEach(function(el) { io.observe(el); });
+      } else {
+        reveals.forEach(function(el) { el.classList.add('is-visible'); });
+      }
+    })();
   </script>
 </body>
 </html>
