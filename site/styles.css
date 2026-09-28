@@ -2045,6 +2045,289 @@ code {
 }
 
 /* ==========================================================================
+   10B. PLEXIFY-INSPIRED S-CURVE ROADMAP, NEON LINE ICONS & GIANT WATERMARKS
+   ========================================================================== */
+
+.plex-roadmap-section {
+  position: relative;
+  background-color: #07060E;
+  background-image:
+    radial-gradient(circle at 50% 18%, rgba(109, 72, 184, 0.24) 0%, transparent 52%),
+    radial-gradient(circle at 18% 60%, rgba(74, 222, 128, 0.08) 0%, transparent 42%),
+    radial-gradient(circle at 82% 40%, rgba(139, 92, 246, 0.14) 0%, transparent 45%),
+    linear-gradient(rgba(167, 139, 250, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.045) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 56px 56px, 56px 56px;
+  color: #FFFFFF;
+  padding: 96px 0 120px;
+  overflow: hidden;
+  border-top: 1px solid rgba(167, 139, 250, 0.16);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.16);
+}
+
+/* Glowing Horizon Planet Arc at the bottom (Plexify signature detail) */
+.plex-horizon-arc {
+  position: absolute;
+  bottom: -230px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 980px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(74, 222, 128, 0.18) 0%, rgba(109, 72, 184, 0.22) 45%, transparent 72%);
+  border-top: 2px solid rgba(167, 139, 250, 0.32);
+  box-shadow: 0 -18px 60px rgba(109, 72, 184, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Floating 3D Squiggles on Left & Right Margins */
+.plex-floating-squiggle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 12px 24px rgba(139, 92, 246, 0.35));
+}
+
+.plex-floating-squiggle.left {
+  left: 4%;
+  top: 52%;
+  width: 58px;
+  height: 58px;
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.plex-floating-squiggle.right {
+  right: 4.5%;
+  top: 66%;
+  width: 54px;
+  height: 64px;
+  animation: floatReverse 7s ease-in-out infinite;
+}
+
+/* Central S-Curve Timeline Container */
+.plex-timeline-stage {
+  position: relative;
+  max-width: 1040px;
+  margin: 20px auto 0;
+  z-index: 3;
+}
+
+/* Sinuous S-Curve SVG in the Center */
+.plex-curve-svg-wrap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.plex-curve-svg-wrap svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Rows for Steps 1, 2, 3, 4 */
+.plex-step-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 140px 1fr;
+  align-items: center;
+  margin-bottom: 36px;
+  z-index: 2;
+}
+
+.plex-step-row:last-child {
+  margin-bottom: 0;
+}
+
+.plex-step-row.left .plex-card-col {
+  grid-column: 1;
+  justify-self: end;
+  width: 100%;
+  max-width: 430px;
+}
+
+.plex-step-row.right .plex-card-col {
+  grid-column: 3;
+  justify-self: start;
+  width: 100%;
+  max-width: 430px;
+}
+
+.plex-node-col {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 4;
+}
+
+/* Circular Numbered Nodes (1, 2, 3, 4) along the S-Curve */
+.plex-step-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #171522;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  color: #E2E8F0;
+  font-family: var(--ff-heading);
+  font-size: 1.02rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.plex-step-row.is-active .plex-step-circle,
+.plex-step-row:hover .plex-step-circle {
+  background: linear-gradient(135deg, #4ADE80 0%, #22C55E 100%);
+  color: #062112;
+  border-color: #86EFAC;
+  box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.16), 0 0 28px rgba(74, 222, 128, 0.55);
+  transform: scale(1.08);
+}
+
+/* Dark Matte Step Card with Giant Cropped Watermark Number (01, 02, 03, 04) */
+.plex-step-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(24, 22, 36, 0.96) 0%, rgba(16, 14, 26, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 30px 28px 34px;
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  overflow: hidden;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.32s ease,
+              box-shadow 0.32s ease;
+}
+
+.plex-step-card:hover,
+.plex-step-row.is-active .plex-step-card {
+  transform: translateY(-6px);
+  border-color: rgba(74, 222, 128, 0.42);
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.65), 0 0 32px rgba(109, 72, 184, 0.22);
+}
+
+/* Large Clean Neon-Outline SVG Icon inside Plex Card */
+.plex-neon-icon {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  color: #4ADE80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.28));
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.28s ease;
+}
+
+.plex-neon-icon svg {
+  width: 54px;
+  height: 54px;
+  display: block;
+}
+
+.plex-step-card:hover .plex-neon-icon {
+  transform: scale(1.1) rotate(-4deg);
+  color: #86EFAC;
+}
+
+.plex-card-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+.plex-card-content h3 {
+  font-family: var(--ff-heading);
+  font-size: 1.24rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.28;
+  margin-bottom: 8px;
+  letter-spacing: -0.015em;
+}
+
+.plex-card-highlight {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #4ADE80;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.plex-card-desc {
+  font-size: 0.84rem;
+  color: #94A3B8;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Giant Cropped Watermark Number (01, 02, 03, 04) at Bottom-Left */
+.plex-watermark-num {
+  position: absolute;
+  bottom: -14px;
+  left: 18px;
+  font-family: var(--ff-heading);
+  font-size: 4.8rem;
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.045);
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.plex-step-card:hover .plex-watermark-num {
+  color: rgba(74, 222, 128, 0.09);
+  transform: translateY(-3px);
+}
+
+/* Giant Watermark Number for Feature Cards (.tech-card) */
+.tech-card-watermark {
+  position: absolute;
+  bottom: -10px;
+  right: 16px;
+  font-family: var(--ff-heading);
+  font-size: 4.2rem;
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: rgba(109, 72, 184, 0.06);
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.tech-card:hover .tech-card-watermark {
+  color: rgba(109, 72, 184, 0.13);
+  transform: translateY(-4px);
+}
+
+.tech-card-subtitle {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
    11. COMPREHENSIVE RESPONSIVE BREAKPOINTS (TABLET, MOBILE & SMALL PHONES)
    ========================================================================== */
 
@@ -2116,6 +2399,38 @@ code {
     font-size: 0.95rem;
     border-radius: 8px;
   }
+  /* Plexify S-Curve Roadmap on Tablet/Mobile */
+  .plex-curve-svg-wrap {
+    left: 27px;
+    transform: none;
+    width: 54px;
+  }
+
+  .plex-step-row,
+  .plex-step-row.left,
+  .plex-step-row.right {
+    grid-template-columns: 54px 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .plex-step-row.left .plex-node-col,
+  .plex-step-row.right .plex-node-col {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .plex-step-row.left .plex-card-col,
+  .plex-step-row.right .plex-card-col {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: stretch;
+    max-width: 100%;
+  }
+
+  .plex-floating-squiggle {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2133,8 +2448,9 @@ code {
   }
   .section,
   .section-slate,
-  .section-dark {
-    padding: 60px 0;
+  .section-dark,
+  .plex-roadmap-section {
+    padding: 60px 0 80px;
   }
   .section-header {
     margin-bottom: 36px;
@@ -2163,6 +2479,25 @@ code {
   .feature-grid-2,
   .footer-cards {
     grid-template-columns: 1fr;
+  }
+
+  .plex-step-card {
+    flex-direction: column;
+    padding: 22px 20px 28px;
+    gap: 14px;
+  }
+
+  .plex-step-circle {
+    width: 44px;
+    height: 44px;
+    font-size: 0.92rem;
+  }
+
+  .plex-step-row,
+  .plex-step-row.left,
+  .plex-step-row.right {
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
   }
 
   .site-header-actions .btn-outline {
