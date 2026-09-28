@@ -35,7 +35,7 @@
     verticalPosition: 'bottom', // 'bottom', 'middle', 'top'
     primaryColor: '#7956c2',
     accentColor: '#ffab00',
-    fabIcon: 'allyada', // 'allyada', 'universal', 'hands', 'heart', 'shield'
+    fabIcon: 'universal', // 'universal', 'allyada', 'wheelchair', 'heart', 'shield'
     vlibrasShirtColor: '',
     vlibrasPantsColor: '',
     vlibrasLogoUrl: '',
@@ -86,8 +86,9 @@
 
   // SVGs de Ícones Acessíveis
   const ICONS = {
-    allyada: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4.8" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="rgba(255,255,255,0.35)"/><circle cx="11.5" cy="38.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="88.5" cy="38.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="28" cy="83.5" r="5.2" fill="rgba(255,255,255,0.35)"/><circle cx="72" cy="83.5" r="5.2" fill="rgba(255,255,255,0.35)"/></svg>`,
-    universal: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.2" r="1.6" fill="currentColor"/><path d="M7.2 10.5h9.6"/><path d="M12 10.5v4.2"/><path d="m9.2 18.5 2.8-3.8 2.8 3.8"/></svg>`,
+    allyada: `<svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>`,
+    universal: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4.8" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.32"/><circle cx="11.5" cy="38.5" r="5.2" fill="currentColor" fill-opacity="0.32"/><circle cx="88.5" cy="38.5" r="5.2" fill="currentColor" fill-opacity="0.32"/><circle cx="28" cy="83.5" r="5.2" fill="currentColor" fill-opacity="0.32"/><circle cx="72" cy="83.5" r="5.2" fill="currentColor" fill-opacity="0.32"/></svg>`,
+    wheelchair: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.8" fill="currentColor"/><path d="M12 7.5v6h5l2 5.5"/><path d="M12 10.5h4"/><path d="M9.5 11.1a4.5 4.5 0 1 0 4.8 6.4"/></svg>`,
     heart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><circle cx="12" cy="9.5" r="1.4" fill="currentColor"/><path d="M9.2 12h5.6"/></svg>`,
     shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="8.5" r="1.4" fill="currentColor"/><path d="M8.8 11.3h6.4"/><path d="m10 16.2 2-3.2 2 3.2"/></svg>`,
     close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
@@ -4662,17 +4663,17 @@
     }
 
     setFabIcon(iconKey) {
-      const validIcons = ['allyada', 'universal', 'hands', 'heart', 'shield'];
-      const chosen = validIcons.includes(iconKey) ? iconKey : 'allyada';
+      const validIcons = ['allyada', 'universal', 'wheelchair', 'hands', 'heart', 'shield'];
+      const chosen = validIcons.includes(iconKey) ? iconKey : 'universal';
       this.config.fabIcon = chosen;
       if (this.shadowRoot) {
         const fabIconSpan = this.shadowRoot.getElementById('allyada-fab-icon-span') || this.shadowRoot.getElementById('allyada-fab-icon-svg');
         if (fabIconSpan) {
-          fabIconSpan.innerHTML = ICONS[chosen] || ICONS.allyada;
+          fabIconSpan.innerHTML = ICONS[chosen] || ICONS.universal;
         }
         const headerIconBox = this.shadowRoot.getElementById('allyada-header-icon-box');
         if (headerIconBox) {
-          headerIconBox.innerHTML = ICONS[chosen] || ICONS.allyada;
+          headerIconBox.innerHTML = ICONS[chosen] || ICONS.universal;
         }
       }
       this.updatePanelUI();
