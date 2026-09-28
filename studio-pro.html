@@ -130,6 +130,56 @@
       font-weight: 500;
     }
 
+    /* Navegação Central do Painel (Domínios | Assinaturas & Planos | Meu Perfil) */
+    .header-center-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      padding: 4px;
+      border-radius: 11px;
+    }
+    .header-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12.8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .header-nav-btn svg {
+      width: 15px;
+      height: 15px;
+      color: var(--text-muted);
+      transition: color 0.16s ease;
+    }
+    .header-nav-btn:hover {
+      color: var(--text-primary);
+    }
+    .header-nav-btn.active {
+      background: var(--bg-surface);
+      color: var(--brand);
+      box-shadow: var(--shadow-sm);
+    }
+    .header-nav-btn.active svg {
+      color: var(--brand);
+    }
+    .nav-count-badge {
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
     .header-right {
       display: flex;
       align-items: center;
@@ -221,7 +271,7 @@
       position: absolute;
       top: calc(100% + 8px);
       right: 0;
-      width: 250px;
+      width: 260px;
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -291,10 +341,10 @@
        ESTRUTURA CENTRAL
     ========================================================================= */
     .main-wrap {
-      max-width: 1260px;
+      max-width: 1300px;
       width: 100%;
       margin: 0 auto;
-      padding: 32px 24px 100px;
+      padding: 30px 26px 110px;
       flex: 1;
     }
 
@@ -303,28 +353,108 @@
     }
     .view-section.active {
       display: block;
+      animation: authPaneSwitch 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     /* =========================================================================
-       TELA 1: LISTA DE DOMÍNIOS (ESTILO REGISTRO.BR)
+       TELA 1: LISTA DE DOMÍNIOS & KPIs EXECUTIVOS
     ========================================================================= */
     .page-heading {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       flex-wrap: wrap;
       gap: 16px;
     }
     .page-heading h1 {
-      font-size: 21px;
+      font-size: 22px;
       font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.025em;
     }
     .page-heading p {
       font-size: 13.5px;
       color: var(--text-muted);
       margin-top: 4px;
+    }
+    .btn-cta-new-sub {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-hover) 100%);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(109, 72, 184, 0.25);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-cta-new-sub:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(109, 72, 184, 0.34);
+    }
+    .btn-cta-new-sub svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Faixa de KPIs Executivos */
+    .kpi-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .kpi-metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .kpi-metric-info span {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    .kpi-metric-info strong {
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .kpi-metric-info small {
+      display: block;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .kpi-metric-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-metric-icon svg {
+      width: 20px;
+      height: 20px;
     }
 
     .table-surface {
@@ -456,6 +586,19 @@
     }
     .status-pill.expired .status-dot { background: var(--status-danger); }
 
+    .plan-tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
     .visual-badge-cell {
       display: inline-flex;
       align-items: center;
@@ -496,7 +639,7 @@
       padding: 7px 14px;
       border-radius: 7px;
       border: none;
-      background: #475569;
+      background: #dc2626;
       color: #ffffff;
       font-size: 11.5px;
       font-weight: 700;
@@ -506,63 +649,148 @@
     }
 
     /* =========================================================================
-       TELA 2: EDIÇÃO DO DOMÍNIO (ESQUERDA: CONTROLES | DIREITA: PRÉ-VISUALIZAÇÃO)
+       TELA 2: WORKSPACE DO DOMÍNIO (DESIGN UX/UI SENIOR)
     ========================================================================= */
-    .editor-top-bar {
+    .domain-workspace-hero {
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 22px;
+      gap: 18px;
+      overflow: hidden;
     }
-    .editor-breadcrumb {
+    .domain-workspace-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand) 0%, #2563eb 60%, #10b981 100%);
+    }
+    .workspace-hero-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
+      flex-wrap: wrap;
     }
     .btn-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 8px 13px;
-      border-radius: 8px;
+      border-radius: 9px;
       border: 1px solid var(--border);
-      background: var(--bg-surface);
+      background: var(--bg-subtle);
       color: var(--text-secondary);
       font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.14s ease;
+      transition: all 0.15s ease;
     }
     .btn-back svg { width: 15px; height: 15px; }
     .btn-back:hover {
       border-color: var(--brand);
       color: var(--brand);
+      background: var(--bg-surface);
+    }
+    .workspace-domain-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--brand);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(109, 72, 184, 0.25);
+      flex-shrink: 0;
+    }
+    .workspace-domain-avatar svg {
+      width: 24px;
+      height: 24px;
+    }
+    .domain-active-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .domain-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .domain-active-title h2 {
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 700;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
     }
-    .domain-active-title span {
+    .domain-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
       font-size: 12.5px;
       color: var(--text-muted);
     }
+    .workspace-hero-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .domain-quick-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border-radius: 9px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .domain-quick-select {
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+    }
 
-    /* Abas Limpas */
+    /* Barra de Abas + Indicador de Sincronização */
+    .workspace-subnav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
     .editor-tabs {
       display: inline-flex;
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 11px;
       padding: 4px;
       gap: 4px;
-      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
     }
     .editor-tab-btn {
-      padding: 8px 16px;
-      border-radius: 7px;
+      padding: 9px 16px;
+      border-radius: 8px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
@@ -571,23 +799,47 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      transition: all 0.14s ease;
+      gap: 8px;
+      transition: all 0.15s ease;
     }
     .editor-tab-btn svg { width: 15px; height: 15px; }
     .editor-tab-btn:hover { color: var(--text-primary); }
     .editor-tab-btn.active {
       background: var(--brand);
       color: #ffffff;
+      box-shadow: 0 2px 8px rgba(109, 72, 184, 0.28);
+    }
+    .workspace-live-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+    }
+    .live-sync-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--status-ok);
     }
 
     .editor-pane { display: none; }
-    .editor-pane.active { display: block; }
+    .editor-pane.active {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: authPaneSwitch 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
 
-    /* Grid 2 Colunas: Esquerda Opções | Direita Pré-visualização */
+    /* Grid Persistente de 2 Colunas: Esquerda Abas | Direita Simulador Sempre Visível */
     .editor-two-columns {
       display: grid;
-      grid-template-columns: 1fr 390px;
+      grid-template-columns: 1fr 410px;
       gap: 24px;
       align-items: start;
     }
@@ -595,31 +847,70 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      min-width: 0;
     }
 
+    /* Cards de Configuração com Step Number e Resumo Ativo */
     .panel-card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
+      border-radius: 15px;
+      padding: 22px 24px;
       box-shadow: var(--shadow-card);
+      transition: border-color 0.18s ease;
+    }
+    .panel-card:hover {
+      border-color: var(--border-strong);
     }
     .panel-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 4px;
+      gap: 12px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .card-step-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-num-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 11.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
     .panel-card-title {
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .card-active-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
     }
     .panel-card-desc {
-      font-size: 12.5px;
+      font-size: 12.8px;
       color: var(--text-muted);
       margin-bottom: 16px;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
     /* Seletor Cor Sólida | Degradê */
@@ -627,23 +918,24 @@
       display: inline-flex;
       background: var(--bg-input);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 9px;
       padding: 3px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
     .seg-switch-btn {
-      padding: 6px 14px;
-      border-radius: 6px;
+      padding: 7px 15px;
+      border-radius: 7px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.14s ease;
     }
     .seg-switch-btn.active {
       background: var(--bg-surface);
-      color: var(--text-primary);
+      color: var(--brand);
       box-shadow: var(--shadow-sm);
     }
 
@@ -654,17 +946,39 @@
       gap: 10px;
     }
     .swatch-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      border: 1.5px solid rgba(0, 0, 0, 0.12);
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(0, 0, 0, 0.14);
       cursor: pointer;
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
     }
-    .swatch-btn:hover { transform: scale(1.06); }
+    .swatch-btn:hover { transform: scale(1.08); }
     .swatch-btn.active {
       border-color: var(--text-primary);
       box-shadow: 0 0 0 3px var(--brand-soft);
+    }
+    .swatch-btn.active::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    }
+
+    .grad-live-bar {
+      height: 10px;
+      width: 100%;
+      border-radius: 999px;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #6d48b8 0%, #2563eb 100%);
     }
 
     .color-wheel-trigger {
@@ -672,7 +986,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 11px 5px 7px;
+      padding: 6px 12px 6px 8px;
       border-radius: 9px;
       border: 1px solid var(--border-strong);
       background: var(--bg-subtle);
@@ -680,6 +994,10 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--text-primary);
+      transition: border-color 0.15s ease;
+    }
+    .color-wheel-trigger:hover {
+      border-color: var(--brand);
     }
     .wheel-ring {
       width: 22px;
@@ -710,7 +1028,7 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 5px 10px;
+      padding: 6px 10px;
       border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--bg-input);
@@ -722,7 +1040,7 @@
       border: 1px solid rgba(0,0,0,0.15);
     }
     .hex-box-wrap input {
-      width: 70px;
+      width: 72px;
       border: none;
       background: transparent;
       color: var(--text-primary);
@@ -741,42 +1059,47 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.14s ease;
     }
     .btn-add-swatch:hover {
       border-color: var(--brand);
       color: var(--brand);
     }
 
-    /* Ícones */
+    /* Ícones do Botão Flutuante */
     .icons-grid-5 {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
     }
     .icon-card-btn {
-      padding: 12px 8px;
-      border-radius: 10px;
+      padding: 14px 8px;
+      border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--bg-subtle);
       color: var(--text-secondary);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       cursor: pointer;
       font-size: 11.5px;
       font-weight: 600;
-      transition: all 0.14s ease;
+      transition: all 0.16s ease;
     }
-    .icon-card-btn svg { width: 22px; height: 22px; }
-    .icon-card-btn:hover { border-color: var(--border-strong); }
+    .icon-card-btn svg { width: 24px; height: 24px; }
+    .icon-card-btn:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
     .icon-card-btn.active {
       border-color: var(--brand);
       background: var(--brand-soft);
       color: var(--brand);
+      box-shadow: 0 0 0 2px var(--brand-soft);
     }
 
-    /* Botões de Escolha */
+    /* Botões de Escolha e Posição */
     .choice-pills-row {
       display: flex;
       flex-wrap: wrap;
@@ -785,8 +1108,8 @@
     .choice-pill {
       flex: 1;
       min-width: 120px;
-      padding: 9px 14px;
-      border-radius: 9px;
+      padding: 10px 14px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg-subtle);
       color: var(--text-secondary);
@@ -796,38 +1119,82 @@
       cursor: pointer;
       transition: all 0.14s ease;
     }
+    .choice-pill:hover {
+      border-color: var(--border-strong);
+    }
     .choice-pill.active {
       border-color: var(--brand);
       background: var(--brand-soft);
       color: var(--brand);
     }
 
-    /* Coluna Direita: Pré-visualização Fixa */
+    .pos-group-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* Coluna Direita: Inspector & Pré-visualização Fixa */
     .preview-sticky-column {
       position: sticky;
-      top: 86px;
+      top: 84px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
+    .inspector-surface-toggle {
+      display: inline-flex;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 2px;
+    }
+    .sim-bg-btn {
+      padding: 4px 9px;
+      border-radius: 5px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .sim-bg-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
     .preview-stage-box {
       background: var(--bg-subtle);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
+      border-radius: 13px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 14px;
       align-items: center;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .preview-stage-box.sim-dark {
+      background: #0f172a;
+      border-color: #1e293b;
     }
     .mini-allyada-panel {
       width: 100%;
       background: #ffffff;
       color: #0f172a;
-      border-radius: 14px;
+      border-radius: 13px;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
       overflow: hidden;
     }
     .mini-panel-head {
-      padding: 13px 16px;
+      padding: 12px 15px;
       border-bottom: 1px solid #e2e8f0;
       display: flex;
       align-items: center;
@@ -858,12 +1225,12 @@
       background: #6d48b8;
     }
     .mini-panel-body {
-      padding: 13px 16px;
+      padding: 12px 15px;
       background: #f8fafc;
     }
     .mini-active-card {
-      padding: 10px 13px;
-      border-radius: 10px;
+      padding: 9px 12px;
+      border-radius: 9px;
       border: 1.5px solid #6d48b8;
       background: rgba(109, 72, 184, 0.05);
       display: flex;
@@ -875,28 +1242,41 @@
 
     .floating-buttons-preview {
       width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 16px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 14px 12px;
       background: var(--bg-surface);
-      border-radius: 10px;
+      border-radius: 11px;
       border: 1px solid var(--border);
+    }
+    .preview-stage-box.sim-dark .floating-buttons-preview {
+      background: #1e293b;
+      border-color: #334155;
     }
     .fab-preview-col {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      text-align: center;
     }
     .fab-preview-col span {
       font-size: 11.5px;
       font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .preview-stage-box.sim-dark .fab-preview-col span {
+      color: #e2e8f0;
+    }
+    .fab-preview-col small {
+      font-size: 10.5px;
+      font-family: monospace;
       color: var(--text-muted);
     }
     .preview-allyada-circle {
-      width: 56px;
-      height: 56px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       background: #6d48b8;
       color: #ffffff;
@@ -905,10 +1285,10 @@
       justify-content: center;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
     }
-    .preview-allyada-circle svg { width: 30px; height: 30px; }
+    .preview-allyada-circle svg { width: 29px; height: 29px; }
     .preview-vlibras-square {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       border-radius: 13px;
       background: #6d48b8;
       color: #ffffff;
@@ -917,16 +1297,20 @@
       justify-content: center;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
     }
-    .preview-vlibras-square svg { width: 27px; height: 27px; }
+    .preview-vlibras-square svg { width: 26px; height: 26px; }
 
     /* Mapa Visual de Posição na Tela do Site */
     .screen-position-map {
       width: 100%;
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 11px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .preview-stage-box.sim-dark .screen-position-map {
+      background: #0f172a;
+      border-color: #334155;
     }
     .mock-browser-bar {
       height: 26px;
@@ -964,12 +1348,15 @@
     }
     .mock-viewport {
       position: relative;
-      height: 164px;
+      height: 166px;
       padding: 12px 44px;
       background: var(--bg-surface);
       display: flex;
       flex-direction: column;
       gap: 8px;
+    }
+    .preview-stage-box.sim-dark .mock-viewport {
+      background: #1e293b;
     }
     .mock-wf-nav {
       height: 12px;
@@ -1068,6 +1455,129 @@
     }
 
     /* =========================================================================
+       PLANOS, ASSINATURAS, UPGRADE & CANCELAMENTO
+    ========================================================================= */
+    .plans-pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .plan-tier-card {
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 22px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .plan-tier-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+    .plan-tier-card.featured {
+      border: 2px solid var(--brand);
+      box-shadow: 0 12px 30px rgba(109, 72, 184, 0.12);
+    }
+    .plan-popular-ribbon {
+      position: absolute;
+      top: -11px;
+      right: 18px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #ffffff;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .plan-price-row {
+      margin: 14px 0 16px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .plan-price-row strong {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+    }
+    .plan-price-row span {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .plan-features-ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .plan-features-ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12.8px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .plan-features-ul li svg {
+      width: 15px;
+      height: 15px;
+      color: var(--status-ok);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .sub-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .sub-option-box {
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .sub-option-box.upgrade-highlight {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+    }
+    .sub-option-box.danger-zone {
+      border-color: rgba(185, 28, 28, 0.28);
+      background: var(--status-danger-bg);
+    }
+    .btn-danger-outline {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--status-danger);
+      background: transparent;
+      color: var(--status-danger);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-danger-outline:hover {
+      background: var(--status-danger);
+      color: #ffffff;
+    }
+
+    /* =========================================================================
        TELA 3: MEU PERFIL & CONFIGURAÇÕES DA CONTA DO CLIENTE
     ========================================================================= */
     .profile-grid {
@@ -1109,10 +1619,11 @@
       border-top: 1px solid var(--border);
       padding: 12px 36px;
       z-index: 60;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
     }
     .bottom-save-bar.hidden { display: none; }
     .save-bar-inner {
-      max-width: 1260px;
+      max-width: 1300px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -1128,6 +1639,11 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-secondary:hover {
+      border-color: var(--brand);
+      color: var(--brand);
     }
     .btn-primary-save {
       padding: 9px 20px;
@@ -1138,10 +1654,11 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, transform 0.15s ease;
     }
     .btn-primary-save:hover {
       background: var(--brand-hover);
+      transform: translateY(-1px);
     }
 
     .code-block-dark {
@@ -1162,6 +1679,7 @@
       position: fixed;
       inset: 0;
       background: rgba(15, 12, 24, 0.65);
+      backdrop-filter: blur(4px);
       z-index: 200;
       align-items: center;
       justify-content: center;
@@ -1171,11 +1689,19 @@
     .modal-card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      max-width: 460px;
+      border-radius: 16px;
+      max-width: 500px;
       width: 100%;
-      padding: 24px;
+      padding: 26px;
       box-shadow: var(--shadow-dropdown);
+      animation: authCardEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @media (max-width: 1040px) {
+      .kpi-strip-grid { grid-template-columns: repeat(2, 1fr); }
+      .plans-pricing-grid { grid-template-columns: 1fr; }
+      .sub-action-grid { grid-template-columns: 1fr; }
+      .header-center-nav { display: none; }
     }
 
     /* =========================================================================
@@ -2111,6 +2637,23 @@
       </div>
     </div>
 
+    <!-- Navegação Central do Painel -->
+    <nav class="header-center-nav" aria-label="Navegação principal do Painel Administrativo">
+      <button type="button" class="header-nav-btn active" id="nav-top-domains">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span>Meus Domínios</span>
+        <span class="nav-count-badge" id="nav-domains-count">4</span>
+      </button>
+      <button type="button" class="header-nav-btn" id="nav-top-subscriptions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span>Assinaturas &amp; Planos</span>
+      </button>
+      <button type="button" class="header-nav-btn" id="nav-top-profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Meu Perfil</span>
+      </button>
+    </nav>
+
     <div class="header-right">
       <button type="button" class="theme-toggle-btn" id="btn-toggle-theme" title="Alternar tema">
         <svg id="theme-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -2137,6 +2680,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           <span>Meus Domínios</span>
         </button>
+        <button type="button" class="dropdown-item" id="menu-item-subscriptions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span>Assinaturas &amp; Planos</span>
+        </button>
         <button type="button" class="dropdown-item" id="menu-item-profile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span>Meu Perfil e Dados</span>
@@ -2159,22 +2706,66 @@
     <!-- =====================================================================
          TELA 1: LISTA DE DOMÍNIOS DO CLIENTE (ESTILO REGISTRO.BR)
     ===================================================================== -->
-    <section class="view-section active" id="view-domains">
+    <section class="view-section active" id="view-domains" aria-labelledby="domains-page-title">
       <div class="page-heading">
         <div>
-          <h1>Meus Domínios</h1>
-          <p>Selecione um domínio abaixo para personalizar cores, degradês, ícone e acessar o código de instalação.</p>
+          <h1 id="domains-page-title">Meus Domínios</h1>
+          <p>Selecione um domínio abaixo para personalizar cores, degradês, ícone, código de instalação ou gerenciar sua assinatura.</p>
         </div>
+        <button type="button" class="btn-cta-new-sub" id="btn-hero-new-sub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Gerar Nova Assinatura</span>
+        </button>
+      </div>
+
+      <!-- KPI Strip Executivo -->
+      <div class="kpi-strip-grid" aria-label="Resumo executivo das assinaturas">
+        <article class="kpi-metric-card">
+          <div class="kpi-metric-top">
+            <span class="kpi-metric-label">Total de Domínios</span>
+            <span class="kpi-metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+          </div>
+          <div class="kpi-metric-val" id="kpi-total-domains">4</div>
+          <div class="kpi-metric-sub">Licenças vinculadas à conta</div>
+        </article>
+
+        <article class="kpi-metric-card">
+          <div class="kpi-metric-top">
+            <span class="kpi-metric-label">Licenças Ativas</span>
+            <span class="kpi-metric-icon" style="color:var(--status-ok); background:var(--status-ok-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          </div>
+          <div class="kpi-metric-val" id="kpi-active-domains">2</div>
+          <div class="kpi-metric-sub">Operando com personalização Pro</div>
+        </article>
+
+        <article class="kpi-metric-card">
+          <div class="kpi-metric-top">
+            <span class="kpi-metric-label">Atenção / Renovação</span>
+            <span class="kpi-metric-icon" style="color:var(--status-warn); background:var(--status-warn-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          </div>
+          <div class="kpi-metric-val" id="kpi-attention-domains">2</div>
+          <div class="kpi-metric-sub">Expirando, em teste ou congelados</div>
+        </article>
+
+        <article class="kpi-metric-card">
+          <div class="kpi-metric-top">
+            <span class="kpi-metric-label">Investimento Mensal</span>
+            <span class="kpi-metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+          </div>
+          <div class="kpi-metric-val" id="kpi-monthly-total">R$ 199,70</div>
+          <div class="kpi-metric-sub">Economize até 37% no pacote anual</div>
+        </article>
       </div>
 
       <div class="table-surface">
         <div class="table-toolbar">
           <div class="search-box">
-            <input type="text" id="input-search-domain" placeholder="Buscar domínio...">
+            <input type="text" id="input-search-domain" placeholder="Buscar domínio ou razão social..." aria-label="Buscar domínio">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
-          <div class="toolbar-info">
+          <div class="toolbar-info" style="display:flex; align-items:center; gap:14px;">
             <span id="domains-count-label">1-4 de 4 domínios</span>
+            <button type="button" class="btn-secondary" id="btn-toolbar-plans" style="padding:7px 12px; font-size:12px;">Ver Planos &amp; Faturamento</button>
           </div>
         </div>
 
@@ -2182,8 +2773,9 @@
           <thead>
             <tr>
               <th>Domínio</th>
+              <th>Plano &amp; Ciclo</th>
               <th>Status</th>
-              <th>Expiração</th>
+              <th>Vigência</th>
               <th>Identidade Visual</th>
               <th style="text-align: right;">Ação</th>
             </tr>
@@ -2194,371 +2786,696 @@
     </section>
 
     <!-- =====================================================================
-         TELA 2: EDIÇÃO INTERNA DO DOMÍNIO SELECIONADO
+         TELA 2: WORKSPACE SÊNIOR DE EDIÇÃO DO DOMÍNIO SELECIONADO
     ===================================================================== -->
-    <section class="view-section" id="view-editor">
+    <section class="view-section" id="view-editor" aria-labelledby="editor-domain-title">
 
-      <div class="editor-top-bar">
-        <div class="editor-breadcrumb">
-          <button type="button" class="btn-back" id="btn-back-to-list">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-            <span>Meus Domínios</span>
-          </button>
-          <div class="domain-active-title">
-            <h2 id="editor-domain-title">RICRICIUMA.COM.BR</h2>
-            <span id="editor-domain-subtitle">1º Registro de Imóveis de Criciúma</span>
+      <!-- Hero Card Sênior do Domínio Ativo -->
+      <div class="domain-workspace-hero">
+        <div class="workspace-hero-top">
+          <div class="workspace-hero-identity">
+            <button type="button" class="btn-back" id="btn-back-to-list" title="Voltar para a lista de domínios">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              <span>Domínios</span>
+            </button>
+
+            <div class="workspace-domain-avatar" id="hero-domain-avatar"></div>
+
+            <div class="workspace-title-block">
+              <div class="workspace-title-row">
+                <h2 id="editor-domain-title">RICRICIUMA.COM.BR</h2>
+                <span class="status-pill active" id="hero-status-pill">
+                  <span class="status-dot"></span>
+                  <span id="hero-status-text">Ativo</span>
+                </span>
+                <span class="plan-tier-badge annual" id="hero-plan-badge">Pro Anual • R$ 59,90/mês</span>
+              </div>
+              <div class="workspace-meta-row">
+                <span class="workspace-meta-item" id="editor-domain-subtitle">1º Registro de Imóveis de Criciúma</span>
+                <span>•</span>
+                <span class="workspace-meta-item">Licença <strong id="hero-license-id">ALLY-901</strong></span>
+                <span>•</span>
+                <span class="workspace-meta-item">Vigência até <strong id="hero-expiration-date">06/08/2027</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="workspace-hero-actions">
+            <label for="quick-domain-switcher" style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Trocar Domínio:</label>
+            <select id="quick-domain-switcher" class="domain-quick-select" aria-label="Alternar rapidamente entre seus domínios"></select>
+            <button type="button" class="btn-secondary" id="btn-hero-open-upgrade" style="padding:8px 13px; font-size:12.5px;">
+              <span>Upgrade / Plano</span>
+            </button>
+            <button type="button" class="btn-primary-save" id="btn-hero-quick-save" style="padding:8px 15px; font-size:12.5px;">
+              <span>Salvar e Publicar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub-navegação de Abas + Status de Sincronização -->
+        <div class="workspace-subnav-bar">
+          <div class="editor-tabs" role="tablist" aria-label="Configurações do domínio selecionado">
+            <button type="button" class="editor-tab-btn active" data-tab="estilo" role="tab" aria-selected="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+              <span>Personalização Visual</span>
+            </button>
+            <button type="button" class="editor-tab-btn" data-tab="instalacao" role="tab" aria-selected="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <span>Código de Instalação</span>
+            </button>
+            <button type="button" class="editor-tab-btn" data-tab="assinatura" role="tab" aria-selected="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              <span>Assinatura, Upgrade &amp; Cancelamento</span>
+            </button>
+          </div>
+
+          <div class="workspace-sync-hint">
+            <span class="sync-pulse-dot" aria-hidden="true"></span>
+            <span>Pré-visualização sincronizada em tempo real</span>
           </div>
         </div>
       </div>
 
-      <div class="editor-tabs" role="tablist">
-        <button type="button" class="editor-tab-btn active" data-tab="estilo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-          <span>Personalização Visual</span>
-        </button>
-        <button type="button" class="editor-tab-btn" data-tab="instalacao">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          <span>Código de Instalação</span>
-        </button>
-        <button type="button" class="editor-tab-btn" data-tab="assinatura">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>Dados da Assinatura</span>
-        </button>
-      </div>
+      <!-- WORKSPACE 2 COLUNAS PERSISTENTES (ESQUERDA: ABAS | DIREITA: SIMULADOR SEMPRE VISÍVEL) -->
+      <div class="editor-two-columns">
 
-      <!-- ABA 1: PERSONALIZAÇÃO VISUAL (2 COLUNAS) -->
-      <div class="editor-pane active" id="pane-estilo">
-        <div class="editor-two-columns">
+        <!-- COLUNA ESQUERDA: CONTEÚDO DAS 3 ABAS DO DOMÍNIO -->
+        <div class="controls-column">
 
-          <!-- COLUNA ESQUERDA: CONTROLES -->
-          <div class="controls-column">
+          <!-- ABA 1: PERSONALIZAÇÃO VISUAL -->
+          <div class="editor-pane active" id="pane-estilo">
+            <div class="controls-column">
 
-            <!-- 1. Cor do Plugin Allyada (Sólida ou Degradê) -->
-            <div class="panel-card">
-              <div class="panel-card-header">
-                <span class="panel-card-title">Cor Principal do Plugin Allyada</span>
-              </div>
-              <p class="panel-card-desc">Selecione uma cor sugerida, personalize no anel cromático ou aplique um degradê:</p>
-
-              <div class="segmented-switch">
-                <button type="button" class="seg-switch-btn active" id="btn-mode-solid">Cor Sólida</button>
-                <button type="button" class="seg-switch-btn" id="btn-mode-gradient">Degradê</button>
-              </div>
-
-              <!-- Cor Sólida Allyada -->
-              <div id="box-solid-colors">
-                <div class="palette-wrap" id="allyada-solid-list">
-                  <button type="button" class="swatch-btn active" data-color="#6d48b8" style="background:#6d48b8;" title="Roxo Allyada"></button>
-                  <button type="button" class="swatch-btn" data-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo"></button>
-                  <button type="button" class="swatch-btn" data-color="#0f766e" style="background:#0f766e;" title="Verde"></button>
-                  <button type="button" class="swatch-btn" data-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
-                  <button type="button" class="swatch-btn" data-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
-                  <button type="button" class="swatch-btn" data-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
-                  <button type="button" class="swatch-btn" data-color="#1e293b" style="background:#1e293b;" title="Grafite"></button>
-
-                  <label class="color-wheel-trigger" title="Escolher no anel de cores">
-                    <span class="wheel-ring"></span>
-                    <span>Anel de Cores</span>
-                    <input type="color" id="input-allyada-wheel" value="#6d48b8">
-                  </label>
-
-                  <div class="hex-box-wrap">
-                    <span class="hex-dot" id="allyada-hex-dot" style="background:#6d48b8;"></span>
-                    <input type="text" id="input-allyada-hex" value="#6D48B8" maxlength="7">
+              <!-- PASSO 01: Cor Principal do Plugin Allyada -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">01</span>
+                    <div>
+                      <span class="panel-card-title">Identidade Cromática do Botão Allyada</span>
+                    </div>
                   </div>
-
-                  <button type="button" class="btn-add-swatch" id="btn-add-solid">Fixar na paleta</button>
+                  <span class="card-active-summary" id="summary-pill-allyada">#6D48B8</span>
                 </div>
-              </div>
+                <p class="panel-card-desc">Escolha uma cor sólida institucional, personalize no anel cromático ou crie um degradê moderno para o botão e cabeçalho do assistente:</p>
 
-              <!-- Degradê Allyada -->
-              <div id="box-gradient-colors" style="display: none;">
-                <div class="palette-wrap" id="allyada-grad-list" style="margin-bottom: 14px;">
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #6d48b8 0%, #4c2889 100%)" data-primary="#6d48b8" style="background:linear-gradient(135deg, #6d48b8 0%, #4c2889 100%);" title="Roxo Institucional"></button>
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)" data-primary="#2563eb" style="background:linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);" title="Azul para Violeta"></button>
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #0d9488 0%, #2563eb 100%)" data-primary="#0d9488" style="background:linear-gradient(135deg, #0d9488 0%, #2563eb 100%);" title="Esmeralda para Azul"></button>
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #db2777 0%, #9333ea 100%)" data-primary="#db2777" style="background:linear-gradient(135deg, #db2777 0%, #9333ea 100%);" title="Outubro Rosa"></button>
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" data-primary="#d97706" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Dourado Cartório"></button>
-                </div>
-
-                <div class="palette-wrap">
-                  <label class="color-wheel-trigger">
-                    <span class="wheel-ring"></span>
-                    <span>Cor 1: <strong id="lbl-grad-1">#6D48B8</strong></span>
-                    <input type="color" id="input-grad-1" value="#6d48b8">
-                  </label>
-                  <label class="color-wheel-trigger">
-                    <span class="wheel-ring"></span>
-                    <span>Cor 2: <strong id="lbl-grad-2">#2563EB</strong></span>
-                    <input type="color" id="input-grad-2" value="#2563eb">
-                  </label>
-                  <button type="button" class="btn-add-swatch" id="btn-add-grad">Fixar Degradê</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- 2. Cor do Botão VLibras (Também Suporta Cor Sólida e Degradê) -->
-            <div class="panel-card">
-              <div class="panel-card-header">
-                <span class="panel-card-title">Cor do Botão e Janela do VLibras</span>
-              </div>
-              <p class="panel-card-desc">Utilize o mesmo padrão da Allyada ou defina uma cor sólida ou degradê exclusivo para o VLibras:</p>
-
-              <div class="choice-pills-row" style="margin-bottom: 14px;">
-                <button type="button" class="choice-pill active" id="btn-vlibras-same">Mesma cor/degradê da Allyada</button>
-                <button type="button" class="choice-pill" id="btn-vlibras-diff">Cor ou degradê separado para o VLibras</button>
-              </div>
-
-              <div id="box-vlibras-custom-color" style="display: none;">
                 <div class="segmented-switch">
-                  <button type="button" class="seg-switch-btn active" id="btn-vl-mode-solid">Cor Sólida VLibras</button>
-                  <button type="button" class="seg-switch-btn" id="btn-vl-mode-gradient">Degradê VLibras</button>
+                  <button type="button" class="seg-switch-btn active" id="btn-mode-solid">Cor Sólida</button>
+                  <button type="button" class="seg-switch-btn" id="btn-mode-gradient">Degradê Linear</button>
                 </div>
 
-                <!-- VLibras Cor Sólida -->
-                <div id="box-vl-solid">
-                  <div class="palette-wrap" id="vlibras-solid-list">
-                    <button type="button" class="swatch-btn active" data-vlcolor="#2563eb" style="background:#2563eb;" title="Azul VLibras"></button>
-                    <button type="button" class="swatch-btn" data-vlcolor="#6d48b8" style="background:#6d48b8;" title="Roxo Allyada"></button>
-                    <button type="button" class="swatch-btn" data-vlcolor="#0f766e" style="background:#0f766e;" title="Verde"></button>
-                    <button type="button" class="swatch-btn" data-vlcolor="#b45309" style="background:#b45309;" title="Dourado"></button>
-                    <button type="button" class="swatch-btn" data-vlcolor="#1e293b" style="background:#1e293b;" title="Grafite"></button>
+                <!-- Cor Sólida Allyada -->
+                <div id="box-solid-colors">
+                  <div class="palette-wrap" id="allyada-solid-list">
+                    <button type="button" class="swatch-btn active" data-color="#6d48b8" style="background:#6d48b8;" title="Roxo Allyada"></button>
+                    <button type="button" class="swatch-btn" data-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo"></button>
+                    <button type="button" class="swatch-btn" data-color="#0f766e" style="background:#0f766e;" title="Verde Esmeralda"></button>
+                    <button type="button" class="swatch-btn" data-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
+                    <button type="button" class="swatch-btn" data-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
+                    <button type="button" class="swatch-btn" data-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
+                    <button type="button" class="swatch-btn" data-color="#1e293b" style="background:#1e293b;" title="Grafite Executivo"></button>
 
-                    <label class="color-wheel-trigger">
+                    <label class="color-wheel-trigger" title="Escolher no anel de cores">
                       <span class="wheel-ring"></span>
                       <span>Anel de Cores</span>
-                      <input type="color" id="input-vlibras-wheel" value="#2563eb">
+                      <input type="color" id="input-allyada-wheel" value="#6d48b8">
                     </label>
 
                     <div class="hex-box-wrap">
-                      <span class="hex-dot" id="vlibras-hex-dot" style="background:#2563eb;"></span>
-                      <input type="text" id="input-vlibras-hex" value="#2563EB" maxlength="7">
+                      <span class="hex-dot" id="allyada-hex-dot" style="background:#6d48b8;"></span>
+                      <input type="text" id="input-allyada-hex" value="#6D48B8" maxlength="7" aria-label="Código hexadecimal da cor Allyada">
                     </div>
 
-                    <button type="button" class="btn-add-swatch" id="btn-add-vl-solid">Fixar na paleta</button>
+                    <button type="button" class="btn-add-swatch" id="btn-add-solid">Fixar na paleta</button>
                   </div>
                 </div>
 
-                <!-- VLibras Degradê -->
-                <div id="box-vl-gradient" style="display: none;">
-                  <div class="palette-wrap" id="vlibras-grad-list" style="margin-bottom: 14px;">
-                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)" style="background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);" title="Degradê Azul VLibras"></button>
-                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #6d48b8 0%, #2563eb 100%)" style="background:linear-gradient(135deg, #6d48b8 0%, #2563eb 100%);" title="Roxo para Azul"></button>
-                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #0d9488 0%, #115e59 100%)" style="background:linear-gradient(135deg, #0d9488 0%, #115e59 100%);" title="Degradê Verde"></button>
-                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Degradê Dourado"></button>
+                <!-- Degradê Allyada -->
+                <div id="box-gradient-colors" style="display: none;">
+                  <div class="palette-wrap" id="allyada-grad-list" style="margin-bottom: 14px;">
+                    <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #6d48b8 0%, #4c2889 100%)" data-primary="#6d48b8" style="background:linear-gradient(135deg, #6d48b8 0%, #4c2889 100%);" title="Roxo Institucional"></button>
+                    <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)" data-primary="#2563eb" style="background:linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);" title="Azul para Violeta"></button>
+                    <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #0d9488 0%, #2563eb 100%)" data-primary="#0d9488" style="background:linear-gradient(135deg, #0d9488 0%, #2563eb 100%);" title="Esmeralda para Azul"></button>
+                    <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #db2777 0%, #9333ea 100%)" data-primary="#db2777" style="background:linear-gradient(135deg, #db2777 0%, #9333ea 100%);" title="Outubro Rosa"></button>
+                    <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" data-primary="#d97706" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Dourado Cartório"></button>
                   </div>
 
                   <div class="palette-wrap">
                     <label class="color-wheel-trigger">
                       <span class="wheel-ring"></span>
-                      <span>Cor 1: <strong id="lbl-vl-grad-1">#2563EB</strong></span>
-                      <input type="color" id="input-vl-grad-1" value="#2563eb">
+                      <span>Cor Inicial: <strong id="lbl-grad-1">#6D48B8</strong></span>
+                      <input type="color" id="input-grad-1" value="#6d48b8">
                     </label>
                     <label class="color-wheel-trigger">
                       <span class="wheel-ring"></span>
-                      <span>Cor 2: <strong id="lbl-vl-grad-2">#6D48B8</strong></span>
-                      <input type="color" id="input-vl-grad-2" value="#6d48b8">
+                      <span>Cor Final: <strong id="lbl-grad-2">#2563EB</strong></span>
+                      <input type="color" id="input-grad-2" value="#2563eb">
                     </label>
-                    <button type="button" class="btn-add-swatch" id="btn-add-vl-grad">Fixar Degradê</button>
+                    <button type="button" class="btn-add-swatch" id="btn-add-grad">Fixar Degradê</button>
                   </div>
+
+                  <div class="grad-live-bar" id="allyada-grad-bar" style="background: linear-gradient(135deg, #6d48b8 0%, #2563eb 100%);"></div>
                 </div>
               </div>
-            </div>
 
-            <!-- 3. Ícone do Botão Flutuante -->
-            <div class="panel-card">
-              <div class="panel-card-header">
-                <span class="panel-card-title">Ícone do Botão Flutuante</span>
-              </div>
-              <p class="panel-card-desc">Selecione o símbolo exibido no botão de acessibilidade do site:</p>
+              <!-- PASSO 02: Cor do Botão VLibras -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">02</span>
+                    <div>
+                      <span class="panel-card-title">Aparência do Botão e Janela do VLibras</span>
+                    </div>
+                  </div>
+                  <span class="card-active-summary" id="summary-pill-vlibras">Sincronizado</span>
+                </div>
+                <p class="panel-card-desc">Mantenha o VLibras automaticamente sincronizado com a cor/degradê da Allyada ou defina uma identidade exclusiva para o intérprete de Libras:</p>
 
-              <div class="icons-grid-5">
-                <button type="button" class="icon-card-btn active" data-icon="universal">
-                  <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
-                  <span>Universal</span>
-                </button>
-                <button type="button" class="icon-card-btn" data-icon="allyada">
-                  <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
-                  <span>Allyada</span>
-                </button>
-                <button type="button" class="icon-card-btn" data-icon="wheelchair">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.8" fill="currentColor"/><path d="M12 7.5v6h5l2 5.5"/><path d="M12 10.5h4"/><path d="M9.5 11.1a4.5 4.5 0 1 0 4.8 6.4"/></svg>
-                  <span>Cadeirante</span>
-                </button>
-                <button type="button" class="icon-card-btn" data-icon="heart">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                  <span>Cuidado</span>
-                </button>
-                <button type="button" class="icon-card-btn" data-icon="shield">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                  <span>Escudo</span>
-                </button>
-              </div>
-            </div>
+                <div class="choice-pills-row" style="margin-bottom: 14px;">
+                  <button type="button" class="choice-pill active" id="btn-vlibras-same">Sincronizar com a cor/degradê da Allyada</button>
+                  <button type="button" class="choice-pill" id="btn-vlibras-diff">Personalizar cor ou degradê exclusivo no VLibras</button>
+                </div>
 
-            <!-- 4. Posição na Tela -->
-            <div class="panel-card">
-              <div class="panel-card-header">
-                <span class="panel-card-title">Posição nos Cantos da Tela</span>
-              </div>
-              <p class="panel-card-desc">Defina o lado e a altura vertical do botão flutuante (o VLibras posiciona-se automaticamente no lado oposto):</p>
+                <div id="box-vlibras-custom-color" style="display: none;">
+                  <div class="segmented-switch">
+                    <button type="button" class="seg-switch-btn active" id="btn-vl-mode-solid">Cor Sólida VLibras</button>
+                    <button type="button" class="seg-switch-btn" id="btn-vl-mode-gradient">Degradê VLibras</button>
+                  </div>
 
-              <div class="choice-pills-row" style="margin-bottom: 10px;">
-                <button type="button" class="choice-pill active" data-hpos="right">Lado Direito</button>
-                <button type="button" class="choice-pill" data-hpos="left">Lado Esquerdo</button>
-              </div>
+                  <!-- VLibras Cor Sólida -->
+                  <div id="box-vl-solid">
+                    <div class="palette-wrap" id="vlibras-solid-list">
+                      <button type="button" class="swatch-btn active" data-vlcolor="#2563eb" style="background:#2563eb;" title="Azul VLibras"></button>
+                      <button type="button" class="swatch-btn" data-vlcolor="#6d48b8" style="background:#6d48b8;" title="Roxo Allyada"></button>
+                      <button type="button" class="swatch-btn" data-vlcolor="#0f766e" style="background:#0f766e;" title="Verde"></button>
+                      <button type="button" class="swatch-btn" data-vlcolor="#b45309" style="background:#b45309;" title="Dourado"></button>
+                      <button type="button" class="swatch-btn" data-vlcolor="#1e293b" style="background:#1e293b;" title="Grafite"></button>
 
-              <div class="choice-pills-row">
-                <button type="button" class="choice-pill active" data-vpos="bottom">Fim da Página</button>
-                <button type="button" class="choice-pill" data-vpos="middle">Centro Lateral</button>
-                <button type="button" class="choice-pill" data-vpos="top">Topo Lateral</button>
-              </div>
-            </div>
+                      <label class="color-wheel-trigger">
+                        <span class="wheel-ring"></span>
+                        <span>Anel de Cores</span>
+                        <input type="color" id="input-vlibras-wheel" value="#2563eb">
+                      </label>
 
-          </div>
-
-          <!-- COLUNA DIREITA: PRÉ-VISUALIZAÇÃO DE CORES E POSIÇÃO -->
-          <aside class="preview-sticky-column">
-            <div class="panel-card">
-              <div class="panel-card-header">
-                <span class="panel-card-title">Pré-visualização Visual</span>
-              </div>
-              <p class="panel-card-desc">Simulação instantânea das cores, degradês, símbolos e posição na página:</p>
-
-              <div class="preview-stage-box">
-                <div class="mini-allyada-panel">
-                  <div class="mini-panel-head">
-                    <div class="mini-head-brand">
-                      <div class="mini-head-icon" id="prev-panel-logo"></div>
-                      <div>
-                        <strong style="font-size:14px; display:block;">Allyada</strong>
-                        <span style="font-size:11px; color:#64748b;">Acessibilidade para você</span>
+                      <div class="hex-box-wrap">
+                        <span class="hex-dot" id="vlibras-hex-dot" style="background:#2563eb;"></span>
+                        <input type="text" id="input-vlibras-hex" value="#2563EB" maxlength="7" aria-label="Código hexadecimal da cor do VLibras">
                       </div>
-                    </div>
-                    <span class="mini-head-pill" id="prev-panel-pill">Combinações</span>
-                  </div>
-                  <div class="mini-panel-body">
-                    <div class="mini-active-card" id="prev-panel-card">
-                      <span>Recurso Selecionado</span>
-                      <span id="prev-panel-status" style="font-size:11px; font-weight:700;">Ativo</span>
+
+                      <button type="button" class="btn-add-swatch" id="btn-add-vl-solid">Fixar na paleta</button>
                     </div>
                   </div>
-                </div>
 
-                <div class="floating-buttons-preview">
-                  <div class="fab-preview-col">
-                    <div class="preview-allyada-circle" id="prev-fab-allyada"></div>
-                    <span>Botão Allyada</span>
-                  </div>
-                  <div class="fab-preview-col">
-                    <div class="preview-vlibras-square" id="prev-fab-vlibras">
-                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7.34 1.23L7.74 1.39L7.92 1.66L8.79 6.93L8.92 7.29L9.19 7.50L9.42 7.42L9.56 7.12L10.56 2.03L10.75 1.82L11.12 1.80L11.57 2.15L11.25 8.46L9.41 9.11L8.04 9.38L7.51 9.90L7.34 10.48L7.41 11.01L7.66 11.46L8.50 12.11L9.64 12.42L11.35 12.46L10.51 13.95L8.76 16.29L6.86 16.34L5.93 15.63L5.22 14.14L4.41 10.71L1.87 6.67L1.61 6.04L1.80 5.69L2.29 5.70L4.83 8.64L5.15 8.83L5.50 8.74L5.42 8.00L3.46 3.42L3.57 2.97L4.07 2.82L4.44 3.15L6.51 7.17L6.80 7.57L7.07 7.62L7.18 6.89L6.79 1.75L6.95 1.41ZM15.84 7.75L16.81 7.74L17.35 7.90L18.50 8.94L19.84 9.74L20.24 10.59L20.30 11.32L20.05 12.56L18.82 15.93L18.64 21.18L18.22 21.47L18.22 21.47L17.95 21.41L17.80 21.17L17.35 17.42L17.14 16.99L16.91 16.87L16.68 17.03L16.52 17.42L15.71 21.94L15.43 22.66L14.89 22.73L14.62 22.40L15.12 17.51L14.95 16.98L14.59 17.18L12.21 21.39L11.83 22.06L11.47 22.20L11.03 22.05L10.88 21.46L13.10 16.49L13.17 16.12L13.02 15.87L12.56 16.00L8.96 19.64L8.47 19.72L8.11 19.16L8.27 18.75L11.86 13.95L12.53 12.53L12.62 11.68L12.38 11.37L12.02 11.23L9.29 11.22L8.77 10.99L8.46 10.55L8.64 10.34L9.62 10.22L11.61 9.56L14.50 8.17ZM20.69 9.56L20.88 9.56L21.03 9.75L21.35 10.83L21.34 11.61L21.08 12.50L20.83 12.37L21.00 10.88ZM21.93 9.76L22.18 9.95L22.40 10.98L22.24 12.12L21.97 12.74L21.76 12.62L22.05 11.27L21.82 9.92ZM4.37 15.25L4.55 15.31L5.41 16.70L6.33 17.37L6.26 17.58L5.61 17.29L4.98 16.72L4.33 15.63L4.26 15.38ZM3.51 15.60L3.70 15.71L4.43 17.17L5.24 17.86L5.17 18.13L4.58 17.77L3.81 16.84L3.42 15.90Z"/></svg>
-                    </div>
-                    <span>Botão VLibras</span>
-                  </div>
-                </div>
-
-                <!-- Mapa Visual da Posição do Botão na Tela do Site -->
-                <div class="screen-position-map" title="Clique em qualquer canto tracejado ou use os controles ao lado para mudar a posição">
-                  <div class="mock-browser-bar">
-                    <div class="mock-dots"><i></i><i></i><i></i></div>
-                    <div class="mock-url-pill">
-                      <span id="mock-browser-url">www.ricriciuma.com.br</span>
-                      <span>Posição na Tela</span>
-                    </div>
-                  </div>
-                  <div class="mock-viewport">
-                    <div class="mock-wf-nav"></div>
-                    <div class="mock-wf-hero"></div>
-                    <div class="mock-wf-cols">
-                      <div class="mock-wf-col"></div>
-                      <div class="mock-wf-col"></div>
+                  <!-- VLibras Degradê -->
+                  <div id="box-vl-gradient" style="display: none;">
+                    <div class="palette-wrap" id="vlibras-grad-list" style="margin-bottom: 14px;">
+                      <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)" style="background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);" title="Degradê Azul VLibras"></button>
+                      <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #6d48b8 0%, #2563eb 100%)" style="background:linear-gradient(135deg, #6d48b8 0%, #2563eb 100%);" title="Roxo para Azul"></button>
+                      <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #0d9488 0%, #115e59 100%)" style="background:linear-gradient(135deg, #0d9488 0%, #115e59 100%);" title="Degradê Verde"></button>
+                      <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Degradê Dourado"></button>
                     </div>
 
-                    <!-- 6 Zonas Clicáveis de Posição do Allyada -->
-                    <button type="button" class="mock-pos-slot pos-left pos-top" data-slot-h="left" data-slot-v="top" title="Mover Allyada para Esquerda • Topo"></button>
-                    <button type="button" class="mock-pos-slot pos-left pos-middle" data-slot-h="left" data-slot-v="middle" title="Mover Allyada para Esquerda • Centro"></button>
-                    <button type="button" class="mock-pos-slot pos-left pos-bottom" data-slot-h="left" data-slot-v="bottom" title="Mover Allyada para Esquerda • Fim da Página"></button>
-                    <button type="button" class="mock-pos-slot pos-right pos-top" data-slot-h="right" data-slot-v="top" title="Mover Allyada para Direita • Topo"></button>
-                    <button type="button" class="mock-pos-slot pos-right pos-middle" data-slot-h="right" data-slot-v="middle" title="Mover Allyada para Direita • Centro"></button>
-                    <button type="button" class="mock-pos-slot pos-right pos-bottom" data-slot-h="right" data-slot-v="bottom" title="Mover Allyada para Direita • Fim da Página"></button>
-
-                    <!-- Pino Dinâmico Allyada -->
-                    <div class="mock-live-allyada" id="screen-mock-allyada">
-                      <span class="mock-pin-tag">Allyada</span>
-                      <span id="screen-mock-allyada-svg" style="display:flex;"></span>
-                    </div>
-
-                    <!-- Pino Dinâmico VLibras (Lado Oposto) -->
-                    <div class="mock-live-vlibras" id="screen-mock-vlibras">
-                      <span class="mock-pin-tag">VLibras</span>
-                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7.34 1.23L7.74 1.39L7.92 1.66L8.79 6.93L8.92 7.29L9.19 7.50L9.42 7.42L9.56 7.12L10.56 2.03L10.75 1.82L11.12 1.80L11.57 2.15L11.25 8.46L9.41 9.11L8.04 9.38L7.51 9.90L7.34 10.48L7.41 11.01L7.66 11.46L8.50 12.11L9.64 12.42L11.35 12.46L10.51 13.95L8.76 16.29L6.86 16.34L5.93 15.63L5.22 14.14L4.41 10.71L1.87 6.67L1.61 6.04L1.80 5.69L2.29 5.70L4.83 8.64L5.15 8.83L5.50 8.74L5.42 8.00L3.46 3.42L3.57 2.97L4.07 2.82L4.44 3.15L6.51 7.17L6.80 7.57L7.07 7.62L7.18 6.89L6.79 1.75L6.95 1.41ZM15.84 7.75L16.81 7.74L17.35 7.90L18.50 8.94L19.84 9.74L20.24 10.59L20.30 11.32L20.05 12.56L18.82 15.93L18.64 21.18L18.22 21.47L17.95 21.41L17.80 21.17L17.35 17.42L17.14 16.99L16.91 16.87L16.68 17.03L16.52 17.42L15.71 21.94L15.43 22.66L14.89 22.73L14.62 22.40L15.12 17.51L14.95 16.98L14.59 17.18L12.21 21.39L11.83 22.06L11.47 22.20L11.03 22.05L10.88 21.46L13.10 16.49L13.17 16.12L13.02 15.87L12.56 16.00L8.96 19.64L8.47 19.72L8.11 19.16L8.27 18.75L11.86 13.95L12.53 12.53L12.62 11.68L12.38 11.37L12.02 11.23L9.29 11.22L8.77 10.99L8.46 10.55L8.64 10.34L9.62 10.22L11.61 9.56L14.50 8.17ZM20.69 9.56L20.88 9.56L21.03 9.75L21.35 10.83L21.34 11.61L21.08 12.50L20.83 12.37L21.00 10.88ZM21.93 9.76L22.18 9.95L22.40 10.98L22.24 12.12L21.97 12.74L21.76 12.62L22.05 11.27L21.82 9.92ZM4.37 15.25L4.55 15.31L5.41 16.70L6.33 17.37L6.26 17.58L5.61 17.29L4.98 16.72L4.33 15.63L4.26 15.38ZM3.51 15.60L3.70 15.71L4.43 17.17L5.24 17.86L5.17 18.13L4.58 17.77L3.81 16.84L3.42 15.90Z"/></svg>
+                    <div class="palette-wrap">
+                      <label class="color-wheel-trigger">
+                        <span class="wheel-ring"></span>
+                        <span>Cor 1: <strong id="lbl-vl-grad-1">#2563EB</strong></span>
+                        <input type="color" id="input-vl-grad-1" value="#2563eb">
+                      </label>
+                      <label class="color-wheel-trigger">
+                        <span class="wheel-ring"></span>
+                        <span>Cor 2: <strong id="lbl-vl-grad-2">#6D48B8</strong></span>
+                        <input type="color" id="input-vl-grad-2" value="#6d48b8">
+                      </label>
+                      <button type="button" class="btn-add-swatch" id="btn-add-vl-grad">Fixar Degradê</button>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <span id="prev-position-label" style="font-size: 11.5px; color: var(--text-muted); font-weight: 500; text-align: center;">
-                  Allyada: Lado Direito (Fim da Página) • VLibras: Lado Esquerdo
-                </span>
+              <!-- PASSO 03: Ícone do Botão Flutuante -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">03</span>
+                    <div>
+                      <span class="panel-card-title">Símbolo do Botão de Acessibilidade</span>
+                    </div>
+                  </div>
+                  <span class="card-active-summary" id="summary-pill-icon">Universal</span>
+                </div>
+                <p class="panel-card-desc">Selecione o ícone vetorial exibido no botão flutuante de acessibilidade do seu site:</p>
+
+                <div class="icons-grid-5">
+                  <button type="button" class="icon-card-btn active" data-icon="universal">
+                    <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
+                    <span>Universal</span>
+                  </button>
+                  <button type="button" class="icon-card-btn" data-icon="allyada">
+                    <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
+                    <span>Allyada</span>
+                  </button>
+                  <button type="button" class="icon-card-btn" data-icon="wheelchair">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.8" fill="currentColor"/><path d="M12 7.5v6h5l2 5.5"/><path d="M12 10.5h4"/><path d="M9.5 11.1a4.5 4.5 0 1 0 4.8 6.4"/></svg>
+                    <span>Cadeirante</span>
+                  </button>
+                  <button type="button" class="icon-card-btn" data-icon="heart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                    <span>Cuidado</span>
+                  </button>
+                  <button type="button" class="icon-card-btn" data-icon="shield">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span>Escudo</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- PASSO 04: Posição nos Cantos da Tela -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">04</span>
+                    <div>
+                      <span class="panel-card-title">Posicionamento e Ergonomia na Página</span>
+                    </div>
+                  </div>
+                  <span class="card-active-summary" id="summary-pill-pos">Direita • Fim</span>
+                </div>
+                <p class="panel-card-desc">Escolha o canto da tela para o botão da Allyada (ou clique diretamente no mapa interativo à direita). O VLibras posiciona-se automaticamente no lado oposto para evitar sobreposição:</p>
+
+                <div style="margin-bottom: 12px;">
+                  <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Alinhamento Horizontal</span>
+                  <div class="choice-pills-row">
+                    <button type="button" class="choice-pill active" data-hpos="right">Lado Direito da Tela</button>
+                    <button type="button" class="choice-pill" data-hpos="left">Lado Esquerdo da Tela</button>
+                  </div>
+                </div>
+
+                <div>
+                  <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Altura Vertical</span>
+                  <div class="choice-pills-row">
+                    <button type="button" class="choice-pill active" data-vpos="bottom">Fim da Página (Inferior)</button>
+                    <button type="button" class="choice-pill" data-vpos="middle">Centro Lateral</button>
+                    <button type="button" class="choice-pill" data-vpos="top">Topo Lateral (Superior)</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ABA 2: CÓDIGO DE INSTALAÇÃO -->
+          <div class="editor-pane" id="pane-instalacao">
+            <div class="controls-column">
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">01</span>
+                    <span class="panel-card-title">Snippet &lt;script&gt; Licenciado do Domínio</span>
+                  </div>
+                  <span id="code-domain-badge" class="card-active-summary"></span>
+                </div>
+                <p class="panel-card-desc">Copie e cole o código abaixo imediatamente antes do fechamento da tag <code>&lt;/body&gt;</code> no código-fonte principal do seu site:</p>
+                <pre class="code-block-dark" id="output-script-code"></pre>
+                <div style="margin-top: 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                  <button type="button" class="btn-primary-save" id="btn-copy-script">Copiar Código de Instalação</button>
+                  <span style="font-size:12px; color:var(--text-muted);">Carregamento assíncrono (<code>defer</code>) com impacto zero na velocidade da página.</span>
+                </div>
+              </div>
+
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">02</span>
+                    <span class="panel-card-title">Guia Rápido por Plataforma</span>
+                  </div>
+                </div>
+                <p class="panel-card-desc">O script funciona em qualquer tecnologia web e valida automaticamente a licença vinculada ao domínio:</p>
+                <div class="sub-action-grid">
+                  <div class="sub-option-box">
+                    <h4>WordPress / Elementor</h4>
+                    <p>Insira em <strong>Aparência → Editor de Tema (footer.php)</strong> ou através do plugin <em>WPCode / Insert Headers and Footers</em>.</p>
+                  </div>
+                  <div class="sub-option-box">
+                    <h4>HTML, PHP, React, Vue ou Next.js</h4>
+                    <p>Adicione no arquivo <code>index.html</code> principal ou no <code>Layout</code> global antes do fechamento de <code>&lt;/body&gt;</code>.</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </aside>
-
-        </div>
-      </div>
-
-      <!-- ABA 2: CÓDIGO DE INSTALAÇÃO -->
-      <div class="editor-pane" id="pane-instalacao">
-        <div class="panel-card" style="max-width: 820px;">
-          <div class="panel-card-header">
-            <span class="panel-card-title">Tag &lt;script&gt; Licenciada</span>
-            <span id="code-domain-badge" style="font-size:12px; font-family:monospace; color:var(--brand); font-weight:600;"></span>
           </div>
-          <p class="panel-card-desc">Insira o código abaixo antes do fechamento da tag <code>&lt;/body&gt;</code> no código-fonte do site:</p>
-          <pre class="code-block-dark" id="output-script-code"></pre>
-          <div style="margin-top: 16px;">
-            <button type="button" class="btn-primary-save" id="btn-copy-script">Copiar código de instalação</button>
-          </div>
-        </div>
-      </div>
 
-      <!-- ABA 3: DADOS DA ASSINATURA -->
-      <div class="editor-pane" id="pane-assinatura">
-        <div class="panel-card" style="max-width: 760px;">
-          <div class="panel-card-header">
-            <span class="panel-card-title">Informações do Domínio Vinculado</span>
-            <span class="status-pill active"><span class="status-dot"></span>Licença Ativa</span>
-          </div>
-          <p class="panel-card-desc">Cada assinatura é exclusiva para um domínio e inclui páginas e acessos ilimitados.</p>
+          <!-- ABA 3: ASSINATURA, UPGRADE & CANCELAMENTO DO DOMÍNIO -->
+          <div class="editor-pane" id="pane-assinatura">
+            <div class="controls-column">
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">01</span>
+                    <span class="panel-card-title">Resumo da Assinatura e Licença deste Domínio</span>
+                  </div>
+                  <span class="status-pill active" id="sub-pane-status-pill"><span class="status-dot"></span><span id="sub-pane-status-text">Licença Ativa</span></span>
+                </div>
+                <p class="panel-card-desc">Cada assinatura Pro é vinculada a um domínio específico e libera páginas, subpáginas e acessos ilimitados.</p>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px;">
-            <div>
-              <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Domínio Autorizado (Somente Leitura)</span>
-              <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-family:monospace; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <span id="sub-locked-domain"></span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px;">
+                  <div>
+                    <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Domínio Autorizado (Protegido)</span>
+                    <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-family:monospace; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      <span id="sub-locked-domain"></span>
+                    </div>
+                    <button type="button" id="btn-open-support" style="background:none; border:none; color:var(--brand); font-size:12px; font-weight:600; text-decoration:underline; cursor:pointer; margin-top:8px;">
+                      O mesmo site mudou de endereço (URL)? Solicitar atualização ao suporte
+                    </button>
+                  </div>
+
+                  <div>
+                    <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Código da Licença &amp; Vigência</span>
+                    <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-size:13px; font-weight:600;">
+                      <span id="sub-license-meta"></span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Plano e Ciclo de Faturamento</span>
+                    <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-size:13px; font-weight:700; color:var(--brand);">
+                      <span id="sub-plan-current-label">Plano Pro Anual • R$ 59,90/mês</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Método de Pagamento Vinculado</span>
+                    <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-size:13px; font-weight:600;">
+                      <span id="sub-payment-method-label">PIX / Boleto Corporativo CNPJ</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <button type="button" id="btn-open-support" style="background:none; border:none; color:var(--brand); font-size:12px; font-weight:600; text-decoration:underline; cursor:pointer; margin-top:8px;">
-                O mesmo site mudou de endereço (URL)? Solicitar atualização ao suporte
+
+              <!-- Gestão de Upgrade, Renovação ou Cancelamento -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <div class="card-step-heading">
+                    <span class="step-num-badge">02</span>
+                    <span class="panel-card-title">Gerenciar Plano, Upgrade ou Cancelamento</span>
+                  </div>
+                </div>
+                <p class="panel-card-desc">Altere o ciclo da sua assinatura para economizar no plano anual, adicione novos domínios ou gerencie o status de renovação:</p>
+
+                <div class="sub-action-grid">
+                  <div class="sub-option-box">
+                    <h4>Fazer Upgrade ou Alterar Ciclo do Plano</h4>
+                    <p>Mude do ciclo mensal ou teste grátis para o <strong>Plano Pro Anual (25% de desconto)</strong> ou <strong>Pacote Corporativo Multi-Domínios</strong>, ou reative uma licença expirada imediatamente.</p>
+                    <button type="button" class="btn-primary-save" id="btn-pane-upgrade" style="align-self:flex-start; padding:8px 14px; font-size:12.5px;">
+                      Fazer Upgrade / Alterar Plano
+                    </button>
+                  </div>
+
+                  <div class="sub-option-box">
+                    <h4>Gerar Nova Assinatura para Outro Site</h4>
+                    <p>Possui outro portal ou cartório? Gere uma nova licença vinculada à sua conta em segundos com liberação imediata do código <code>&lt;script&gt;</code>.</p>
+                    <button type="button" class="btn-secondary" id="btn-pane-new-sub" style="align-self:flex-start; padding:8px 14px; font-size:12.5px;">
+                      + Gerar Nova Assinatura
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Zona de Cancelamento / Reativação -->
+                <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+                  <div>
+                    <strong style="font-size:13px; display:block; color:var(--text-primary);" id="cancel-zone-title">Cancelamento de Assinatura deste Domínio</strong>
+                    <span style="font-size:12px; color:var(--text-muted);" id="cancel-zone-desc">Sem fidelidade oculta: ao cancelar, o domínio permanece acessível até o fim do período vigente ou pode ser reativado a qualquer momento.</span>
+                  </div>
+                  <button type="button" class="btn-danger-outline" id="btn-open-cancel-modal">
+                    Cancelar Assinatura
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COLUNA DIREITA PERSISTENTE: SIMULADOR INTERATIVO DE CORES E POSIÇÃO -->
+        <aside class="preview-sticky-column" aria-label="Simulador visual ao vivo do plugin Allyada e VLibras">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <span class="panel-card-title">Simulador Visual ao Vivo</span>
+              <div class="inspector-surface-toggle" title="Testar contraste sobre site claro ou escuro">
+                <button type="button" class="sim-bg-btn active" id="btn-sim-light">Fundo Claro</button>
+                <button type="button" class="sim-bg-btn" id="btn-sim-dark">Fundo Escuro</button>
+              </div>
+            </div>
+            <p class="panel-card-desc">Veja instantaneamente como o painel, os botões flutuantes e a posição ficam aplicados na página do cliente:</p>
+
+            <div class="preview-stage-box" id="preview-stage-box">
+              <div class="mini-allyada-panel">
+                <div class="mini-panel-head">
+                  <div class="mini-head-brand">
+                    <div class="mini-head-icon" id="prev-panel-logo"></div>
+                    <div>
+                      <strong style="font-size:14px; display:block;">Allyada</strong>
+                      <span style="font-size:11px; color:#64748b;">Acessibilidade para você</span>
+                    </div>
+                  </div>
+                  <span class="mini-head-pill" id="prev-panel-pill">Combinações</span>
+                </div>
+                <div class="mini-panel-body">
+                  <div class="mini-active-card" id="prev-panel-card">
+                    <span>Recurso Selecionado</span>
+                    <span id="prev-panel-status" style="font-size:11px; font-weight:700;">Ativo</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="floating-buttons-preview">
+                <div class="fab-preview-col">
+                  <div class="preview-allyada-circle" id="prev-fab-allyada"></div>
+                  <span>Botão Allyada</span>
+                </div>
+                <div class="fab-preview-col">
+                  <div class="preview-vlibras-square" id="prev-fab-vlibras">
+                    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7.34 1.23L7.74 1.39L7.92 1.66L8.79 6.93L8.92 7.29L9.19 7.50L9.42 7.42L9.56 7.12L10.56 2.03L10.75 1.82L11.12 1.80L11.57 2.15L11.25 8.46L9.41 9.11L8.04 9.38L7.51 9.90L7.34 10.48L7.41 11.01L7.66 11.46L8.50 12.11L9.64 12.42L11.35 12.46L10.51 13.95L8.76 16.29L6.86 16.34L5.93 15.63L5.22 14.14L4.41 10.71L1.87 6.67L1.61 6.04L1.80 5.69L2.29 5.70L4.83 8.64L5.15 8.83L5.50 8.74L5.42 8.00L3.46 3.42L3.57 2.97L4.07 2.82L4.44 3.15L6.51 7.17L6.80 7.57L7.07 7.62L7.18 6.89L6.79 1.75L6.95 1.41ZM15.84 7.75L16.81 7.74L17.35 7.90L18.50 8.94L19.84 9.74L20.24 10.59L20.30 11.32L20.05 12.56L18.82 15.93L18.64 21.18L18.22 21.47L17.95 21.41L17.80 21.17L17.35 17.42L17.14 16.99L16.91 16.87L16.68 17.03L16.52 17.42L15.71 21.94L15.43 22.66L14.89 22.73L14.62 22.40L15.12 17.51L14.95 16.98L14.59 17.18L12.21 21.39L11.83 22.06L11.47 22.20L11.03 22.05L10.88 21.46L13.10 16.49L13.17 16.12L13.02 15.87L12.56 16.00L8.96 19.64L8.47 19.72L8.11 19.16L8.27 18.75L11.86 13.95L12.53 12.53L12.62 11.68L12.38 11.37L12.02 11.23L9.29 11.22L8.77 10.99L8.46 10.55L8.64 10.34L9.62 10.22L11.61 9.56L14.50 8.17ZM20.69 9.56L20.88 9.56L21.03 9.75L21.35 10.83L21.34 11.61L21.08 12.50L20.83 12.37L21.00 10.88ZM21.93 9.76L22.18 9.95L22.40 10.98L22.24 12.12L21.97 12.74L21.76 12.62L22.05 11.27L21.82 9.92ZM4.37 15.25L4.55 15.31L5.41 16.70L6.33 17.37L6.26 17.58L5.61 17.29L4.98 16.72L4.33 15.63L4.26 15.38ZM3.51 15.60L3.70 15.71L4.43 17.17L5.24 17.86L5.17 18.13L4.58 17.77L3.81 16.84L3.42 15.90Z"/></svg>
+                  </div>
+                  <span>Botão VLibras</span>
+                </div>
+              </div>
+
+              <!-- Mapa Visual da Posição do Botão na Tela do Site -->
+              <div class="screen-position-map" title="Clique em qualquer um dos 6 cantos pontilhados para posicionar o botão">
+                <div class="mock-browser-bar">
+                  <div class="mock-dots"><i></i><i></i><i></i></div>
+                  <div class="mock-url-pill">
+                    <span id="mock-browser-url">www.ricriciuma.com.br</span>
+                    <span>Clique nos cantos para mover</span>
+                  </div>
+                </div>
+                <div class="mock-viewport">
+                  <div class="mock-wf-nav"></div>
+                  <div class="mock-wf-hero"></div>
+                  <div class="mock-wf-cols">
+                    <div class="mock-wf-col"></div>
+                    <div class="mock-wf-col"></div>
+                  </div>
+
+                  <!-- 6 Zonas Clicáveis de Posição do Allyada -->
+                  <button type="button" class="mock-pos-slot pos-left pos-top" data-slot-h="left" data-slot-v="top" title="Mover Allyada para Esquerda • Topo"></button>
+                  <button type="button" class="mock-pos-slot pos-left pos-middle" data-slot-h="left" data-slot-v="middle" title="Mover Allyada para Esquerda • Centro"></button>
+                  <button type="button" class="mock-pos-slot pos-left pos-bottom" data-slot-h="left" data-slot-v="bottom" title="Mover Allyada para Esquerda • Fim da Página"></button>
+                  <button type="button" class="mock-pos-slot pos-right pos-top" data-slot-h="right" data-slot-v="top" title="Mover Allyada para Direita • Topo"></button>
+                  <button type="button" class="mock-pos-slot pos-right pos-middle" data-slot-h="right" data-slot-v="middle" title="Mover Allyada para Direita • Centro"></button>
+                  <button type="button" class="mock-pos-slot pos-right pos-bottom" data-slot-h="right" data-slot-v="bottom" title="Mover Allyada para Direita • Fim da Página"></button>
+
+                  <!-- Pino Dinâmico Allyada -->
+                  <div class="mock-live-allyada" id="screen-mock-allyada">
+                    <span class="mock-pin-tag">Allyada</span>
+                    <span id="screen-mock-allyada-svg" style="display:flex;"></span>
+                  </div>
+
+                  <!-- Pino Dinâmico VLibras (Lado Oposto) -->
+                  <div class="mock-live-vlibras" id="screen-mock-vlibras">
+                    <span class="mock-pin-tag">VLibras</span>
+                    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7.34 1.23L7.74 1.39L7.92 1.66L8.79 6.93L8.92 7.29L9.19 7.50L9.42 7.42L9.56 7.12L10.56 2.03L10.75 1.82L11.12 1.80L11.57 2.15L11.25 8.46L9.41 9.11L8.04 9.38L7.51 9.90L7.34 10.48L7.41 11.01L7.66 11.46L8.50 12.11L9.64 12.42L11.35 12.46L10.51 13.95L8.76 16.29L6.86 16.34L5.93 15.63L5.22 14.14L4.41 10.71L1.87 6.67L1.61 6.04L1.80 5.69L2.29 5.70L4.83 8.64L5.15 8.83L5.50 8.74L5.42 8.00L3.46 3.42L3.57 2.97L4.07 2.82L4.44 3.15L6.51 7.17L6.80 7.57L7.07 7.62L7.18 6.89L6.79 1.75L6.95 1.41ZM15.84 7.75L16.81 7.74L17.35 7.90L18.50 8.94L19.84 9.74L20.24 10.59L20.30 11.32L20.05 12.56L18.82 15.93L18.64 21.18L18.22 21.47L17.95 21.41L17.80 21.17L17.35 17.42L17.14 16.99L16.91 16.87L16.68 17.03L16.52 17.42L15.71 21.94L15.43 22.66L14.89 22.73L14.62 22.40L15.12 17.51L14.95 16.98L14.59 17.18L12.21 21.39L11.83 22.06L11.47 22.20L11.03 22.05L10.88 21.46L13.10 16.49L13.17 16.12L13.02 15.87L12.56 16.00L8.96 19.64L8.47 19.72L8.11 19.16L8.27 18.75L11.86 13.95L12.53 12.53L12.62 11.68L12.38 11.37L12.02 11.23L9.29 11.22L8.77 10.99L8.46 10.55L8.64 10.34L9.62 10.22L11.61 9.56L14.50 8.17ZM20.69 9.56L20.88 9.56L21.03 9.75L21.35 10.83L21.34 11.61L21.08 12.50L20.83 12.37L21.00 10.88ZM21.93 9.76L22.18 9.95L22.40 10.98L22.24 12.12L21.97 12.74L21.76 12.62L22.05 11.27L21.82 9.92ZM4.37 15.25L4.55 15.31L5.41 16.70L6.33 17.37L6.26 17.58L5.61 17.29L4.98 16.72L4.33 15.63L4.26 15.38ZM3.51 15.60L3.70 15.71L4.43 17.17L5.24 17.86L5.17 18.13L4.58 17.77L3.81 16.84L3.42 15.90Z"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <span id="prev-position-label" style="font-size: 11.5px; color: var(--text-muted); font-weight: 500; text-align: center;">
+                Allyada: Lado Direito (Fim da Página) • VLibras: Lado Esquerdo
+              </span>
+            </div>
+
+            <!-- Atalho Rápido para Copiar Código direto da Coluna Direita -->
+            <div style="margin-top: 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:12px; border-top:1px solid var(--border);">
+              <span style="font-size:11.5px; color:var(--text-muted); font-weight:600;">Pronto para instalar no site?</span>
+              <button type="button" class="btn-secondary" id="btn-sidebar-copy-code" style="padding:7px 12px; font-size:12px;">
+                Copiar &lt;script&gt;
               </button>
             </div>
-
-            <div>
-              <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Identificador e Vigência</span>
-              <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-size:13px; font-weight:600;">
-                <span id="sub-license-meta"></span>
-              </div>
-            </div>
           </div>
-        </div>
+        </aside>
+
       </div>
 
     </section>
 
     <!-- =====================================================================
-         TELA 3: MEU PERFIL E CONFIGURAÇÕES DA CONTA DO CLIENTE
+         TELA 3: CENTRAL DE ASSINATURAS, PLANOS, UPGRADE E CANCELAMENTO
     ===================================================================== -->
-    <section class="view-section" id="view-profile">
+    <section class="view-section" id="view-subscriptions" aria-labelledby="subs-page-title">
+      <div class="page-heading">
+        <div>
+          <h1 id="subs-page-title">Assinaturas, Planos &amp; Faturamento</h1>
+          <p>Gere novas licenças para seus domínios, faça upgrade para o ciclo anual com desconto ou gerencie cancelamentos com transparência.</p>
+        </div>
+        <button type="button" class="btn-secondary" id="btn-subs-back-domains">
+          Voltar para Meus Domínios
+        </button>
+      </div>
+
+      <!-- Comparativo de Planos para Gerar Assinatura ou Upgrade -->
+      <div class="plans-pricing-grid" aria-label="Opções de planos Pro disponíveis">
+        <!-- Plano 1: Pro Mensal -->
+        <article class="plan-tier-card">
+          <div class="plan-tier-head">
+            <span class="plan-tier-name">Plano Pro Mensal</span>
+            <p class="plan-tier-desc">Ideal para contratação flexível sem fidelidade anual para 1 domínio.</p>
+          </div>
+          <div class="plan-tier-price">
+            <span class="currency">R$</span>
+            <span class="amount">79,90</span>
+            <span class="period">/ mês por domínio</span>
+          </div>
+          <span class="plan-tier-saving" style="background:var(--bg-subtle); color:var(--text-secondary);">Cobrança mensal recorrente</span>
+          <ul class="plan-feature-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Personalização total de cores sólidas e degradês</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>VLibras com cor ou degradê personalizado</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>5 símbolos e 6 posições de tela configuráveis</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Cancelamento livre a qualquer momento</span></li>
+          </ul>
+          <button type="button" class="btn-secondary" data-select-plan="monthly" style="width:100%;">
+            Selecionar Pro Mensal
+          </button>
+        </article>
+
+        <!-- Plano 2: Pro Anual (Recomendado) -->
+        <article class="plan-tier-card featured">
+          <span class="plan-popular-ribbon">Mais Escolhido • 25% OFF</span>
+          <div class="plan-tier-head">
+            <span class="plan-tier-name">Plano Pro Anual</span>
+            <p class="plan-tier-desc">Melhor custo-benefício para empresas, prefeituras e serventias extrajudiciais.</p>
+          </div>
+          <div class="plan-tier-price">
+            <span class="currency">R$</span>
+            <span class="amount">59,90</span>
+            <span class="period">/ mês no ciclo anual</span>
+          </div>
+          <span class="plan-tier-saving">Economia de R$ 240,00 por ano</span>
+          <ul class="plan-feature-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Todos os recursos visuais do Plano Pro</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Páginas e visualizações mensais ilimitadas</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Nota Fiscal corporativa (CNPJ) e suporte prioritário</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Garantia de renovação protegida por 12 meses</span></li>
+          </ul>
+          <button type="button" class="btn-primary-save" data-select-plan="annual" style="width:100%;">
+            Selecionar Pro Anual (25% OFF)
+          </button>
+        </article>
+
+        <!-- Plano 3: Pacote Corporativo Multi-Domínios -->
+        <article class="plan-tier-card">
+          <div class="plan-tier-head">
+            <span class="plan-tier-name">Corporativo Multi-Domínios</span>
+            <p class="plan-tier-desc">Para grupos empresariais, redes de cartórios ou agências (3 ou mais domínios).</p>
+          </div>
+          <div class="plan-tier-price">
+            <span class="currency">R$</span>
+            <span class="amount">49,90</span>
+            <span class="period">/ mês por domínio</span>
+          </div>
+          <span class="plan-tier-saving">37% de desconto no lote corporativo</span>
+          <ul class="plan-feature-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Gestão centralizada de todos os sites em 1 login</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Identidade visual independente por domínio</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Faturamento unificado via PIX, Cartão ou Boleto CNPJ</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Atendimento técnico dedicado para implantação</span></li>
+          </ul>
+          <button type="button" class="btn-secondary" data-select-plan="corporate" style="width:100%;">
+            Selecionar Multi-Domínios
+          </button>
+        </article>
+      </div>
+
+      <!-- Gerador de Nova Assinatura de Domínio + Tabela de Assinaturas -->
+      <div class="profile-grid">
+        <!-- Formulário: Gerar Nova Assinatura -->
+        <div class="panel-card" id="card-generate-subscription">
+          <div class="panel-card-header">
+            <div class="card-step-heading">
+              <span class="step-num-badge">+</span>
+              <span class="panel-card-title">Gerar Nova Assinatura de Domínio</span>
+            </div>
+            <span class="card-active-summary">Liberação Imediata</span>
+          </div>
+          <p class="panel-card-desc">Adicione um novo domínio à sua conta, escolha o plano desejado e gere instantaneamente sua licença e código de instalação:</p>
+
+          <form id="form-new-subscription">
+            <div class="form-group">
+              <label for="new-sub-domain">Domínio do Site (URL)</label>
+              <input type="text" id="new-sub-domain" class="form-input" placeholder="Ex: cartorioflorianopolis.com.br" required>
+            </div>
+
+            <div class="form-group">
+              <label for="new-sub-title">Nome da Instituição / Identificação</label>
+              <input type="text" id="new-sub-title" class="form-input" placeholder="Ex: 2º Tabelionato de Notas de Florianópolis" required>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="new-sub-plan">Plano Escolhido</label>
+                <select id="new-sub-plan" class="form-input">
+                  <option value="annual" selected>Plano Pro Anual — R$ 59,90/mês (25% OFF)</option>
+                  <option value="monthly">Plano Pro Mensal — R$ 79,90/mês</option>
+                  <option value="corporate">Corporativo Multi-Domínios — R$ 49,90/mês</option>
+                  <option value="trial">Teste Grátis de 7 Dias — R$ 0,00</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="new-sub-payment">Forma de Pagamento</label>
+                <select id="new-sub-payment" class="form-input">
+                  <option value="PIX Corporativo (Liberação Imediata)">PIX Corporativo (Imediato)</option>
+                  <option value="Cartão de Crédito Corporativo">Cartão de Crédito Corporativo</option>
+                  <option value="Boleto Faturado CNPJ">Boleto Faturado CNPJ</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:8px;">
+              <button type="submit" class="btn-primary-save">
+                Gerar Assinatura e Personalizar Domínio
+              </button>
+              <span id="new-sub-feedback" style="font-size:12.5px; font-weight:600; color:var(--status-ok);"></span>
+            </div>
+          </form>
+        </div>
+
+        <!-- Lista de Assinaturas com Ações Rápidas de Upgrade / Cancelamento -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <span class="panel-card-title">Gerenciar Assinaturas da Conta</span>
+          </div>
+          <p class="panel-card-desc">Faça upgrade de ciclo, renove licenças ou solicite cancelamento individual por domínio:</p>
+
+          <div id="subs-management-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         TELA 4: MEU PERFIL E CONFIGURAÇÕES DA CONTA DO CLIENTE
+    ===================================================================== -->
+    <section class="view-section" id="view-profile" aria-labelledby="profile-page-title">
       <div class="editor-top-bar">
         <div class="editor-breadcrumb">
           <button type="button" class="btn-back" id="btn-back-from-profile">
@@ -2566,7 +3483,7 @@
             <span>Voltar aos Domínios</span>
           </button>
           <div class="domain-active-title">
-            <h2>Meu Perfil e Configurações da Conta</h2>
+            <h2 id="profile-page-title">Meu Perfil e Configurações da Conta</h2>
             <span>Gerencie seus dados cadastrais, credenciais de acesso e preferências de avisos</span>
           </div>
         </div>
@@ -2677,6 +3594,74 @@
     </div>
   </div>
 
+  <!-- MODAL DE UPGRADE / ALTERAÇÃO DE PLANO DO DOMÍNIO -->
+  <div class="modal-overlay" id="modal-upgrade-plan">
+    <div class="modal-card" style="max-width: 520px;">
+      <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">Upgrade ou Alteração de Plano</h3>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+        Selecione o novo plano para o domínio <strong id="upgrade-modal-domain" style="color:var(--text-primary);"></strong> e atualize a vigência da sua licença imediatamente:
+      </p>
+
+      <div class="form-group">
+        <label for="upgrade-select-plan">Escolha o Novo Plano / Ciclo</label>
+        <select id="upgrade-select-plan" class="form-input">
+          <option value="annual">Plano Pro Anual — R$ 59,90/mês (25% OFF • +12 meses de vigência)</option>
+          <option value="corporate">Corporativo Multi-Domínios — R$ 49,90/mês (37% OFF)</option>
+          <option value="monthly">Plano Pro Mensal — R$ 79,90/mês (Renovação mensal)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="upgrade-select-payment">Método de Faturamento Preferencial</label>
+        <select id="upgrade-select-payment" class="form-input">
+          <option value="PIX Corporativo (Liberação Imediata)">PIX Corporativo (Liberação Imediata)</option>
+          <option value="Cartão de Crédito Corporativo">Cartão de Crédito Corporativo</option>
+          <option value="Boleto Faturado CNPJ">Boleto Faturado CNPJ</option>
+        </select>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+        <button type="button" class="btn-secondary" id="btn-close-upgrade-modal">Fechar</button>
+        <button type="button" class="btn-primary-save" id="btn-confirm-upgrade-modal">Confirmar Upgrade de Plano</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CANCELAMENTO DE ASSINATURA COM OFERTA DE RETENÇÃO -->
+  <div class="modal-overlay" id="modal-cancel-sub">
+    <div class="modal-card" style="max-width: 520px;">
+      <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 6px; color: var(--status-err);">Cancelar Assinatura do Domínio</h3>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
+        Você está solicitando o cancelamento da licença do domínio <strong id="cancel-modal-domain" style="color:var(--text-primary);"></strong>.
+      </p>
+
+      <div style="padding: 13px 15px; border-radius: 10px; background: var(--brand-soft); border: 1px solid var(--brand-border); margin-bottom: 16px;">
+        <strong style="font-size: 13px; color: var(--brand); display:block; margin-bottom:4px;">Prefere economizar 25% mantendo o site acessível?</strong>
+        <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.45; margin-bottom: 10px;">
+          Antes de cancelar, você pode migrar este domínio para o ciclo anual com desconto reduzido para <strong>R$ 59,90/mês</strong>.
+        </p>
+        <button type="button" class="btn-primary-save" id="btn-retention-keep" style="padding:7px 13px; font-size:12px;">
+          Aplicar 25% de Desconto e Manter Ativo
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label for="cancel-reason-select">Motivo principal do cancelamento</label>
+        <select id="cancel-reason-select" class="form-input">
+          <option value="Redução temporária de custos">Redução temporária de custos</option>
+          <option value="O site está em reformulação / manutenção">O site está em reformulação / manutenção</option>
+          <option value="Apenas testando a ferramenta">Estava apenas avaliando a ferramenta</option>
+          <option value="Outro motivo">Outro motivo</option>
+        </select>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+        <button type="button" class="btn-secondary" id="btn-close-cancel-modal">Voltar sem Cancelar</button>
+        <button type="button" class="btn-danger-outline" id="btn-confirm-cancel-sub">Confirmar Cancelamento</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function() {
       const ICONS = {
@@ -2687,11 +3672,52 @@
         shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>'
       };
 
+      const PLAN_CATALOG = {
+        annual: {
+          code: 'annual',
+          badgeClass: 'annual',
+          shortLabel: 'Pro Anual (25% OFF)',
+          fullLabel: 'Plano Pro Anual • R$ 59,90/mês',
+          price: 59.90
+        },
+        monthly: {
+          code: 'monthly',
+          badgeClass: 'monthly',
+          shortLabel: 'Pro Mensal',
+          fullLabel: 'Plano Pro Mensal • R$ 79,90/mês',
+          price: 79.90
+        },
+        corporate: {
+          code: 'corporate',
+          badgeClass: 'annual',
+          shortLabel: 'Multi-Domínios (37% OFF)',
+          fullLabel: 'Corporativo Multi-Domínios • R$ 49,90/mês',
+          price: 49.90
+        },
+        trial: {
+          code: 'trial',
+          badgeClass: 'trial',
+          shortLabel: 'Teste Grátis 7 Dias',
+          fullLabel: 'Teste Grátis Pro (7 Dias) • R$ 0,00',
+          price: 0
+        }
+      };
+
+      const ICON_LABELS = {
+        universal: 'Universal',
+        allyada: 'Allyada',
+        wheelchair: 'Cadeirante',
+        heart: 'Cuidado',
+        shield: 'Escudo'
+      };
+
       const domains = [
         {
           id: 'ALLY-901',
           domain: 'RICRICIUMA.COM.BR',
           title: '1º Registro de Imóveis de Criciúma',
+          planCode: 'annual',
+          paymentMethod: 'PIX Corporativo (Anual)',
           status: 'active',
           statusLabel: 'Ativo',
           expiration: '06/08/2027',
@@ -2710,6 +3736,8 @@
           id: 'ALLY-902',
           domain: 'CARTORIOTUBARAO.COM.BR',
           title: 'Tabelionato de Notas e Protesto de Tubarão',
+          planCode: 'annual',
+          paymentMethod: 'Boleto Faturado CNPJ',
           status: 'active',
           statusLabel: 'Ativo',
           expiration: '14/09/2027',
@@ -2728,8 +3756,10 @@
           id: 'ALLY-903',
           domain: '2CARTORIOOLIMPIA.COM.BR',
           title: '2º Tabelionato de Notas de Olímpia',
+          planCode: 'monthly',
+          paymentMethod: 'Cartão de Crédito Corporativo',
           status: 'expiring',
-          statusLabel: 'Expirando',
+          statusLabel: 'Renovação Próxima',
           expiration: '01/10/2026',
           colorMode: 'gradient',
           primaryColor: '#2563eb',
@@ -2746,6 +3776,8 @@
           id: 'ALLY-904',
           domain: 'CARTORIOBELOJARDIM.COM.BR',
           title: 'Cartório Único de Belo Jardim',
+          planCode: 'monthly',
+          paymentMethod: 'Boleto Faturado CNPJ',
           status: 'expired',
           statusLabel: 'Congelado',
           expiration: '19/07/2026',
@@ -2764,20 +3796,53 @@
 
       let activeIdx = 0;
 
-      // Navegação entre Seções (Domínios | Editor | Perfil)
+      // Navegação entre Seções (Domínios | Editor | Assinaturas | Perfil)
       const views = {
         domains: document.getElementById('view-domains'),
         editor: document.getElementById('view-editor'),
+        subscriptions: document.getElementById('view-subscriptions'),
         profile: document.getElementById('view-profile')
       };
       const bottomBar = document.getElementById('bottom-save-bar');
 
+      function updateTopNavHighlight(viewKey) {
+        document.getElementById('nav-top-domains').classList.toggle('active', viewKey === 'domains' || viewKey === 'editor');
+        document.getElementById('nav-top-subscriptions').classList.toggle('active', viewKey === 'subscriptions');
+        document.getElementById('nav-top-profile').classList.toggle('active', viewKey === 'profile');
+      }
+
       function showView(viewKey) {
         Object.keys(views).forEach(k => {
-          views[k].classList.toggle('active', k === viewKey);
+          if (views[k]) views[k].classList.toggle('active', k === viewKey);
         });
+        updateTopNavHighlight(viewKey);
         bottomBar.classList.toggle('hidden', viewKey !== 'editor');
-        if (viewKey === 'domains') renderDomainsTable();
+        if (viewKey === 'domains') {
+          updateKpiMetrics();
+          renderDomainsTable();
+        } else if (viewKey === 'subscriptions') {
+          updateKpiMetrics();
+          renderSubscriptionsManagementList();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function updateKpiMetrics() {
+        const total = domains.length;
+        const activeCount = domains.filter(d => d.status === 'active').length;
+        const attentionCount = domains.filter(d => d.status !== 'active').length;
+        const monthlySum = domains.reduce((acc, d) => {
+          if (d.status === 'expired' || d.status === 'canceled') return acc;
+          const p = PLAN_CATALOG[d.planCode] || PLAN_CATALOG.monthly;
+          return acc + p.price;
+        }, 0);
+
+        document.getElementById('nav-domains-count').textContent = String(total);
+        document.getElementById('kpi-total-domains').textContent = String(total);
+        document.getElementById('kpi-active-domains').textContent = String(activeCount);
+        document.getElementById('kpi-attention-domains').textContent = String(attentionCount);
+        document.getElementById('kpi-monthly-total').textContent =
+          'R$ ' + monthlySum.toFixed(2).replace('.', ',');
       }
 
       const authScreen = document.getElementById('auth-gate-screen');
@@ -2936,14 +4001,15 @@
           .toUpperCase() || 'MEUSITE.COM.BR';
         const emailVal = document.getElementById('trial-email').value.trim() || 'contato@empresa.com.br';
 
-        // Calcula data de +7 dias
         const expDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
         const expStr = expDate.toLocaleDateString('pt-BR');
 
         domains.unshift({
-          id: 'TRIAL-7D',
+          id: 'TRIAL-' + Math.floor(100 + Math.random() * 899),
           domain: rawDomain,
           title: `${nameVal} (Teste Grátis 7 Dias)`,
+          planCode: 'trial',
+          paymentMethod: 'Período de Avaliação Gratuita',
           status: 'expiring',
           statusLabel: 'Teste 7 Dias',
           expiration: expStr,
@@ -2999,7 +4065,18 @@
       btnTheme.addEventListener('click', toggleGlobalTheme);
       btnAuthTheme.addEventListener('click', toggleGlobalTheme);
 
-      // Dropdown de Perfil no Canto Superior Direito
+      // Navegação Superior e Dropdown de Perfil
+      document.getElementById('nav-top-domains').addEventListener('click', () => showView('domains'));
+      document.getElementById('nav-top-subscriptions').addEventListener('click', () => showView('subscriptions'));
+      document.getElementById('nav-top-profile').addEventListener('click', () => showView('profile'));
+
+      document.getElementById('btn-hero-new-sub').addEventListener('click', () => {
+        showView('subscriptions');
+        setTimeout(() => document.getElementById('new-sub-domain').focus(), 80);
+      });
+      document.getElementById('btn-toolbar-plans').addEventListener('click', () => showView('subscriptions'));
+      document.getElementById('btn-subs-back-domains').addEventListener('click', () => showView('domains'));
+
       const btnProfile = document.getElementById('btn-profile-menu');
       const dropProfile = document.getElementById('profile-dropdown');
       btnProfile.addEventListener('click', (e) => {
@@ -3014,6 +4091,7 @@
       });
 
       document.getElementById('menu-item-domains').addEventListener('click', () => showView('domains'));
+      document.getElementById('menu-item-subscriptions').addEventListener('click', () => showView('subscriptions'));
       document.getElementById('menu-item-profile').addEventListener('click', () => showView('profile'));
       document.getElementById('menu-item-security').addEventListener('click', () => {
         showView('profile');
@@ -3042,7 +4120,7 @@
         setTimeout(() => { msg.textContent = ''; }, 3000);
       });
 
-      // Tabela de Domínios (Estilo Registro.br)
+      // Tabela de Domínios (Estilo Registro.br com Plano & Ciclo)
       const tbody = document.getElementById('domains-table-body');
       const searchInput = document.getElementById('input-search-domain');
 
@@ -3059,9 +4137,11 @@
         filtered.forEach(({ d, i }) => {
           const tr = document.createElement('tr');
           const bgStyle = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
-          const actionBtnHtml = d.status === 'expired'
-            ? `<button type="button" class="btn-row-pay">Pagar</button>`
-            : `<button type="button" class="btn-row-edit">Acessar</button>`;
+          const planInfo = PLAN_CATALOG[d.planCode] || PLAN_CATALOG.monthly;
+          const isFrozen = d.status === 'expired' || d.status === 'canceled';
+          const actionBtnHtml = isFrozen
+            ? `<button type="button" class="btn-row-pay" data-row-upgrade="${i}">Reativar / Plano</button>`
+            : `<button type="button" class="btn-row-edit">Personalizar</button>`;
 
           tr.innerHTML = `
             <td>
@@ -3071,7 +4151,10 @@
               </div>
             </td>
             <td>
-              <span class="status-pill ${d.status}">
+              <span class="plan-tier-badge ${planInfo.badgeClass}">${planInfo.shortLabel}</span>
+            </td>
+            <td>
+              <span class="status-pill ${d.status === 'canceled' ? 'expired' : d.status}">
                 <span class="status-dot"></span>
                 <span>${d.statusLabel}</span>
               </span>
@@ -3085,22 +4168,105 @@
             </td>
             <td style="text-align: right;">${actionBtnHtml}</td>
           `;
-          tr.addEventListener('click', () => openDomainEditor(i));
+          tr.addEventListener('click', (e) => {
+            const upBtn = e.target.closest('[data-row-upgrade]');
+            if (upBtn) {
+              e.stopPropagation();
+              openUpgradeModalForDomain(i);
+              return;
+            }
+            openDomainEditor(i);
+          });
           tbody.appendChild(tr);
         });
       }
       searchInput.addEventListener('input', renderDomainsTable);
 
-      function openDomainEditor(idx) {
-        activeIdx = idx;
+      // Popula o Seletor Rápido de Domínios no Hero do Editor
+      const quickSwitcher = document.getElementById('quick-domain-switcher');
+      function populateQuickDomainSwitcher() {
+        quickSwitcher.innerHTML = '';
+        domains.forEach((dom, idx) => {
+          const opt = document.createElement('option');
+          opt.value = String(idx);
+          opt.textContent = `${dom.domain} (${dom.statusLabel})`;
+          if (idx === activeIdx) opt.selected = true;
+          quickSwitcher.appendChild(opt);
+        });
+      }
+      quickSwitcher.addEventListener('change', (e) => {
+        const nextIdx = parseInt(e.target.value, 10);
+        if (!isNaN(nextIdx) && domains[nextIdx]) {
+          openDomainEditor(nextIdx);
+        }
+      });
+
+      function switchEditorTab(tabKey) {
+        document.querySelectorAll('.editor-tab-btn').forEach(b => {
+          const isMatch = b.getAttribute('data-tab') === tabKey;
+          b.classList.toggle('active', isMatch);
+          b.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+        });
+        document.querySelectorAll('.editor-pane').forEach(p => {
+          p.classList.toggle('active', p.id === 'pane-' + tabKey);
+        });
+      }
+
+      function refreshDomainHeroAndSubscriptionPane() {
         const d = domains[activeIdx];
-        showView('editor');
+        const planInfo = PLAN_CATALOG[d.planCode] || PLAN_CATALOG.monthly;
+        const pillClass = d.status === 'canceled' ? 'expired' : d.status;
 
         document.getElementById('editor-domain-title').textContent = d.domain;
-        document.getElementById('editor-domain-subtitle').textContent = `${d.title} • Licença ${d.id}`;
+        document.getElementById('editor-domain-subtitle').textContent = d.title;
+        document.getElementById('hero-license-id').textContent = d.id;
+        document.getElementById('hero-expiration-date').textContent = d.expiration;
+
+        const heroStatusPill = document.getElementById('hero-status-pill');
+        heroStatusPill.className = `status-pill ${pillClass}`;
+        document.getElementById('hero-status-text').textContent = d.statusLabel;
+
+        const heroPlanBadge = document.getElementById('hero-plan-badge');
+        heroPlanBadge.className = `plan-tier-badge ${planInfo.badgeClass}`;
+        heroPlanBadge.textContent = planInfo.fullLabel;
+
         document.getElementById('code-domain-badge').textContent = d.domain.toLowerCase();
         document.getElementById('sub-locked-domain').textContent = 'https://www.' + d.domain.toLowerCase();
         document.getElementById('sub-license-meta').textContent = `${d.id} • Vigência até ${d.expiration}`;
+        document.getElementById('sub-plan-current-label').textContent = planInfo.fullLabel;
+        document.getElementById('sub-payment-method-label').textContent = d.paymentMethod || 'PIX / Boleto CNPJ';
+
+        const subPanePill = document.getElementById('sub-pane-status-pill');
+        subPanePill.className = `status-pill ${pillClass}`;
+        document.getElementById('sub-pane-status-text').textContent = d.statusLabel;
+
+        const cancelBtn = document.getElementById('btn-open-cancel-modal');
+        const cancelTitle = document.getElementById('cancel-zone-title');
+        const cancelDesc = document.getElementById('cancel-zone-desc');
+        if (d.status === 'canceled' || d.status === 'expired') {
+          cancelTitle.textContent = 'Assinatura Pausada / Cancelada neste Domínio';
+          cancelDesc.textContent = 'Reative sua assinatura com 1 clique para restaurar imediatamente todas as personalizações visuais do domínio.';
+          cancelBtn.textContent = 'Reativar Assinatura Agora';
+          cancelBtn.className = 'btn-primary-save';
+        } else {
+          cancelTitle.textContent = 'Cancelamento de Assinatura deste Domínio';
+          cancelDesc.textContent = 'Sem fidelidade oculta: ao cancelar, o domínio permanece acessível até o fim do período vigente ou pode ser reativado a qualquer momento.';
+          cancelBtn.textContent = 'Cancelar Assinatura';
+          cancelBtn.className = 'btn-danger-outline';
+        }
+      }
+
+      function openDomainEditor(idx, initialTab) {
+        activeIdx = idx;
+        const d = domains[activeIdx];
+        showView('editor');
+        populateQuickDomainSwitcher();
+        refreshDomainHeroAndSubscriptionPane();
+        if (initialTab) {
+          switchEditorTab(initialTab);
+        } else {
+          switchEditorTab('estilo');
+        }
 
         setSolidOrGradMode(d.colorMode || 'solid');
         document.getElementById('input-allyada-wheel').value = d.primaryColor;
@@ -3133,10 +4299,23 @@
       // Abas do Editor
       document.querySelectorAll('.editor-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const tab = btn.getAttribute('data-tab');
-          document.querySelectorAll('.editor-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-          document.querySelectorAll('.editor-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + tab));
+          switchEditorTab(btn.getAttribute('data-tab'));
         });
+      });
+
+      // Alternador de Fundo Claro / Escuro no Simulador Visual à Direita
+      const stageBox = document.getElementById('preview-stage-box');
+      const btnSimLight = document.getElementById('btn-sim-light');
+      const btnSimDark = document.getElementById('btn-sim-dark');
+      btnSimLight.addEventListener('click', () => {
+        stageBox.classList.remove('sim-dark');
+        btnSimLight.classList.add('active');
+        btnSimDark.classList.remove('active');
+      });
+      btnSimDark.addEventListener('click', () => {
+        stageBox.classList.add('sim-dark');
+        btnSimDark.classList.add('active');
+        btnSimLight.classList.remove('active');
       });
 
       // Modo Cor Sólida vs Degradê (Allyada)
@@ -3220,6 +4399,8 @@
             d.colorMode = 'gradient';
             document.querySelectorAll('#allyada-grad-list .swatch-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            const gradBar = document.getElementById('allyada-grad-bar');
+            if (gradBar) gradBar.style.background = d.gradient;
             updateRightPreviewAndCode();
           };
         });
@@ -3235,6 +4416,8 @@
         d.primaryColor = c1;
         d.gradient = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
         d.colorMode = 'gradient';
+        const gradBar = document.getElementById('allyada-grad-bar');
+        if (gradBar) gradBar.style.background = d.gradient;
         updateRightPreviewAndCode();
       }
       document.getElementById('input-grad-1').addEventListener('input', updateCustomGrad);
@@ -3411,7 +4594,7 @@
         });
       });
 
-      // Atualiza Pré-visualização Direita e Código <script>
+      // Atualiza Pré-visualização Direita, Badges de Resumo e Código <script>
       function updateRightPreviewAndCode() {
         const d = domains[activeIdx];
         const bgMain = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
@@ -3419,6 +4602,25 @@
           ? bgMain
           : ((d.vlibrasMode === 'gradient' && d.vlibrasGrad) ? d.vlibrasGrad : d.vlibrasColor);
         const iconSvg = ICONS[d.icon] || ICONS.universal;
+
+        // Atualiza Avatar do Domínio no Hero do Workspace
+        const heroAvatar = document.getElementById('hero-domain-avatar');
+        if (heroAvatar) {
+          heroAvatar.style.background = bgMain;
+          heroAvatar.innerHTML = iconSvg;
+        }
+
+        // Atualiza Pílulas de Resumo nos Cards 01, 02, 03, 04
+        document.getElementById('summary-pill-allyada').textContent =
+          d.colorMode === 'gradient' ? 'Degradê Ativo' : d.primaryColor.toUpperCase();
+        document.getElementById('summary-pill-vlibras').textContent =
+          d.vlibrasSame ? 'Sincronizado' : (d.vlibrasMode === 'gradient' ? 'Degradê VLibras' : d.vlibrasColor.toUpperCase());
+        document.getElementById('summary-pill-icon').textContent =
+          ICON_LABELS[d.icon] || 'Universal';
+
+        const shortH = d.hpos === 'left' ? 'Esquerda' : 'Direita';
+        const shortV = { bottom: 'Fim', middle: 'Centro', top: 'Topo' }[d.vpos] || 'Fim';
+        document.getElementById('summary-pill-pos').textContent = `${shortH} • ${shortV}`;
 
         const prevLogo = document.getElementById('prev-panel-logo');
         prevLogo.style.background = bgMain;
@@ -3490,21 +4692,223 @@
   defer><\/script>`;
       }
 
-      document.getElementById('btn-copy-script').addEventListener('click', (e) => {
+      function copyCurrentScript(btnEl) {
         navigator.clipboard.writeText(document.getElementById('output-script-code').textContent);
-        const orig = e.target.textContent;
-        e.target.textContent = 'Código copiado para a área de transferência';
-        setTimeout(() => { e.target.textContent = orig; }, 2200);
-      });
+        const orig = btnEl.textContent;
+        btnEl.textContent = 'Código <script> copiado!';
+        setTimeout(() => { btnEl.textContent = orig; }, 2200);
+      }
 
-      document.getElementById('btn-save-domain').addEventListener('click', () => {
+      document.getElementById('btn-copy-script').addEventListener('click', (e) => copyCurrentScript(e.currentTarget));
+      document.getElementById('btn-sidebar-copy-code').addEventListener('click', (e) => copyCurrentScript(e.currentTarget));
+
+      function triggerSaveToast(customMsg) {
         const d = domains[activeIdx];
         const toast = document.getElementById('save-toast');
-        toast.textContent = `Configurações de ${d.domain} salvas e publicadas.`;
-        setTimeout(() => { toast.textContent = ''; }, 3500);
+        toast.textContent = customMsg || `Configurações visuais de ${d.domain} salvas e publicadas.`;
+        setTimeout(() => { toast.textContent = ''; }, 3800);
+      }
+
+      document.getElementById('btn-save-domain').addEventListener('click', () => triggerSaveToast());
+      document.getElementById('btn-hero-quick-save').addEventListener('click', () => triggerSaveToast());
+
+      // =========================================================================
+      // GESTÃO DE ASSINATURAS, GERAÇÃO DE NOVOS PLANOS, UPGRADE E CANCELAMENTO
+      // =========================================================================
+      const subsListContainer = document.getElementById('subs-management-list');
+
+      function renderSubscriptionsManagementList() {
+        subsListContainer.innerHTML = '';
+        domains.forEach((d, idx) => {
+          const planInfo = PLAN_CATALOG[d.planCode] || PLAN_CATALOG.monthly;
+          const pillClass = d.status === 'canceled' ? 'expired' : d.status;
+          const item = document.createElement('div');
+          item.style.cssText = 'padding:13px 15px; border-radius:11px; border:1px solid var(--border); background:var(--bg-subtle); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;';
+
+          const isInactive = d.status === 'expired' || d.status === 'canceled';
+          item.innerHTML = `
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <strong style="font-size:13.5px; color:var(--text-primary);">${d.domain}</strong>
+                <span class="status-pill ${pillClass}" style="padding:2px 8px; font-size:11px;">
+                  <span class="status-dot"></span><span>${d.statusLabel}</span>
+                </span>
+                <span class="plan-tier-badge ${planInfo.badgeClass}">${planInfo.shortLabel}</span>
+              </div>
+              <span style="font-size:11.5px; color:var(--text-muted);">${d.title} • Vigência: ${d.expiration}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button type="button" class="btn-secondary" data-sub-edit="${idx}" style="padding:6px 11px; font-size:11.5px;">Personalizar</button>
+              <button type="button" class="btn-primary-save" data-sub-upgrade="${idx}" style="padding:6px 11px; font-size:11.5px;">${isInactive ? 'Reativar / Plano' : 'Upgrade'}</button>
+              ${!isInactive ? `<button type="button" class="btn-danger-outline" data-sub-cancel="${idx}" style="padding:6px 10px; font-size:11.5px;">Cancelar</button>` : ''}
+            </div>
+          `;
+          subsListContainer.appendChild(item);
+        });
+
+        subsListContainer.querySelectorAll('[data-sub-edit]').forEach(btn => {
+          btn.addEventListener('click', () => openDomainEditor(parseInt(btn.getAttribute('data-sub-edit'), 10), 'estilo'));
+        });
+        subsListContainer.querySelectorAll('[data-sub-upgrade]').forEach(btn => {
+          btn.addEventListener('click', () => openUpgradeModalForDomain(parseInt(btn.getAttribute('data-sub-upgrade'), 10)));
+        });
+        subsListContainer.querySelectorAll('[data-sub-cancel]').forEach(btn => {
+          btn.addEventListener('click', () => openCancelModalForDomain(parseInt(btn.getAttribute('data-sub-cancel'), 10)));
+        });
+      }
+
+      // Selecionar plano nos 3 cards comparativos preenche o formulário de nova assinatura
+      document.querySelectorAll('[data-select-plan]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const planCode = btn.getAttribute('data-select-plan');
+          const selectEl = document.getElementById('new-sub-plan');
+          if (selectEl) selectEl.value = planCode;
+          const domainInput = document.getElementById('new-sub-domain');
+          if (domainInput) {
+            domainInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => domainInput.focus(), 220);
+          }
+        });
       });
 
-      // Modal Suporte
+      // Gerar Nova Assinatura de Domínio
+      document.getElementById('form-new-subscription').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const rawDom = document.getElementById('new-sub-domain').value.trim()
+          .replace(/^https?:\/\//i, '')
+          .replace(/^www\./i, '')
+          .split('/')[0]
+          .toUpperCase();
+        const titleVal = document.getElementById('new-sub-title').value.trim() || 'Nova Unidade Licenciada';
+        const planCode = document.getElementById('new-sub-plan').value || 'annual';
+        const paymentVal = document.getElementById('new-sub-payment').value;
+
+        if (!rawDom) return;
+
+        const now = new Date();
+        const expDate = planCode === 'trial'
+          ? new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+          : new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+
+        const newDomainObj = {
+          id: 'ALLY-' + Math.floor(910 + Math.random() * 89),
+          domain: rawDom,
+          title: titleVal,
+          planCode: planCode,
+          paymentMethod: paymentVal,
+          status: planCode === 'trial' ? 'expiring' : 'active',
+          statusLabel: planCode === 'trial' ? 'Teste 7 Dias' : 'Ativo',
+          expiration: expDate.toLocaleDateString('pt-BR'),
+          colorMode: 'solid',
+          primaryColor: '#6d48b8',
+          gradient: '',
+          vlibrasSame: true,
+          vlibrasMode: 'solid',
+          vlibrasColor: '#2563eb',
+          vlibrasGrad: '',
+          icon: 'universal',
+          hpos: 'right',
+          vpos: 'bottom'
+        };
+
+        domains.unshift(newDomainObj);
+        document.getElementById('new-sub-domain').value = '';
+        document.getElementById('new-sub-title').value = '';
+        updateKpiMetrics();
+        renderSubscriptionsManagementList();
+
+        openDomainEditor(0, 'estilo');
+        triggerSaveToast(`Assinatura criada para ${rawDom}! Personalize as cores abaixo.`);
+      });
+
+      // Modal de Upgrade / Alteração de Plano
+      const upgradeModal = document.getElementById('modal-upgrade-plan');
+      function openUpgradeModalForDomain(idx) {
+        activeIdx = idx;
+        const d = domains[activeIdx];
+        document.getElementById('upgrade-modal-domain').textContent = d.domain;
+        document.getElementById('upgrade-select-plan').value = d.planCode === 'trial' ? 'annual' : d.planCode;
+        upgradeModal.classList.add('open');
+      }
+
+      document.getElementById('btn-hero-open-upgrade').addEventListener('click', () => openUpgradeModalForDomain(activeIdx));
+      document.getElementById('btn-pane-upgrade').addEventListener('click', () => openUpgradeModalForDomain(activeIdx));
+      document.getElementById('btn-pane-new-sub').addEventListener('click', () => {
+        showView('subscriptions');
+        setTimeout(() => document.getElementById('new-sub-domain').focus(), 80);
+      });
+
+      document.getElementById('btn-close-upgrade-modal').addEventListener('click', () => upgradeModal.classList.remove('open'));
+      document.getElementById('btn-confirm-upgrade-modal').addEventListener('click', () => {
+        const d = domains[activeIdx];
+        const nextPlan = document.getElementById('upgrade-select-plan').value;
+        const nextPay = document.getElementById('upgrade-select-payment').value;
+        d.planCode = nextPlan;
+        d.paymentMethod = nextPay;
+        d.status = 'active';
+        d.statusLabel = 'Ativo';
+
+        const now = new Date();
+        const nextExp = nextPlan === 'monthly'
+          ? new Date(now.getFullYear(), now.getMonth() + 1, now.getDate())
+          : new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+        d.expiration = nextExp.toLocaleDateString('pt-BR');
+
+        upgradeModal.classList.remove('open');
+        updateKpiMetrics();
+        populateQuickDomainSwitcher();
+        refreshDomainHeroAndSubscriptionPane();
+        renderDomainsTable();
+        renderSubscriptionsManagementList();
+        triggerSaveToast(`Plano de ${d.domain} atualizado para ${(PLAN_CATALOG[nextPlan] || PLAN_CATALOG.annual).shortLabel}.`);
+      });
+
+      // Modal de Cancelamento / Reativação de Assinatura
+      const cancelModal = document.getElementById('modal-cancel-sub');
+      function openCancelModalForDomain(idx) {
+        activeIdx = idx;
+        const d = domains[activeIdx];
+        if (d.status === 'canceled' || d.status === 'expired') {
+          openUpgradeModalForDomain(idx);
+          return;
+        }
+        document.getElementById('cancel-modal-domain').textContent = d.domain;
+        cancelModal.classList.add('open');
+      }
+
+      document.getElementById('btn-open-cancel-modal').addEventListener('click', () => openCancelModalForDomain(activeIdx));
+      document.getElementById('btn-close-cancel-modal').addEventListener('click', () => cancelModal.classList.remove('open'));
+
+      // Oferta de Retenção 25% OFF dentro do Modal de Cancelamento
+      document.getElementById('btn-retention-keep').addEventListener('click', () => {
+        const d = domains[activeIdx];
+        d.planCode = 'annual';
+        d.status = 'active';
+        d.statusLabel = 'Ativo';
+        cancelModal.classList.remove('open');
+        updateKpiMetrics();
+        populateQuickDomainSwitcher();
+        refreshDomainHeroAndSubscriptionPane();
+        renderDomainsTable();
+        renderSubscriptionsManagementList();
+        triggerSaveToast(`Desconto de 25% (Pro Anual) aplicado ao domínio ${d.domain}!`);
+      });
+
+      // Confirmação de Cancelamento
+      document.getElementById('btn-confirm-cancel-sub').addEventListener('click', () => {
+        const d = domains[activeIdx];
+        d.status = 'canceled';
+        d.statusLabel = 'Cancelado';
+        cancelModal.classList.remove('open');
+        updateKpiMetrics();
+        populateQuickDomainSwitcher();
+        refreshDomainHeroAndSubscriptionPane();
+        renderDomainsTable();
+        renderSubscriptionsManagementList();
+        triggerSaveToast(`Assinatura de ${d.domain} marcada como cancelada. Você pode reativá-la quando desejar.`);
+      });
+
+      // Modal Suporte (Mudança de URL do mesmo site)
       const modal = document.getElementById('modal-support');
       document.getElementById('btn-open-support').addEventListener('click', () => {
         document.getElementById('modal-old-url').textContent = 'https://www.' + domains[activeIdx].domain.toLowerCase();
@@ -3513,12 +4917,12 @@
       document.getElementById('btn-close-support').addEventListener('click', () => modal.classList.remove('open'));
       document.getElementById('btn-submit-support').addEventListener('click', () => {
         modal.classList.remove('open');
-        const toast = document.getElementById('save-toast');
-        toast.textContent = 'Solicitação enviada ao suporte técnico.';
-        setTimeout(() => { toast.textContent = ''; }, 4000);
+        triggerSaveToast('Solicitação de atualização de URL enviada ao suporte técnico.');
       });
 
+      updateKpiMetrics();
       renderDomainsTable();
+      renderSubscriptionsManagementList();
     })();
   </script>
 
