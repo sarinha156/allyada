@@ -1179,8 +1179,37 @@
     }
 
     /* =========================================================================
-       TELA DE ENTRADA SPLIT-SCREEN: BG VISUAL À ESQUERDA & LOGIN À DIREITA
+       TELA DE ENTRADA SPLIT-SCREEN: EFEITOS, ANIMAÇÕES & SEMÂNTICA WCAG
     ========================================================================= */
+    @keyframes authOrbFloat1 {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(34px, -28px, 0) scale(1.12); }
+    }
+    @keyframes authOrbFloat2 {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(-38px, 26px, 0) scale(1.15); }
+    }
+    @keyframes authWatermarkFloat {
+      0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.042; }
+      50% { transform: rotate(6deg) scale(1.05); opacity: 0.07; }
+    }
+    @keyframes authDotRipple {
+      0% { transform: scale(1); opacity: 0.85; }
+      100% { transform: scale(2.8); opacity: 0; }
+    }
+    @keyframes authRevealUp {
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes authCardEnter {
+      0% { opacity: 0; transform: translateY(20px) scale(0.985); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes authPaneSwitch {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
     .auth-gate-wrapper {
       min-height: 100vh;
       display: grid;
@@ -1188,10 +1217,10 @@
       background: var(--bg-surface);
     }
     .auth-gate-wrapper.hidden {
-      display: none;
+      display: none !important;
     }
 
-    /* Coluna Esquerda: Background Visual Moderno (Sem Card de Domínio) */
+    /* Coluna Esquerda: Background Visual Moderno com Orbes Animadas */
     .auth-visual-side {
       position: relative;
       overflow: hidden;
@@ -1200,61 +1229,104 @@
       flex-direction: column;
       justify-content: space-between;
       color: #ffffff;
-      background-color: #0e091d;
+      background-color: #0d081c;
       background-image:
-        radial-gradient(circle at 12% 16%, rgba(139, 92, 246, 0.45) 0%, transparent 48%),
-        radial-gradient(circle at 88% 84%, rgba(37, 99, 235, 0.40) 0%, transparent 52%),
-        radial-gradient(circle at 50% 45%, rgba(109, 72, 184, 0.22) 0%, transparent 62%),
-        linear-gradient(145deg, #0c071a 0%, #1b1035 52%, #101935 100%);
+        radial-gradient(circle at 14% 18%, rgba(139, 92, 246, 0.42) 0%, transparent 48%),
+        radial-gradient(circle at 86% 82%, rgba(37, 99, 235, 0.38) 0%, transparent 52%),
+        linear-gradient(145deg, #0b0618 0%, #190f32 52%, #0f1834 100%);
+    }
+    html.ally-contrast-light .auth-visual-side,
+    html.ally-contrast-dark .auth-visual-side {
+      background-image: none !important;
     }
     .auth-visual-side::before {
       content: '';
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.032) 1px, transparent 1px);
       background-size: 44px 44px;
-      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 20%, transparent 80%);
-      pointer-events: none;
-    }
-    .auth-bg-watermark {
-      position: absolute;
-      right: -90px;
-      bottom: -90px;
-      width: 420px;
-      height: 420px;
-      color: rgba(255, 255, 255, 0.035);
+      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.88) 20%, transparent 82%);
       pointer-events: none;
       z-index: 1;
     }
+
+    /* Orbes Luminosas Flutuantes no Background */
+    .auth-ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(68px);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .auth-ambient-orb.orb-1 {
+      width: 340px;
+      height: 340px;
+      top: -60px;
+      left: -50px;
+      background: rgba(139, 92, 246, 0.36);
+      animation: authOrbFloat1 11s ease-in-out infinite;
+    }
+    .auth-ambient-orb.orb-2 {
+      width: 380px;
+      height: 380px;
+      bottom: -90px;
+      right: -60px;
+      background: rgba(37, 99, 235, 0.32);
+      animation: authOrbFloat2 14s ease-in-out infinite;
+    }
+    .auth-bg-watermark {
+      position: absolute;
+      right: -85px;
+      bottom: -85px;
+      width: 430px;
+      height: 430px;
+      color: #ffffff;
+      opacity: 0.045;
+      pointer-events: none;
+      z-index: 1;
+      animation: authWatermarkFloat 16s ease-in-out infinite;
+    }
+
     .auth-visual-top {
       position: relative;
       z-index: 2;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      animation: authRevealUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     .auth-brand-cluster {
       display: flex;
       align-items: center;
       gap: 12px;
+      text-decoration: none;
+      color: #ffffff;
     }
     .auth-brand-emblem {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
+      margin: 0;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.24);
       backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #ffffff;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .auth-brand-cluster:hover .auth-brand-emblem {
+      transform: scale(1.07) rotate(-4deg);
+      border-color: rgba(167, 139, 250, 0.65);
+      box-shadow: 0 10px 26px rgba(139, 92, 246, 0.38);
     }
     .auth-brand-emblem svg {
-      width: 24px;
-      height: 24px;
+      width: 25px;
+      height: 25px;
     }
     .auth-brand-cluster strong {
       font-size: 19px;
@@ -1263,108 +1335,157 @@
       color: #ffffff;
     }
     .btn-back-site-glass {
-      padding: 8px 15px;
+      padding: 8px 16px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.18);
       background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(10px);
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.92);
       font-size: 12.5px;
       font-weight: 600;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      transition: all 0.18s ease;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-back-site-glass svg {
+      transition: transform 0.22s ease;
     }
     .btn-back-site-glass:hover {
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(255, 255, 255, 0.32);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.36);
       color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .btn-back-site-glass:hover svg {
+      transform: translateX(-3px);
     }
 
     .auth-visual-center {
       position: relative;
       z-index: 2;
-      max-width: 520px;
+      max-width: 530px;
       margin: auto 0;
     }
     .auth-kicker-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 13px;
+      gap: 9px;
+      padding: 6px 14px;
       border-radius: 999px;
       background: rgba(167, 139, 250, 0.14);
-      border: 1px solid rgba(167, 139, 250, 0.3);
+      border: 1px solid rgba(167, 139, 250, 0.32);
       color: #ddd6fe;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      animation: authRevealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
     }
     .auth-kicker-dot {
-      width: 6px;
-      height: 6px;
+      position: relative;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #a78bfa;
       box-shadow: 0 0 8px #a78bfa;
     }
+    .auth-kicker-dot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: #a78bfa;
+      animation: authDotRipple 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
     .auth-visual-center h2 {
-      font-size: 36px;
+      font-size: 35px;
       font-weight: 700;
       line-height: 1.16;
       letter-spacing: -0.03em;
       color: #ffffff;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+      animation: authRevealUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
     }
-    .auth-visual-center p {
-      font-size: 15px;
-      line-height: 1.65;
-      color: rgba(226, 232, 240, 0.78);
-      margin-bottom: 34px;
+    .auth-visual-center > p {
+      font-size: 14.5px;
+      line-height: 1.62;
+      color: rgba(226, 232, 240, 0.8);
+      margin-bottom: 28px;
+      animation: authRevealUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
     }
 
-    /* Pilares Visuais Limpos na Coluna Esquerda */
+    /* Pilares Semânticos com Micro-Interações Glassmorphism */
     .auth-feature-pillars {
+      list-style: none;
+      padding: 0;
+      margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
+    .auth-pillar-li {
+      margin: 0;
+      padding: 0;
+    }
+    .auth-pillar-li:nth-child(1) { animation: authRevealUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
+    .auth-pillar-li:nth-child(2) { animation: authRevealUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both; }
+    .auth-pillar-li:nth-child(3) { animation: authRevealUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.46s both; }
+
     .auth-pillar-item {
       display: flex;
       align-items: flex-start;
       gap: 14px;
+      padding: 13px 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.085);
+      backdrop-filter: blur(8px);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .auth-pillar-item:hover {
+      transform: translateX(6px) translateY(-2px);
+      background: rgba(255, 255, 255, 0.065);
+      border-color: rgba(167, 139, 250, 0.38);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
     }
     .auth-pillar-icon {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
+      margin: 2px 0 0;
       border-radius: 10px;
-      background: rgba(167, 139, 250, 0.14);
-      border: 1px solid rgba(167, 139, 250, 0.28);
+      background: rgba(167, 139, 250, 0.16);
+      border: 1px solid rgba(167, 139, 250, 0.3);
       color: #c4b5fd;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-top: 2px;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, color 0.25s ease;
+    }
+    .auth-pillar-item:hover .auth-pillar-icon {
+      transform: scale(1.1);
+      background: rgba(167, 139, 250, 0.28);
+      color: #ffffff;
     }
     .auth-pillar-icon svg {
-      width: 17px;
-      height: 17px;
+      width: 18px;
+      height: 18px;
     }
-    .auth-pillar-text strong {
-      display: block;
+    .auth-pillar-text h3 {
       font-size: 14px;
       font-weight: 600;
       color: #f8fafc;
-      margin-bottom: 2px;
+      margin: 0 0 3px;
+      line-height: 1.3;
     }
-    .auth-pillar-text span {
-      font-size: 13px;
-      color: rgba(226, 232, 240, 0.68);
-      line-height: 1.45;
+    .auth-pillar-text p {
+      font-size: 12.8px;
+      color: rgba(226, 232, 240, 0.72);
+      line-height: 1.48;
+      margin: 0;
     }
 
     .auth-visual-foot {
@@ -1373,8 +1494,26 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
       font-size: 12px;
-      color: rgba(226, 232, 240, 0.52);
+      color: rgba(226, 232, 240, 0.56);
+      animation: authRevealUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.54s both;
+    }
+    .auth-foot-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .auth-foot-link {
+      color: rgba(226, 232, 240, 0.72);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.18s ease;
+    }
+    .auth-foot-link:hover {
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     /* Coluna Direita: Painel de Login / Cadastro / Teste Grátis */
@@ -1385,22 +1524,42 @@
       justify-content: center;
       align-items: center;
       padding: 48px 40px;
-      background: var(--bg-surface);
+      background:
+        radial-gradient(circle at 85% 12%, var(--brand-soft) 0%, transparent 42%),
+        var(--bg-surface);
     }
     .auth-floating-theme {
       position: absolute;
       top: 26px;
       right: 32px;
+      z-index: 3;
     }
     .auth-form-box {
+      position: relative;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
+      padding: 32px 30px;
+      border-radius: 18px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      animation: authCardEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      overflow: hidden;
+    }
+    .auth-form-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand) 0%, #2563eb 50%, #a855f7 100%);
     }
     .auth-card-head {
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
     .auth-card-head h1 {
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 700;
       letter-spacing: -0.025em;
       color: var(--text-primary);
@@ -1418,7 +1577,7 @@
       border-radius: 11px;
       background: var(--bg-subtle);
       border: 1px solid var(--border);
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
     .auth-tab-btn {
       padding: 9px 12px;
@@ -1429,16 +1588,19 @@
       font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
     }
+    .auth-tab-btn:hover:not(.active) {
+      color: var(--text-primary);
+    }
     .auth-tab-btn.active {
       background: var(--bg-surface);
       color: var(--brand);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
     }
     .trial-mini-pill {
       padding: 2px 6px;
@@ -1454,6 +1616,24 @@
     }
     .auth-pane.active {
       display: block;
+      animation: authPaneSwitch 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .auth-pane-heading {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 0 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .auth-pane-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
     .trial-highlight-banner {
       display: flex;
@@ -1486,6 +1666,11 @@
       display: flex;
       align-items: center;
       pointer-events: none;
+      transition: color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .input-icon-wrap:focus-within .input-leading-icon {
+      color: var(--brand);
+      transform: scale(1.12);
     }
     .input-leading-icon svg {
       width: 16px;
@@ -1495,11 +1680,11 @@
       padding: 11px 13px 11px 38px;
       border-radius: 9px;
       font-size: 13.5px;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
     }
     .auth-pane .form-input:focus {
       border-color: var(--brand);
-      box-shadow: 0 0 0 3px var(--brand-soft);
+      box-shadow: 0 0 0 3.5px var(--brand-soft);
     }
     .form-row-2 {
       display: grid;
@@ -1512,11 +1697,11 @@
       align-items: center;
     }
     .pass-field-wrap .form-input {
-      padding-right: 38px;
+      padding-right: 36px;
     }
     .btn-eye-pass {
       position: absolute;
-      right: 10px;
+      right: 9px;
       background: none;
       border: none;
       color: var(--text-muted);
@@ -1524,9 +1709,12 @@
       display: flex;
       align-items: center;
       padding: 4px;
+      border-radius: 6px;
+      transition: color 0.18s ease, background 0.18s ease;
     }
     .btn-eye-pass:hover {
-      color: var(--text-primary);
+      color: var(--brand);
+      background: var(--bg-subtle);
     }
     .auth-row-between {
       display: flex;
@@ -1543,13 +1731,18 @@
       font-weight: 600;
       cursor: pointer;
       padding: 0;
+      text-decoration: none;
+      transition: color 0.15s ease;
     }
     .link-inline-btn:hover {
+      color: var(--brand-hover);
       text-decoration: underline;
     }
     .btn-auth-submit {
+      position: relative;
+      overflow: hidden;
       width: 100%;
-      padding: 12px 18px;
+      padding: 12.5px 18px;
       border-radius: 10px;
       border: none;
       background: linear-gradient(135deg, var(--brand) 0%, var(--brand-hover) 100%);
@@ -1558,15 +1751,36 @@
       font-weight: 600;
       cursor: pointer;
       box-shadow: 0 6px 18px rgba(109, 72, 184, 0.26);
-      transition: transform 0.14s ease, box-shadow 0.14s ease;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
     }
+    .btn-auth-submit::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.55s ease;
+      pointer-events: none;
+    }
     .btn-auth-submit:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 22px rgba(109, 72, 184, 0.34);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(109, 72, 184, 0.36);
+    }
+    .btn-auth-submit:hover::after {
+      left: 135%;
+    }
+    .btn-auth-submit svg {
+      transition: transform 0.2s ease;
+    }
+    .btn-auth-submit:hover svg {
+      transform: translateX(4px);
     }
     .auth-error-msg {
       display: none;
@@ -1588,9 +1802,27 @@
       line-height: 1.5;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .auth-ambient-orb,
+      .auth-bg-watermark,
+      .auth-kicker-dot::after,
+      .auth-visual-top,
+      .auth-kicker-pill,
+      .auth-visual-center h2,
+      .auth-visual-center > p,
+      .auth-pillar-li,
+      .auth-visual-foot,
+      .auth-form-box,
+      .auth-pane.active {
+        animation: none !important;
+      }
+    }
+
     @media (max-width: 980px) {
       .auth-gate-wrapper { grid-template-columns: 1fr; }
       .auth-visual-side { padding: 32px 24px; }
+      .auth-form-side { padding: 32px 20px; }
+      .auth-form-box { padding: 26px 22px; }
       .form-row-2 { grid-template-columns: 1fr; }
       .editor-two-columns, .profile-grid { grid-template-columns: 1fr; }
       .preview-sticky-column { position: static; }
@@ -1600,121 +1832,140 @@
 <body>
 
   <!-- =========================================================================
-       PORTA DE ENTRADA SPLIT-SCREEN: BACKGROUND À ESQUERDA & LOGIN À DIREITA
+       PORTA DE ENTRADA SPLIT-SCREEN: ESTRUTURA SEMÂNTICA WCAG & ANIMAÇÕES
   ========================================================================= -->
   <div class="auth-gate-wrapper" id="auth-gate-screen">
 
-    <!-- Lado Esquerdo: Background Visual Corporativo (Sem Card de Exemplo) -->
-    <div class="auth-visual-side">
+    <!-- Lado Esquerdo: Região Complementar de Apresentação Institucional -->
+    <aside class="auth-visual-side" role="complementary" aria-label="Apresentação Institucional do Painel Administrativo Pro">
+      <div class="auth-ambient-orb orb-1" aria-hidden="true"></div>
+      <div class="auth-ambient-orb orb-2" aria-hidden="true"></div>
       <svg class="auth-bg-watermark" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2"/><circle cx="11.5" cy="38.5" r="5.5"/><circle cx="88.5" cy="38.5" r="5.5"/><circle cx="28" cy="83.5" r="5.5"/><circle cx="72" cy="83.5" r="5.5"/></svg>
 
-      <div class="auth-visual-top">
-        <div class="auth-brand-cluster">
-          <div class="auth-brand-emblem">
-            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
-          </div>
+      <!-- Cabeçalho Institucional (Landmark: Topo / Banner) -->
+      <header class="auth-visual-top" role="banner" aria-label="Cabeçalho da Marca Allyada">
+        <a href="site/index.html" class="auth-brand-cluster" aria-label="Allyada Acessibilidade Digital — Página Inicial">
+          <figure class="auth-brand-emblem" role="img" aria-label="Logotipo Símbolo Universal de Acessibilidade da Allyada">
+            <svg role="img" aria-label="Símbolo Universal de Acessibilidade da Allyada" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
+          </figure>
           <strong>Allyada</strong>
-        </div>
-
-        <a href="site/index.html" class="btn-back-site-glass">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          <span>Voltar ao site</span>
         </a>
-      </div>
 
-      <div class="auth-visual-center">
+        <nav aria-label="Navegação de retorno ao site institucional">
+          <a href="site/index.html" class="btn-back-site-glass" aria-label="Voltar ao site institucional da Allyada">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            <span>Voltar ao site</span>
+          </a>
+        </nav>
+      </header>
+
+      <!-- Seção de Destaques do Plano Pro -->
+      <section class="auth-visual-center" aria-labelledby="auth-hero-heading">
         <div class="auth-kicker-pill">
-          <span class="auth-kicker-dot"></span>
+          <span class="auth-kicker-dot" aria-hidden="true"></span>
           <span>Painel Administrativo • Plano Pro</span>
         </div>
-        <h2>Acessibilidade digital com a identidade da sua marca.</h2>
+        <h2 id="auth-hero-heading">Acessibilidade digital com a identidade da sua marca.</h2>
         <p>
           Centralize a gestão dos seus domínios e personalize a aparência do assistente de acessibilidade e do VLibras para integrar perfeitamente ao design do seu site.
         </p>
 
-        <div class="auth-feature-pillars">
-          <div class="auth-pillar-item">
-            <div class="auth-pillar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-            </div>
-            <div class="auth-pillar-text">
-              <strong>Cores Sólidas, Degradês e Símbolos</strong>
-              <span>Adapte o botão flutuante e a janela do VLibras exatamente à paleta da sua instituição.</span>
-            </div>
-          </div>
+        <ul class="auth-feature-pillars" aria-label="Principais recursos do Painel Administrativo Pro">
+          <li class="auth-pillar-li">
+            <article class="auth-pillar-item" aria-label="Recurso: Cores Sólidas, Degradês e Símbolos">
+              <figure class="auth-pillar-icon" role="img" aria-label="Ícone de paleta de cores e degradês personalizados">
+                <svg role="img" aria-label="Paleta de cores personalizadas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+              </figure>
+              <div class="auth-pillar-text">
+                <h3>Cores Sólidas, Degradês e Símbolos</h3>
+                <p>Adapte o botão flutuante e a janela do VLibras exatamente à paleta da sua instituição.</p>
+              </div>
+            </article>
+          </li>
 
-          <div class="auth-pillar-item">
-            <div class="auth-pillar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            </div>
-            <div class="auth-pillar-text">
-              <strong>Múltiplos Domínios em uma Conta</strong>
-              <span>Gerencie todas as suas assinaturas, códigos de instalação e vigências em um único lugar.</span>
-            </div>
-          </div>
+          <li class="auth-pillar-li">
+            <article class="auth-pillar-item" aria-label="Recurso: Múltiplos Domínios em uma Conta">
+              <figure class="auth-pillar-icon" role="img" aria-label="Ícone de globo representando múltiplos domínios web">
+                <svg role="img" aria-label="Gestão de múltiplos domínios" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </figure>
+              <div class="auth-pillar-text">
+                <h3>Múltiplos Domínios em uma Conta</h3>
+                <p>Gerencie todas as suas assinaturas, códigos de instalação e vigências em um único lugar.</p>
+              </div>
+            </article>
+          </li>
 
-          <div class="auth-pillar-item">
-            <div class="auth-pillar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            </div>
-            <div class="auth-pillar-text">
-              <strong>Teste Grátis por 7 Dias</strong>
-              <span>Cadastre seu domínio agora e experimente todos os recursos do Plano Pro sem compromisso.</span>
-            </div>
-          </div>
-        </div>
-      </div>
+          <li class="auth-pillar-li">
+            <article class="auth-pillar-item" aria-label="Recurso: Teste Grátis por 7 Dias">
+              <figure class="auth-pillar-icon" role="img" aria-label="Ícone de escudo de validação do teste gratuito de 7 dias">
+                <svg role="img" aria-label="Escudo de garantia de 7 dias grátis" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              </figure>
+              <div class="auth-pillar-text">
+                <h3>Teste Grátis por 7 Dias</h3>
+                <p>Cadastre seu domínio agora e experimente todos os recursos do Plano Pro sem compromisso.</p>
+              </div>
+            </article>
+          </li>
+        </ul>
+      </section>
 
-      <div class="auth-visual-foot">
+      <!-- Rodapé Institucional (Landmark: Rodapé / Contentinfo) -->
+      <footer class="auth-visual-foot" role="contentinfo" aria-label="Rodapé Institucional e Conformidade Legal">
         <span>Allyada Tecnologia Assistiva</span>
-        <span>Conformidade LBI & WCAG 2.1 AA</span>
-      </div>
-    </div>
+        <div class="auth-foot-links">
+          <a href="site/index.html#planos" class="auth-foot-link">Planos e Licenças</a>
+          <span aria-hidden="true">•</span>
+          <a href="site/index.html#recursos" class="auth-foot-link">Conformidade LBI &amp; WCAG 2.1 AA</a>
+        </div>
+      </footer>
+    </aside>
 
-    <!-- Lado Direito: Formulário de Login, Cadastro e Teste Grátis -->
-    <div class="auth-form-side">
-      <div class="auth-floating-theme">
-        <button type="button" class="theme-toggle-btn" id="btn-auth-toggle-theme" title="Alternar tema">
-          <svg id="auth-theme-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <!-- Lado Direito: Conteúdo Principal de Login, Cadastro e Teste Grátis -->
+    <main class="auth-form-side" id="auth-main-region" role="main" aria-label="Autenticação e Cadastro no Painel Administrativo">
+      <nav class="auth-floating-theme" aria-label="Preferência de Tema Claro ou Escuro">
+        <button type="button" class="theme-toggle-btn" id="btn-auth-toggle-theme" title="Alternar entre tema claro e escuro" aria-label="Alternar entre tema claro e escuro">
+          <svg id="auth-theme-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           <span id="auth-theme-label">Tema Escuro</span>
         </button>
-      </div>
+      </nav>
 
-      <div class="auth-form-box">
+      <section class="auth-form-box" aria-labelledby="auth-main-title">
         <div class="auth-card-head">
-          <h1 id="auth-main-title">Acessar minha conta</h1>
-          <p id="auth-main-subtitle">Entre com suas credenciais Pro ou crie sua conta para testar grátis por 7 dias.</p>
+          <h1 id="auth-main-title">Entrar na sua conta</h1>
+          <p id="auth-main-subtitle">Acesse o Painel Administrativo para gerenciar seus domínios e personalizações.</p>
         </div>
 
-        <div class="auth-mode-tabs" id="auth-tabs-bar">
-          <button type="button" class="auth-tab-btn active" id="tab-auth-login">Entrar na Conta</button>
-          <button type="button" class="auth-tab-btn" id="tab-auth-trial">
+        <nav class="auth-mode-tabs" id="auth-tabs-bar" role="tablist" aria-label="Alternar entre Entrar na Conta e Cadastre-se com Teste Grátis">
+          <button type="button" class="auth-tab-btn active" id="tab-auth-login" role="tab" aria-selected="true" aria-controls="auth-pane-login">Entrar na Conta</button>
+          <button type="button" class="auth-tab-btn" id="tab-auth-trial" role="tab" aria-selected="false" aria-controls="auth-pane-trial">
             <span>Cadastre-se</span>
             <span class="trial-mini-pill">7 Dias Grátis</span>
           </button>
-        </div>
+        </nav>
 
         <!-- ABA 1: LOGIN (ENTRAR NA CONTA) -->
-        <form class="auth-pane active" id="auth-pane-login">
+        <form class="auth-pane active" id="auth-pane-login" role="tabpanel" aria-labelledby="login-form-heading">
+          <h2 class="auth-pane-heading" id="login-form-heading">Credenciais da Conta Corporativa</h2>
+
           <div class="form-group">
             <label for="login-email">E-mail Corporativo</label>
             <div class="input-icon-wrap">
-              <span class="input-leading-icon">
+              <span class="input-leading-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </span>
-              <input type="email" id="login-email" class="form-input" value="contato@inovacartorios.com.br" required>
+              <input type="email" id="login-email" class="form-input" value="contato@inovacartorios.com.br" autocomplete="email" required>
             </div>
           </div>
 
           <div class="form-group">
             <label for="login-password">Senha de Acesso</label>
             <div class="pass-field-wrap input-icon-wrap">
-              <span class="input-leading-icon">
+              <span class="input-leading-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
-              <input type="password" id="login-password" class="form-input" value="12345678" required>
-              <button type="button" class="btn-eye-pass" id="btn-toggle-pass" title="Mostrar ou ocultar senha">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <input type="password" id="login-password" class="form-input" value="12345678" autocomplete="current-password" required>
+              <button type="button" class="btn-eye-pass" id="btn-toggle-pass" title="Mostrar ou ocultar senha" aria-label="Mostrar ou ocultar senha de acesso">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
           </div>
@@ -1724,51 +1975,53 @@
               <input type="checkbox" checked style="accent-color:var(--brand); width:15px; height:15px;">
               <span>Manter conectado</span>
             </label>
-            <button type="button" class="link-inline-btn" id="btn-goto-recover">Esqueci minha senha</button>
+            <a href="#recuperar-senha" class="link-inline-btn" id="btn-goto-recover">Esqueci minha senha</a>
           </div>
 
           <button type="submit" class="btn-auth-submit">
             <span>Entrar no Painel Administrativo</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
 
-          <div class="auth-foot-note">
+          <p class="auth-foot-note">
             Ainda não possui uma conta Pro?
-            <button type="button" class="link-inline-btn" id="btn-switch-to-signup">Cadastre-se e teste grátis por 7 dias</button>
-          </div>
+            <a href="#cadastro-teste-gratis" class="link-inline-btn" id="btn-switch-to-signup">Cadastre-se e teste grátis por 7 dias</a>
+          </p>
         </form>
 
         <!-- ABA 2: CADASTRE-SE & TESTE GRÁTIS DE 7 DIAS -->
-        <form class="auth-pane" id="auth-pane-trial">
-          <div class="trial-highlight-banner">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <form class="auth-pane" id="auth-pane-trial" role="tabpanel" aria-labelledby="trial-form-heading" hidden aria-hidden="true">
+          <h2 class="auth-pane-heading" id="trial-form-heading">Cadastro com 7 Dias de Teste Grátis</h2>
+
+          <div class="trial-highlight-banner" role="note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
             <span>Crie sua conta e ganhe <strong>7 dias de teste gratuito</strong> do Plano Pro no seu domínio.</span>
           </div>
 
           <div class="form-group">
             <label for="trial-name">Nome do Responsável ou Empresa</label>
             <div class="input-icon-wrap">
-              <span class="input-leading-icon">
+              <span class="input-leading-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </span>
-              <input type="text" id="trial-name" class="form-input" placeholder="Ex: 1º Tabelionato / Sua Empresa" required>
+              <input type="text" id="trial-name" class="form-input" placeholder="Ex: 1º Tabelionato / Sua Empresa" autocomplete="organization" required>
             </div>
           </div>
 
           <div class="form-group">
             <label for="trial-email">E-mail Corporativo</label>
             <div class="input-icon-wrap">
-              <span class="input-leading-icon">
+              <span class="input-leading-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </span>
-              <input type="email" id="trial-email" class="form-input" placeholder="voce@suaempresa.com.br" required>
+              <input type="email" id="trial-email" class="form-input" placeholder="voce@suaempresa.com.br" autocomplete="email" required>
             </div>
           </div>
 
           <div class="form-group">
             <label for="trial-domain">Domínio do Site para Personalizar</label>
             <div class="input-icon-wrap">
-              <span class="input-leading-icon">
+              <span class="input-leading-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </span>
               <input type="text" id="trial-domain" class="form-input" placeholder="Ex: meusite.com.br" required>
@@ -1779,66 +2032,74 @@
             <div class="form-group">
               <label for="trial-password">Criar Senha</label>
               <div class="pass-field-wrap input-icon-wrap">
-                <span class="input-leading-icon">
+                <span class="input-leading-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 </span>
-                <input type="password" id="trial-password" class="form-input" placeholder="Mín. 8 caracteres" required>
+                <input type="password" id="trial-password" class="form-input" placeholder="Mín. 8 caracteres" autocomplete="new-password" required>
+                <button type="button" class="btn-eye-pass" id="btn-toggle-trial-pass" title="Mostrar ou ocultar senha" aria-label="Mostrar ou ocultar senha criada">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
               </div>
             </div>
 
             <div class="form-group">
               <label for="trial-password-confirm">Confirmar Senha</label>
               <div class="pass-field-wrap input-icon-wrap">
-                <span class="input-leading-icon">
+                <span class="input-leading-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                 </span>
-                <input type="password" id="trial-password-confirm" class="form-input" placeholder="Repita a senha" required>
+                <input type="password" id="trial-password-confirm" class="form-input" placeholder="Repita a senha" autocomplete="new-password" required>
+                <button type="button" class="btn-eye-pass" id="btn-toggle-trial-confirm" title="Mostrar ou ocultar confirmação de senha" aria-label="Mostrar ou ocultar confirmação de senha">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="auth-error-msg" id="trial-pass-error">
+          <div class="auth-error-msg" id="trial-pass-error" role="alert" aria-live="assertive">
             As senhas informadas não coincidem. Verifique e tente novamente.
           </div>
 
           <button type="submit" class="btn-auth-submit" style="margin-top: 6px;">
             <span>Criar Conta e Iniciar 7 Dias Grátis</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
 
-          <div class="auth-foot-note">
+          <p class="auth-foot-note">
             Já possui uma conta cadastrada?
-            <button type="button" class="link-inline-btn" id="btn-switch-to-login">Entrar na minha conta</button>
-          </div>
+            <a href="#entrar-na-conta" class="link-inline-btn" id="btn-switch-to-login">Entrar na minha conta</a>
+          </p>
         </form>
 
         <!-- ABA 3: RECUPERAR SENHA -->
-        <form class="auth-pane" id="auth-pane-recover">
+        <form class="auth-pane" id="auth-pane-recover" role="tabpanel" aria-labelledby="recover-form-heading" hidden aria-hidden="true">
+          <h2 class="auth-pane-heading" id="recover-form-heading">Solicitação de Redefinição de Senha</h2>
+
           <div class="form-group">
             <label for="recover-email">E-mail Cadastrado na Conta Pro</label>
             <div class="input-icon-wrap">
-              <span class="input-leading-icon">
+              <span class="input-leading-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </span>
-              <input type="email" id="recover-email" class="form-input" placeholder="contato@suaempresa.com.br" required>
+              <input type="email" id="recover-email" class="form-input" placeholder="contato@suaempresa.com.br" autocomplete="email" required>
             </div>
           </div>
           <button type="submit" class="btn-auth-submit">
             <span>Enviar Link de Redefinição</span>
           </button>
-          <p id="recover-feedback" style="font-size:12.5px; color:var(--status-ok); font-weight:600; text-align:center; margin-top:12px; display:none;">
+          <p id="recover-feedback" role="status" aria-live="polite" style="font-size:12.5px; color:var(--status-ok); font-weight:600; text-align:center; margin-top:12px; display:none;">
             Enviamos as instruções de recuperação para o seu e-mail.
           </p>
-          <div class="auth-foot-note">
-            <button type="button" class="link-inline-btn" id="btn-back-to-login">Voltar para o Login</button>
-          </div>
+          <p class="auth-foot-note">
+            <a href="#entrar-na-conta" class="link-inline-btn" id="btn-back-to-login">Voltar para o Login</a>
+          </p>
         </form>
-      </div>
-    </div>
+      </section>
+    </main>
   </div>
 
   <!-- BARRA SUPERIOR DO PAINEL (EXIBIDA APÓS O LOGIN) -->
-  <header class="admin-header" id="admin-top-header" style="display: none;">
+  <header class="admin-header" id="admin-top-header" style="display: none;" hidden aria-hidden="true">
     <div class="header-left" id="logo-home-btn" title="Ir para Meus Domínios">
       <div class="brand-mark">
         <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.8 30.2A40 40 0 0 1 86.2 30.2"/><path d="M9.3 47.4A40 40 0 0 0 20.2 77.5"/><path d="M90.7 47.4A40 40 0 0 1 79.8 77.5"/><path d="M35.5 88.2A40 40 0 0 0 64.5 88.2"/><path d="M15.8 40.5Q50 58 84.2 40.5"/><path d="M30.8 79.2L49.2 49.5L50.8 49.5L69.2 79.2"/><circle cx="50" cy="29.5" r="10.2" fill="currentColor" fill-opacity="0.3"/><circle cx="11.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="88.5" cy="38.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="28" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/><circle cx="72" cy="83.5" r="5.5" fill="currentColor" fill-opacity="0.3"/></svg>
@@ -1893,7 +2154,7 @@
     </div>
   </header>
 
-  <main class="main-wrap" id="admin-main-wrap" style="display: none;">
+  <main class="main-wrap" id="admin-main-wrap" style="display: none;" hidden aria-hidden="true">
 
     <!-- =====================================================================
          TELA 1: LISTA DE DOMÍNIOS DO CLIENTE (ESTILO REGISTRO.BR)
@@ -2520,21 +2781,38 @@
       }
 
       const authScreen = document.getElementById('auth-gate-screen');
+      const authMainRegion = document.getElementById('auth-main-region');
       const adminHeader = document.getElementById('admin-top-header');
       const adminMain = document.getElementById('admin-main-wrap');
 
       function enterAuthenticatedPanel() {
         authScreen.classList.add('hidden');
+        authScreen.setAttribute('hidden', '');
+        authScreen.setAttribute('aria-hidden', 'true');
+        if (authMainRegion) authMainRegion.removeAttribute('role');
         adminHeader.style.display = 'flex';
+        adminHeader.removeAttribute('hidden');
+        adminHeader.setAttribute('aria-hidden', 'false');
         adminMain.style.display = 'block';
+        adminMain.removeAttribute('hidden');
+        adminMain.setAttribute('aria-hidden', 'false');
+        adminMain.setAttribute('role', 'main');
         showView('domains');
       }
 
       function logoutToAuthGate() {
         bottomBar.classList.add('hidden');
         adminHeader.style.display = 'none';
+        adminHeader.setAttribute('hidden', '');
+        adminHeader.setAttribute('aria-hidden', 'true');
         adminMain.style.display = 'none';
+        adminMain.setAttribute('hidden', '');
+        adminMain.setAttribute('aria-hidden', 'true');
+        adminMain.removeAttribute('role');
         authScreen.classList.remove('hidden');
+        authScreen.removeAttribute('hidden');
+        authScreen.setAttribute('aria-hidden', 'false');
+        if (authMainRegion) authMainRegion.setAttribute('role', 'main');
       }
 
       // Alternância entre Abas de Login, Teste Grátis de 7 Dias e Recuperação de Senha
@@ -2545,12 +2823,26 @@
       const paneRecover = document.getElementById('auth-pane-recover');
       const authTabsBar = document.getElementById('auth-tabs-bar');
 
+      function setPaneAccessibilityState(paneEl, isActive) {
+        paneEl.classList.toggle('active', isActive);
+        if (isActive) {
+          paneEl.removeAttribute('hidden');
+          paneEl.setAttribute('aria-hidden', 'false');
+        } else {
+          paneEl.setAttribute('hidden', '');
+          paneEl.setAttribute('aria-hidden', 'true');
+        }
+      }
+
       function switchAuthMode(mode) {
-        paneLogin.classList.toggle('active', mode === 'login');
-        paneTrial.classList.toggle('active', mode === 'trial');
-        paneRecover.classList.toggle('active', mode === 'recover');
+        setPaneAccessibilityState(paneLogin, mode === 'login');
+        setPaneAccessibilityState(paneTrial, mode === 'trial');
+        setPaneAccessibilityState(paneRecover, mode === 'recover');
+
         tabLoginBtn.classList.toggle('active', mode === 'login');
+        tabLoginBtn.setAttribute('aria-selected', mode === 'login' ? 'true' : 'false');
         tabTrialBtn.classList.toggle('active', mode === 'trial');
+        tabTrialBtn.setAttribute('aria-selected', mode === 'trial' ? 'true' : 'false');
         authTabsBar.style.display = mode === 'recover' ? 'none' : 'grid';
 
         const titleEl = document.getElementById('auth-main-title');
@@ -2569,16 +2861,35 @@
 
       tabLoginBtn.addEventListener('click', () => switchAuthMode('login'));
       tabTrialBtn.addEventListener('click', () => switchAuthMode('trial'));
-      document.getElementById('btn-goto-recover').addEventListener('click', () => switchAuthMode('recover'));
-      document.getElementById('btn-back-to-login').addEventListener('click', () => switchAuthMode('login'));
-      document.getElementById('btn-switch-to-signup').addEventListener('click', () => switchAuthMode('trial'));
-      document.getElementById('btn-switch-to-login').addEventListener('click', () => switchAuthMode('login'));
-
-      // Mostrar / Ocultar Senha no Login
-      const passInput = document.getElementById('login-password');
-      document.getElementById('btn-toggle-pass').addEventListener('click', () => {
-        passInput.type = passInput.type === 'password' ? 'text' : 'password';
+      document.getElementById('btn-goto-recover').addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthMode('recover');
       });
+      document.getElementById('btn-back-to-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthMode('login');
+      });
+      document.getElementById('btn-switch-to-signup').addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthMode('trial');
+      });
+      document.getElementById('btn-switch-to-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        switchAuthMode('login');
+      });
+
+      // Mostrar / Ocultar Senhas no Login e no Cadastro
+      function bindPasswordEyeToggle(btnId, inputId) {
+        const btn = document.getElementById(btnId);
+        const inp = document.getElementById(inputId);
+        if (!btn || !inp) return;
+        btn.addEventListener('click', () => {
+          inp.type = inp.type === 'password' ? 'text' : 'password';
+        });
+      }
+      bindPasswordEyeToggle('btn-toggle-pass', 'login-password');
+      bindPasswordEyeToggle('btn-toggle-trial-pass', 'trial-password');
+      bindPasswordEyeToggle('btn-toggle-trial-confirm', 'trial-password-confirm');
 
       // Submissão do Login
       paneLogin.addEventListener('submit', (e) => {
