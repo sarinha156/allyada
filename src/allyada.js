@@ -5625,7 +5625,14 @@
       const vlibrasIsLeft = !allyadaIsLeft;
       const side = vlibrasIsLeft ? 'left' : 'right';
       const opposite = vlibrasIsLeft ? 'right' : 'left';
-      const vlibrasColor = (this.config && this.config.vlibrasColor) ? this.config.vlibrasColor : '#7956c2';
+      const rawVlibras = (this.config && this.config.vlibrasColor)
+        ? this.config.vlibrasColor
+        : ((this.config && this.config.fabGradient) || (this.config && this.config.primaryColor) || '#7956c2');
+      const isGrad = typeof rawVlibras === 'string' && (rawVlibras.startsWith('linear-gradient') || rawVlibras.startsWith('radial-gradient'));
+      const hexMatch = typeof rawVlibras === 'string' ? rawVlibras.match(/#[0-9a-fA-F]{6}/) : null;
+      const vlibrasPrimaryHex = isGrad ? (hexMatch ? hexMatch[0] : '#7956c2') : rawVlibras;
+      const vlibrasBg = rawVlibras;
+
       if (typeof window !== 'undefined' && window.VLibrasWidget) {
         window.VLibrasWidget.position = vlibrasIsLeft ? 'L' : 'R';
       }
@@ -5646,14 +5653,14 @@
             ${side}: 24px !important;
             ${opposite}: auto !important;
             flex-direction: ${vlibrasIsLeft ? 'row-reverse' : 'row'} !important;
-            --vlibras-btn-focus-visible-shadow: 0 0 10px 4px ${vlibrasColor} !important;
+            --vlibras-btn-focus-visible-shadow: 0 0 10px 4px ${vlibrasPrimaryHex} !important;
           }
           #vlibras-button {
             ${side}: 0 !important;
             ${opposite}: auto !important;
             border-radius: 14px !important;
-            background: ${vlibrasColor} !important;
-            box-shadow: 0 8px 22px rgba(121, 86, 194, 0.35) !important;
+            background: ${vlibrasBg} !important;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.28) !important;
           }
           #vlibras-button img,
           #vlibras-popup {
@@ -5680,7 +5687,7 @@
           :host(.dark),
           [data-theme="dark"] {
             --radius: 18px !important;
-            --primary: ${vlibrasColor} !important;
+            --primary: ${vlibrasPrimaryHex} !important;
             --primary-foreground: #ffffff !important;
             --secondary: #5e3ea1 !important;
             --secondary-foreground: #f3effb !important;

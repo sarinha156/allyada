@@ -6,55 +6,57 @@
   <title>Allyada — Painel Administrativo</title>
   <style>
     /* =========================================================================
-       ALLYADA DESIGN SYSTEM — TEMA CLARO (PADRÃO) & TEMA ESCURO
+       ALLYADA ENTERPRISE DESIGN SYSTEM — TEMA CLARO & TEMA ESCURO
     ========================================================================= */
     :root,
     [data-theme="light"] {
-      --bg-page: #f4f3f8;
+      --bg-page: #f6f6f9;
       --bg-surface: #ffffff;
-      --bg-subtle: #f8f7fc;
-      --bg-input: #f1f0f7;
-      --bg-hover: #efeaf9;
-      --border: #e2ddf0;
-      --border-strong: #cbc2e3;
-      --text-primary: #181326;
-      --text-secondary: #4a435c;
-      --text-muted: #766e8a;
-      --brand: #7956c2;
-      --brand-hover: #6441ad;
-      --brand-soft: rgba(121, 86, 194, 0.1);
-      --status-ok: #16a34a;
+      --bg-subtle: #faf9fc;
+      --bg-input: #f2f1f6;
+      --bg-hover: #f3effb;
+      --border: #e4e2ec;
+      --border-strong: #cfc9e0;
+      --text-primary: #14111f;
+      --text-secondary: #494459;
+      --text-muted: #756f86;
+      --brand: #6d48b8;
+      --brand-hover: #5a389e;
+      --brand-soft: rgba(109, 72, 184, 0.09);
+      --status-ok: #15803d;
       --status-ok-bg: #dcfce7;
-      --status-warn: #d97706;
+      --status-warn: #b45309;
       --status-warn-bg: #fef3c7;
-      --status-danger: #dc2626;
+      --status-danger: #b91c1c;
       --status-danger-bg: #fee2e2;
-      --shadow-card: 0 8px 24px rgba(24, 19, 38, 0.05);
-      --shadow-float: 0 16px 36px rgba(24, 19, 38, 0.1);
+      --shadow-sm: 0 1px 3px rgba(20, 17, 31, 0.04);
+      --shadow-card: 0 4px 20px rgba(20, 17, 31, 0.05);
+      --shadow-dropdown: 0 14px 34px rgba(20, 17, 31, 0.12);
     }
 
     [data-theme="dark"] {
-      --bg-page: #0f0c18;
-      --bg-surface: #181426;
-      --bg-subtle: #201a31;
-      --bg-input: #261f3b;
-      --bg-hover: #2d2447;
-      --border: #332a4d;
-      --border-strong: #4a3d6e;
-      --text-primary: #f5f3fa;
-      --text-secondary: #cfc9de;
-      --text-muted: #968db0;
+      --bg-page: #0d0b14;
+      --bg-surface: #151221;
+      --bg-subtle: #1b172a;
+      --bg-input: #221d35;
+      --bg-hover: #27213d;
+      --border: #2c2542;
+      --border-strong: #413761;
+      --text-primary: #f4f2f8;
+      --text-secondary: #c9c4d8;
+      --text-muted: #8e87a4;
       --brand: #9472de;
       --brand-hover: #a78bfa;
-      --brand-soft: rgba(148, 114, 222, 0.16);
+      --brand-soft: rgba(148, 114, 222, 0.15);
       --status-ok: #4ade80;
-      --status-ok-bg: rgba(74, 222, 128, 0.14);
+      --status-ok-bg: rgba(74, 222, 128, 0.12);
       --status-warn: #fbbf24;
-      --status-warn-bg: rgba(251, 191, 36, 0.14);
+      --status-warn-bg: rgba(251, 191, 36, 0.12);
       --status-danger: #f87171;
-      --status-danger-bg: rgba(248, 113, 113, 0.14);
-      --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.35);
-      --shadow-float: 0 18px 42px rgba(0, 0, 0, 0.5);
+      --status-danger-bg: rgba(248, 113, 113, 0.12);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
+      --shadow-card: 0 8px 26px rgba(0, 0, 0, 0.35);
+      --shadow-dropdown: 0 18px 40px rgba(0, 0, 0, 0.55);
     }
 
     * {
@@ -62,6 +64,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
@@ -70,50 +73,59 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition: background 0.18s ease, color 0.18s ease;
     }
 
     /* =========================================================================
-       CABEÇALHO DO PAINEL ADMINISTRATIVO
+       BARRA SUPERIOR (HEADER COM TEMA E MENU DE PERFIL)
     ========================================================================= */
     .admin-header {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border);
-      padding: 14px 36px;
+      height: 66px;
+      padding: 0 36px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 80;
     }
     .header-left {
       display: flex;
       align-items: center;
       gap: 14px;
+      cursor: pointer;
     }
     .brand-mark {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6d48b8 0%, #523294 100%);
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(121, 86, 194, 0.3);
-      cursor: pointer;
     }
-    .brand-mark svg { width: 24px; height: 24px; }
+    .brand-mark svg { width: 21px; height: 21px; }
+    .brand-titles {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
     .brand-titles strong {
-      font-size: 16.5px;
-      font-weight: 800;
+      font-size: 15.5px;
+      font-weight: 700;
       letter-spacing: -0.02em;
-      display: block;
+      color: var(--text-primary);
+    }
+    .brand-divider {
+      color: var(--border-strong);
+      font-weight: 400;
     }
     .brand-titles span {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-muted);
       font-weight: 500;
     }
@@ -121,100 +133,210 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
+      position: relative;
     }
 
-    /* Botão Alternador Tema Claro / Escuro */
-    .theme-switch-btn {
+    /* Botão Tema Claro/Escuro Minimalista */
+    .theme-toggle-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
+      gap: 7px;
+      height: 38px;
+      padding: 0 13px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--bg-subtle);
       color: var(--text-secondary);
       font-size: 12.5px;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
     }
-    .theme-switch-btn:hover {
-      border-color: var(--brand);
-      color: var(--brand);
+    .theme-toggle-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+    .theme-toggle-btn svg {
+      width: 15px;
+      height: 15px;
     }
 
-    .account-badge {
+    /* Botão de Perfil do Usuário no Topo Direito */
+    .profile-trigger-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 42px;
+      padding: 4px 10px 4px 6px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .profile-trigger-btn:hover,
+    .profile-trigger-btn.active {
+      border-color: var(--border-strong);
+      background: var(--bg-subtle);
+    }
+    .profile-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-strong);
+    }
+    .profile-meta {
+      text-align: left;
+      line-height: 1.2;
+    }
+    .profile-meta strong {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .profile-meta span {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .profile-chevron {
+      width: 15px;
+      height: 15px;
+      color: var(--text-muted);
+    }
+
+    /* Menu Dropdown do Perfil */
+    .profile-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 250px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-dropdown);
+      padding: 6px;
+      z-index: 120;
+    }
+    .profile-dropdown.open {
+      display: block;
+    }
+    .dropdown-header {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+    .dropdown-header strong {
+      display: block;
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+    .dropdown-header span {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+    .dropdown-item {
+      width: 100%;
+      padding: 9px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding-left: 14px;
-      border-left: 1px solid var(--border);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.12s ease, color 0.12s ease;
     }
-    .pro-tag {
-      background: var(--brand-soft);
+    .dropdown-item svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
+    .dropdown-item:hover {
+      background: var(--bg-hover);
       color: var(--brand);
-      border: 1px solid var(--border-strong);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 3px 9px;
-      border-radius: 999px;
+    }
+    .dropdown-item:hover svg {
+      color: var(--brand);
+    }
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+    .dropdown-item.danger:hover {
+      background: var(--status-danger-bg);
+      color: var(--status-danger);
+    }
+    .dropdown-item.danger:hover svg {
+      color: var(--status-danger);
     }
 
     /* =========================================================================
-       CONTAINER PRINCIPAL
+       ESTRUTURA CENTRAL
     ========================================================================= */
     .main-wrap {
-      max-width: 1280px;
+      max-width: 1260px;
       width: 100%;
       margin: 0 auto;
       padding: 32px 24px 100px;
       flex: 1;
     }
 
-    /* =========================================================================
-       TELA 1: LISTA DE DOMÍNIOS DO CLIENTE (ESTILO REGISTRO.BR)
-    ========================================================================= */
-    .view-domains {
-      display: block;
-    }
-    .view-domains.hidden {
+    .view-section {
       display: none;
     }
+    .view-section.active {
+      display: block;
+    }
 
-    .domains-page-header {
+    /* =========================================================================
+       TELA 1: LISTA DE DOMÍNIOS (ESTILO REGISTRO.BR)
+    ========================================================================= */
+    .page-heading {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
       gap: 16px;
     }
-    .domains-page-header h1 {
-      font-size: 22px;
-      font-weight: 800;
+    .page-heading h1 {
+      font-size: 21px;
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
-    .domains-page-header p {
+    .page-heading p {
       font-size: 13.5px;
       color: var(--text-muted);
       margin-top: 4px;
     }
 
-    .domains-table-card {
+    .table-surface {
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 14px;
       box-shadow: var(--shadow-card);
       overflow: hidden;
     }
 
-    /* Barra de Busca e Paginação Estilo Registro.br */
     .table-toolbar {
-      padding: 18px 24px;
+      padding: 16px 22px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -222,69 +344,65 @@
       gap: 16px;
       flex-wrap: wrap;
     }
-    .search-input-wrap {
+    .search-box {
       position: relative;
       flex: 1;
-      max-width: 440px;
+      max-width: 420px;
       min-width: 240px;
     }
-    .search-input-wrap input {
+    .search-box input {
       width: 100%;
-      padding: 11px 40px 11px 16px;
-      border-radius: 10px;
+      padding: 10px 38px 10px 14px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--bg-input);
       color: var(--text-primary);
-      font-size: 13.5px;
+      font-size: 13px;
       outline: none;
       transition: border-color 0.15s ease;
     }
-    .search-input-wrap input:focus {
+    .search-box input:focus {
       border-color: var(--brand);
     }
-    .search-input-wrap svg {
+    .search-box svg {
       position: absolute;
-      right: 14px;
+      right: 12px;
       top: 50%;
       transform: translateY(-50%);
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       color: var(--text-muted);
       pointer-events: none;
     }
-    .toolbar-meta {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 13px;
+    .toolbar-info {
+      font-size: 12.5px;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 500;
     }
 
-    /* Tabela Estilo Registro.br */
     .domains-table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
     }
     .domains-table th {
-      padding: 14px 24px;
-      font-size: 11.5px;
-      font-weight: 800;
+      padding: 13px 22px;
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
-      border-bottom: 2px solid var(--border);
+      border-bottom: 1px solid var(--border);
       background: var(--bg-subtle);
     }
     .domains-table td {
-      padding: 18px 24px;
+      padding: 16px 22px;
       border-bottom: 1px solid var(--border);
-      font-size: 14px;
+      font-size: 13.5px;
       vertical-align: middle;
     }
     .domains-table tbody tr {
-      transition: background 0.15s ease;
+      transition: background 0.12s ease;
       cursor: pointer;
     }
     .domains-table tbody tr:hover {
@@ -294,250 +412,241 @@
       border-bottom: none;
     }
 
-    .domain-name-cell {
-      font-weight: 800;
-      font-size: 14.5px;
+    .domain-cell-title {
+      font-weight: 700;
+      font-size: 13.5px;
       color: var(--text-primary);
-      letter-spacing: 0.01em;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
     }
-    .domain-name-cell small {
+    .domain-cell-title small {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       color: var(--text-muted);
     }
 
-    .status-badge {
+    .status-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 12.5px;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
     }
-    .status-badge.active {
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .status-pill.active {
       color: var(--status-ok);
       background: var(--status-ok-bg);
     }
-    .status-badge.expiring {
+    .status-pill.active .status-dot { background: var(--status-ok); }
+    .status-pill.expiring {
       color: var(--status-warn);
       background: var(--status-warn-bg);
     }
-    .status-badge.expired {
+    .status-pill.expiring .status-dot { background: var(--status-warn); }
+    .status-pill.expired {
       color: var(--status-danger);
       background: var(--status-danger-bg);
     }
+    .status-pill.expired .status-dot { background: var(--status-danger); }
 
-    .visual-chip {
+    .visual-badge-cell {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 12.5px;
+      font-size: 12px;
       color: var(--text-secondary);
-      font-weight: 600;
+      font-weight: 500;
     }
-    .visual-mini-fab {
-      width: 28px;
-      height: 28px;
+    .mini-fab-dot {
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       color: #ffffff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+      box-shadow: var(--shadow-sm);
     }
-    .visual-mini-fab svg { width: 15px; height: 15px; }
+    .mini-fab-dot svg { width: 14px; height: 14px; }
 
-    .btn-table-action {
-      padding: 8px 16px;
-      border-radius: 8px;
+    .btn-row-edit {
+      padding: 7px 14px;
+      border-radius: 7px;
       border: 1px solid var(--border-strong);
       background: var(--bg-surface);
-      color: var(--brand);
-      font-size: 12.5px;
-      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.14s ease;
     }
-    .btn-table-action:hover {
+    .btn-row-edit:hover {
       background: var(--brand);
       color: #ffffff;
       border-color: var(--brand);
     }
-    .btn-table-pay {
-      padding: 8px 16px;
-      border-radius: 8px;
+    .btn-row-pay {
+      padding: 7px 14px;
+      border-radius: 7px;
       border: none;
       background: #475569;
       color: #ffffff;
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11.5px;
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.03em;
       cursor: pointer;
     }
 
     /* =========================================================================
-       TELA 2: EDIÇÃO INTERNA DO DOMÍNIO SELECIONADO
-       (ESQUERDA: OPÇÕES | DIREITA: PRÉ-VISUALIZAÇÃO DE CORES)
+       TELA 2: EDIÇÃO DO DOMÍNIO (ESQUERDA: CONTROLES | DIREITA: PRÉ-VISUALIZAÇÃO)
     ========================================================================= */
-    .view-editor {
-      display: none;
-    }
-    .view-editor.active {
-      display: block;
-    }
-
     .editor-top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
     .editor-breadcrumb {
       display: flex;
       align-items: center;
       gap: 14px;
     }
-    .btn-back-domains {
+    .btn-back {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 9px 14px;
-      border-radius: 10px;
+      padding: 8px 13px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--bg-surface);
       color: var(--text-secondary);
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12.5px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.14s ease;
     }
-    .btn-back-domains:hover {
+    .btn-back svg { width: 15px; height: 15px; }
+    .btn-back:hover {
       border-color: var(--brand);
       color: var(--brand);
     }
     .domain-active-title h2 {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
     }
     .domain-active-title span {
       font-size: 12.5px;
       color: var(--text-muted);
     }
 
-    /* Abas Internas do Domínio (Apenas 3 Abas: Personalização, Instalação e Dados da Assinatura) */
+    /* Abas Limpas */
     .editor-tabs {
       display: inline-flex;
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 5px;
-      gap: 6px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-card);
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 22px;
     }
     .editor-tab-btn {
-      padding: 10px 18px;
-      border-radius: 8px;
+      padding: 8px 16px;
+      border-radius: 7px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
-      font-size: 13.5px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.15s ease;
+      gap: 7px;
+      transition: all 0.14s ease;
     }
-    .editor-tab-btn svg { width: 17px; height: 17px; }
-    .editor-tab-btn:hover {
-      color: var(--text-primary);
-    }
+    .editor-tab-btn svg { width: 15px; height: 15px; }
+    .editor-tab-btn:hover { color: var(--text-primary); }
     .editor-tab-btn.active {
       background: var(--brand);
       color: #ffffff;
-      box-shadow: 0 4px 12px rgba(121, 86, 194, 0.28);
     }
 
-    .editor-pane {
-      display: none;
-    }
-    .editor-pane.active {
-      display: block;
-    }
+    .editor-pane { display: none; }
+    .editor-pane.active { display: block; }
 
-    /* Layout de 2 Colunas na Aba Estilo: Esquerda (Controles) | Direita (Pré-visualização Fixa) */
+    /* Grid 2 Colunas: Esquerda Opções | Direita Pré-visualização */
     .editor-two-columns {
       display: grid;
-      grid-template-columns: 1fr 400px;
+      grid-template-columns: 1fr 390px;
       gap: 24px;
       align-items: start;
     }
-
     .controls-column {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
     .panel-card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px 24px;
+      border-radius: 14px;
+      padding: 22px;
       box-shadow: var(--shadow-card);
     }
     .panel-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .panel-card-title {
-      font-size: 15px;
-      font-weight: 800;
+      font-size: 14.5px;
+      font-weight: 700;
       color: var(--text-primary);
     }
     .panel-card-desc {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-muted);
       margin-bottom: 16px;
       line-height: 1.45;
     }
 
-    /* Seletor Cor Sólida vs Degradê */
+    /* Seletor Cor Sólida | Degradê */
     .segmented-switch {
       display: inline-flex;
       background: var(--bg-input);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 16px;
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 14px;
     }
     .seg-switch-btn {
-      padding: 7px 16px;
-      border-radius: 7px;
+      padding: 6px 14px;
+      border-radius: 6px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
-      font-size: 12.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
     }
     .seg-switch-btn.active {
       background: var(--bg-surface);
-      color: var(--brand);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
     }
 
-    /* Swatches + Anel de Cores */
     .palette-wrap {
       display: flex;
       align-items: center;
@@ -545,16 +654,14 @@
       gap: 10px;
     }
     .swatch-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
-      border: 2px solid rgba(0, 0, 0, 0.12);
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
-    .swatch-btn:hover {
-      transform: scale(1.08);
-    }
+    .swatch-btn:hover { transform: scale(1.06); }
     .swatch-btn.active {
       border-color: var(--text-primary);
       box-shadow: 0 0 0 3px var(--brand-soft);
@@ -565,18 +672,18 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 12px 6px 8px;
-      border-radius: 11px;
-      border: 1.5px dashed var(--border-strong);
+      padding: 5px 11px 5px 7px;
+      border-radius: 9px;
+      border: 1px solid var(--border-strong);
       background: var(--bg-subtle);
       cursor: pointer;
-      font-size: 12.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
       color: var(--text-primary);
     }
     .wheel-ring {
-      width: 26px;
-      height: 26px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       background: conic-gradient(#ef4444, #f59e0b, #eab308, #10b981, #06b6d4, #3b82f6, #8b5cf6, #ec4899, #ef4444);
       display: flex;
@@ -585,8 +692,8 @@
     }
     .wheel-ring::after {
       content: "";
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: var(--bg-subtle);
     }
@@ -602,41 +709,45 @@
     .hex-box-wrap {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 10px;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--bg-input);
     }
     .hex-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 5px;
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
       border: 1px solid rgba(0,0,0,0.15);
     }
     .hex-box-wrap input {
-      width: 74px;
+      width: 70px;
       border: none;
       background: transparent;
       color: var(--text-primary);
       font-family: monospace;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12.5px;
+      font-weight: 600;
       outline: none;
     }
 
     .btn-add-swatch {
-      padding: 8px 12px;
-      border-radius: 10px;
+      padding: 7px 12px;
+      border-radius: 8px;
       border: 1px solid var(--border-strong);
-      background: var(--brand-soft);
-      color: var(--brand);
+      background: var(--bg-subtle);
+      color: var(--text-primary);
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
     }
+    .btn-add-swatch:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
 
-    /* Opções de Ícone */
+    /* Ícones */
     .icons-grid-5 {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -644,8 +755,8 @@
     }
     .icon-card-btn {
       padding: 12px 8px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      border: 1px solid var(--border);
       background: var(--bg-subtle);
       color: var(--text-secondary);
       display: flex;
@@ -654,20 +765,18 @@
       gap: 6px;
       cursor: pointer;
       font-size: 11.5px;
-      font-weight: 700;
-      transition: all 0.15s ease;
+      font-weight: 600;
+      transition: all 0.14s ease;
     }
-    .icon-card-btn svg { width: 24px; height: 24px; }
-    .icon-card-btn:hover {
-      border-color: var(--brand);
-    }
+    .icon-card-btn svg { width: 22px; height: 22px; }
+    .icon-card-btn:hover { border-color: var(--border-strong); }
     .icon-card-btn.active {
       border-color: var(--brand);
       background: var(--brand-soft);
       color: var(--brand);
     }
 
-    /* Botões de Escolha de Posição */
+    /* Botões de Escolha */
     .choice-pills-row {
       display: flex;
       flex-wrap: wrap;
@@ -676,16 +785,16 @@
     .choice-pill {
       flex: 1;
       min-width: 120px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1.5px solid var(--border);
+      padding: 9px 14px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
       background: var(--bg-subtle);
       color: var(--text-secondary);
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12.5px;
+      font-weight: 600;
       text-align: center;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.14s ease;
     }
     .choice-pill.active {
       border-color: var(--brand);
@@ -693,40 +802,32 @@
       color: var(--brand);
     }
 
-    /* =========================================================================
-       COLUNA DA DIREITA: PRÉ-VISUALIZAÇÃO FIXA DE CORES & ÍCONE
-    ========================================================================= */
+    /* Coluna Direita: Pré-visualização Fixa */
     .preview-sticky-column {
       position: sticky;
       top: 86px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
     }
-
     .preview-stage-box {
       background: var(--bg-subtle);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
+      border-radius: 12px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
       align-items: center;
     }
-
-    /* Miniatura do Cabeçalho e Card do Painel Allyada */
     .mini-allyada-panel {
       width: 100%;
       background: #ffffff;
       color: #0f172a;
-      border-radius: 16px;
+      border-radius: 14px;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
       overflow: hidden;
     }
     .mini-panel-head {
-      padding: 14px 18px;
+      padding: 13px 16px;
       border-bottom: 1px solid #e2e8f0;
       display: flex;
       align-items: center;
@@ -738,41 +839,40 @@
       gap: 10px;
     }
     .mini-head-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: #7956c2;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: #6d48b8;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .mini-head-icon svg { width: 20px; height: 20px; }
+    .mini-head-icon svg { width: 19px; height: 19px; }
     .mini-head-pill {
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
+      font-size: 10.5px;
+      font-weight: 700;
       color: #ffffff;
-      background: #7956c2;
+      background: #6d48b8;
     }
     .mini-panel-body {
-      padding: 14px 18px;
+      padding: 13px 16px;
       background: #f8fafc;
     }
     .mini-active-card {
-      padding: 11px 14px;
-      border-radius: 12px;
-      border: 2px solid #7956c2;
-      background: rgba(121, 86, 194, 0.06);
+      padding: 10px 13px;
+      border-radius: 10px;
+      border: 1.5px solid #6d48b8;
+      background: rgba(109, 72, 184, 0.05);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 12.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
     }
 
-    /* Dupla de Botões Flutuantes (Allyada + VLibras) */
     .floating-buttons-preview {
       width: 100%;
       display: flex;
@@ -780,8 +880,8 @@
       justify-content: space-around;
       padding: 16px 12px;
       background: var(--bg-surface);
-      border-radius: 12px;
-      border: 1px dashed var(--border-strong);
+      border-radius: 10px;
+      border: 1px solid var(--border);
     }
     .fab-preview-col {
       display: flex;
@@ -791,37 +891,67 @@
     }
     .fab-preview-col span {
       font-size: 11.5px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text-muted);
     }
     .preview-allyada-circle {
-      width: 60px;
-      height: 60px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      background: #7956c2;
+      background: #6d48b8;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
     }
-    .preview-allyada-circle svg { width: 32px; height: 32px; }
+    .preview-allyada-circle svg { width: 30px; height: 30px; }
     .preview-vlibras-square {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: #7956c2;
+      width: 50px;
+      height: 50px;
+      border-radius: 13px;
+      background: #6d48b8;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
     }
-    .preview-vlibras-square svg { width: 26px; height: 26px; }
+    .preview-vlibras-square svg { width: 24px; height: 24px; }
 
     /* =========================================================================
-       BARRA INFERIOR DE PUBLICAÇÃO
+       TELA 3: MEU PERFIL & CONFIGURAÇÕES DA CONTA DO CLIENTE
     ========================================================================= */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--brand);
+    }
+
+    /* Barra Inferior Fixa */
     .bottom-save-bar {
       position: fixed;
       bottom: 0;
@@ -829,15 +959,12 @@
       right: 0;
       background: var(--bg-surface);
       border-top: 1px solid var(--border);
-      padding: 14px 36px;
+      padding: 12px 36px;
       z-index: 60;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
     }
-    .bottom-save-bar.hidden {
-      display: none;
-    }
+    .bottom-save-bar.hidden { display: none; }
     .save-bar-inner {
-      max-width: 1280px;
+      max-width: 1260px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -845,97 +972,124 @@
       gap: 16px;
     }
     .btn-secondary {
-      padding: 10px 20px;
-      border-radius: 10px;
+      padding: 9px 18px;
+      border-radius: 8px;
       border: 1px solid var(--border-strong);
       background: var(--bg-subtle);
       color: var(--text-secondary);
-      font-size: 13.5px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
     }
     .btn-primary-save {
-      padding: 11px 24px;
-      border-radius: 10px;
+      padding: 9px 20px;
+      border-radius: 8px;
       border: none;
-      background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
+      background: var(--brand);
       color: #ffffff;
-      font-size: 13.5px;
-      font-weight: 800;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(121, 86, 194, 0.32);
+      transition: background 0.15s ease;
+    }
+    .btn-primary-save:hover {
+      background: var(--brand-hover);
     }
 
     .code-block-dark {
-      background: #120f1d;
-      color: #e9d5ff;
+      background: #110e1b;
+      color: #e2dcf5;
       padding: 18px;
-      border-radius: 12px;
+      border-radius: 10px;
       font-family: 'Consolas', monospace;
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.6;
       overflow-x: auto;
       white-space: pre-wrap;
-      border: 1px solid #2e2546;
+      border: 1px solid #2b2440;
     }
 
-    /* Modal Suporte Troca de URL */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 12, 24, 0.7);
+      background: rgba(15, 12, 24, 0.65);
       z-index: 200;
       align-items: center;
       justify-content: center;
       padding: 20px;
     }
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
     .modal-card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      max-width: 480px;
+      border-radius: 14px;
+      max-width: 460px;
       width: 100%;
-      padding: 26px;
-      box-shadow: var(--shadow-float);
+      padding: 24px;
+      box-shadow: var(--shadow-dropdown);
     }
 
     @media (max-width: 980px) {
-      .editor-two-columns {
-        grid-template-columns: 1fr;
-      }
-      .preview-sticky-column {
-        position: static;
-      }
+      .editor-two-columns, .profile-grid { grid-template-columns: 1fr; }
+      .preview-sticky-column { position: static; }
     }
   </style>
 </head>
 <body>
 
-  <!-- CABEÇALHO DO PAINEL ADMINISTRATIVO -->
+  <!-- BARRA SUPERIOR -->
   <header class="admin-header">
-    <div class="header-left">
-      <div class="brand-mark" id="logo-home-btn" title="Voltar para Meus Domínios">
+    <div class="header-left" id="logo-home-btn" title="Ir para Meus Domínios">
+      <div class="brand-mark">
         <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="7.5" r="3.5" fill="currentColor"/><path d="M9 14.5C14.5 16.2 25.5 16.2 31 14.5" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15.5 16L13 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M24.5 16L27 33" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M14.5 23.5H25.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
       </div>
       <div class="brand-titles">
-        <strong>Allyada — Painel Administrativo</strong>
-        <span>Gestão de Domínios e Personalização do Cliente</span>
+        <strong>Allyada</strong>
+        <span class="brand-divider">/</span>
+        <span>Painel Administrativo</span>
       </div>
     </div>
 
     <div class="header-right">
-      <button type="button" class="theme-switch-btn" id="btn-toggle-theme" title="Alternar entre Tema Claro e Tema Escuro">
-        <span id="theme-icon">🌙</span>
+      <button type="button" class="theme-toggle-btn" id="btn-toggle-theme" title="Alternar tema">
+        <svg id="theme-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <span id="theme-label">Tema Escuro</span>
       </button>
 
-      <div class="account-badge">
-        <span class="pro-tag">✨ CONTA PRO</span>
-        <span>Grupo Inova</span>
+      <!-- Botão de Perfil do Cliente -->
+      <button type="button" class="profile-trigger-btn" id="btn-profile-menu" aria-expanded="false">
+        <div class="profile-avatar" id="header-avatar-initials">GI</div>
+        <div class="profile-meta">
+          <strong id="header-user-name">Sarah — Grupo Inova</strong>
+          <span id="header-user-role">Conta Corporativa PRO</span>
+        </div>
+        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+
+      <!-- Dropdown do Perfil -->
+      <div class="profile-dropdown" id="profile-dropdown">
+        <div class="dropdown-header">
+          <strong id="drop-user-name">Sarah — Grupo Inova</strong>
+          <span id="drop-user-email">contato@inovacartorios.com.br</span>
+        </div>
+        <button type="button" class="dropdown-item" id="menu-item-domains">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>Meus Domínios</span>
+        </button>
+        <button type="button" class="dropdown-item" id="menu-item-profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Meu Perfil e Dados</span>
+        </button>
+        <button type="button" class="dropdown-item" id="menu-item-security">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Segurança e Senha</span>
+        </button>
+        <div class="dropdown-divider"></div>
+        <button type="button" class="dropdown-item danger" id="menu-item-logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sair da Conta</span>
+        </button>
       </div>
     </div>
   </header>
@@ -945,21 +1099,21 @@
     <!-- =====================================================================
          TELA 1: LISTA DE DOMÍNIOS DO CLIENTE (ESTILO REGISTRO.BR)
     ===================================================================== -->
-    <section class="view-domains" id="view-domains">
-      <div class="domains-page-header">
+    <section class="view-section active" id="view-domains">
+      <div class="page-heading">
         <div>
           <h1>Meus Domínios</h1>
-          <p>Clique sobre um domínio ativo abaixo para personalizar as cores, ícone, posição ou copiar o código de instalação.</p>
+          <p>Selecione um domínio abaixo para personalizar cores, degradês, ícone e acessar o código de instalação.</p>
         </div>
       </div>
 
-      <div class="domains-table-card">
+      <div class="table-surface">
         <div class="table-toolbar">
-          <div class="search-input-wrap">
+          <div class="search-box">
             <input type="text" id="input-search-domain" placeholder="Buscar domínio...">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
-          <div class="toolbar-meta">
+          <div class="toolbar-info">
             <span id="domains-count-label">1-4 de 4 domínios</span>
           </div>
         </div>
@@ -967,10 +1121,10 @@
         <table class="domains-table">
           <thead>
             <tr>
-              <th>Domínio ↓</th>
+              <th>Domínio</th>
               <th>Status</th>
-              <th>Expiração ↓</th>
-              <th>Visual Atual</th>
+              <th>Expiração</th>
+              <th>Identidade Visual</th>
               <th style="text-align: right;">Ação</th>
             </tr>
           </thead>
@@ -980,24 +1134,23 @@
     </section>
 
     <!-- =====================================================================
-         TELA 2: EDITOR INTERNO DO DOMÍNIO SELECIONADO
-         (COLUNA ESQUERDA: OPÇÕES | COLUNA DIREITA: PRÉ-VISUALIZAÇÃO)
+         TELA 2: EDIÇÃO INTERNA DO DOMÍNIO SELECIONADO
     ===================================================================== -->
-    <section class="view-editor" id="view-editor">
+    <section class="view-section" id="view-editor">
 
       <div class="editor-top-bar">
         <div class="editor-breadcrumb">
-          <button type="button" class="btn-back-domains" id="btn-back-to-list">
-            <span>← Meus Domínios</span>
+          <button type="button" class="btn-back" id="btn-back-to-list">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            <span>Meus Domínios</span>
           </button>
           <div class="domain-active-title">
             <h2 id="editor-domain-title">RICRICIUMA.COM.BR</h2>
-            <span id="editor-domain-subtitle">1º Registro de Imóveis de Criciúma • Licença PRO Ativa</span>
+            <span id="editor-domain-subtitle">1º Registro de Imóveis de Criciúma</span>
           </div>
         </div>
       </div>
 
-      <!-- Abas Internas (Sem aba de Selo/Documentos) -->
       <div class="editor-tabs" role="tablist">
         <button type="button" class="editor-tab-btn active" data-tab="estilo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
@@ -1013,31 +1166,31 @@
         </button>
       </div>
 
-      <!-- ABA 1: PERSONALIZAÇÃO VISUAL (2 COLUNAS: ESQUERDA OPÇÕES | DIREITA PRÉ-VISUALIZAÇÃO) -->
+      <!-- ABA 1: PERSONALIZAÇÃO VISUAL (2 COLUNAS) -->
       <div class="editor-pane active" id="pane-estilo">
         <div class="editor-two-columns">
 
-          <!-- COLUNA ESQUERDA: ITENS DE CONFIGURAÇÃO -->
+          <!-- COLUNA ESQUERDA: CONTROLES -->
           <div class="controls-column">
 
-            <!-- 1. Cor da Marca (Sólida, Anel Personalizado e Degradê) -->
+            <!-- 1. Cor do Plugin Allyada (Sólida ou Degradê) -->
             <div class="panel-card">
               <div class="panel-card-header">
-                <span class="panel-card-title">1. Cor Principal do Plugin Allyada</span>
+                <span class="panel-card-title">Cor Principal do Plugin Allyada</span>
               </div>
-              <p class="panel-card-desc">Escolha uma cor sugerida, abra o anel de cores personalizadas ou monte um degradê exclusivo:</p>
+              <p class="panel-card-desc">Selecione uma cor sugerida, personalize no anel cromático ou aplique um degradê:</p>
 
               <div class="segmented-switch">
                 <button type="button" class="seg-switch-btn active" id="btn-mode-solid">Cor Sólida</button>
-                <button type="button" class="seg-switch-btn" id="btn-mode-gradient">✨ Degradê</button>
+                <button type="button" class="seg-switch-btn" id="btn-mode-gradient">Degradê</button>
               </div>
 
-              <!-- Seção Cor Sólida -->
+              <!-- Cor Sólida Allyada -->
               <div id="box-solid-colors">
                 <div class="palette-wrap" id="allyada-solid-list">
-                  <button type="button" class="swatch-btn active" data-color="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
-                  <button type="button" class="swatch-btn" data-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo / Novembro Azul"></button>
-                  <button type="button" class="swatch-btn" data-color="#0f766e" style="background:#0f766e;" title="Verde Saúde / Inclusão"></button>
+                  <button type="button" class="swatch-btn active" data-color="#6d48b8" style="background:#6d48b8;" title="Roxo Allyada"></button>
+                  <button type="button" class="swatch-btn" data-color="#1d4ed8" style="background:#1d4ed8;" title="Azul Corporativo"></button>
+                  <button type="button" class="swatch-btn" data-color="#0f766e" style="background:#0f766e;" title="Verde"></button>
                   <button type="button" class="swatch-btn" data-color="#b45309" style="background:#b45309;" title="Dourado / Cartório"></button>
                   <button type="button" class="swatch-btn" data-color="#db2777" style="background:#db2777;" title="Outubro Rosa"></button>
                   <button type="button" class="swatch-btn" data-color="#ca8a04" style="background:#ca8a04;" title="Setembro Amarelo"></button>
@@ -1046,73 +1199,107 @@
                   <label class="color-wheel-trigger" title="Escolher no anel de cores">
                     <span class="wheel-ring"></span>
                     <span>Anel de Cores</span>
-                    <input type="color" id="input-allyada-wheel" value="#7956c2">
+                    <input type="color" id="input-allyada-wheel" value="#6d48b8">
                   </label>
 
                   <div class="hex-box-wrap">
-                    <span class="hex-dot" id="allyada-hex-dot" style="background:#7956c2;"></span>
-                    <input type="text" id="input-allyada-hex" value="#7956C2" maxlength="7">
+                    <span class="hex-dot" id="allyada-hex-dot" style="background:#6d48b8;"></span>
+                    <input type="text" id="input-allyada-hex" value="#6D48B8" maxlength="7">
                   </div>
 
-                  <button type="button" class="btn-add-swatch" id="btn-add-solid">+ Fixar na paleta</button>
+                  <button type="button" class="btn-add-swatch" id="btn-add-solid">Fixar na paleta</button>
                 </div>
               </div>
 
-              <!-- Seção Degradê -->
+              <!-- Degradê Allyada -->
               <div id="box-gradient-colors" style="display: none;">
                 <div class="palette-wrap" id="allyada-grad-list" style="margin-bottom: 14px;">
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%)" data-primary="#7956c2" style="background:linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);" title="Roxo Profundo"></button>
+                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #6d48b8 0%, #4c2889 100%)" data-primary="#6d48b8" style="background:linear-gradient(135deg, #6d48b8 0%, #4c2889 100%);" title="Roxo Institucional"></button>
                   <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)" data-primary="#2563eb" style="background:linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);" title="Azul para Violeta"></button>
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #0d9488 0%, #2563eb 100%)" data-primary="#0d9488" style="background:linear-gradient(135deg, #0d9488 0%, #2563eb 100%);" title="Verde para Azul"></button>
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #db2777 0%, #9333ea 100%)" data-primary="#db2777" style="background:linear-gradient(135deg, #db2777 0%, #9333ea 100%);" title="Outubro Rosa Degradê"></button>
-                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" data-primary="#d97706" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Ouro Cartório"></button>
+                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #0d9488 0%, #2563eb 100%)" data-primary="#0d9488" style="background:linear-gradient(135deg, #0d9488 0%, #2563eb 100%);" title="Esmeralda para Azul"></button>
+                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #db2777 0%, #9333ea 100%)" data-primary="#db2777" style="background:linear-gradient(135deg, #db2777 0%, #9333ea 100%);" title="Outubro Rosa"></button>
+                  <button type="button" class="swatch-btn" data-grad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" data-primary="#d97706" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Dourado Cartório"></button>
                 </div>
 
                 <div class="palette-wrap">
                   <label class="color-wheel-trigger">
                     <span class="wheel-ring"></span>
-                    <span>Cor 1: <strong id="lbl-grad-1">#7956C2</strong></span>
-                    <input type="color" id="input-grad-1" value="#7956c2">
+                    <span>Cor 1: <strong id="lbl-grad-1">#6D48B8</strong></span>
+                    <input type="color" id="input-grad-1" value="#6d48b8">
                   </label>
                   <label class="color-wheel-trigger">
                     <span class="wheel-ring"></span>
-                    <span>Cor 2: <strong id="lbl-grad-2">#DB2777</strong></span>
-                    <input type="color" id="input-grad-2" value="#db2777">
+                    <span>Cor 2: <strong id="lbl-grad-2">#2563EB</strong></span>
+                    <input type="color" id="input-grad-2" value="#2563eb">
                   </label>
-                  <button type="button" class="btn-add-swatch" id="btn-add-grad">+ Fixar Degradê</button>
+                  <button type="button" class="btn-add-swatch" id="btn-add-grad">Fixar Degradê</button>
                 </div>
               </div>
             </div>
 
-            <!-- 2. Cor do Botão VLibras Separada -->
+            <!-- 2. Cor do Botão VLibras (Também Suporta Cor Sólida e Degradê) -->
             <div class="panel-card">
               <div class="panel-card-header">
-                <span class="panel-card-title">2. Cor do Botão e Janela do VLibras</span>
+                <span class="panel-card-title">Cor do Botão e Janela do VLibras</span>
               </div>
-              <p class="panel-card-desc">Você pode manter a mesma cor da Allyada ou escolher uma cor independente para o VLibras:</p>
+              <p class="panel-card-desc">Utilize o mesmo padrão da Allyada ou defina uma cor sólida ou degradê exclusivo para o VLibras:</p>
 
               <div class="choice-pills-row" style="margin-bottom: 14px;">
-                <button type="button" class="choice-pill active" id="btn-vlibras-same">Usar mesma cor da Allyada</button>
-                <button type="button" class="choice-pill" id="btn-vlibras-diff">Escolher cor separada para o VLibras</button>
+                <button type="button" class="choice-pill active" id="btn-vlibras-same">Mesma cor/degradê da Allyada</button>
+                <button type="button" class="choice-pill" id="btn-vlibras-diff">Cor ou degradê separado para o VLibras</button>
               </div>
 
               <div id="box-vlibras-custom-color" style="display: none;">
-                <div class="palette-wrap" id="vlibras-solid-list">
-                  <button type="button" class="swatch-btn active" data-vlcolor="#2563eb" style="background:#2563eb;" title="Azul Tradicional VLibras"></button>
-                  <button type="button" class="swatch-btn" data-vlcolor="#7956c2" style="background:#7956c2;" title="Roxo Allyada"></button>
-                  <button type="button" class="swatch-btn" data-vlcolor="#0f766e" style="background:#0f766e;" title="Verde"></button>
-                  <button type="button" class="swatch-btn" data-vlcolor="#b45309" style="background:#b45309;" title="Dourado"></button>
-                  <button type="button" class="swatch-btn" data-vlcolor="#1e293b" style="background:#1e293b;" title="Grafite"></button>
+                <div class="segmented-switch">
+                  <button type="button" class="seg-switch-btn active" id="btn-vl-mode-solid">Cor Sólida VLibras</button>
+                  <button type="button" class="seg-switch-btn" id="btn-vl-mode-gradient">Degradê VLibras</button>
+                </div>
 
-                  <label class="color-wheel-trigger">
-                    <span class="wheel-ring"></span>
-                    <span>Anel de Cores</span>
-                    <input type="color" id="input-vlibras-wheel" value="#2563eb">
-                  </label>
+                <!-- VLibras Cor Sólida -->
+                <div id="box-vl-solid">
+                  <div class="palette-wrap" id="vlibras-solid-list">
+                    <button type="button" class="swatch-btn active" data-vlcolor="#2563eb" style="background:#2563eb;" title="Azul VLibras"></button>
+                    <button type="button" class="swatch-btn" data-vlcolor="#6d48b8" style="background:#6d48b8;" title="Roxo Allyada"></button>
+                    <button type="button" class="swatch-btn" data-vlcolor="#0f766e" style="background:#0f766e;" title="Verde"></button>
+                    <button type="button" class="swatch-btn" data-vlcolor="#b45309" style="background:#b45309;" title="Dourado"></button>
+                    <button type="button" class="swatch-btn" data-vlcolor="#1e293b" style="background:#1e293b;" title="Grafite"></button>
 
-                  <div class="hex-box-wrap">
-                    <span class="hex-dot" id="vlibras-hex-dot" style="background:#2563eb;"></span>
-                    <input type="text" id="input-vlibras-hex" value="#2563EB" maxlength="7">
+                    <label class="color-wheel-trigger">
+                      <span class="wheel-ring"></span>
+                      <span>Anel de Cores</span>
+                      <input type="color" id="input-vlibras-wheel" value="#2563eb">
+                    </label>
+
+                    <div class="hex-box-wrap">
+                      <span class="hex-dot" id="vlibras-hex-dot" style="background:#2563eb;"></span>
+                      <input type="text" id="input-vlibras-hex" value="#2563EB" maxlength="7">
+                    </div>
+
+                    <button type="button" class="btn-add-swatch" id="btn-add-vl-solid">Fixar na paleta</button>
+                  </div>
+                </div>
+
+                <!-- VLibras Degradê -->
+                <div id="box-vl-gradient" style="display: none;">
+                  <div class="palette-wrap" id="vlibras-grad-list" style="margin-bottom: 14px;">
+                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)" style="background:linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);" title="Degradê Azul VLibras"></button>
+                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #6d48b8 0%, #2563eb 100%)" style="background:linear-gradient(135deg, #6d48b8 0%, #2563eb 100%);" title="Roxo para Azul"></button>
+                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #0d9488 0%, #115e59 100%)" style="background:linear-gradient(135deg, #0d9488 0%, #115e59 100%);" title="Degradê Verde"></button>
+                    <button type="button" class="swatch-btn" data-vlgrad="linear-gradient(135deg, #d97706 0%, #92400e 100%)" style="background:linear-gradient(135deg, #d97706 0%, #92400e 100%);" title="Degradê Dourado"></button>
+                  </div>
+
+                  <div class="palette-wrap">
+                    <label class="color-wheel-trigger">
+                      <span class="wheel-ring"></span>
+                      <span>Cor 1: <strong id="lbl-vl-grad-1">#2563EB</strong></span>
+                      <input type="color" id="input-vl-grad-1" value="#2563eb">
+                    </label>
+                    <label class="color-wheel-trigger">
+                      <span class="wheel-ring"></span>
+                      <span>Cor 2: <strong id="lbl-vl-grad-2">#6D48B8</strong></span>
+                      <input type="color" id="input-vl-grad-2" value="#6d48b8">
+                    </label>
+                    <button type="button" class="btn-add-swatch" id="btn-add-vl-grad">Fixar Degradê</button>
                   </div>
                 </div>
               </div>
@@ -1121,9 +1308,9 @@
             <!-- 3. Ícone do Botão Flutuante -->
             <div class="panel-card">
               <div class="panel-card-header">
-                <span class="panel-card-title">3. Ícone do Botão Flutuante</span>
+                <span class="panel-card-title">Ícone do Botão Flutuante</span>
               </div>
-              <p class="panel-card-desc">Selecione o ícone que representará a acessibilidade no canto do site:</p>
+              <p class="panel-card-desc">Selecione o símbolo exibido no botão de acessibilidade do site:</p>
 
               <div class="icons-grid-5">
                 <button type="button" class="icon-card-btn active" data-icon="allyada">
@@ -1149,44 +1336,42 @@
               </div>
             </div>
 
-            <!-- 4. Posição do Botão na Tela -->
+            <!-- 4. Posição na Tela -->
             <div class="panel-card">
               <div class="panel-card-header">
-                <span class="panel-card-title">4. Posição nos Cantos da Tela</span>
+                <span class="panel-card-title">Posição nos Cantos da Tela</span>
               </div>
-              <p class="panel-card-desc">Escolha o lado e a altura vertical do botão no site (o VLibras fica sempre no lado oposto):</p>
+              <p class="panel-card-desc">Defina o lado e a altura vertical do botão flutuante (o VLibras posiciona-se automaticamente no lado oposto):</p>
 
-              <div class="choice-pills-row" style="margin-bottom: 12px;">
+              <div class="choice-pills-row" style="margin-bottom: 10px;">
                 <button type="button" class="choice-pill active" data-hpos="right">Lado Direito</button>
                 <button type="button" class="choice-pill" data-hpos="left">Lado Esquerdo</button>
               </div>
 
               <div class="choice-pills-row">
                 <button type="button" class="choice-pill active" data-vpos="bottom">Fim da Página</button>
-                <button type="button" class="choice-pill" data-vpos="middle">Centro Lateral ✨</button>
-                <button type="button" class="choice-pill" data-vpos="top">Topo Lateral ✨</button>
+                <button type="button" class="choice-pill" data-vpos="middle">Centro Lateral</button>
+                <button type="button" class="choice-pill" data-vpos="top">Topo Lateral</button>
               </div>
             </div>
 
           </div>
 
-          <!-- COLUNA DIREITA: PRÉ-VISUALIZAÇÃO DE CORES E ÍCONE -->
+          <!-- COLUNA DIREITA: PRÉ-VISUALIZAÇÃO DE CORES -->
           <aside class="preview-sticky-column">
             <div class="panel-card">
               <div class="panel-card-header">
-                <span class="panel-card-title">Pré-visualização do Plugin</span>
-                <span class="pro-tag">Ao Vivo</span>
+                <span class="panel-card-title">Pré-visualização Visual</span>
               </div>
-              <p class="panel-card-desc">Veja na hora como ficam as cores e o ícone escolhidos à esquerda:</p>
+              <p class="panel-card-desc">Simulação instantânea das cores, degradês e ícone aplicados aos componentes:</p>
 
               <div class="preview-stage-box">
-                <!-- Cabeçalho e Card Ativo do Painel Allyada -->
                 <div class="mini-allyada-panel">
                   <div class="mini-panel-head">
                     <div class="mini-head-brand">
                       <div class="mini-head-icon" id="prev-panel-logo"></div>
                       <div>
-                        <strong style="font-size:14.5px; display:block;">Allyada</strong>
+                        <strong style="font-size:14px; display:block;">Allyada</strong>
                         <span style="font-size:11px; color:#64748b;">Acessibilidade para você</span>
                       </div>
                     </div>
@@ -1194,13 +1379,12 @@
                   </div>
                   <div class="mini-panel-body">
                     <div class="mini-active-card" id="prev-panel-card">
-                      <span>✓ Perfil Ativo no Painel</span>
-                      <span id="prev-panel-status" style="font-size:11px; font-weight:800;">Ativado</span>
+                      <span>Recurso Selecionado</span>
+                      <span id="prev-panel-status" style="font-size:11px; font-weight:700;">Ativo</span>
                     </div>
                   </div>
                 </div>
 
-                <!-- Botões Flutuantes Allyada + VLibras -->
                 <div class="floating-buttons-preview">
                   <div class="fab-preview-col">
                     <div class="preview-allyada-circle" id="prev-fab-allyada"></div>
@@ -1214,7 +1398,7 @@
                   </div>
                 </div>
 
-                <span id="prev-position-label" style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-align: center;">
+                <span id="prev-position-label" style="font-size: 12px; color: var(--text-muted); font-weight: 500; text-align: center;">
                   Posição: Lado Direito • Fim da Página
                 </span>
               </div>
@@ -1228,40 +1412,41 @@
       <div class="editor-pane" id="pane-instalacao">
         <div class="panel-card" style="max-width: 820px;">
           <div class="panel-card-header">
-            <span class="panel-card-title">Tag &lt;script&gt; Exclusiva deste Domínio</span>
-            <span class="pro-tag" id="code-domain-badge"></span>
+            <span class="panel-card-title">Tag &lt;script&gt; Licenciada</span>
+            <span id="code-domain-badge" style="font-size:12px; font-family:monospace; color:var(--brand); font-weight:600;"></span>
           </div>
-          <p class="panel-card-desc">Cole o código abaixo antes do fechamento da tag <code>&lt;/body&gt;</code> do seu site:</p>
+          <p class="panel-card-desc">Insira o código abaixo antes do fechamento da tag <code>&lt;/body&gt;</code> no código-fonte do site:</p>
           <pre class="code-block-dark" id="output-script-code"></pre>
           <div style="margin-top: 16px;">
-            <button type="button" class="btn-primary-save" id="btn-copy-script">📋 Copiar Código &lt;script&gt;</button>
+            <button type="button" class="btn-primary-save" id="btn-copy-script">Copiar código de instalação</button>
           </div>
         </div>
       </div>
 
-      <!-- ABA 3: DADOS DA ASSINATURA (DOMÍNIO TRAVADO + SOLICITAR TROCA AO SUPORTE) -->
+      <!-- ABA 3: DADOS DA ASSINATURA -->
       <div class="editor-pane" id="pane-assinatura">
         <div class="panel-card" style="max-width: 760px;">
           <div class="panel-card-header">
-            <span class="panel-card-title">Dados do Domínio Licenciado</span>
-            <span class="status-badge active" id="sub-status-pill">● Ativo</span>
+            <span class="panel-card-title">Informações do Domínio Vinculado</span>
+            <span class="status-pill active"><span class="status-dot"></span>Licença Ativa</span>
           </div>
-          <p class="panel-card-desc">Cada assinatura PRO é vinculada exclusivamente a um único domínio (com páginas e acessos ilimitados).</p>
+          <p class="panel-card-desc">Cada assinatura é exclusiva para um domínio e inclui páginas e acessos ilimitados.</p>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px;">
             <div>
-              <span style="font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Domínio Vinculado (Não Editável)</span>
-              <div style="padding:11px 14px; border-radius:10px; border:1px solid var(--border); background:var(--bg-input); font-family:monospace; font-size:13.5px; font-weight:700;">
-                🔒 <span id="sub-locked-domain"></span>
+              <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Domínio Autorizado (Somente Leitura)</span>
+              <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-family:monospace; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span id="sub-locked-domain"></span>
               </div>
-              <button type="button" id="btn-open-support" style="background:none; border:none; color:var(--brand); font-size:12.5px; font-weight:700; text-decoration:underline; cursor:pointer; margin-top:8px;">
-                O mesmo site mudou de URL? Chamar o suporte para atualizar
+              <button type="button" id="btn-open-support" style="background:none; border:none; color:var(--brand); font-size:12px; font-weight:600; text-decoration:underline; cursor:pointer; margin-top:8px;">
+                O mesmo site mudou de endereço (URL)? Solicitar atualização ao suporte
               </button>
             </div>
 
             <div>
-              <span style="font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">ID da Licença / Expiração</span>
-              <div style="padding:11px 14px; border-radius:10px; border:1px solid var(--border); background:var(--bg-input); font-size:13.5px; font-weight:700;">
+              <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:6px;">Identificador e Vigência</span>
+              <div style="padding:10px 13px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); font-size:13px; font-weight:600;">
                 <span id="sub-license-meta"></span>
               </div>
             </div>
@@ -1271,37 +1456,124 @@
 
     </section>
 
+    <!-- =====================================================================
+         TELA 3: MEU PERFIL E CONFIGURAÇÕES DA CONTA DO CLIENTE
+    ===================================================================== -->
+    <section class="view-section" id="view-profile">
+      <div class="editor-top-bar">
+        <div class="editor-breadcrumb">
+          <button type="button" class="btn-back" id="btn-back-from-profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            <span>Voltar aos Domínios</span>
+          </button>
+          <div class="domain-active-title">
+            <h2>Meu Perfil e Configurações da Conta</h2>
+            <span>Gerencie seus dados cadastrais, credenciais de acesso e preferências de avisos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-grid">
+        <!-- Dados Cadastrais -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <span class="panel-card-title">Dados do Titular / Empresa</span>
+          </div>
+          <p class="panel-card-desc">Informações utilizadas para identificação da conta e emissão de faturas:</p>
+
+          <div class="form-group">
+            <label for="prof-name">Nome do Responsável</label>
+            <input type="text" id="prof-name" class="form-input" value="Sarah — Grupo Inova">
+          </div>
+          <div class="form-group">
+            <label for="prof-company">Razão Social / Empresa</label>
+            <input type="text" id="prof-company" class="form-input" value="Inova Cartórios e Sistemas Ltda">
+          </div>
+          <div class="form-group">
+            <label for="prof-doc">CNPJ / CPF</label>
+            <input type="text" id="prof-doc" class="form-input" value="12.345.678/0001-90">
+          </div>
+          <div class="form-group">
+            <label for="prof-email">E-mail Principal de Acesso</label>
+            <input type="email" id="prof-email" class="form-input" value="contato@inovacartorios.com.br">
+          </div>
+          <div class="form-group">
+            <label for="prof-phone">Telefone / WhatsApp</label>
+            <input type="tel" id="prof-phone" class="form-input" value="(48) 99999-0000">
+          </div>
+          <button type="button" class="btn-primary-save" id="btn-save-profile">Salvar Dados do Perfil</button>
+          <span id="profile-saved-msg" style="font-size:12.5px; color:var(--status-ok); font-weight:600; margin-left:10px;"></span>
+        </div>
+
+        <!-- Segurança e Preferências -->
+        <div class="controls-column">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <span class="panel-card-title">Segurança e Alteração de Senha</span>
+            </div>
+            <p class="panel-card-desc">Atualize sua senha de acesso ao Painel Administrativo:</p>
+
+            <div class="form-group">
+              <label for="prof-pass-cur">Senha Atual</label>
+              <input type="password" id="prof-pass-cur" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label for="prof-pass-new">Nova Senha</label>
+              <input type="password" id="prof-pass-new" class="form-input" placeholder="Mínimo de 8 caracteres">
+            </div>
+            <button type="button" class="btn-secondary" id="btn-update-password">Atualizar Senha</button>
+            <span id="pass-saved-msg" style="font-size:12.5px; color:var(--status-ok); font-weight:600; margin-left:10px;"></span>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <span class="panel-card-title">Alertas de Renovação de Domínios</span>
+            </div>
+            <p class="panel-card-desc">Receba avisos automáticos antes do vencimento das licenças dos seus domínios:</p>
+            <label style="display:flex; align-items:center; gap:10px; font-size:13px; margin-bottom:10px; cursor:pointer;">
+              <input type="checkbox" checked style="accent-color:var(--brand); width:16px; height:16px;">
+              <span>Receber lembretes de renovação por e-mail (30 e 7 dias antes)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; font-size:13px; cursor:pointer;">
+              <input type="checkbox" checked style="accent-color:var(--brand); width:16px; height:16px;">
+              <span>Receber alertas importantes via WhatsApp</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- BARRA FIXA DE SALVAMENTO (EXIBIDA DENTRO DO EDITOR DO DOMÍNIO) -->
+  <!-- BARRA INFERIOR DE PUBLICAÇÃO -->
   <footer class="bottom-save-bar hidden" id="bottom-save-bar">
     <div class="save-bar-inner">
-      <span id="save-toast" style="font-size: 13.5px; font-weight: 700; color: var(--status-ok);"></span>
-      <div style="display: flex; gap: 12px; margin-left: auto;">
+      <span id="save-toast" style="font-size: 13px; font-weight: 600; color: var(--status-ok);"></span>
+      <div style="display: flex; gap: 10px; margin-left: auto;">
         <button type="button" class="btn-secondary" id="btn-cancel-edit">Voltar aos Domínios</button>
-        <button type="button" class="btn-primary-save" id="btn-save-domain">Salvar e Publicar Alterações</button>
+        <button type="button" class="btn-primary-save" id="btn-save-domain">Salvar e Publicar</button>
       </div>
     </div>
   </footer>
 
-  <!-- MODAL: SOLICITAR TROCA DE URL DO MESMO SITE AO SUPORTE -->
+  <!-- MODAL DE SUPORTE PARA ATUALIZAÇÃO DE URL -->
   <div class="modal-overlay" id="modal-support">
     <div class="modal-card">
-      <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 8px;">Solicitar Troca de URL ao Suporte</h3>
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Solicitar Atualização de URL ao Suporte</h3>
       <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
-        O domínio não pode ser trocado diretamente pelo painel para evitar uso em sites diferentes. Se o <strong>mesmo site</strong> apenas mudou de endereço oficial, informe abaixo para nossa equipe atualizar:
+        O domínio não pode ser alterado livremente para proteger sua licença. Caso o <strong>mesmo site</strong> tenha mudado de endereço oficial, informe a nova URL abaixo para nossa equipe atualizar:
       </p>
       <div style="margin-bottom: 12px;">
-        <label style="font-size:11.5px; font-weight:800; color:var(--text-muted); display:block; margin-bottom:4px;">DOMÍNIO ATUAL</label>
-        <div id="modal-old-url" style="padding:10px 12px; border-radius:8px; background:var(--bg-input); font-family:monospace; font-size:13px;"></div>
+        <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">DOMÍNIO ATUAL</label>
+        <div id="modal-old-url" style="padding:9px 12px; border-radius:8px; background:var(--bg-input); font-family:monospace; font-size:13px;"></div>
       </div>
       <div style="margin-bottom: 18px;">
-        <label style="font-size:11.5px; font-weight:800; color:var(--text-muted); display:block; margin-bottom:4px;">NOVA URL DO MESMO SITE</label>
-        <input type="url" id="modal-new-url" placeholder="https://www.novosite.com.br" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); color:var(--text-primary); outline:none;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">NOVA URL DO MESMO SITE</label>
+        <input type="url" id="modal-new-url" class="form-input" placeholder="https://www.novosite.com.br">
       </div>
       <div style="display:flex; justify-content:flex-end; gap:10px;">
-        <button type="button" class="btn-secondary" id="btn-close-support">Fechar</button>
-        <button type="button" class="btn-primary-save" id="btn-submit-support">Enviar ao Suporte</button>
+        <button type="button" class="btn-secondary" id="btn-close-support">Cancelar</button>
+        <button type="button" class="btn-primary-save" id="btn-submit-support">Enviar Solicitação</button>
       </div>
     </div>
   </div>
@@ -1322,13 +1594,15 @@
           domain: 'RICRICIUMA.COM.BR',
           title: '1º Registro de Imóveis de Criciúma',
           status: 'active',
-          statusLabel: '● Ativo',
+          statusLabel: 'Ativo',
           expiration: '06/08/2027',
           colorMode: 'solid',
-          primaryColor: '#7956c2',
+          primaryColor: '#6d48b8',
           gradient: '',
           vlibrasSame: true,
+          vlibrasMode: 'solid',
           vlibrasColor: '#2563eb',
+          vlibrasGrad: '',
           icon: 'allyada',
           hpos: 'right',
           vpos: 'bottom'
@@ -1338,13 +1612,15 @@
           domain: 'CARTORIOTUBARAO.COM.BR',
           title: 'Tabelionato de Notas e Protesto de Tubarão',
           status: 'active',
-          statusLabel: '● Ativo',
+          statusLabel: 'Ativo',
           expiration: '14/09/2027',
           colorMode: 'solid',
           primaryColor: '#b45309',
           gradient: '',
           vlibrasSame: false,
+          vlibrasMode: 'solid',
           vlibrasColor: '#1e293b',
+          vlibrasGrad: '',
           icon: 'shield',
           hpos: 'right',
           vpos: 'middle'
@@ -1354,13 +1630,15 @@
           domain: '2CARTORIOOLIMPIA.COM.BR',
           title: '2º Tabelionato de Notas de Olímpia',
           status: 'expiring',
-          statusLabel: '⚠ Expirando',
+          statusLabel: 'Expirando',
           expiration: '01/10/2026',
           colorMode: 'gradient',
           primaryColor: '#2563eb',
           gradient: 'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
           vlibrasSame: true,
+          vlibrasMode: 'solid',
           vlibrasColor: '#2563eb',
+          vlibrasGrad: '',
           icon: 'universal',
           hpos: 'left',
           vpos: 'middle'
@@ -1370,13 +1648,15 @@
           domain: 'CARTORIOBELOJARDIM.COM.BR',
           title: 'Cartório Único de Belo Jardim',
           status: 'expired',
-          statusLabel: '▲ Congelado',
+          statusLabel: 'Congelado',
           expiration: '19/07/2026',
           colorMode: 'solid',
           primaryColor: '#0f766e',
           gradient: '',
           vlibrasSame: true,
+          vlibrasMode: 'solid',
           vlibrasColor: '#0f766e',
+          vlibrasGrad: '',
           icon: 'hands',
           hpos: 'right',
           vpos: 'bottom'
@@ -1385,18 +1665,81 @@
 
       let activeIdx = 0;
 
-      // Tema Claro / Escuro
+      // Navegação entre Seções (Domínios | Editor | Perfil)
+      const views = {
+        domains: document.getElementById('view-domains'),
+        editor: document.getElementById('view-editor'),
+        profile: document.getElementById('view-profile')
+      };
+      const bottomBar = document.getElementById('bottom-save-bar');
+
+      function showView(viewKey) {
+        Object.keys(views).forEach(k => {
+          views[k].classList.toggle('active', k === viewKey);
+        });
+        bottomBar.classList.toggle('hidden', viewKey !== 'editor');
+        if (viewKey === 'domains') renderDomainsTable();
+      }
+
+      // Alternador de Tema Claro / Escuro (Sem Emojis)
       const htmlEl = document.documentElement;
       const btnTheme = document.getElementById('btn-toggle-theme');
+      const themeSvg = document.getElementById('theme-svg-icon');
+      const sunPath = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+      const moonPath = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+
       btnTheme.addEventListener('click', () => {
         const isDark = htmlEl.getAttribute('data-theme') === 'dark';
         const next = isDark ? 'light' : 'dark';
         htmlEl.setAttribute('data-theme', next);
-        document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+        themeSvg.innerHTML = next === 'dark' ? sunPath : moonPath;
         document.getElementById('theme-label').textContent = next === 'dark' ? 'Tema Claro' : 'Tema Escuro';
       });
 
-      // Renderizar Tabela Estilo Registro.br
+      // Dropdown de Perfil no Canto Superior Direito
+      const btnProfile = document.getElementById('btn-profile-menu');
+      const dropProfile = document.getElementById('profile-dropdown');
+      btnProfile.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropProfile.classList.toggle('open');
+        btnProfile.classList.toggle('active', isOpen);
+        btnProfile.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      document.addEventListener('click', () => {
+        dropProfile.classList.remove('open');
+        btnProfile.classList.remove('active');
+      });
+
+      document.getElementById('menu-item-domains').addEventListener('click', () => showView('domains'));
+      document.getElementById('menu-item-profile').addEventListener('click', () => showView('profile'));
+      document.getElementById('menu-item-security').addEventListener('click', () => {
+        showView('profile');
+        setTimeout(() => document.getElementById('prof-pass-cur').focus(), 60);
+      });
+      document.getElementById('menu-item-logout').addEventListener('click', () => {
+        alert('Sessão encerrada com segurança.');
+      });
+
+      document.getElementById('btn-back-from-profile').addEventListener('click', () => showView('domains'));
+      document.getElementById('btn-save-profile').addEventListener('click', () => {
+        const newName = document.getElementById('prof-name').value.trim() || 'Cliente PRO';
+        const newEmail = document.getElementById('prof-email').value.trim();
+        document.getElementById('header-user-name').textContent = newName;
+        document.getElementById('drop-user-name').textContent = newName;
+        document.getElementById('drop-user-email').textContent = newEmail;
+        const msg = document.getElementById('profile-saved-msg');
+        msg.textContent = 'Dados atualizados.';
+        setTimeout(() => { msg.textContent = ''; }, 3000);
+      });
+      document.getElementById('btn-update-password').addEventListener('click', () => {
+        const msg = document.getElementById('pass-saved-msg');
+        msg.textContent = 'Senha atualizada.';
+        document.getElementById('prof-pass-cur').value = '';
+        document.getElementById('prof-pass-new').value = '';
+        setTimeout(() => { msg.textContent = ''; }, 3000);
+      });
+
+      // Tabela de Domínios (Estilo Registro.br)
       const tbody = document.getElementById('domains-table-body');
       const searchInput = document.getElementById('input-search-domain');
 
@@ -1414,21 +1757,26 @@
           const tr = document.createElement('tr');
           const bgStyle = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
           const actionBtnHtml = d.status === 'expired'
-            ? `<button type="button" class="btn-table-pay">Regularizar</button>`
-            : `<button type="button" class="btn-table-action">Personalizar →</button>`;
+            ? `<button type="button" class="btn-row-pay">Pagar</button>`
+            : `<button type="button" class="btn-row-edit">Acessar</button>`;
 
           tr.innerHTML = `
             <td>
-              <div class="domain-name-cell">
+              <div class="domain-cell-title">
                 <span>${d.domain}</span>
                 <small>${d.title}</small>
               </div>
             </td>
-            <td><span class="status-badge ${d.status}">${d.statusLabel}</span></td>
-            <td style="font-weight: 600; color: var(--text-secondary);">${d.expiration}</td>
             <td>
-              <div class="visual-chip">
-                <span class="visual-mini-fab" style="background: ${bgStyle};">${ICONS[d.icon] || ICONS.allyada}</span>
+              <span class="status-pill ${d.status}">
+                <span class="status-dot"></span>
+                <span>${d.statusLabel}</span>
+              </span>
+            </td>
+            <td style="font-weight: 500; color: var(--text-secondary);">${d.expiration}</td>
+            <td>
+              <div class="visual-badge-cell">
+                <span class="mini-fab-dot" style="background: ${bgStyle};">${ICONS[d.icon] || ICONS.allyada}</span>
                 <span>${d.colorMode === 'gradient' ? 'Degradê' : d.primaryColor.toUpperCase()}</span>
               </div>
             </td>
@@ -1438,26 +1786,18 @@
           tbody.appendChild(tr);
         });
       }
-
       searchInput.addEventListener('input', renderDomainsTable);
-
-      // Abrir Editor do Domínio Selecionado
-      const viewDomains = document.getElementById('view-domains');
-      const viewEditor = document.getElementById('view-editor');
-      const bottomBar = document.getElementById('bottom-save-bar');
 
       function openDomainEditor(idx) {
         activeIdx = idx;
         const d = domains[activeIdx];
-        viewDomains.classList.add('hidden');
-        viewEditor.classList.add('active');
-        bottomBar.classList.remove('hidden');
+        showView('editor');
 
         document.getElementById('editor-domain-title').textContent = d.domain;
         document.getElementById('editor-domain-subtitle').textContent = `${d.title} • Licença ${d.id}`;
         document.getElementById('code-domain-badge').textContent = d.domain.toLowerCase();
         document.getElementById('sub-locked-domain').textContent = 'https://www.' + d.domain.toLowerCase();
-        document.getElementById('sub-license-meta').textContent = `${d.id} • Válida até ${d.expiration}`;
+        document.getElementById('sub-license-meta').textContent = `${d.id} • Vigência até ${d.expiration}`;
 
         setSolidOrGradMode(d.colorMode || 'solid');
         document.getElementById('input-allyada-wheel').value = d.primaryColor;
@@ -1465,6 +1805,7 @@
         document.getElementById('allyada-hex-dot').style.background = d.primaryColor;
 
         setVlibrasSameMode(d.vlibrasSame);
+        setVlibrasSolidOrGradMode(d.vlibrasMode || 'solid');
         document.getElementById('input-vlibras-wheel').value = d.vlibrasColor;
         document.getElementById('input-vlibras-hex').value = d.vlibrasColor.toUpperCase();
         document.getElementById('vlibras-hex-dot').style.background = d.vlibrasColor;
@@ -1482,18 +1823,11 @@
         updateRightPreviewAndCode();
       }
 
-      function backToDomainsList() {
-        viewEditor.classList.remove('active');
-        bottomBar.classList.add('hidden');
-        viewDomains.classList.remove('hidden');
-        renderDomainsTable();
-      }
+      document.getElementById('btn-back-to-list').addEventListener('click', () => showView('domains'));
+      document.getElementById('btn-cancel-edit').addEventListener('click', () => showView('domains'));
+      document.getElementById('logo-home-btn').addEventListener('click', () => showView('domains'));
 
-      document.getElementById('btn-back-to-list').addEventListener('click', backToDomainsList);
-      document.getElementById('btn-cancel-edit').addEventListener('click', backToDomainsList);
-      document.getElementById('logo-home-btn').addEventListener('click', backToDomainsList);
-
-      // Abas Internas
+      // Abas do Editor
       document.querySelectorAll('.editor-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const tab = btn.getAttribute('data-tab');
@@ -1502,7 +1836,7 @@
         });
       });
 
-      // Modo Cor Sólida vs Degradê
+      // Modo Cor Sólida vs Degradê (Allyada)
       function setSolidOrGradMode(mode) {
         const d = domains[activeIdx];
         d.colorMode = mode;
@@ -1523,7 +1857,6 @@
         setSolidOrGradMode('gradient');
       });
 
-      // Cliques de Cores Sólidas
       function bindSolidBtns() {
         document.querySelectorAll('#allyada-solid-list .swatch-btn').forEach(btn => {
           btn.onclick = () => {
@@ -1575,13 +1908,12 @@
         bindSolidBtns();
       });
 
-      // Cliques de Degradê
       function bindGradBtns() {
         document.querySelectorAll('#allyada-grad-list .swatch-btn').forEach(btn => {
           btn.onclick = () => {
             const d = domains[activeIdx];
             d.gradient = btn.getAttribute('data-grad');
-            d.primaryColor = btn.getAttribute('data-primary') || '#7956c2';
+            d.primaryColor = btn.getAttribute('data-primary') || '#6d48b8';
             d.colorMode = 'gradient';
             document.querySelectorAll('#allyada-grad-list .swatch-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -1619,7 +1951,7 @@
         bindGradBtns();
       });
 
-      // Cor Separada do VLibras
+      // VLibras: Mesma Cor/Degradê vs Separado (Sólido ou Degradê)
       function setVlibrasSameMode(same) {
         const d = domains[activeIdx];
         d.vlibrasSame = same;
@@ -1631,28 +1963,107 @@
       document.getElementById('btn-vlibras-same').addEventListener('click', () => setVlibrasSameMode(true));
       document.getElementById('btn-vlibras-diff').addEventListener('click', () => setVlibrasSameMode(false));
 
-      document.querySelectorAll('#vlibras-solid-list .swatch-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const d = domains[activeIdx];
-          d.vlibrasColor = btn.getAttribute('data-vlcolor');
-          document.querySelectorAll('#vlibras-solid-list .swatch-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          document.getElementById('input-vlibras-wheel').value = d.vlibrasColor;
-          document.getElementById('input-vlibras-hex').value = d.vlibrasColor.toUpperCase();
-          document.getElementById('vlibras-hex-dot').style.background = d.vlibrasColor;
-          updateRightPreviewAndCode();
-        });
+      function setVlibrasSolidOrGradMode(mode) {
+        const d = domains[activeIdx];
+        d.vlibrasMode = mode;
+        document.getElementById('btn-vl-mode-solid').classList.toggle('active', mode === 'solid');
+        document.getElementById('btn-vl-mode-gradient').classList.toggle('active', mode === 'gradient');
+        document.getElementById('box-vl-solid').style.display = mode === 'solid' ? 'block' : 'none';
+        document.getElementById('box-vl-gradient').style.display = mode === 'gradient' ? 'block' : 'none';
+        updateRightPreviewAndCode();
+      }
+      document.getElementById('btn-vl-mode-solid').addEventListener('click', () => setVlibrasSolidOrGradMode('solid'));
+      document.getElementById('btn-vl-mode-gradient').addEventListener('click', () => {
+        const d = domains[activeIdx];
+        if (!d.vlibrasGrad) {
+          const c1 = document.getElementById('input-vl-grad-1').value;
+          const c2 = document.getElementById('input-vl-grad-2').value;
+          d.vlibrasGrad = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+        }
+        setVlibrasSolidOrGradMode('gradient');
       });
+
+      function bindVlSolidBtns() {
+        document.querySelectorAll('#vlibras-solid-list .swatch-btn').forEach(btn => {
+          btn.onclick = () => {
+            const d = domains[activeIdx];
+            d.vlibrasColor = btn.getAttribute('data-vlcolor');
+            d.vlibrasMode = 'solid';
+            document.querySelectorAll('#vlibras-solid-list .swatch-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('input-vlibras-wheel').value = d.vlibrasColor;
+            document.getElementById('input-vlibras-hex').value = d.vlibrasColor.toUpperCase();
+            document.getElementById('vlibras-hex-dot').style.background = d.vlibrasColor;
+            updateRightPreviewAndCode();
+          };
+        });
+      }
+      bindVlSolidBtns();
 
       document.getElementById('input-vlibras-wheel').addEventListener('input', (e) => {
         const d = domains[activeIdx];
         d.vlibrasColor = e.target.value;
+        d.vlibrasMode = 'solid';
         document.getElementById('input-vlibras-hex').value = d.vlibrasColor.toUpperCase();
         document.getElementById('vlibras-hex-dot').style.background = d.vlibrasColor;
         updateRightPreviewAndCode();
       });
 
-      // Ícone e Posição
+      document.getElementById('btn-add-vl-solid').addEventListener('click', () => {
+        const d = domains[activeIdx];
+        const list = document.getElementById('vlibras-solid-list');
+        const wheel = list.querySelector('.color-wheel-trigger');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'swatch-btn active';
+        btn.setAttribute('data-vlcolor', d.vlibrasColor);
+        btn.style.background = d.vlibrasColor;
+        list.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active'));
+        list.insertBefore(btn, wheel);
+        bindVlSolidBtns();
+      });
+
+      function bindVlGradBtns() {
+        document.querySelectorAll('#vlibras-grad-list .swatch-btn').forEach(btn => {
+          btn.onclick = () => {
+            const d = domains[activeIdx];
+            d.vlibrasGrad = btn.getAttribute('data-vlgrad');
+            d.vlibrasMode = 'gradient';
+            document.querySelectorAll('#vlibras-grad-list .swatch-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateRightPreviewAndCode();
+          };
+        });
+      }
+      bindVlGradBtns();
+
+      function updateVlCustomGrad() {
+        const c1 = document.getElementById('input-vl-grad-1').value;
+        const c2 = document.getElementById('input-vl-grad-2').value;
+        document.getElementById('lbl-vl-grad-1').textContent = c1.toUpperCase();
+        document.getElementById('lbl-vl-grad-2').textContent = c2.toUpperCase();
+        const d = domains[activeIdx];
+        d.vlibrasGrad = `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
+        d.vlibrasMode = 'gradient';
+        updateRightPreviewAndCode();
+      }
+      document.getElementById('input-vl-grad-1').addEventListener('input', updateVlCustomGrad);
+      document.getElementById('input-vl-grad-2').addEventListener('input', updateVlCustomGrad);
+
+      document.getElementById('btn-add-vl-grad').addEventListener('click', () => {
+        const d = domains[activeIdx];
+        const list = document.getElementById('vlibras-grad-list');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'swatch-btn active';
+        btn.setAttribute('data-vlgrad', d.vlibrasGrad);
+        btn.style.background = d.vlibrasGrad;
+        list.querySelectorAll('.swatch-btn').forEach(b => b.classList.remove('active'));
+        list.appendChild(btn);
+        bindVlGradBtns();
+      });
+
+      // Ícones e Posição
       document.querySelectorAll('.icon-card-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.icon-card-btn').forEach(b => b.classList.remove('active'));
@@ -1680,11 +2091,13 @@
         });
       });
 
-      // Atualiza a Coluna da Direita (Pré-visualização) e o Código <script>
+      // Atualiza Pré-visualização Direita e Código <script>
       function updateRightPreviewAndCode() {
         const d = domains[activeIdx];
         const bgMain = (d.colorMode === 'gradient' && d.gradient) ? d.gradient : d.primaryColor;
-        const vlColor = d.vlibrasSame ? d.primaryColor : d.vlibrasColor;
+        const vlBg = d.vlibrasSame
+          ? bgMain
+          : ((d.vlibrasMode === 'gradient' && d.vlibrasGrad) ? d.vlibrasGrad : d.vlibrasColor);
         const iconSvg = ICONS[d.icon] || ICONS.allyada;
 
         const prevLogo = document.getElementById('prev-panel-logo');
@@ -1699,15 +2112,15 @@
         prevFab.style.background = bgMain;
         prevFab.innerHTML = iconSvg;
 
-        document.getElementById('prev-fab-vlibras').style.background = vlColor;
+        document.getElementById('prev-fab-vlibras').style.background = vlBg;
 
         const hTxt = d.hpos === 'left' ? 'Lado Esquerdo' : 'Lado Direito';
-        const vMap = { bottom: 'Fim da Página', middle: 'Centro Lateral ✨', top: 'Topo Lateral ✨' };
+        const vMap = { bottom: 'Fim da Página', middle: 'Centro Lateral', top: 'Topo Lateral' };
         document.getElementById('prev-position-label').textContent =
           `Posição: ${hTxt} • ${vMap[d.vpos]}`;
 
         const gradAttr = (d.colorMode === 'gradient' && d.gradient) ? `\n  data-gradient="${d.gradient}"` : '';
-        const vlAttr = !d.vlibrasSame ? `\n  data-vlibras-color="${d.vlibrasColor}"` : '';
+        const vlAttr = !d.vlibrasSame ? `\n  data-vlibras-color="${vlBg}"` : '';
         document.getElementById('output-script-code').textContent =
 `<!-- Allyada Acessibilidade PRO — Domínio Licenciado: ${d.domain.toLowerCase()} -->
 <script src="https://cdn.allyada.com.br/allyada.min.js"
@@ -1722,14 +2135,14 @@
       document.getElementById('btn-copy-script').addEventListener('click', (e) => {
         navigator.clipboard.writeText(document.getElementById('output-script-code').textContent);
         const orig = e.target.textContent;
-        e.target.textContent = '✅ Código <script> Copiado!';
+        e.target.textContent = 'Código copiado para a área de transferência';
         setTimeout(() => { e.target.textContent = orig; }, 2200);
       });
 
       document.getElementById('btn-save-domain').addEventListener('click', () => {
         const d = domains[activeIdx];
         const toast = document.getElementById('save-toast');
-        toast.textContent = `✓ Alterações de ${d.domain} salvas com sucesso!`;
+        toast.textContent = `Configurações de ${d.domain} salvas e publicadas.`;
         setTimeout(() => { toast.textContent = ''; }, 3500);
       });
 
@@ -1743,7 +2156,7 @@
       document.getElementById('btn-submit-support').addEventListener('click', () => {
         modal.classList.remove('open');
         const toast = document.getElementById('save-toast');
-        toast.textContent = '✓ Solicitação enviada ao suporte para atualização de URL!';
+        toast.textContent = 'Solicitação enviada ao suporte técnico.';
         setTimeout(() => { toast.textContent = ''; }, 4000);
       });
 
