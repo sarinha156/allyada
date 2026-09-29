@@ -14,14 +14,19 @@
  */
 
 (function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory();
-  } else {
-    const exportsObj = factory();
+  const exportsObj = factory();
+  if (typeof window !== 'undefined') {
+    window.Allyada = exportsObj;
+    window.AcessiWeb = exportsObj;
+  }
+  if (root) {
     root.Allyada = exportsObj;
     root.AcessiWeb = exportsObj;
+  }
+  if (typeof define === 'function' && define.amd) {
+    define([], function() { return exportsObj; });
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = exportsObj;
   }
 }(typeof self !== 'undefined' ? self : this, function() {
   'use strict';
@@ -166,7 +171,7 @@
 
       // Lê configurações globais window.ALLYADA_CONFIG e atributos data-* da tag <script> do cliente PRO
       const scriptEl = (typeof document !== 'undefined')
-        ? (document.currentScript || document.querySelector('script[src*="allyada"], script[src*="acessibilidade"], script[data-allyada]'))
+        ? (document.currentScript || document.querySelector('script[data-allyada], script[src*="allyada"], script[src*="acessibilidade"], script[data-color], script[data-gradient], script[data-icon]'))
         : null;
       const scriptOpts = {};
       if (scriptEl && scriptEl.getAttribute) {
@@ -180,6 +185,7 @@
         if (scriptEl.getAttribute('data-vlibras-pants')) scriptOpts.vlibrasPantsColor = scriptEl.getAttribute('data-vlibras-pants');
         if (scriptEl.getAttribute('data-vlibras-logo')) scriptOpts.vlibrasLogoUrl = scriptEl.getAttribute('data-vlibras-logo');
         if (scriptEl.getAttribute('data-domain')) scriptOpts.allowedDomain = scriptEl.getAttribute('data-domain');
+        if (scriptEl.getAttribute('data-strict-domain') === 'true') scriptOpts.strictDomain = true;
       }
       const globalCfg = (typeof window !== 'undefined' && window.ALLYADA_CONFIG && typeof window.ALLYADA_CONFIG === 'object')
         ? window.ALLYADA_CONFIG
@@ -190,11 +196,11 @@
         normalizedOptions.primaryColor = '#7956c2';
       }
 
-      // Validação de licença por domínio: se allowedDomain estiver definido e não bater com o domínio atual, reverte para o padrão gratuito
-      if (normalizedOptions.allowedDomain && typeof window !== 'undefined' && window.location && window.location.hostname) {
+      // Validação de domínio estrita apenas quando explicitamente ativada via data-strict-domain="true"
+      if (normalizedOptions.strictDomain && normalizedOptions.allowedDomain && typeof window !== 'undefined' && window.location && window.location.hostname) {
         const currentHost = window.location.hostname.toLowerCase().replace(/^www\./, '');
         const allowedList = String(normalizedOptions.allowedDomain).toLowerCase().split(',').map(d => d.trim().replace(/^www\./, '')).filter(Boolean);
-        const isAllowed = allowedList.some(d => currentHost === d || currentHost.endsWith('.' + d) || currentHost === 'localhost' || currentHost === '127.0.0.1');
+        const isAllowed = !currentHost || allowedList.some(d => currentHost === d || currentHost.endsWith('.' + d) || currentHost === 'localhost' || currentHost === '127.0.0.1');
         if (!isAllowed) {
           console.warn(`[Allyada PRO] Licença vinculada ao domínio "${normalizedOptions.allowedDomain}". Revertendo para visual padrão gratuito.`);
           normalizedOptions.primaryColor = '#7956c2';
@@ -209,8 +215,8 @@
       }
 
       this.config = { ...this.config, ...normalizedOptions };
-      if (!normalizedOptions.vlibrasColor && this.config.primaryColor) {
-        this.config.vlibrasColor = this.config.primaryColor;
+      if (!normalizedOptions.vlibrasColor) {
+        this.config.vlibrasColor = this.config.fabGradient || this.config.primaryColor || '#7956c2';
       }
 
       // Verifica se o modo Studio PRO (Configurador do Cliente) foi acionado via URL (?allyada_admin=1 ou ?allyada_pro=1)
@@ -221,11 +227,13 @@
       } catch (e) {}
 
       this.loadState();
-      // A posição vertical nos cantos respeita a configuração definida pelo cliente dono do site
+      // As posições horizontal e vertical definidas na tag <script> do cliente têm prioridade sobre o estado anterior
       if (normalizedOptions.verticalPosition) {
+        this.config.verticalPosition = normalizedOptions.verticalPosition;
         this.state.verticalPosition = normalizedOptions.verticalPosition;
       }
       if (normalizedOptions.position) {
+        this.config.position = normalizedOptions.position;
         this.state.dockPosition = normalizedOptions.position;
       }
 
@@ -4705,6 +4713,33 @@
       this.applyVLibrasCustomTheme();
     }
 
+    applyClientConfig(cfg = {}) {
+      if (!cfg || typeof cfg !== 'object') return;
+      const primary = cfg.primaryColor || '#7956c2';
+      const grad = (cfg.colorMode === 'gradient' && cfg.gradient) ? cfg.gradient : (cfg.fabGradient || '');
+      this.setBrandColor(primary, grad);
+
+      const vlColor = cfg.vlibrasColor || grad || primary;
+      this.setVLibrasColor(vlColor);
+
+      if (cfg.icon || cfg.fabIcon) {
+        this.setFabIcon(cfg.icon || cfg.fabIcon);
+      }
+      const nextH = cfg.hpos || cfg.position;
+      if (nextH === 'left' || nextH === 'right') {
+        this.config.position = nextH;
+        this.state.dockPosition = nextH;
+      }
+      const nextV = cfg.vpos || cfg.verticalPosition;
+      if (nextV === 'top' || nextV === 'middle' || nextV === 'bottom') {
+        this.config.verticalPosition = nextV;
+        this.state.verticalPosition = nextV;
+      }
+      this.saveState();
+      this.applyAllStateChanges();
+      this.updatePanelUI();
+    }
+
     setVLibrasUniform(opts = {}) {
       if (opts.shirt) {
         this._customShirtEdited = true;
@@ -5866,8 +5901,8 @@
         :host {
           all: initial !important;
           --primary: ${this.config.primaryColor};
-          --primary-hover: #6340ac;
-          --fab-bg: ${this.config.fabGradient || 'linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%)'};
+          --primary-hover: ${this.config.primaryColor};
+          --fab-bg: ${this.config.fabGradient || 'var(--primary)'};
           --accent: ${this.config.accentColor};
           --bg-panel: rgba(255, 255, 255, 0.95);
           --bg-card: #f8fafc;
@@ -5968,7 +6003,7 @@
           font-weight: 800;
           padding: 2px 7px;
           border-radius: 999px;
-          background: linear-gradient(135deg, #7956c2 0%, #5e3ea1 100%);
+          background: var(--fab-bg, var(--primary));
           color: #ffffff;
           letter-spacing: 0.03em;
         }
@@ -5981,10 +6016,10 @@
           width: 64px;
           height: 64px;
           border-radius: 50%;
-          background: var(--fab-bg, linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%));
+          background: var(--fab-bg, var(--primary));
           color: #ffffff;
           border: none;
-          box-shadow: 0 10px 30px -4px rgba(121, 86, 194, 0.48), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+          box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.3);
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -6125,13 +6160,13 @@
           width: 40px;
           height: 40px;
           border-radius: 12px;
-          background: linear-gradient(135deg, var(--primary) 0%, #5e3ea1 100%);
+          background: var(--fab-bg, var(--primary));
           color: #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          box-shadow: 0 4px 12px rgba(121, 86, 194, 0.25);
+          box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         }
         .brand-badge-icon svg { width: 26px; height: 26px; display: block; }
         .brand-text { display: flex; flex-direction: column; min-width: 0; }
